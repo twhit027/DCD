@@ -1,0 +1,718 @@
+<?xml version="1.0" encoding="windows-1250"?>
+<AdBaseData>
+	<AdBaseInfo FromDistribute="true">
+		<OrderCustomers>
+			<OrderCustomer>
+				<IsPrimaryOrderer>true</IsPrimaryOrderer>
+				<IsPrimaryPayor>true</IsPrimaryPayor>
+				<Customer FromDistribute="true">
+					<account-number>10</account-number>
+					<Name1>ATEX TEST CO.</Name1>
+					<Phone>3212545559</Phone>
+					<Address>
+						<Addr1>`</Addr1>
+						<City>MELBOURNE</City>
+						<Postal-Code>32940</Postal-Code>
+					</Address>
+				</Customer>
+			</OrderCustomer>
+		</OrderCustomers>
+		<publication-code>Y</publication-code>
+		<pagination-code>N</pagination-code>
+		<ad-sold-by>jfuller</ad-sold-by>
+		<ad-order-taker>jfuller</ad-order-taker>
+		<billing-flag>N</billing-flag>
+		<import-price>0.00</import-price>
+		<ExpireDate>10312013</ExpireDate>
+		<Ad>
+			<buyer-ad-id>0000000003-01</buyer-ad-id>
+			<AdNumber>0000000003-01</AdNumber>
+			<ad-width>0.00</ad-width>
+			<ad-type>DES-10 Col</ad-type>
+			<ad-height>3</ad-height>
+			<ad-unit-of-measure>lines</ad-unit-of-measure>
+			<AdLocInfo>
+				<publication>DES-Des Moines Register</publication>
+				<publication-placement>DES-Automotive</publication-placement>
+				<publication-position>Cars </publication-position>
+				<import-price>0.00</import-price>
+				<rundates>
+					<RunDate>
+						<Date>10252013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+					<RunDate>
+						<Date>10302013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+					<RunDate>
+						<Date>10312013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+				</rundates>
+			</AdLocInfo>
+		</Ad>
+	</AdBaseInfo>
+	<AdBaseInfo FromDistribute="true">
+		<OrderCustomers>
+			<OrderCustomer>
+				<IsPrimaryOrderer>true</IsPrimaryOrderer>
+				<IsPrimaryPayor>true</IsPrimaryPayor>
+				<Customer FromDistribute="true">
+					<account-number>11</account-number>
+					<Name1>WILKE</Name1>
+					<Name2>JULIA</Name2>
+					<Phone>6024448306</Phone>
+					<Address>
+						<City>AVONDALE</City>
+						<Postal-Code>85392</Postal-Code>
+					</Address>
+				</Customer>
+			</OrderCustomer>
+		</OrderCustomers>
+		<publication-code>Y</publication-code>
+		<pagination-code>N</pagination-code>
+		<ad-sold-by>jwilke</ad-sold-by>
+		<ad-order-taker>jwilke</ad-order-taker>
+		<billing-flag>N</billing-flag>
+		<import-price>0.00</import-price>
+		<ExpireDate>10302013</ExpireDate>
+		<Ad>
+			<buyer-ad-id>0000000004-01</buyer-ad-id>
+			<AdNumber>0000000004-01</AdNumber>
+			<ad-width>0.00</ad-width>
+			<ad-type>DES-10 Col</ad-type>
+			<ad-height>3</ad-height>
+			<ad-unit-of-measure>lines</ad-unit-of-measure>
+			<AdLocInfo>
+				<publication>DES-Grinnell Pennysaver</publication>
+				<publication-placement>DES-Automotive</publication-placement>
+				<publication-position>Classic and Antique </publication-position>
+				<import-price>0.00</import-price>
+				<rundates>
+					<RunDate>
+						<Date>10232013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+					<RunDate>
+						<Date>10302013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+				</rundates>
+			</AdLocInfo>
+		</Ad>
+	</AdBaseInfo>
+	<AdBaseInfo FromDistribute="true">
+		<OrderCustomers>
+			<OrderCustomer>
+				<IsPrimaryOrderer>true</IsPrimaryOrderer>
+				<IsPrimaryPayor>true</IsPrimaryPayor>
+				<Customer FromDistribute="true">
+					<account-number>11</account-number>
+					<Name1>WILKE</Name1>
+					<Name2>JULIA</Name2>
+					<Phone>6024448306</Phone>
+					<Address>
+						<City>AVONDALE</City>
+						<Postal-Code>85392</Postal-Code>
+					</Address>
+				</Customer>
+			</OrderCustomer>
+		</OrderCustomers>
+		<publication-code>Y</publication-code>
+		<pagination-code>N</pagination-code>
+		<ad-sold-by>jkerske</ad-sold-by>
+		<ad-order-taker>jkerske</ad-order-taker>
+		<billing-flag>N</billing-flag>
+		<import-price>0.00</import-price>
+		<ExpireDate>11272013</ExpireDate>
+		<Ad>
+			<buyer-ad-id>0000000005-01</buyer-ad-id>
+			<AdNumber>0000000005-01</AdNumber>
+			<ad-width>1.00</ad-width>
+			<ad-type>DES-10 Col</ad-type>
+			<ad-height>23</ad-height>
+			<ad-unit-of-measure>lines</ad-unit-of-measure>
+			<ad-content type="text">1997 Ford 
+Focus
+300,000 m
+ blue 4 door
+front end damage
+$300 obo
+777-8875
+</ad-content>
+			<AdLocInfo>
+				<publication>DES-Altoona</publication>
+				<publication-placement>DES-Automotive</publication-placement>
+				<publication-position>Cars </publication-position>
+				<import-price>0.00</import-price>
+				<invoice-text>1997 Ford Focus 300,000 m  blue 4 door front end damage $300 obo 777-8875 </invoice-text>
+				<rundates>
+					<RunDate>
+						<Date>10302013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+					<RunDate>
+						<Date>11062013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+					<RunDate>
+						<Date>11132013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+					<RunDate>
+						<Date>11202013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+					<RunDate>
+						<Date>11272013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+				</rundates>
+			</AdLocInfo>
+			<AdLocInfo>
+				<publication>DES-Altoona</publication>
+				<publication-placement>DES-Automotive</publication-placement>
+				<publication-position>Cars </publication-position>
+				<import-price>0.00</import-price>
+				<invoice-text>1997 Ford Focus 300,000 m  blue 4 door front end damage $300 obo 777-8875 </invoice-text>
+				<rundates>
+					<RunDate>
+						<Date>10302013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+				</rundates>
+			</AdLocInfo>
+			<ad-slug>1997FORDFOCUS300000MBLUE4DOORFRONTENDDAMAGE300OBO7778875</ad-slug>
+		</Ad>
+	</AdBaseInfo>
+	<AdBaseInfo FromDistribute="true">
+		<OrderCustomers>
+			<OrderCustomer>
+				<IsPrimaryOrderer>true</IsPrimaryOrderer>
+				<IsPrimaryPayor>true</IsPrimaryPayor>
+				<Customer FromDistribute="true">
+					<account-number>10</account-number>
+					<Name1>ATEX TEST CO.</Name1>
+					<Phone>3212545559</Phone>
+					<Address>
+						<Addr1>`</Addr1>
+						<City>MELBOURNE</City>
+						<Postal-Code>32940</Postal-Code>
+					</Address>
+				</Customer>
+			</OrderCustomer>
+		</OrderCustomers>
+		<publication-code>Y</publication-code>
+		<pagination-code>N</pagination-code>
+		<ad-sold-by>ebland</ad-sold-by>
+		<ad-order-taker>ebland</ad-order-taker>
+		<billing-flag>N</billing-flag>
+		<import-price>0.00</import-price>
+		<ExpireDate>10302013</ExpireDate>
+		<Ad>
+			<buyer-ad-id>0000000006-01</buyer-ad-id>
+			<AdNumber>0000000006-01</AdNumber>
+			<ad-width>1.00</ad-width>
+			<ad-type>DES-6COL WIDE</ad-type>
+			<ad-height>7</ad-height>
+			<ad-unit-of-measure>lines</ad-unit-of-measure>
+			<ad-content type="text">Anna and Ellen&apos;s 
+Montezuma test ad num
+ber two.
+</ad-content>
+			<AdLocInfo>
+				<publication>DES-Montezuma Supplement</publication>
+				<publication-placement>DES-Automotive</publication-placement>
+				<publication-position>Cars </publication-position>
+				<import-price>0.00</import-price>
+				<invoice-text>Anna and Ellen&apos;s Montezuma test ad number two.</invoice-text>
+				<rundates>
+					<RunDate>
+						<Date>10302013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+				</rundates>
+			</AdLocInfo>
+			<ad-slug>ANNAANDELLENSMONTEZUMATESTADNUMBERTWO</ad-slug>
+		</Ad>
+	</AdBaseInfo>
+	<AdBaseInfo FromDistribute="true">
+		<OrderCustomers>
+			<OrderCustomer>
+				<IsPrimaryOrderer>true</IsPrimaryOrderer>
+				<IsPrimaryPayor>true</IsPrimaryPayor>
+				<Customer FromDistribute="true">
+					<account-number>10</account-number>
+					<Name1>ATEX TEST CO.</Name1>
+					<Phone>3212545559</Phone>
+					<Address>
+						<Addr1>`</Addr1>
+						<City>MELBOURNE</City>
+						<Postal-Code>32940</Postal-Code>
+					</Address>
+				</Customer>
+			</OrderCustomer>
+		</OrderCustomers>
+		<publication-code>Y</publication-code>
+		<pagination-code>N</pagination-code>
+		<ad-sold-by>danderson</ad-sold-by>
+		<ad-order-taker>danderson</ad-order-taker>
+		<billing-flag>N</billing-flag>
+		<import-price>0.00</import-price>
+		<ExpireDate>10232013</ExpireDate>
+		<Ad>
+			<buyer-ad-id>0000000008-01</buyer-ad-id>
+			<AdNumber>0000000008-01</AdNumber>
+			<ad-width>1.00</ad-width>
+			<ad-type>DES-6COL WIDE</ad-type>
+			<ad-height>23</ad-height>
+			<ad-unit-of-measure>lines</ad-unit-of-measure>
+			<ad-content type="text">THis is a test. THis is a test. THis is a test. 
+THis is a test. THis is a test. THis is a test. 
+THis is a test. THis is a test. THis is a test. 
+THis is a test. THis is a test. THis is a test. 
+THis is a test. THis is a test. THis is a test. 
+THis is a test. THis is a test. THis is a test. 
+THis is a test. THis is a test. THis is a test. 
+THis is a test. THis is a test. THis is a test. 
+THis is a test. THis is a test. THis is a test. 
+THis is a test. THis is a test. THis is a test. 
+THis is a test. THis is a test. THis is a test. 
+THis is a test. THis is a test. THis is a test. 
+THis is a test. THis is a test. THis is a test. 
+THis is a test. THis is a test. THis is a test. 
+THis is a test. THis is a test. THis is a test. 
+THis is a test. THis is a test. THis is a test. 
+THis is a test. THis is a test. THis is a test. 
+THis is a test. THis is a test. THis is a test. 
+THis is a test. THis is a test. THis is a test. 
+THis is a test. THis is a test. THis is a test. 
+THis is a test. THis is a test. THis is a test. 
+THis is a test. THis is a test. 
+</ad-content>
+			<AdLocInfo>
+				<publication>DES-Iowa County Advocate</publication>
+				<publication-placement>DES-East Auto</publication-placement>
+				<publication-position>Cars </publication-position>
+				<import-price>0.00</import-price>
+				<invoice-text>THis is a test. THis is a test. THis is a test. THis is a test. THis is a test. THis is a test. THis is a test. THis is a test. THis is a test. THis is a test. </invoice-text>
+				<rundates>
+					<RunDate>
+						<Date>10232013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+				</rundates>
+			</AdLocInfo>
+			<ad-slug>THISISATESTTHISISATESTTHISISATESTTHISISATESTTHISISATESTTHISISATESTTHISISATESTTHISISATESTTHISISATESTTHISISATEST</ad-slug>
+		</Ad>
+	</AdBaseInfo>
+	<AdBaseInfo FromDistribute="true">
+		<OrderCustomers>
+			<OrderCustomer>
+				<IsPrimaryOrderer>true</IsPrimaryOrderer>
+				<IsPrimaryPayor>true</IsPrimaryPayor>
+				<Customer FromDistribute="true">
+					<account-number>10</account-number>
+					<Name1>ATEX TEST CO.</Name1>
+					<Phone>3212545559</Phone>
+					<Address>
+						<Addr1>`</Addr1>
+						<City>MELBOURNE</City>
+						<Postal-Code>32940</Postal-Code>
+					</Address>
+				</Customer>
+			</OrderCustomer>
+		</OrderCustomers>
+		<publication-code>Y</publication-code>
+		<pagination-code>N</pagination-code>
+		<ad-sold-by>dcampbel</ad-sold-by>
+		<ad-order-taker>dcampbel</ad-order-taker>
+		<billing-flag>N</billing-flag>
+		<import-price>0.00</import-price>
+		<ExpireDate>11202013</ExpireDate>
+		<Ad>
+			<buyer-ad-id>0000000010-01</buyer-ad-id>
+			<AdNumber>0000000010-01</AdNumber>
+			<ad-width>1.00</ad-width>
+			<ad-type>DES-10 Col</ad-type>
+			<ad-height>11</ad-height>
+			<ad-unit-of-measure>lines</ad-unit-of-measure>
+			<ad-content type="text">ddfFodyy
+hyfsdfssd
+sdsr
+</ad-content>
+			<AdLocInfo>
+				<publication>DES-Altoona</publication>
+				<publication-placement>DES-Automotive</publication-placement>
+				<publication-position>Cars </publication-position>
+				<import-price>0.00</import-price>
+				<invoice-text>ddfFodyyhyfsdfssdsdsr</invoice-text>
+				<rundates>
+					<RunDate>
+						<Date>11132013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+					<RunDate>
+						<Date>11202013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+				</rundates>
+			</AdLocInfo>
+			<ad-slug>DDFFODYYHYFSDFSSDSDSR</ad-slug>
+		</Ad>
+	</AdBaseInfo>
+	<AdBaseInfo FromDistribute="true">
+		<OrderCustomers>
+			<OrderCustomer>
+				<IsPrimaryOrderer>true</IsPrimaryOrderer>
+				<IsPrimaryPayor>true</IsPrimaryPayor>
+				<Customer FromDistribute="true">
+					<account-number>10</account-number>
+					<Name1>ATEX TEST CO.</Name1>
+					<Phone>3212545559</Phone>
+					<Address>
+						<Addr1>`</Addr1>
+						<City>MELBOURNE</City>
+						<Postal-Code>32940</Postal-Code>
+					</Address>
+				</Customer>
+			</OrderCustomer>
+		</OrderCustomers>
+		<publication-code>Y</publication-code>
+		<pagination-code>N</pagination-code>
+		<ad-sold-by>pstrand</ad-sold-by>
+		<ad-order-taker>pstrand</ad-order-taker>
+		<billing-flag>N</billing-flag>
+		<import-price>0.00</import-price>
+		<ExpireDate>11202013</ExpireDate>
+		<Ad>
+			<buyer-ad-id>0000000012-01</buyer-ad-id>
+			<AdNumber>0000000012-01</AdNumber>
+			<ad-width>1.00</ad-width>
+			<ad-type>DES-6COL WIDE</ad-type>
+			<ad-height>6</ad-height>
+			<ad-unit-of-measure>lines</ad-unit-of-measure>
+			<ad-content type="text">ack my box 
+with five dozen 
+liquor jugs.
+</ad-content>
+			<AdLocInfo>
+				<publication>DES-Iowa County Advocate</publication>
+				<publication-placement>DES-East Auto</publication-placement>
+				<publication-position>Cars </publication-position>
+				<import-price>0.00</import-price>
+				<invoice-text>Pack my box with five dozen liquor jugs.</invoice-text>
+				<rundates>
+					<RunDate>
+						<Date>11062013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+					<RunDate>
+						<Date>11132013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+					<RunDate>
+						<Date>11202013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+				</rundates>
+			</AdLocInfo>
+			<ad-slug>PACKMYBOXWITHFIVEDOZENLIQUORJUGS</ad-slug>
+		</Ad>
+	</AdBaseInfo>
+	<AdBaseInfo FromDistribute="true">
+		<OrderCustomers>
+			<OrderCustomer>
+				<IsPrimaryOrderer>true</IsPrimaryOrderer>
+				<IsPrimaryPayor>true</IsPrimaryPayor>
+				<Customer FromDistribute="true">
+					<account-number>12</account-number>
+					<Name1>WISCONSIN CENTRAL</Name1>
+					<Phone>7153330111</Phone>
+					<Address>
+						<City>SCHOFIELD</City>
+						<Postal-Code>54476</Postal-Code>
+					</Address>
+				</Customer>
+			</OrderCustomer>
+		</OrderCustomers>
+		<publication-code>Y</publication-code>
+		<pagination-code>N</pagination-code>
+		<ad-sold-by>cjaxness</ad-sold-by>
+		<ad-order-taker>cjaxness</ad-order-taker>
+		<billing-flag>N</billing-flag>
+		<import-price>0.00</import-price>
+		<ExpireDate>11132013</ExpireDate>
+		<Ad>
+			<buyer-ad-id>0000000011-01</buyer-ad-id>
+			<AdNumber>0000000011-01</AdNumber>
+			<ad-width>1.00</ad-width>
+			<ad-type>DES-10 Col</ad-type>
+			<ad-height>2</ad-height>
+			<ad-unit-of-measure>lines</ad-unit-of-measure>
+			<ad-content type="text">test
+</ad-content>
+			<AdLocInfo>
+				<publication>DES-Juice</publication>
+				<publication-placement>DES-Automotive</publication-placement>
+				<publication-position>Autos Wanted</publication-position>
+				<import-price>0.00</import-price>
+				<invoice-text>test</invoice-text>
+				<rundates>
+					<RunDate>
+						<Date>11132013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+				</rundates>
+			</AdLocInfo>
+			<ad-slug>TEST</ad-slug>
+		</Ad>
+	</AdBaseInfo>
+	<AdBaseInfo FromDistribute="true">
+		<OrderCustomers>
+			<OrderCustomer>
+				<IsPrimaryOrderer>true</IsPrimaryOrderer>
+				<IsPrimaryPayor>true</IsPrimaryPayor>
+				<Customer FromDistribute="true">
+					<account-number>11</account-number>
+					<Name1>WILKE</Name1>
+					<Name2>JULIA</Name2>
+					<Phone>6024448306</Phone>
+					<Address>
+						<City>AVONDALE</City>
+						<Postal-Code>85392</Postal-Code>
+					</Address>
+				</Customer>
+			</OrderCustomer>
+		</OrderCustomers>
+		<publication-code>Y</publication-code>
+		<pagination-code>N</pagination-code>
+		<ad-sold-by>jkerske</ad-sold-by>
+		<ad-order-taker>jkerske</ad-order-taker>
+		<billing-flag>N</billing-flag>
+		<import-price>0.00</import-price>
+		<ExpireDate>11272013</ExpireDate>
+		<Ad>
+			<buyer-ad-id>0000000013-01</buyer-ad-id>
+			<AdNumber>0000000013-01</AdNumber>
+			<ad-width>1.00</ad-width>
+			<ad-type>DES-10 Col</ad-type>
+			<ad-height>22</ad-height>
+			<ad-unit-of-measure>lines</ad-unit-of-measure>
+			<ad-content type="text">4 bedroom con
+do for  rent. 
+Beautiful 
+views. Updated 
+Kitchen with 
+marble 
+countertops  
+lower level 
+walk-out. 
+$1100 per 
+mnth.
+</ad-content>
+			<AdLocInfo>
+				<publication>DES-Indianola</publication>
+				<publication-placement>DES-Real Estate</publication-placement>
+				<publication-position>Income Property</publication-position>
+				<import-price>0.00</import-price>
+				<invoice-text>4 bedroom condo for  rent. Beautiful views. Updated Kitchen with marble countertops  lower level walk-out.  $1100 per mnth.</invoice-text>
+				<rundates>
+					<RunDate>
+						<Date>10232013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+					<RunDate>
+						<Date>10302013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+					<RunDate>
+						<Date>11062013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+					<RunDate>
+						<Date>11132013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+					<RunDate>
+						<Date>11202013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+					<RunDate>
+						<Date>11272013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+				</rundates>
+			</AdLocInfo>
+			<ad-slug>4BEDROOMCONDOFORRENTBEAUTIFULVIEWSUPDATEDKITCHENWITHMARBLECOUNTERTOPSLOWERLEVELWALKOUT1100PERMNTH</ad-slug>
+		</Ad>
+	</AdBaseInfo>
+	<AdBaseInfo FromDistribute="true">
+		<OrderCustomers>
+			<OrderCustomer>
+				<IsPrimaryOrderer>true</IsPrimaryOrderer>
+				<IsPrimaryPayor>true</IsPrimaryPayor>
+				<Customer FromDistribute="true">
+					<account-number>10</account-number>
+					<Name1>ATEX TEST CO.</Name1>
+					<Phone>3212545559</Phone>
+					<Address>
+						<Addr1>`</Addr1>
+						<City>MELBOURNE</City>
+						<Postal-Code>32940</Postal-Code>
+					</Address>
+				</Customer>
+			</OrderCustomer>
+		</OrderCustomers>
+		<publication-code>Y</publication-code>
+		<pagination-code>N</pagination-code>
+		<ad-sold-by>cjaxness</ad-sold-by>
+		<ad-order-taker>cjaxness</ad-order-taker>
+		<billing-flag>N</billing-flag>
+		<import-price>0.00</import-price>
+		<ExpireDate>10282013</ExpireDate>
+		<Ad>
+			<buyer-ad-id>0000000014-01</buyer-ad-id>
+			<AdNumber>0000000014-01</AdNumber>
+			<ad-width>1.00</ad-width>
+			<ad-type>DES-10 Col</ad-type>
+			<ad-height>0</ad-height>
+			<ad-unit-of-measure>lines</ad-unit-of-measure>
+			<AdLocInfo>
+				<publication>DES-Des Moines Register</publication>
+				<publication-placement>DES-Automotive</publication-placement>
+				<publication-position>Cars </publication-position>
+				<import-price>0.00</import-price>
+				<rundates>
+					<RunDate>
+						<Date>10242013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+					<RunDate>
+						<Date>10252013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+					<RunDate>
+						<Date>10262013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+					<RunDate>
+						<Date>10272013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+					<RunDate>
+						<Date>10282013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+				</rundates>
+			</AdLocInfo>
+			<AdLocInfo>
+				<publication>DES-Register Digital</publication>
+				<publication-placement>ECSD-Cars.com</publication-placement>
+				<publication-position>Cars.com CL Better</publication-position>
+				<import-price>0.00</import-price>
+				<rundates>
+					<RunDate>
+						<Date>10242013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+				</rundates>
+			</AdLocInfo>
+		</Ad>
+	</AdBaseInfo>
+	<AdBaseInfo FromDistribute="true">
+		<OrderCustomers>
+			<OrderCustomer>
+				<IsPrimaryOrderer>true</IsPrimaryOrderer>
+				<IsPrimaryPayor>true</IsPrimaryPayor>
+				<Customer FromDistribute="true">
+					<account-number>10</account-number>
+					<Name1>ATEX TEST CO.</Name1>
+					<Phone>3212545559</Phone>
+					<Address>
+						<Addr1>`</Addr1>
+						<City>MELBOURNE</City>
+						<Postal-Code>32940</Postal-Code>
+					</Address>
+				</Customer>
+			</OrderCustomer>
+		</OrderCustomers>
+		<publication-code>Y</publication-code>
+		<pagination-code>N</pagination-code>
+		<ad-sold-by>jfuller</ad-sold-by>
+		<ad-order-taker>jfuller</ad-order-taker>
+		<billing-flag>N</billing-flag>
+		<import-price>0.00</import-price>
+		<ExpireDate>11062013</ExpireDate>
+		<Ad>
+			<buyer-ad-id>0000000016-01</buyer-ad-id>
+			<AdNumber>0000000016-01</AdNumber>
+			<ad-width>0.00</ad-width>
+			<ad-type>DES-10 Col</ad-type>
+			<ad-height>3</ad-height>
+			<ad-unit-of-measure>lines</ad-unit-of-measure>
+			<AdLocInfo>
+				<publication>DES-Grinnell Pennysaver</publication>
+				<publication-placement>DES-Automotive</publication-placement>
+				<publication-position>Classic and Antique </publication-position>
+				<import-price>0.00</import-price>
+				<rundates>
+					<RunDate>
+						<Date>10302013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+					<RunDate>
+						<Date>11062013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+				</rundates>
+			</AdLocInfo>
+		</Ad>
+	</AdBaseInfo>
+	<AdBaseInfo FromDistribute="true">
+		<OrderCustomers>
+			<OrderCustomer>
+				<IsPrimaryOrderer>true</IsPrimaryOrderer>
+				<IsPrimaryPayor>true</IsPrimaryPayor>
+				<Customer FromDistribute="true">
+					<account-number>10</account-number>
+					<Name1>ATEX TEST CO.</Name1>
+					<Phone>3212545559</Phone>
+					<Address>
+						<Addr1>`</Addr1>
+						<City>MELBOURNE</City>
+						<Postal-Code>32940</Postal-Code>
+					</Address>
+				</Customer>
+			</OrderCustomer>
+		</OrderCustomers>
+		<publication-code>N</publication-code>
+		<pagination-code>N</pagination-code>
+		<ad-sold-by>jfuller</ad-sold-by>
+		<ad-order-taker>jfuller</ad-order-taker>
+		<billing-flag>N</billing-flag>
+		<import-price>0.00</import-price>
+		<ExpireDate>11202013</ExpireDate>
+		<Ad>
+			<buyer-ad-id>0000000017-01</buyer-ad-id>
+			<AdNumber>0000000017-01</AdNumber>
+			<ad-width>0.00</ad-width>
+			<ad-type>DES-10 Col</ad-type>
+			<ad-height>0</ad-height>
+			<ad-unit-of-measure>lines</ad-unit-of-measure>
+			<AdLocInfo>
+				<publication>DES-Juice</publication>
+				<publication-placement>DES-Automotive</publication-placement>
+				<publication-position>Cars </publication-position>
+				<import-price>0.00</import-price>
+				<rundates>
+					<RunDate>
+						<Date>11202013</Date>
+						<UnitPrice>0</UnitPrice>
+					</RunDate>
+				</rundates>
+			</AdLocInfo>
+		</Ad>
+	</AdBaseInfo>
+</AdBaseData>
