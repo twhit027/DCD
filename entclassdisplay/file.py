@@ -6,7 +6,7 @@ FILE_OUT = "write.sql"
 FILE_IN = "current.xml"
 TABLE = "class_listings"
 
-#open file to read
+#open file to read new
 file = open(FILE_IN,'r')
 
 #read in file and save it to string
