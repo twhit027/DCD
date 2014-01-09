@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="shortcut icon" href="images/ico/favicon.png">
+
+<style type="text/css">
+body
+{
+	min-width:10px!important;
+}
+</style>
+
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/jasny-bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
+<div class="container">
+	<?php
+		$url = $_SERVER['REQUEST_URI'];
+		$siteurl = 'http://www.indystar.com';
+		$mobileUrl = 'http://m.indystar.com';
+		$sitename = 'indystar';
+		$busname = 'The Indianapolis Star';
+		$siteCode = 'BG';
+		$siteCode = $_GET['sc'];
+		$siteCode = parse_url($url, PHP_URL_PATH);
+		include('includes/constants.php');
+		include('includes/functions.php');
+    //include('includes/header.php'); 
+		include('includes/mobilenavigation.php');
+    include('includes/toggle.php'); 
+		
+		$ads = new Ads();
+		echo $ads->InitializeAds();
+	?>
+	<div class="row-fluid">
+		<iframe src="<?=$siteurl?>/services/cobrand/header/" style="position: absolute; border-width: 0px; height: 40px; width: 100%"></iframe>
+	</div>
+</div>
+</header>
+  
+<?php
+	echo $ads->getLaunchpad(); 	
+?>
+
+<div class="container" >     
+    <div class="row" style="background-color:#FFF;">
+        <div class="col-xs-11 col-sm-8">
+    
+            <h1><?=$busname?> &amp; Online Classifieds</h1>
+            
+            <a href="<?=$siteurl?>"><img target="_blank" alt="<?=$sitename?> Logo" title="<?=$sitename?>" style="margin-bottom: 10px;background-color: black" src="http://www.gannett-cdn.com/sites/<?=$sitename?>/images/site-nav-logo.png"></a>
+                        
+            <p>We have many ad packages to suit your classified needs.</p>
+            
+            <p>Place a classified ad in <?=$busname?> in-paper and online. List all kinds of items including Merchandise, Pets, Garage Sales, Services, and much more. </p>
+            
+           	<?php
+            	$nav = new Content();
+							echo $nav->getPartnersString($siteurl);
+            ?>
+        </div>
+       
+        <div class=" col-sm-4 card-suspender-color" style="background-color:#000;">
+        	<div class="hidden-xs">
+          <?php 
+						include('includes/navigation.php'); 
+						echo $ads->getFlex();
+					?>
+        	</div>
+        </div>
+        
+        
+    </div>
+
+</div>
+
+<input type="hidden" name="SC" value="<?=$siteCode?>">
+
+<?php 
+echo $ads->getLeaderBottom(); 
+include('includes/tracking.php'); 
+?>
+
+<footer>
+<!-- start of (4) footer -->
+<div class="row-fluid">
+	<iframe src="<?=$siteurl?>/services/cobrand/footer/" style="position: absolute; border-width: 0px; height: 250px; width: 100%" ></iframe>
+</div>
+<!-- end of (4) footer -->	
+</footer>
+
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+	<script src="scripts/bootstrap.min.js"></script>
+    <script src="scripts/jasny-bootstrap.min.js"></script>
+</body>
+</html>
