@@ -23,14 +23,24 @@ body
 <header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
 <div class="container">
 	<?php
+
+		$sites = array(
+			'DES' => array('siteName' => 'desmoinesregister', 'siteUrl' => 'http://www.desmoinesregister.com', 'busName' => 'The Des Moines Register'),
+			'INI' => array('siteName' => 'indystar', 'siteUrl' => 'http://www.indystar.com', 'busName' => 'The Indianapolis Star'),
+			'IOW' => array('siteName' => 'press-citizen', 'siteUrl' => 'http://www.press-citizen.com', 'busName' => 'The Press-Citizen'),
+			'POU' => array('siteName' => 'poughkeepsiejournal', 'siteUrl' => 'http://www.poughkeepsiejournal.com', 'busName' => 'The Poughkeepsie Journal'),
+			'DES' => array('siteName' => 'lohud', 'siteUrl' => 'http://www.lohud.com', 'busName' => 'The Journal News')		
+		);
+		
 		$url = $_SERVER['REQUEST_URI'];
-		$siteurl = 'http://www.indystar.com';
-		$mobileUrl = 'http://m.indystar.com';
-		$sitename = 'indystar';
-		$busname = 'The Indianapolis Star';
-		$siteCode = 'BG';
-		$siteCode = $_GET['sc'];
-		$siteCode = parse_url($url, PHP_URL_PATH);
+		$siteCode = 'DES';
+		if (isset($_GET['sc'])&&(isset($sites[$_GET['sc']]))) {
+			$siteCode = $_GET['sc'];
+		}
+		$siteUrl = $sites[$siteCode]['siteUrl'];
+		$siteName = $sites[$siteCode]['siteName'];
+		$busName = $sites[$siteCode]['busName'];	
+
 		include('includes/constants.php');
 		include('includes/functions.php');
     //include('includes/header.php'); 
@@ -38,10 +48,10 @@ body
     include('includes/toggle.php'); 
 		
 		$ads = new Ads();
-		echo $ads->InitializeAds();
+		echo $ads->InitializeAds();	
 	?>
 	<div class="row-fluid">
-		<iframe src="<?=$siteurl?>/services/cobrand/header/" style="position: absolute; border-width: 0px; height: 40px; width: 100%"></iframe>
+		<iframe src="http://<?=$siteName?>.gannettdigital.com/LI-header.html" style="position: absolute; border-width: 0px; height: 40px; width: 100%"></iframe>
 	</div>
 </div>
 </header>
@@ -54,17 +64,17 @@ body
     <div class="row" style="background-color:#FFF;">
         <div class="col-xs-11 col-sm-8">
     
-            <h1><?=$busname?> &amp; Online Classifieds</h1>
+            <h1><?=$busName?> &amp; Online Classifieds</h1>
             
-            <a href="<?=$siteurl?>"><img target="_blank" alt="<?=$sitename?> Logo" title="<?=$sitename?>" style="margin-bottom: 10px;background-color: black" src="http://www.gannett-cdn.com/sites/<?=$sitename?>/images/site-nav-logo.png"></a>
+            <a href="<?=$siteUrl?>"><img target="_blank" alt="<?=$siteName?> Logo" title="<?=$siteName?>" style="margin-bottom: 10px;background-color: black" src="<?=$siteUrl?>/graphics/ody/cobrand_logo.gif"></a>
                         
             <p>We have many ad packages to suit your classified needs.</p>
             
-            <p>Place a classified ad in <?=$busname?> in-paper and online. List all kinds of items including Merchandise, Pets, Garage Sales, Services, and much more. </p>
+            <p>Place a classified ad in <?=$busName?> in-paper and online. List all kinds of items including Merchandise, Pets, Garage Sales, Services, and much more. </p>
             
            	<?php
             	$nav = new Content();
-							echo $nav->getPartnersString($siteurl);
+							echo $nav->getPartnersString($siteUrl);
             ?>
         </div>
        
@@ -92,7 +102,7 @@ include('includes/tracking.php');
 <footer>
 <!-- start of (4) footer -->
 <div class="row-fluid">
-	<iframe src="<?=$siteurl?>/services/cobrand/footer/" style="position: absolute; border-width: 0px; height: 250px; width: 100%" ></iframe>
+	<iframe src="http://<?=$siteName?>.gannettdigital.com/LI-footer.html" style="position: absolute; border-width: 0px; height: 250px; width: 100%" ></iframe>
 </div>
 <!-- end of (4) footer -->	
 </footer>

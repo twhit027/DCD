@@ -4,8 +4,8 @@ class Database
 	public $db;
 	
 	function __construct() {
-		//$this->db = new PDO('mysql:dbname='.DB_NAME.';host='.DB_SERVER.';port='.DB_PORT.';charset=utf8', DB_USER, DB_PASS);
-		$this->db = new PDO('mysql:dbname=classifiedsproje;host=localhost;port=3306;charset=utf8', 'classifiedsproj', 'Classdb13!');
+		$this->db = new PDO('mysql:dbname='.DB_NAME.';host='.DB_SERVER.';port='.DB_PORT.';charset=utf8', DB_USER, DB_PASS);
+		//$this->db = new PDO('mysql:dbname=classifiedsproje;host=localhost;port=3306;charset=utf8', 'classifiedsproj', 'Classdb13!');
 		$this->db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 		//error mode on
 		$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -211,37 +211,29 @@ class Content extends Database
 	public function getPartnersString($siteUrl)
 	{		
 		$data ='		
-		<p><a class="button" href="'.$siteUrl.'/placead"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">Place an Ad</button></a></p>
-             
-        <h1>Featured Partner Classified Services</h1>
+		<p><a class="button" href="'.$siteUrl.'/placead"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">Place an Ad</button></a></p>             
+    <h1>Featured Partner Classified Services</h1>
 		<div class="row">
-		<div class="col-sm-3">
-		<h4>Cars</h4>
-		<a href="'.$siteUrl.'/cars"><img alt="Cars.com" src="images/130-cars.gif"></a>
-		<p><a class="button" href="'.$siteUrl.'/cars"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Autos</button></a></p>
-		
-		</div> 
-		
-		<div class="col-md-3">
-		<h4>Jobs</h4>
-		<a href="'.$siteUrl.'/jobs"><img alt="micareerbuilder.com" src="images/130-careerbuilder.gif"></a>
-		<p><a class="button" href="'.$siteUrl.'/jobs"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Jobs</button></a></p>
-		
-		</div>
-		
-		<div class="col-md-3">
-		<h4>Homes</h4>
-		<a href="'.$siteUrl.'/homes"><img alt="homefinder.com" src="images/130-homefinder.gif" ></a>
-		<p><a class="button" href="'.$siteUrl.'/homes"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Homes</button></a></p>
-		
-		</div>
-		
-		<div class="col-md-3">
-		<h4>Rentals</h4>
-		<a href="'.$siteUrl.'/rentals"><img alt="apartments.com" src="images/130-apartments.gif" ></a>
-		<p><a class="button" href="'.$siteUrl.'/rentals"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Listings</button></a></p>
-		
-		</div>
+			<div class="col-md-3">
+				<h4>Cars</h4>
+				<a href="'.$siteUrl.'/cars"><img alt="Cars.com" src="images/130-cars.gif"></a>
+				<p><a class="button" href="'.$siteUrl.'/cars"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Autos</button></a></p>
+			</div> 		
+			<div class="col-md-3">
+				<h4>Jobs</h4>
+				<a href="'.$siteUrl.'/jobs"><img alt="micareerbuilder.com" src="images/130-careerbuilder.gif"></a>
+				<p><a class="button" href="'.$siteUrl.'/jobs"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Jobs</button></a></p>		
+			</div>		
+			<div class="col-md-3">
+				<h4>Homes</h4>
+				<a href="'.$siteUrl.'/homes"><img alt="homefinder.com" src="images/130-homefinder.gif" ></a>
+				<p><a class="button" href="'.$siteUrl.'/homes"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Homes</button></a></p>
+			</div>		
+			<div class="col-md-3">
+				<h4>Rentals</h4>
+				<a href="'.$siteUrl.'/rentals"><img alt="apartments.com" src="images/130-apartments.gif" ></a>
+				<p><a class="button" href="'.$siteUrl.'/rentals"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Listings</button></a></p>
+			</div>
 		</div>';
 		
 		return $data;
