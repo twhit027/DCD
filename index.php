@@ -33,7 +33,7 @@ body
 		
 		$url = $_SERVER['REQUEST_URI'];
 		$siteCode = 'DES';
-		if (isset($_GET['sc'])&&(isset(strtoupper($sites[$_GET['sc']])))) {
+		if (isset($_GET['sc'])&&(isset($sites[strtoupper($_GET['sc'])]))) {
 			$siteCode = strtoupper($_GET['sc']);
 		}
 		$siteUrl = $sites[$siteCode]['siteUrl'];
@@ -42,7 +42,7 @@ body
 
 		include('includes/constants.php');
 		include('includes/functions.php');
-    include('includes/header.php'); 
+    include('includes/header.php');
 		include('includes/mobilenavigation.php');
     include('includes/toggle.php'); 
 		
