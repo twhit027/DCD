@@ -231,8 +231,8 @@ class Content extends Database
 			</div>		
 			<div class="col-md-3">
 				<h4>Rentals</h4>
-				<a href="'.$siteUrl.'/rentals"><img alt="apartments.com" src="images/130-apartments.gif" ></a>
-				<p><a class="button" href="'.$siteUrl.'/rentals"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Listings</button></a></p>
+				<a href="'.$siteUrl.'/apartments"><img alt="apartments.com" src="images/130-apartments.gif" ></a>
+				<p><a class="button" href="'.$siteUrl.'/apartments"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Listings</button></a></p>
 			</div>
 		</div>';
 		
