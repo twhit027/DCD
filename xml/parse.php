@@ -66,7 +66,8 @@ function char($parser,$data)
 	global $state;
 	
 	if (!$state) {return;}
-	
+
+
 	if ($state=="RUN-DATE") {  $userdata[$usercount]["RUN-DATE"] = $data;}
 	if ($state=="PUB-CODE") { $userdata[$usercount]["PUB-CODE"] = $data;}
 	if ($state=="AD-TYPE") { $userdata[$usercount]["AD-TYPE"] = $data;}
@@ -132,9 +133,36 @@ xml_parser_free($parser);
 
 class Admin extends Database
 {
+	function getPositions()
+	{
+		
+		$stmt = $this->db->prepare("SELECT * FROM `placement` ORDER BY id");
+		$stmt->execute();
+		
+		foreach ($stmt as $row) 
+		{
+			$data[$row['id']] =  $row['name'];
+		}
+		
+		return $data;
 	
+	}
 	
-	function putData()
+	function getPlacements()
+	{
+		
+		$stmt = $this->db->prepare("SELECT * FROM `position` ORDER BY id");
+		$stmt->execute();
+		
+		foreach ($stmt as $row) 
+		{
+			$data[$row['id']] =  $row['name'];
+		}
+		return $data;
+	
+	}
+	
+	function putData($placemenet, $position)
 	{
 		global $usercount;
 		global $userdata;
@@ -142,8 +170,46 @@ class Admin extends Database
 	
 		for($i=0;$i<$usercount; $i++) 
 		{
+				//<pub-code>DES-RM Des Moines Register
+				//<ad-type>DES-6COL
+				//<cat-code>General Classified</cat-code>
+				//<class-code>DES-Garage Sale-B</class-code>
+				//<subclass-code>Event and Fairs</subclass-code>
+				//<placement-description>DES GARAGE SALE BROADSHEET</placement-description>
+				//<position-description>Garage Sale - Event and Fairs</position-description>
+				
+				$pieces = explode(" - ", $userdata[$i]["POSITION-DESCRIPTION"]);
+				
+				
+				
+				/* start here monday */
+				/* start here monday */
+				/* start here monday */
+				if (!in_array($pieces[0], $placement)) 
+				{
+					//insert new placement with newest id
+					$placementnumber += 1;
+					$placement[$placementnumber] = $pieces[0];
+					
+					$stmt = $this->db->prepare("INSERT INTO  'placement' (`id`, `name`) VALUES(:id, :name)");
+					$stmt->execute(array(':id' => $userdata[$i]["RUN-DATE"], ':PubCode' => $userdata[$i]["PUB-CODE"]));
 			
 			
+				}
+
+				if(!in_array($pieces[1], $position)) 
+				{
+					//insert new position with newest id link it to it's parent placement
+					$positionnumber += 1;
+					$position[$positionnumber] = $pieces[1];	
+				}
+				/* start here monday */
+				/* start here monday */
+				/* start here monday */
+				
+				
+				
+				
 			$stmt = $this->db->prepare("INSERT INTO " . TBL_LISTING . "(`RunDate`, `PubCode`, `AdType`, `CatCode`, `ClassCode`, `SubclassCode`, `PositionDescription`, `Adnumber`, `StartDate`, `EndDate`, `LineCount`, `RunCount`, `CustomerType`, `AccountNumber`, `AccountName`, `Addr1`, `Addr2`, `BlockHouseNumber`, `UnitNumber`, `FloorNumber`, `POBoxNumber`, `AttentionTo`, `City`, `State`, `PostalCode`, `Country`, `PhoneNumber`, `FaxNumber`, `URLAddr`, `EmailAddr`, `PayFlag`, `AdDescription`, `OrderSource`, `OrderStatus`, `PayorAcct`, `AgencyFlag`, `RateNote`, `UserDate1Label`, `UserDate2Label`, `UserDate3Label`, `UserDate4Label`, `AdContent`) VALUES(:RunDate, :PubCode, :AdType, :CatCode, :ClassCode, :SubclassCode, :PostionDescription, :Adnumber, :Startdate, :Enddate, :LineCount, :RunCount, :CustomerType, :AccountNumber, :AccountName, :Addr1, :Addr2, :BlockHouseNumber, :UnitNumber, :FloorNumber, :POBoxNumber, :AttentionTo, :City, :State, :PostalCode, :Country, :PhoneNumber, :FaxNumber, :URLAddr, :EmailAddr, :PayFlag, :AdDescription, :OrderSource, :OrderStatus, :PayorAcct, :AgencyFlag, :RateNote, :UserDate1Label, :UserDate2Label, :UserDate3Label, :UserDate4Label, :AdContent)");
 						
 			$stmt->execute(array(':RunDate' => $userdata[$i]["RUN-DATE"], ':PubCode' => $userdata[$i]["PUB-CODE"], ':AdType' => $userdata[$i]["AD-TYPE"], ':CatCode' => $userdata[$i]["CAT-CODE"] , ':ClassCode' => $userdata[$i]["CLASS-CODE"] , ':SubclassCode' => $userdata[$i]["SUBCLASS-CODE"], ':PostionDescription' => $userdata[$i]["POSITION-DESCRIPTION"], ':Adnumber' => $userdata[$i]["AD-NUMBER"], ':Startdate' => $userdata[$i]["START-DATE"], ':Enddate' => $userdata[$i]["END-DATE"], ':LineCount' => $userdata[$i]["LINE-COUNT"], ':RunCount' => $userdata[$i]["RUN-COUNT"] , ':CustomerType' => $userdata[$i]["CUSTOMER-TYPE"] , ':AccountNumber' => $userdata[$i]["ACCOUNT-NUMBER"], ':AccountName' => $userdata[$i]["ACCOUNT-NAME"] , ':Addr1' => $userdata[$i]["ADDR-1"]  , ':Addr2' => $userdata[$i]["ADDR-2"], ':BlockHouseNumber' => $userdata[$i]["BLOCK-HOUSE-NUMBER"], ':UnitNumber' => $userdata[$i]["UNIT-NUMBER"] , ':FloorNumber' => $userdata[$i]["FLOOR-NUMBER"] , ':POBoxNumber' => $userdata[$i]["POBOX-NUMBER"], ':AttentionTo' => $userdata[$i]["ATTENTION-TO"] , ':City' => $userdata[$i]["CITY"] , ':State' => $userdata[$i]["STATE"], ':PostalCode' => $userdata[$i]["POSTAL-CODE"] , ':Country' => $userdata[$i]["COUNTRY"], ':PhoneNumber' => $userdata[$i]["PHONE-NUMBER"], ':FaxNumber' => $userdata[$i]["FAX-NUMBER"], ':URLAddr' => $userdata[$i]["URL-ADDR"], ':EmailAddr' => $userdata[$i]["EMAIL-ADDR"], ':PayFlag' => $userdata[$i]["PAY-FLAG"], ':AdDescription' => $userdata[$i]["AD-DESCRIPTION"], ':OrderSource' => $userdata[$i]["ORDER-SOURCE"] , ':OrderStatus' => $userdata[$i]["ORDER-STATUS"], ':PayorAcct' => $userdata[$i]["PAYOR-ACCT"], ':AgencyFlag' => $userdata[$i]["AGENCY-FLAG"], ':RateNote' => $userdata[$i]["RATE-NOTE"], ':UserDate1Label' => $userdata[$i]["USERDATE1LABEL"], ':UserDate2Label' => $userdata[$i]["USERDATE2LABEL"], ':UserDate3Label' => $userdata[$i]["USERDATE13LABEL"], ':UserDate4Label' => $userdata[$i]["USERDATE4LABEL"], ':AdContent' => $userdata[$i]["AD-CONTENT"] ));
@@ -201,8 +267,11 @@ class Admin extends Database
 }
 
 	
+
 $user = new Admin();
-$uid = $user->putData();
+$positions = $user->getPositions();
+$placements = $user->getPlacements();
+$uid = $user->putData($placements, $positions);
 
 
 	
