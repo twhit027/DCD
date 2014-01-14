@@ -5,7 +5,6 @@ include('includes/constants.php');
 $log   = KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
 
 $log->logInfo('Landing Page');
-
 $log->logInfo('FORWARDED_FOR: '.$_SERVER['HTTP_X_FORWARDED_FOR']);
 $log->logInfo('REMOTE_ADDR: '.$_SERVER['REMOTE_ADDR']);
 ?>

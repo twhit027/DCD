@@ -4,11 +4,15 @@ class Database
 	public $db;
 	
 	function __construct() {
-		$this->db = new PDO('mysql:dbname='.DB_NAME.';host='.DB_SERVER.';port='.DB_PORT.';charset=utf8', DB_USER, DB_PASS);
-		//$this->db = new PDO('mysql:dbname=classifiedsproje;host=localhost;port=3306;charset=utf8', 'classifiedsproj', 'Classdb13!');
-		$this->db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-		//error mode on
-		$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		try{
+			$this->db = new PDO('mysql:dbname='.DB_NAME.';host='.DB_SERVER.';port='.DB_PORT.';charset=utf8', DB_USER, DB_PASS);
+			$this->db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+			//error mode on
+			$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		}catch(PDOException $ex){
+			//$log->logEmerg('Unable to connect to the database');
+	    $db = null;
+		}		
 	}
 
 	function __destruct() {
@@ -20,12 +24,10 @@ class Database
 class Navigation extends Database
 {
 	function getTopNavigation()
-	{
-		
+	{		
 		$stmt = $this->db->prepare("SELECT * FROM `siteinfo`");
 		$stmt->execute();
-		$data = '';
-			
+		$data = '';			
 			
 		foreach ($stmt as $row) 
 		{
@@ -77,17 +79,6 @@ class Navigation extends Database
 	
 }
 
-class status extends Database
-{
-try {	
-		$stmt = $this->db->prepare("SELECT * FROM `siteinfo`");
-		$stmt->execute();
-} catch(PDOException $ex) {
-    return false;
-}	
-
-return true;
-}
 class Ads extends Database
 {
 	function InitializeAds()
@@ -171,6 +162,7 @@ class Ads extends Database
 	}
 	
 }
+
 class Content extends Database
 {	
 	public function getPartners()
@@ -250,14 +242,13 @@ class Content extends Database
 		
 		return $data;
 	}	
-	
 }
+
 class Tracking extends Database
 {
 	function getTracking()
 	{
 	}
-
 }
 
 ?>
