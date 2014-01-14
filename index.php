@@ -1,3 +1,14 @@
+<?php
+include(dirname(__FILE__) . '/includes/KLogger.php');
+include('includes/constants.php');
+
+$log   = KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
+
+$log->logInfo('Landing Page');
+
+$log->logInfo('FORWARDED_FOR: '.$_SERVER['HTTP_X_FORWARDED_FOR']);
+$log->logInfo('REMOTE_ADDR: '.$_SERVER['REMOTE_ADDR']);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,7 +51,6 @@ body
 		$siteName = $sites[$siteCode]['siteName'];
 		$busName = $sites[$siteCode]['busName'];	
 
-		include('includes/constants.php');
 		include('includes/functions.php');
     include('includes/header.php');
 		include('includes/mobilenavigation.php');
