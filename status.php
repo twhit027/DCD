@@ -1,0 +1,67 @@
+<?php
+include(dirname(__FILE__) . '/includes/KLogger.php');
+include('includes/constants.php');
+
+$log   = KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
+
+$connectionStatus = 'Passed';
+$queryStatus = 'Passed';
+$connBgColor = '#00FF00';
+$queryBgStatus = '#00FF00';
+
+try {
+		$dbh = new PDO('mysql:dbname='.DB_NAME.';host='.DB_SERVER.';port='.DB_PORT.';charset=utf8', DB_USER, DB_PASS);
+		$dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		try {	
+				$retArray = $dbh->query("SELECT * FROM `siteinfo`");
+		} catch(PDOException $ex) {
+		    $queryStatus = 'Failed';
+		}			
+    $dbh = null;
+} catch (PDOException $e) {
+	$connectionStatus = 'Failed';
+	$queryStatus = 'Failed';
+}
+
+if ($connectionStatus == 'Failed') {
+	$connBgColor = '#FF0000';
+	$log->logEmerg('Connection Status: '. $connectionStatus);
+}
+if ($queryStatus == 'Failed') {
+	$queryBgStatus = '#FF0000';
+	$log->logEmerg('Query Status: '. $queryStatus);
+}
+
+$log->logInfo('status Page');
+$log->logInfo('Connection Status: '. $connectionStatus);
+$log->logInfo('Query Status: '. $queryStatus);
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="shortcut icon" href="images/ico/favicon.png">
+
+<style type="text/css">
+body
+{
+	min-width:10px!important;
+}
+</style>
+
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/jasny-bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+	<table>
+<tr><td>database Connection status </td><td bgcolor="<?php echo $connBgColor?>"><?php echo $connectionStatus?></td></tr>
+<tr><td>database Query status </td><td bgcolor="<?php echo $queryBgStatus?>"><?php echo $queryStatus?></td></tr>
+</table>
+</body>
+</html>
