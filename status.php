@@ -17,20 +17,20 @@ try {
 				$retArray = $dbh->query("SELECT * FROM `siteinfo`");
 		} catch(PDOException $ex) {
 		    $queryStatus = 'Failed';
+		    $log->logEmerg('Query Status: '. $queryStatus);
 		}			
     $dbh = null;
 } catch (PDOException $e) {
 	$connectionStatus = 'Failed';
-	$queryStatus = 'Failed';
+	$queryStatus = 'Failed';	
+	$log->logEmerg('Connection Status: '. $connectionStatus);
 }
 
 if ($connectionStatus == 'Failed') {
-	$connBgColor = '#FF0000';
-	$log->logEmerg('Connection Status: '. $connectionStatus);
+	$connBgColor = '#FF0000';	
 }
 if ($queryStatus == 'Failed') {
-	$queryBgStatus = '#FF0000';
-	$log->logEmerg('Query Status: '. $queryStatus);
+	$queryBgStatus = '#FF0000';	
 }
 
 $log->logInfo('status Page');
