@@ -76,6 +76,18 @@ class Navigation extends Database
 	
 	
 }
+
+class status extends Database
+{
+try {	
+		$stmt = $this->db->prepare("SELECT * FROM `siteinfo`");
+		$stmt->execute();
+} catch(PDOException $ex) {
+    return false;
+}	
+
+return true;
+}
 class Ads extends Database
 {
 	function InitializeAds()
