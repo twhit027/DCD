@@ -4,11 +4,15 @@ class Database
 	public $db;
 	
 	function __construct() {
-		$this->db = new PDO('mysql:dbname='.DB_NAME.';host='.DB_SERVER.';port='.DB_PORT.';charset=utf8', DB_USER, DB_PASS);
-		//$this->db = new PDO('mysql:dbname=classifiedsproje;host=localhost;port=3306;charset=utf8', 'classifiedsproj', 'Classdb13!');
-		$this->db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-		//error mode on
-		$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		try{
+			$this->db = new PDO('mysql:dbname='.DB_NAME.';host='.DB_SERVER.';port='.DB_PORT.';charset=utf8', DB_USER, DB_PASS);
+			$this->db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+			//error mode on
+			$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		}catch(PDOException $ex){
+			//$log->logEmerg('Unable to connect to the database');
+	    $db = null;
+		}		
 	}
 
 	function __destruct() {
@@ -20,12 +24,10 @@ class Database
 class Navigation extends Database
 {
 	function getTopNavigation()
-	{
-		
+	{		
 		$stmt = $this->db->prepare("SELECT * FROM `siteinfo`");
 		$stmt->execute();
-		$data = '';
-			
+		$data = '';			
 			
 		foreach ($stmt as $row) 
 		{
@@ -76,6 +78,7 @@ class Navigation extends Database
 	
 	
 }
+
 class Ads extends Database
 {
 	function InitializeAds()
@@ -159,6 +162,7 @@ class Ads extends Database
 	}
 	
 }
+
 class Content extends Database
 {	
 	public function getPartners()
@@ -231,21 +235,20 @@ class Content extends Database
 			</div>		
 			<div class="col-md-3">
 				<h4>Rentals</h4>
-				<a href="'.$siteUrl.'/rentals"><img alt="apartments.com" src="images/130-apartments.gif" ></a>
-				<p><a class="button" href="'.$siteUrl.'/rentals"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Listings</button></a></p>
+				<a href="'.$siteUrl.'/apartments"><img alt="apartments.com" src="images/130-apartments.gif" ></a>
+				<p><a class="button" href="'.$siteUrl.'/apartments"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Listings</button></a></p>
 			</div>
 		</div>';
 		
 		return $data;
 	}	
-	
 }
+
 class Tracking extends Database
 {
 	function getTracking()
 	{
 	}
-
 }
 
 ?>

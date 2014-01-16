@@ -1,3 +1,13 @@
+<?php
+include(dirname(__FILE__) . '/includes/KLogger.php');
+include('includes/constants.php');
+
+$log   = KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
+
+$log->logInfo('Landing Page');
+$log->logInfo('FORWARDED_FOR: '.$_SERVER['HTTP_X_FORWARDED_FOR']);
+$log->logInfo('REMOTE_ADDR: '.$_SERVER['REMOTE_ADDR']);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,36 +33,31 @@ body
 <header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
 <div class="container">
 	<?php
-
 		$sites = array(
 			'DES' => array('siteName' => 'desmoinesregister', 'siteUrl' => 'http://www.desmoinesregister.com', 'busName' => 'The Des Moines Register'),
 			'INI' => array('siteName' => 'indystar', 'siteUrl' => 'http://www.indystar.com', 'busName' => 'The Indianapolis Star'),
 			'IOW' => array('siteName' => 'press-citizen', 'siteUrl' => 'http://www.press-citizen.com', 'busName' => 'The Press-Citizen'),
 			'POU' => array('siteName' => 'poughkeepsiejournal', 'siteUrl' => 'http://www.poughkeepsiejournal.com', 'busName' => 'The Poughkeepsie Journal'),
-			'DES' => array('siteName' => 'lohud', 'siteUrl' => 'http://www.lohud.com', 'busName' => 'The Journal News')		
+			'TJN' => array('siteName' => 'lohud', 'siteUrl' => 'http://www.lohud.com', 'busName' => 'The Journal News')		
 		);
 		
 		$url = $_SERVER['REQUEST_URI'];
 		$siteCode = 'DES';
-		if (isset($_GET['sc'])&&(isset($sites[$_GET['sc']]))) {
-			$siteCode = $_GET['sc'];
+		if (isset($_GET['sc'])&&(isset($sites[strtoupper($_GET['sc'])]))) {
+			$siteCode = strtoupper($_GET['sc']);
 		}
 		$siteUrl = $sites[$siteCode]['siteUrl'];
 		$siteName = $sites[$siteCode]['siteName'];
 		$busName = $sites[$siteCode]['busName'];	
 
-		include('includes/constants.php');
 		include('includes/functions.php');
-    //include('includes/header.php'); 
+    include('includes/header.php');
 		include('includes/mobilenavigation.php');
     include('includes/toggle.php'); 
 		
 		$ads = new Ads();
 		echo $ads->InitializeAds();	
 	?>
-	<div class="row-fluid">
-		<iframe src="http://<?=$siteName?>.gannettdigital.com/LI-header.html" style="position: absolute; border-width: 0px; height: 40px; width: 100%"></iframe>
-	</div>
 </div>
 </header>
   
@@ -100,11 +105,9 @@ include('includes/tracking.php');
 ?>
 
 <footer>
-<!-- start of (4) footer -->
-<div class="row-fluid">
-	<iframe src="http://<?=$siteName?>.gannettdigital.com/LI-footer.html" style="position: absolute; border-width: 0px; height: 250px; width: 100%" ></iframe>
-</div>
-<!-- end of (4) footer -->	
+<?php
+	include('includes/footer.php');
+?>
 </footer>
 
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
