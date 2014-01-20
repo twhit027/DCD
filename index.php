@@ -40,24 +40,6 @@ body
 <header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
 <div class="container">
 	<?php
-		$sites = array(
-			'DES' => array('siteName' => 'desmoinesregister', 'siteUrl' => 'http://www.desmoinesregister.com', 'busName' => 'The Des Moines Register', 'palate' => 2),
-			'INI' => array('siteName' => 'indystar', 'siteUrl' => 'http://www.indystar.com', 'busName' => 'The Indianapolis Star', 'palate' => 1),
-			'IOW' => array('siteName' => 'press-citizen', 'siteUrl' => 'http://www.press-citizen.com', 'busName' => 'The Press-Citizen', 'palate' => 4),
-			'POU' => array('siteName' => 'poughkeepsiejournal', 'siteUrl' => 'http://www.poughkeepsiejournal.com', 'busName' => 'The Poughkeepsie Journal', 'palate' => 4),
-			'TJN' => array('siteName' => 'lohud', 'siteUrl' => 'http://www.lohud.com', 'busName' => 'The Journal News', 'palate' => 2)		
-		);
-		
-		$url = $_SERVER['REQUEST_URI'];
-		$siteCode = 'DES';
-		if (isset($_GET['sc'])&&(isset($sites[strtoupper($_GET['sc'])]))) {
-			$siteCode = strtoupper($_GET['sc']);
-		}
-		$siteUrl = $sites[$siteCode]['siteUrl'];
-		$siteName = $sites[$siteCode]['siteName'];
-		$busName = $sites[$siteCode]['busName'];
-		$palNum = $sites[$siteCode]['palate'];	
-
 		include('includes/functions.php');
     include('includes/header.php');
 		include('includes/mobilenavigation.php');

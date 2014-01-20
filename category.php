@@ -1,3 +1,14 @@
+<?php
+include(dirname(__FILE__) . '/includes/KLogger.php');
+include('includes/constants.php');
+
+$log   = KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
+
+$log->logInfo('Landing Page');
+
+$log->logInfo('FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR']);
+$log->logInfo('REMOTE_ADDR: '.$_SERVER['REMOTE_ADDR']);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,20 +21,15 @@
 
 <div class="container">
 
-	<?php
-	include('includes/constants.php');
+<?php
 	include('includes/functions.php');
-    include('includes/header.php'); 
+  include('includes/header.php'); 
 	include('includes/mobilenavigation.php');
-    include('includes/toggle.php'); 
-	
+  include('includes/toggle.php'); 	
 	
 	$ads = new Ads();
 	echo $ads->InitializeAds();
-    ?>
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-	<script src="scripts/bootstrap.min.js"></script>
-    <script src="scripts/jasny-bootstrap.min.js"></script>
+?>
 </div>           
 
 </header>
@@ -95,8 +101,14 @@ body
 </div>
 
 
-<?php echo $ads->getLeaderBottom(); ?>
+	<?php echo $ads->getLeaderBottom(); ?>
 
+	<footer class="footer">
+		<?php include('includes/footer.php');?>
+	</footer>
 
+	<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+	<script src="scripts/bootstrap.min.js"></script>
+	<script src="scripts/jasny-bootstrap.min.js"></script>
 </body>
 </html>

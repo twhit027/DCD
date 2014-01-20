@@ -1,3 +1,21 @@
+<?php
+include(dirname(__FILE__) . '/includes/KLogger.php');
+include('includes/constants.php');
+
+$log   = KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
+
+$log->logInfo('Landing Page');
+
+$log->logInfo('FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR']);
+$log->logInfo('REMOTE_ADDR: '.$_SERVER['REMOTE_ADDR']);
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
 <script type="text/javascript">
 
@@ -8,9 +26,8 @@ var geocoder = new google.maps.Geocoder;
 	
 var dotlocation = new google.maps.LatLng(44.27618, -88.415222);	
 
-function initialize() {
-     
-     
+function initialize() 
+{          
     var myOptions = {
       zoom: 11,
       center: dotlocation,
@@ -18,10 +35,7 @@ function initialize() {
 	  
     };
 	
-    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-	
-	
-	
+    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);			
 	
 	//begin appleton
 		
@@ -42,8 +56,6 @@ function initialize() {
 	  directionsDisplay.setMap(map);
 	  directionsDisplay.setPanel(document.getElementById("directionsPanel"));
 
-
-
 	/* begin oshkosh
 
 	var infowindow2 = new google.maps.InfoWindow({
@@ -60,8 +72,6 @@ function initialize() {
 	  infowindow2.open(map,marker2);
 	});
 	*/
-
-
 }
 
 function calcRoute() {
@@ -84,22 +94,13 @@ function calcRoute() {
 
 setTimeout("initialize()", 3000);
 </script>
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="">
-<meta name="author" content="">
+</head>
 
 <header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
 
 <div class="container">
 
 	<?php
-	include('includes/constants.php');
 	include('includes/functions.php');
     include('includes/header.php'); 
 	include('includes/mobilenavigation.php');
@@ -160,7 +161,11 @@ body
 
 <?php echo $ads->getLeaderBottom(); ?>
 
-
+<footer class="footer">
+<?php
+	include('includes/footer.php');
+?>
+</footer>
 
 </body>
 </html>
