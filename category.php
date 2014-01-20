@@ -45,7 +45,9 @@ body
 <div class="container" >     
     <div class="row" style="background-color:#000;">
         <div class="col-xs-11 col-sm-8" style="background-color:#FFF;">
-    
+    		<?php
+            echo $nav->getSideNavigation();
+			?>            
             <h1>ATVs</h1>
         
             <div class="jumbotron">
@@ -85,7 +87,8 @@ body
         <div class=" col-sm-4 card-suspender-color">
         	<div class="hidden-xs">
             <?php 
-			include('includes/navigation.php'); 
+			$nav = new Navigation();
+			echo $nav->getSideNavigation();
 			echo $ads->getFlex();
 			?>
         	</div>

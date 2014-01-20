@@ -149,7 +149,8 @@ body
         <div class=" col-sm-4 card-suspender-color">
         	<div class="hidden-xs">
             <?php 
-			include('includes/navigation.php'); 
+			$nav = new Navigation();
+			echo $nav->getSideNavigation();
 			echo $ads->getFlex();
 			?>
         	</div>
