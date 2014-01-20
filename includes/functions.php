@@ -17,6 +17,17 @@ class Database
 
 }
 
+$palate = array(
+	1 => array('top' => '#292929', 'bottom' => '#080808', 'border' => '#2C2C2C'),
+	2 => array('top' => '#01588d', 'bottom' => '#0b396b', 'border' => '#87ABC0'),
+	3 => array('top' => '#01abf9', 'bottom' => '#038be6', 'border' => '#87ABC0'),
+	4 => array('top' => '#851719', 'bottom' => '#701612', 'border' => '#151515'),
+	5 => array('top' => '#000061', 'bottom' => '#00004c', 'border' => '#87ABC0'),
+	6 => array('top' => '#000079', 'bottom' => '#000054', 'border' => '#87ABC0'),
+	7 => array('top' => '#0000ae', 'bottom' => '#00007f', 'border' => '#87ABC0'),
+	8 => array('top' => '#00007b', 'bottom' => '#00005b', 'border' => '#87ABC0')
+);
+
 class Navigation extends Database
 {
 	function getTopNavigation()
@@ -73,20 +84,50 @@ class Navigation extends Database
 		
 		return $data;
 	}
+
+	function getTopNavigationStatic($siteUrl, $palateNum)
+	{							
+		  global $palate;
+		  //background:url("'.$siteUrl.'/odygci/p2/spritesheet_x.png") repeat-x scroll 0 -332px -371px rgba(0, 0, 0, 0);
+			$data = '<style>.navbar-inverse {							
+			background: -webkit-linear-gradient('.$palate[$palateNum]['top'].', '.$palate[$palateNum]['bottom'].'); /* For Safari */
+			background: -o-linear-gradient('.$palate[$palateNum]['top'].', '.$palate[$palateNum]['bottom'].'); /* For Opera 11.1 to 12.0 */
+			background: -moz-linear-gradient('.$palate[$palateNum]['top'].', '.$palate[$palateNum]['bottom'].'); /* For Firefox 3.6 to 15 */
+			background: linear-gradient('.$palate[$palateNum]['top'].', '.$palate[$palateNum]['bottom'].'); /* Standard syntax */
+			border-bottom-color: '.$palate[$palateNum]['border'].';
+			}</style>';			
+			
+			$data .= '<nav id="grad" role="navigation" class="collapse navbar-collapse bs-navbar-collapse top-navbar"><ul class="nav navbar-nav">';
+			$data .= '<li><img style="padding-top:10px" class="img-responsive" src="'.$siteUrl.'/graphics/ody/cobrand_logo.gif"/></li>';
+			$data .= '<li><a href="'.$siteUrl.'/jobs">JOBS</a></li>';
+			$data .= '<li><a href="'.$siteUrl.'/cars">CARS</a></li>';
+			$data .= '<li><a href="'.$siteUrl.'/homes">HOMES</a></li>';
+			$data .= '<li><a href="'.$siteUrl.'/apartments">APARTMENTS</a></li>';
+			$data .= '<li><a href="'.$siteUrl.'/dating">DATING</a></li>';
+			$data .= '<li><a href="'.$siteUrl.'/newclass/front/">BUY & SELL</a></li>';						
+			$data .= '</ul></nav>';			
+		
+		return $data;
+	}		
 	
-	
+	function getBottomNavigationStatic() 
+	{
+		
+	}
 }
 
 class status extends Database
 {
-try {	
-		$stmt = $this->db->prepare("SELECT * FROM `siteinfo`");
-		$stmt->execute();
-} catch(PDOException $ex) {
-    return false;
-}	
-
-return true;
+	function getStatus() {
+		try {	
+				$stmt = $this->db->prepare("SELECT * FROM `siteinfo`");
+				$stmt->execute();
+		} catch(PDOException $ex) {
+		    return false;
+		}	
+		
+		return true;
+	}
 }
 class Ads extends Database
 {

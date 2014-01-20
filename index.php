@@ -6,7 +6,7 @@ $log   = KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
 
 $log->logInfo('Landing Page');
 
-$log->logInfo('FORWARDED_FOR: '.$_SERVER['HTTP_X_FORWARDED_FOR']);
+$log->logInfo('FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR']);
 $log->logInfo('REMOTE_ADDR: '.$_SERVER['REMOTE_ADDR']);
 ?>
 <!DOCTYPE html>
@@ -29,17 +29,23 @@ body
 
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/jasny-bootstrap.min.css" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
 </head>
 <body>
 <header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
 <div class="container">
 	<?php
 		$sites = array(
-			'DES' => array('siteName' => 'desmoinesregister', 'siteUrl' => 'http://www.desmoinesregister.com', 'busName' => 'The Des Moines Register'),
-			'INI' => array('siteName' => 'indystar', 'siteUrl' => 'http://www.indystar.com', 'busName' => 'The Indianapolis Star'),
-			'IOW' => array('siteName' => 'press-citizen', 'siteUrl' => 'http://www.press-citizen.com', 'busName' => 'The Press-Citizen'),
-			'POU' => array('siteName' => 'poughkeepsiejournal', 'siteUrl' => 'http://www.poughkeepsiejournal.com', 'busName' => 'The Poughkeepsie Journal'),
-			'TJN' => array('siteName' => 'lohud', 'siteUrl' => 'http://www.lohud.com', 'busName' => 'The Journal News')		
+			'DES' => array('siteName' => 'desmoinesregister', 'siteUrl' => 'http://www.desmoinesregister.com', 'busName' => 'The Des Moines Register', 'palate' => 2),
+			'INI' => array('siteName' => 'indystar', 'siteUrl' => 'http://www.indystar.com', 'busName' => 'The Indianapolis Star', 'palate' => 1),
+			'IOW' => array('siteName' => 'press-citizen', 'siteUrl' => 'http://www.press-citizen.com', 'busName' => 'The Press-Citizen', 'palate' => 4),
+			'POU' => array('siteName' => 'poughkeepsiejournal', 'siteUrl' => 'http://www.poughkeepsiejournal.com', 'busName' => 'The Poughkeepsie Journal', 'palate' => 4),
+			'TJN' => array('siteName' => 'lohud', 'siteUrl' => 'http://www.lohud.com', 'busName' => 'The Journal News', 'palate' => 2)		
 		);
 		
 		$url = $_SERVER['REQUEST_URI'];
@@ -49,7 +55,8 @@ body
 		}
 		$siteUrl = $sites[$siteCode]['siteUrl'];
 		$siteName = $sites[$siteCode]['siteName'];
-		$busName = $sites[$siteCode]['busName'];	
+		$busName = $sites[$siteCode]['busName'];
+		$palNum = $sites[$siteCode]['palate'];	
 
 		include('includes/functions.php');
     include('includes/header.php');
@@ -105,7 +112,7 @@ echo $ads->getLeaderBottom();
 include('includes/tracking.php'); 
 ?>
 
-<footer>
+<footer class="footer">
 <?php
 	include('includes/footer.php');
 ?>
