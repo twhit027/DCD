@@ -51,38 +51,17 @@ body
 <div class="container" >     
     <div class="row" style="background-color:#000;">
         <div class="col-xs-11 col-sm-8" style="background-color:#FFF;">
-    
-            <h1>ATVs</h1>
+    		<?php  
+		   $content = new Content();
+		   
+           echo $content->getCategoryTitle($_GET['x']);
         
-            <div class="jumbotron">
-              <p>1999 Grizly in great shape, blue 4x4 call 999-999-9999</p>
-              <p><a class="btn btn-primary btn-lg" role="button" href="item.php?x=<?php echo $_GET['x']; ?>">Learn more</a></p>
-            </div>
-            
-            <div class="jumbotron">
-              <p>2010 Ranger in great shape, blue 4x4 call 999-999-9999</p>
-              <p><a class="btn btn-primary btn-lg" role="button" href="item.php?x=<?php echo $_GET['x']; ?>">Learn more</a></p>
-            </div>
-            
-            <div class="jumbotron">
-              <p>1999 Grizly in great shape, blue 4x4 call 999-999-9999</p>
-              <p><a class="btn btn-primary btn-lg" role="button" href="item.php?x=<?php echo $_GET['x']; ?>">Learn more</a></p>
-            </div>
-            
-            <div class="jumbotron">
-              <p>2010 Ranger in great shape, blue 4x4 call 999-999-9999</p>
-              <p><a class="btn btn-primary btn-lg" role="button" href="item.php?x=<?php echo $_GET['x']; ?>">Learn more</a></p>
-            </div>
-            
-            <div class="jumbotron">
-              <p>1999 Grizly in great shape, blue 4x4 call 999-999-9999</p>
-              <p><a class="btn btn-primary btn-lg" role="button" href="item.php?x=<?php echo $_GET['x']; ?>">Learn more</a></p>
-            </div>
-            
-            <div class="jumbotron">
-              <p>2010 Ranger in great shape, blue 4x4 call 999-999-9999</p>
-              <p><a class="btn btn-primary btn-lg" role="button" href="item.php?x=<?php echo $_GET['x']; ?>">Learn more</a></p>
-            </div>
+           
+		   
+		   echo $content->getCategoryListing($_GET['x']);
+		   
+		    ?>
+           
                 
       
           
@@ -91,7 +70,8 @@ body
         <div class=" col-sm-4 card-suspender-color">
         	<div class="hidden-xs">
             <?php 
-			include('includes/navigation.php'); 
+			$nav = new Navigation();
+			echo $nav->getSideNavigation();
 			echo $ads->getFlex();
 			?>
         	</div>
