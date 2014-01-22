@@ -9,8 +9,8 @@
         </div>
         
         <ul class="nav nav-list collapse" id="accordion-heading-cars">
-            <a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x=<?php echo $_GET['x']; ?>" title="Title">Cars(25)</a>
-            <a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x=<?php echo $_GET['x']; ?>" title="Title">ATVS(4)</a>
+            <a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x=<?php echo @$_GET['x']; ?>" title="Title">Cars(25)</a>
+            <a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x=<?php echo @$_GET['x']; ?>" title="Title">ATVS(4)</a>
            
         </ul>
        
@@ -21,8 +21,8 @@
         </div>
         
         <ul class="nav nav-list collapse" id="accordion-heading-animal">
-           <a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x=<?php echo $_GET['x']; ?>" title="Title">Cats(25)</a>
-           <a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x=<?php echo $_GET['x']; ?>" title="Title">Dogs(4)</a>
+           <a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x=<?php echo @$_GET['x']; ?>" title="Title">Cats(25)</a>
+           <a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x=<?php echo @$_GET['x']; ?>" title="Title">Dogs(4)</a>
         </ul>
        
     </li>
