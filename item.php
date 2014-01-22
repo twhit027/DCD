@@ -1,3 +1,13 @@
+<?php
+include(dirname(__FILE__) . '/includes/KLogger.php');
+include('includes/constants.php');
+
+$log   = KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
+
+$log->logInfo('Landing Page');
+$log->logInfo('FORWARDED_FOR: '.$_SERVER['HTTP_X_FORWARDED_FOR']);
+$log->logInfo('REMOTE_ADDR: '.$_SERVER['REMOTE_ADDR']);
+?>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
 <script type="text/javascript">
 
@@ -90,29 +100,53 @@ setTimeout("initialize()", 3000);
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
 <meta name="author" content="">
 
+<link rel="shortcut icon" href="images/ico/favicon.png">
+
+<style type="text/css">
+body
+{
+	min-width:10px!important;
+}
+</style>
+
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/jasny-bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
 <header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
-
 <div class="container">
-
 	<?php
-	include('includes/constants.php');
-	include('includes/functions.php');
-    include('includes/header.php'); 
-	include('includes/mobilenavigation.php');
+		$sites = array(
+			'DES' => array('siteName' => 'desmoinesregister', 'siteUrl' => 'http://www.desmoinesregister.com', 'busName' => 'The Des Moines Register'),
+			'INI' => array('siteName' => 'indystar', 'siteUrl' => 'http://www.indystar.com', 'busName' => 'The Indianapolis Star'),
+			'IOW' => array('siteName' => 'press-citizen', 'siteUrl' => 'http://www.press-citizen.com', 'busName' => 'The Press-Citizen'),
+			'POU' => array('siteName' => 'poughkeepsiejournal', 'siteUrl' => 'http://www.poughkeepsiejournal.com', 'busName' => 'The Poughkeepsie Journal'),
+			'TJN' => array('siteName' => 'lohud', 'siteUrl' => 'http://www.lohud.com', 'busName' => 'The Journal News')		
+		);
+		
+		$url = $_SERVER['REQUEST_URI'];
+		$siteCode = 'DES';
+		if (isset($_GET['sc'])&&(isset($sites[strtoupper($_GET['sc'])]))) {
+			$siteCode = strtoupper($_GET['sc']);
+		}
+		$siteUrl = $sites[$siteCode]['siteUrl'];
+		$siteName = $sites[$siteCode]['siteName'];
+		$busName = $sites[$siteCode]['busName'];	
+
+		include('includes/functions.php');
+    include('includes/header.php');
+		include('includes/mobilenavigation.php');
     include('includes/toggle.php'); 
-	
-	
-	$ads = new Ads();
-	echo $ads->InitializeAds();
-    ?>
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-	<script src="scripts/bootstrap.min.js"></script>
-    <script src="scripts/jasny-bootstrap.min.js"></script>
-</div>            
+		
+		$ads = new Ads();
+		echo $ads->InitializeAds();	
+	?>
+</div>
 </header>
   
 <style type="text/css">
