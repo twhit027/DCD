@@ -13,14 +13,30 @@ $log->logInfo('REMOTE_ADDR: '.$_SERVER['REMOTE_ADDR']);
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
 <meta name="author" content="">
+<link rel="shortcut icon" href="images/ico/favicon.png">
+<style type="text/css">
+body
+{
+	min-width:10px!important;
+}
+</style>
 
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/jasny-bootstrap.min.css" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
 <header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
-
 <div class="container">
-
 <?php
 	include('includes/functions.php');
   include('includes/header.php'); 
@@ -33,17 +49,6 @@ $log->logInfo('REMOTE_ADDR: '.$_SERVER['REMOTE_ADDR']);
 </div>           
 
 </header>
-  
-<style type="text/css">
-body
-{
-	min-width:10px!important;
-}
-</style>
-
-<link href="css/bootstrap.min.css" rel="stylesheet">
-<link href="css/jasny-bootstrap.min.css" rel="stylesheet">
-
 <?php
 	echo $ads->getLaunchpad(); 	
 ?>
@@ -91,17 +96,21 @@ body
         <div class=" col-sm-4 card-suspender-color">
         	<div class="hidden-xs">
             <?php 
-			include('includes/navigation.php'); 
-			echo $ads->getFlex();
-			?>
+						include('includes/navigation.php'); 
+						echo $ads->getFlex();
+						?>
         	</div>
         </div>
     </div>
     
 </div>
 
+<input type="hidden" name="SC" value="<?php echo $siteCode;?>">
 
-	<?php echo $ads->getLeaderBottom(); ?>
+	<?php 
+	echo $ads->getLeaderBottom(); 
+	include('includes/tracking.php'); 
+	?>
 
 	<footer class="footer">
 		<?php include('includes/footer.php');?>
