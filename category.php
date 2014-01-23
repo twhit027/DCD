@@ -2,7 +2,7 @@
 include(dirname(__FILE__) . '/includes/KLogger.php');
 include('includes/constants.php');
 
-$log   = KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
+$log = KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
 
 $log->logInfo('Landing Page');
 
@@ -61,35 +61,33 @@ body
         
             <div class="jumbotron">
               <p>1999 Grizly in great shape, blue 4x4 call 999-999-9999</p>
-              <p><a class="btn btn-primary btn-lg" role="button" href="item.php?x=<?php echo $_GET['x']; ?>">Learn more</a></p>
+              <p><a class="btn btn-primary btn-lg" role="button" href="item.php?sc=<?php echo @$siteCode; ?>&x=<?php echo $_GET['x']; ?>">Learn more</a></p>
             </div>
             
             <div class="jumbotron">
               <p>2010 Ranger in great shape, blue 4x4 call 999-999-9999</p>
-              <p><a class="btn btn-primary btn-lg" role="button" href="item.php?x=<?php echo $_GET['x']; ?>">Learn more</a></p>
+              <p><a class="btn btn-primary btn-lg" role="button" href="item.php?sc=<?php echo @$siteCode; ?>&x=<?php echo $_GET['x']; ?>">Learn more</a></p>
             </div>
             
             <div class="jumbotron">
               <p>1999 Grizly in great shape, blue 4x4 call 999-999-9999</p>
-              <p><a class="btn btn-primary btn-lg" role="button" href="item.php?x=<?php echo $_GET['x']; ?>">Learn more</a></p>
+              <p><a class="btn btn-primary btn-lg" role="button" href="item.php?sc=<?php echo @$siteCode; ?>&x=<?php echo $_GET['x']; ?>">Learn more</a></p>
             </div>
             
             <div class="jumbotron">
               <p>2010 Ranger in great shape, blue 4x4 call 999-999-9999</p>
-              <p><a class="btn btn-primary btn-lg" role="button" href="item.php?x=<?php echo $_GET['x']; ?>">Learn more</a></p>
+              <p><a class="btn btn-primary btn-lg" role="button" href="item.php?sc=<?php echo @$siteCode; ?>&x=<?php echo $_GET['x']; ?>">Learn more</a></p>
             </div>
             
             <div class="jumbotron">
               <p>1999 Grizly in great shape, blue 4x4 call 999-999-9999</p>
-              <p><a class="btn btn-primary btn-lg" role="button" href="item.php?x=<?php echo $_GET['x']; ?>">Learn more</a></p>
+              <p><a class="btn btn-primary btn-lg" role="button" href="item.php?sc=<?php echo @$siteCode; ?>&x=<?php echo $_GET['x']; ?>">Learn more</a></p>
             </div>
             
             <div class="jumbotron">
               <p>2010 Ranger in great shape, blue 4x4 call 999-999-9999</p>
-              <p><a class="btn btn-primary btn-lg" role="button" href="item.php?x=<?php echo $_GET['x']; ?>">Learn more</a></p>
-            </div>
-                
-      
+              <p><a class="btn btn-primary btn-lg" role="button" href="item.php?sc=<?php echo @$siteCode; ?>&x=<?php echo $_GET['x']; ?>">Learn more</a></p>
+            </div>                     
           
         </div>
        

@@ -2,7 +2,7 @@
 include(dirname(__FILE__) . '/includes/KLogger.php');
 include('includes/constants.php');
 
-$log   = KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
+$log = KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
 
 $log->logInfo('Landing Page');
 
