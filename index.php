@@ -17,9 +17,7 @@ $log->logInfo('REMOTE_ADDR: '.$_SERVER['REMOTE_ADDR']);
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
 <meta name="author" content="">
-
 <link rel="shortcut icon" href="images/ico/favicon.png">
-
 <style type="text/css">
 body
 {
@@ -87,7 +85,7 @@ body
 
 </div>
 
-<input type="hidden" name="SC" value="<?=$siteCode?>">
+<input type="hidden" name="SC" value="<?php echo $siteCode;?>">
 
 <?php 
 echo $ads->getLeaderBottom(); 
@@ -100,8 +98,8 @@ include('includes/tracking.php');
 ?>
 </footer>
 
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+	<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 	<script src="scripts/bootstrap.min.js"></script>
-    <script src="scripts/jasny-bootstrap.min.js"></script>
+  <script src="scripts/jasny-bootstrap.min.js"></script>
 </body>
 </html>
