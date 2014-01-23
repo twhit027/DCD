@@ -2,12 +2,14 @@
 include(dirname(__FILE__) . '/includes/KLogger.php');
 include('includes/constants.php');
 
-$log   = KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
+$log = KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
 
 $log->logInfo('Landing Page');
 
 $log->logInfo('FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR']);
-$log->logInfo('REMOTE_ADDR: '.$_SERVER['REMOTE_ADDR']);
+$log->logInfo('REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR']);
+$log->logInfo('HTTP_HOST: '.@$_SERVER['HTTP_HOST']);
+$log->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -86,6 +88,8 @@ body
 </div>
 
 <input type="hidden" name="SC" value="<?php echo $siteCode;?>">
+<input type="hidden" name="HH" value="<?php echo $httpHost;?>">
+<input type="hidden" name="DM" value="<?php echo $domain;?>">
 
 <?php 
 echo $ads->getLeaderBottom(); 
