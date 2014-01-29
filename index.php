@@ -41,8 +41,20 @@ body
 <div class="container">
 	<?php
 		include('includes/functions.php');
-    include('includes/header.php');
-		include('includes/mobilenavigation.php');
+    	include('includes/header.php');
+		
+		$nav = new Navigation();
+		
+		echo '<nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse side-navbar ">';
+    	echo '<div class="visible-xs">';
+      	echo '<h3 style="color:#3276B1;">View By Category</h3>';
+        echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
+		echo $nav->getSideNavigation();
+		
+		echo '</ul>';
+		echo '</div>';
+		echo '</nav>';
+
     include('includes/toggle.php'); 
 		
 		$ads = new Ads();
@@ -68,8 +80,8 @@ body
             <p>Place a classified ad in <?=$busName?> in-paper and online. List all kinds of items including Merchandise, Pets, Garage Sales, Services, and much more. </p>
             
            	<?php
-            	$nav = new Content();
-							echo $nav->getPartnersString($siteUrl);
+            	$content = new Content();
+				echo $content->getPartnersString($siteUrl);
             ?>
         </div>
        
@@ -77,8 +89,16 @@ body
         	<div class="hidden-xs">
           <?php 
 						
-						$nav = new Navigation();
+						
+						echo '<h3 style="color:#3276B1;">View By Category</h3>';			
+						echo '<div role="navigation" id="sidebar" >';
+						echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
+		
 						echo $nav->getSideNavigation();
+						
+						echo '</ul>';
+						echo '</div>';
+		
 						echo $ads->getFlex();
 					?>
         	</div>

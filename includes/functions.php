@@ -54,29 +54,27 @@ class Navigation extends Database
 	
 		$stmt = $this->db->prepare("SELECT * FROM `categories` where `placement_id` = 0 ");
 		$stmt->execute();
-		$data = '<h3 style="color:#3276B1;">View By Category</h3>';			
-		$data .= '<div role="navigation" id="sidebar" >';
-		$data .= '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
+		$random = rand(1, 1500);
 		foreach ($stmt as $row) 
 		{
 			$data .='<li>';
 
 			$data .='<div class="accordion-heading" style="padding-bottom:5px;">';
-			$data .='<a data-toggle="collapse" class="btn btn-default"  style="width:100%;" role="button" data-target="#accordion-heading-'.$row['id'].'"><span class="nav-header-primary">'.$row['name'].'</span></a>';
+			$data .='<a data-toggle="collapse" class="btn btn-default"  style="width:100%;" role="button" data-target="#accordion-heading-'.$row['id'].''.$random.'"><span class="nav-header-primary">'.$row['name'].'</span></a>';
 			$data .='</div>';
 		
-			$data .='<ul class="nav nav-list collapse" id="accordion-heading-'.$row['id'].'">';
+			$data .='<ul class="nav nav-list collapse" id="accordion-heading-'.$row['id'].''.$random.'">';
 				$data .= $this->getChildNav($row['id']);
 			$data .='</ul>';
 			
 			$data .='</li>';
 		}
 		
-		$data .= '</ul>';
 		
-		$data .= '</div>';
 		return $data;
 	}
+	
+	
 	
 	function getChildNav($id)
 	{
@@ -90,6 +88,10 @@ class Navigation extends Database
 		return $data;
 				
 	}
+	
+
+		
+		
 	function getTopNavigation()
 	{
 		

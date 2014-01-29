@@ -26,7 +26,17 @@ $log->logInfo('REMOTE_ADDR: '.$_SERVER['REMOTE_ADDR']);
 	<?php
 	include('includes/functions.php');
     include('includes/header.php'); 
-	include('includes/mobilenavigation.php');
+	$nav = new Navigation();
+		
+	echo '<nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse side-navbar ">';
+	echo '<div class="visible-xs">';
+	echo '<h3 style="color:#3276B1;">View By Category</h3>';
+	echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
+	echo $nav->getSideNavigation();
+	
+	echo '</ul>';
+	echo '</div>';
+	echo '</nav>';
     include('includes/toggle.php'); 
 	
 	
@@ -74,8 +84,14 @@ body
         <div class=" col-sm-4 card-suspender-color">
         	<div class="hidden-xs">
             <?php 
-			$nav = new Navigation();
-			echo $nav->getSideNavigation();			 
+			echo '<h3 style="color:#3276B1;">View By Category</h3>';			
+			echo '<div role="navigation" id="sidebar" >';
+			echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
+
+			echo $nav->getSideNavigation();
+			
+			echo '</ul>';
+			echo '</div>';		 
 			echo $ads->getFlex();
 			?>
         	</div>
