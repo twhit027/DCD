@@ -40,7 +40,17 @@ body
 <?php
 	include('includes/functions.php');
   include('includes/header.php'); 
-	include('includes/mobilenavigation.php');
+	$nav = new Navigation();
+		
+		echo '<nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse side-navbar ">';
+    	echo '<div class="visible-xs">';
+      	echo '<h3 style="color:#3276B1;">View By Category</h3>';
+        echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
+		echo $nav->getSideNavigation();
+		
+		echo '</ul>';
+		echo '</div>';
+		echo '</nav>';
   include('includes/toggle.php'); 	
 	
 	$ads = new Ads();
@@ -56,47 +66,35 @@ body
 <div class="container" >     
     <div class="row" style="background-color:#000;">
         <div class="col-xs-11 col-sm-8" style="background-color:#FFF;">
-    
-            <h1>ATVs</h1>
+    		<?php  
+		   $content = new Content();
+		   
+           echo $content->getCategoryTitle($_GET['x']);
         
-            <div class="jumbotron">
-              <p>1999 Grizly in great shape, blue 4x4 call 999-999-9999</p>
-              <p><a class="btn btn-primary btn-lg" role="button" href="item.php?sc=<?php echo @$siteCode; ?>&x=<?php echo $_GET['x']; ?>">Learn more</a></p>
-            </div>
-            
-            <div class="jumbotron">
-              <p>2010 Ranger in great shape, blue 4x4 call 999-999-9999</p>
-              <p><a class="btn btn-primary btn-lg" role="button" href="item.php?sc=<?php echo @$siteCode; ?>&x=<?php echo $_GET['x']; ?>">Learn more</a></p>
-            </div>
-            
-            <div class="jumbotron">
-              <p>1999 Grizly in great shape, blue 4x4 call 999-999-9999</p>
-              <p><a class="btn btn-primary btn-lg" role="button" href="item.php?sc=<?php echo @$siteCode; ?>&x=<?php echo $_GET['x']; ?>">Learn more</a></p>
-            </div>
-            
-            <div class="jumbotron">
-              <p>2010 Ranger in great shape, blue 4x4 call 999-999-9999</p>
-              <p><a class="btn btn-primary btn-lg" role="button" href="item.php?sc=<?php echo @$siteCode; ?>&x=<?php echo $_GET['x']; ?>">Learn more</a></p>
-            </div>
-            
-            <div class="jumbotron">
-              <p>1999 Grizly in great shape, blue 4x4 call 999-999-9999</p>
-              <p><a class="btn btn-primary btn-lg" role="button" href="item.php?sc=<?php echo @$siteCode; ?>&x=<?php echo $_GET['x']; ?>">Learn more</a></p>
-            </div>
-            
-            <div class="jumbotron">
-              <p>2010 Ranger in great shape, blue 4x4 call 999-999-9999</p>
-              <p><a class="btn btn-primary btn-lg" role="button" href="item.php?sc=<?php echo @$siteCode; ?>&x=<?php echo $_GET['x']; ?>">Learn more</a></p>
-            </div>                     
+           
+		   
+		   echo $content->getCategoryListing($_GET['x']);
+		   
+		    ?>
+           
+                
+      
           
         </div>
        
         <div class=" col-sm-4 card-suspender-color">
         	<div class="hidden-xs">
             <?php 
-						include('includes/navigation.php'); 
-						echo $ads->getFlex();
-						?>
+			echo '<h3 style="color:#3276B1;">View By Category</h3>';			
+			echo '<div role="navigation" id="sidebar" >';
+			echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
+
+			echo $nav->getSideNavigation();
+			
+			echo '</ul>';
+			echo '</div>';
+			echo $ads->getFlex();
+			?>
         	</div>
         </div>
     </div>

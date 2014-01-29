@@ -87,6 +87,50 @@ $palNum = $sites[$siteCode]['palate'];
 
 class Navigation extends Database
 {
+	
+	function getSideNavigation()
+	{		
+	
+		$stmt = $this->db->prepare("SELECT * FROM `categories` where `placement_id` = 0 ");
+		$stmt->execute();
+		$random = rand(1, 1500);
+		foreach ($stmt as $row) 
+		{
+			$data .='<li>';
+
+			$data .='<div class="accordion-heading" style="padding-bottom:5px;">';
+			$data .='<a data-toggle="collapse" class="btn btn-default"  style="width:100%;" role="button" data-target="#accordion-heading-'.$row['id'].''.$random.'"><span class="nav-header-primary">'.$row['name'].'</span></a>';
+			$data .='</div>';
+		
+			$data .='<ul class="nav nav-list collapse" id="accordion-heading-'.$row['id'].''.$random.'">';
+				$data .= $this->getChildNav($row['id']);
+			$data .='</ul>';
+			
+			$data .='</li>';
+		}
+		
+		
+		return $data;
+	}
+	
+	
+	
+	function getChildNav($id)
+	{
+		$stmt = $this->db->prepare("SELECT * FROM `categories` where `placement_id` = :id ");
+		$stmt->execute(Array(':id' => $id));
+		$data ="";
+		foreach ($stmt as $row) 
+		{
+			$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x='.$row['id'].'" title="Title">'.$row['name'].'</a>';
+		}
+		return $data;
+				
+	}
+	
+
+		
+		
 	function getTopNavigation()
 	{
 		
@@ -271,6 +315,64 @@ class Ads extends Database
 }
 class Content extends Database
 {	
+	
+	public function getAd($id)
+	{		
+		$stmt = $this->db->prepare("SELECT * FROM `listing` where `ID`= :id");
+		$stmt->execute(array(':id' => $id));
+		$data = '';	
+			
+		foreach ($stmt as $row) 
+		{		
+			$data .= " <div class='jumbotron' >
+              <p>".$row['AdDescription']."</p>
+              <button class='btn btn-primary btn-lg' class='btn btn-default'>Add To List</button>
+			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Tweet</button>
+			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Facebook</button>
+            </div>";	
+		}
+		
+		return $data;
+	}
+	
+	
+	public function getCategoryListing($id)
+	{		
+		$stmt = $this->db->prepare("SELECT * FROM `listing` where `placement_id`= :id");
+		$stmt->execute(array(':id' => $id));
+		$data = '';	
+			
+		foreach ($stmt as $row) 
+		{		
+			$data .= " <div class='jumbotron'>
+              <p>".$row['AdDescription']."</p>
+              <p>
+			  <a class='btn btn-primary btn-lg' role='button' href='item.php?x=". $row['ID']."'>Learn more</a>
+			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Add To List</button>
+			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Tweet</button>
+			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Facebook</button>
+			  </p>
+            </div>";	
+		}
+		
+		return $data;
+	}
+	public function getCategoryTitle($id)
+	{		
+		$stmt = $this->db->prepare("SELECT * FROM `categories` where `id`= :id");
+		$stmt->execute(array(':id' => $id));
+		$data = '';	
+			
+		foreach ($stmt as $row) 
+		{		
+			$data .= " <h1>". $row['name']."</h1>";
+            	
+		}
+		
+		return $data;
+	}
+	
+	
 	public function getPartners()
 	{		
 		$stmt = $this->db->prepare("SELECT * FROM `siteinfo`");

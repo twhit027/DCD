@@ -113,9 +113,6 @@ function char($parser,$data)
 
 }
 
-
-
-
 $fp=fopen($file,"r");
 
 while ($data=fread($fp,4096))
@@ -133,36 +130,9 @@ xml_parser_free($parser);
 
 class Admin extends Database
 {
-	function getPositions()
-	{
-		
-		$stmt = $this->db->prepare("SELECT * FROM `placement` ORDER BY id");
-		$stmt->execute();
-		
-		foreach ($stmt as $row) 
-		{
-			$data[$row['id']] =  $row['name'];
-		}
-		
-		return $data;
+
 	
-	}
-	
-	function getPlacements()
-	{
-		
-		$stmt = $this->db->prepare("SELECT * FROM `position` ORDER BY id");
-		$stmt->execute();
-		
-		foreach ($stmt as $row) 
-		{
-			$data[$row['id']] =  $row['name'];
-		}
-		return $data;
-	
-	}
-	
-	function putData($placemenet, $position)
+	function putData()
 	{
 		global $usercount;
 		global $userdata;
@@ -182,9 +152,7 @@ class Admin extends Database
 				
 				
 				
-				/* start here monday */
-				/* start here monday */
-				/* start here monday */
+				/* 
 				if (!in_array($pieces[0], $placement)) 
 				{
 					//insert new placement with newest id
@@ -203,12 +171,7 @@ class Admin extends Database
 					$positionnumber += 1;
 					$position[$positionnumber] = $pieces[1];	
 				}
-				/* start here monday */
-				/* start here monday */
-				/* start here monday */
-				
-				
-				
+				*/
 				
 			$stmt = $this->db->prepare("INSERT INTO " . TBL_LISTING . "(`RunDate`, `PubCode`, `AdType`, `CatCode`, `ClassCode`, `SubclassCode`, `PositionDescription`, `Adnumber`, `StartDate`, `EndDate`, `LineCount`, `RunCount`, `CustomerType`, `AccountNumber`, `AccountName`, `Addr1`, `Addr2`, `BlockHouseNumber`, `UnitNumber`, `FloorNumber`, `POBoxNumber`, `AttentionTo`, `City`, `State`, `PostalCode`, `Country`, `PhoneNumber`, `FaxNumber`, `URLAddr`, `EmailAddr`, `PayFlag`, `AdDescription`, `OrderSource`, `OrderStatus`, `PayorAcct`, `AgencyFlag`, `RateNote`, `UserDate1Label`, `UserDate2Label`, `UserDate3Label`, `UserDate4Label`, `AdContent`) VALUES(:RunDate, :PubCode, :AdType, :CatCode, :ClassCode, :SubclassCode, :PostionDescription, :Adnumber, :Startdate, :Enddate, :LineCount, :RunCount, :CustomerType, :AccountNumber, :AccountName, :Addr1, :Addr2, :BlockHouseNumber, :UnitNumber, :FloorNumber, :POBoxNumber, :AttentionTo, :City, :State, :PostalCode, :Country, :PhoneNumber, :FaxNumber, :URLAddr, :EmailAddr, :PayFlag, :AdDescription, :OrderSource, :OrderStatus, :PayorAcct, :AgencyFlag, :RateNote, :UserDate1Label, :UserDate2Label, :UserDate3Label, :UserDate4Label, :AdContent)");
 						
@@ -266,14 +229,11 @@ class Admin extends Database
 
 }
 
-	
-
 $user = new Admin();
-$positions = $user->getPositions();
-$placements = $user->getPlacements();
-$uid = $user->putData($placements, $positions);
-
-
+//$positions = $user->getPositions();
+//$placements = $user->getPlacements();
+//$uid = $user->putData($placements, $positions);
+$uid = $user->putData();
 	
 	
 

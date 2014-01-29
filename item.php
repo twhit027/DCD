@@ -17,6 +17,8 @@ $log->logInfo('REMOTE_ADDR: '.$_SERVER['REMOTE_ADDR']);
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
 <meta name="author" content="">
+<<<<<<< HEAD
+=======
 <link rel="shortcut icon" href="images/ico/favicon.png">
 <style type="text/css">
 body
@@ -36,82 +38,8 @@ body
     
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
 <script type="text/javascript">
+>>>>>>> remotes/origin/develop
 
-var map;
-var directionsDisplay = new google.maps.DirectionsRenderer;
-var directionsService = new google.maps.DirectionsService;
-var geocoder = new google.maps.Geocoder;
-	
-var dotlocation = new google.maps.LatLng(44.27618, -88.415222);	
-
-function initialize() 
-{          
-    var myOptions = {
-      zoom: 11,
-      center: dotlocation,
- 	  mapTypeId: google.maps.MapTypeId.ROADMAP
-	  
-    };
-	
-    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);			
-	
-	//begin appleton
-		
-	var infowindow = new google.maps.InfoWindow({
-		content: "<div id='content'>Address here<form onSubmit='return calcRoute();' ><input type='hidden' id='end' value='"+dotlocation +"'><input type='text' id='start'><input type='button' value='Find directions' onClick='return calcRoute();' ></form></div>"
-	});
-
-	var marker = new google.maps.Marker({
-		position: dotlocation,
-		map: map,
-		title:"Appleton"
-	});
-
-	google.maps.event.addListener(marker, 'click', function() {
-	  infowindow.open(map,marker);
-	});
-
-	  directionsDisplay.setMap(map);
-	  directionsDisplay.setPanel(document.getElementById("directionsPanel"));
-
-	/* begin oshkosh
-
-	var infowindow2 = new google.maps.InfoWindow({
-		content: '<div id="content"> Oshkosh </div>'
-	});
-
-	var marker2 = new google.maps.Marker({
-		position: new google.maps.LatLng(43.99861, -88.5443),
-		map: map,
-		title:"Appleton"
-	});
-
-	google.maps.event.addListener(marker2, 'click', function() {
-	  infowindow2.open(map,marker2);
-	});
-	*/
-}
-
-function calcRoute() {
-    var start = document.getElementById("start").value;
-    var end = document.getElementById("end").value;
-    var request = {
-        origin:start, 
-        destination:end,
-        travelMode: google.maps.DirectionsTravelMode.DRIVING
-    };
-    directionsService.route(request, function(response, status) {
-
-      if (status == google.maps.DirectionsStatus.OK) {
-        directionsDisplay.setDirections(response);
-      }
- 
-    });
-	return false;
-  }
-
-setTimeout("initialize()", 3000);
-</script>
 </head>
 <body>
 <header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
@@ -119,7 +47,17 @@ setTimeout("initialize()", 3000);
 	<?php
 	include('includes/functions.php');
     include('includes/header.php'); 
-	include('includes/mobilenavigation.php');
+	$nav = new Navigation();
+		
+	echo '<nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse side-navbar ">';
+	echo '<div class="visible-xs">';
+	echo '<h3 style="color:#3276B1;">View By Category</h3>';
+	echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
+	echo $nav->getSideNavigation();
+	
+	echo '</ul>';
+	echo '</div>';
+	echo '</nav>';
     include('includes/toggle.php'); 
 		
 	$ads = new Ads();
@@ -148,13 +86,14 @@ body
     
             
                 
-             <div class="jumbotron">
-              <p>1999 Grizly in great shape, blue 4x4 call 999-999-9999 this is a whole bunch of extra text about the ad that will go on and on extra text about the ad that will go on and on extra text about the ad that will go on and on extra text about the ad that will go on and on</p>
-              
-              <div id="map_canvas" style="width:100%;height:100%;"></div>
-              <div id="directionsPanel" style="width:100%;"></div>
-      
-            </div>
+        <?php  
+		   $content = new Content();
+		   
+           echo $content->getAd($_GET['x']);
+        
+       
+		   
+		    ?>
         
           
         </div>
@@ -162,7 +101,14 @@ body
         <div class=" col-sm-4 card-suspender-color">
         	<div class="hidden-xs">
             <?php 
-			include('includes/navigation.php'); 
+			echo '<h3 style="color:#3276B1;">View By Category</h3>';			
+			echo '<div role="navigation" id="sidebar" >';
+			echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
+
+			echo $nav->getSideNavigation();
+			
+			echo '</ul>';
+			echo '</div>';		 
 			echo $ads->getFlex();
 			?>
         	</div>
