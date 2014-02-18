@@ -94,6 +94,7 @@ class Navigation extends Database
 		$stmt = $this->db->prepare("SELECT * FROM `categories` where `placement_id` = 0 ");
 		$stmt->execute();
 		$random = rand(1, 1500);
+		$data = '';
 		foreach ($stmt as $row) 
 		{
 			$data .='<li>';

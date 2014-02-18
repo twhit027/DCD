@@ -85,22 +85,23 @@ body
             ?>
         </div>
        
-        <div class=" col-sm-4 card-suspender-color" style="background-color:#000;">
+        <div class=" col-sm-4 card-suspender-color" >
         	<div class="hidden-xs">
-          <?php 
-						
-						
-						echo '<h3 style="color:#3276B1;">View By Category</h3>';			
-						echo '<div role="navigation" id="sidebar" >';
+          <?php 																					
+						echo '<div role="navigation" id="sidebar" style="background-color:#000; padding-left:15px; padding-right:15px; padding-top:5px">';
+						echo '<h3 style="color:#3276B1;">View By Category</h3>';						
 						echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
 		
 						echo $nav->getSideNavigation();
 						
 						echo '</ul>';
-						echo '</div>';
-		
-						echo $ads->getFlex();
+						echo '</div>';								
 					?>
+        	<div style="padding:10px">
+        		<?php 
+        		echo $ads->getFlex();	
+        		?>
+        	</div>					
         	</div>
         </div>
         
