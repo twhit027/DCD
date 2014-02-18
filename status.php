@@ -62,6 +62,7 @@ body
 	<table>
 <tr><td>database Connection status </td><td bgcolor="<?php echo $connBgColor?>"><?php echo $connectionStatus?></td></tr>
 <tr><td>database Query status </td><td bgcolor="<?php echo $queryBgStatus?>"><?php echo $queryStatus?></td></tr>
+<tr><td>DCD Version </td><td><?php echo DCD_VERSION ?> </td>
 </table>
 </body>
 </html>
