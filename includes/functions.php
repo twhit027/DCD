@@ -94,6 +94,7 @@ class Navigation extends Database
 		$stmt = $this->db->prepare("SELECT * FROM `categories` where `placement_id` = 0 ");
 		$stmt->execute();
 		$random = rand(1, 1500);
+		$data = '';
 		foreach ($stmt as $row) 
 		{
 			$data .='<li>';
@@ -113,8 +114,52 @@ class Navigation extends Database
 		return $data;
 	}
 	
+function getSideNavigationBuild()
+	{			
+		$stmt = $this->db->prepare("SELECT DISTINCT(ClassCode) FROM `listing`");
+		$stmt->execute();
+		$random = rand(1, 1500);
+		$data = '';
+
+		foreach ($stmt as $row) 
+		{
+			preg_match( '/-(.+)-/' , $row['ClassCode'], $matches);
+			
+			echo 'matches: ';
+			print_r($matches);
+			
+			if ($matches[1]) {
+				$data .='<li>';
 	
+				$data .='<div class="accordion-heading" style="padding-bottom:5px;">';
+				$data .='<a data-toggle="collapse" class="btn btn-default"  style="width:100%;" role="button" data-target="#accordion-heading-'.$random.'"><span class="nav-header-primary">'.$matches[1].'</span></a>';
+				$data .='</div>';
+			
+				$data .='<ul class="nav nav-list collapse" id="accordion-heading-'.$random.'">';					
+					$data .= $this->getChildNavByClassCode($row['id']);
+				$data .='</ul>';
+			
+			$data .='</li>';
+			}
+		}
+		
+		
+		return $data;
+	}
 	
+	function getChildNavByClassCode($classCode)
+	{
+		$stmt = $this->db->prepare("SELECT SubclassCode FROM `listing` where `ClassCode` = :classCode ");
+		$stmt->execute(Array(':classCode' => $classCode));
+		$data ="";
+		foreach ($stmt as $row) 
+		{
+			$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x='.$row['SubclassCode'].'" title="Title">'.$row['SubclassCode'].'</a>';
+		}
+		return $data;
+				
+	}		
+		
 	function getChildNav($id)
 	{
 		$stmt = $this->db->prepare("SELECT * FROM `categories` where `placement_id` = :id ");
