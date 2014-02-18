@@ -9,4 +9,5 @@ define("DB_NAME", "classifiedsproje");
 define("TBL_LISTING", "listing");
 define("LOGGING_LEVEL", KLogger::DEBUG);
 define("LOGGING_DIR", "logs");
+define("DCD_VERSION", "9.0");
 ?>
