@@ -17,8 +17,165 @@ class Database
 
 }
 
+function get_host() {
+    if ($host = @$_SERVER['HTTP_X_FORWARDED_HOST'])
+    {
+        $elements = explode(',', $host);
+        $host = trim(end($elements));
+    } else {
+        if (!$host = @$_SERVER['HTTP_HOST']) {
+            if (!$host = $_SERVER['SERVER_NAME']) {
+                $host = !empty($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '';
+            }
+        }
+    }
+
+    // Remove port number from host
+    $host = preg_replace('/:\d+$/', '', $host);
+    return trim($host);
+}
+
+function get_domain($host)
+{  
+  if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $host, $regs)) {
+    return $regs['domain'];
+  }
+  return false;
+}
+
+$domain2SiteCode = array(
+	'desmoinesregister.com' => 'DES',
+	'indystar.com' => 'INI',
+	'press-citizen.com' => 'IOW',
+	'poughkeepsiejournal.com' => 'POU',
+	'lohud.com' => 'TJN'
+);
+$sites = array(
+	'DES' => array('siteName' => 'desmoinesregister', 'siteUrl' => 'http://www.desmoinesregister.com', 'busName' => 'The Des Moines Register', 'palate' => 2),
+	'INI' => array('siteName' => 'indystar', 'siteUrl' => 'http://www.indystar.com', 'busName' => 'The Indianapolis Star', 'palate' => 1),
+	'IOW' => array('siteName' => 'press-citizen', 'siteUrl' => 'http://www.press-citizen.com', 'busName' => 'The Press-Citizen', 'palate' => 4),
+	'POU' => array('siteName' => 'poughkeepsiejournal', 'siteUrl' => 'http://www.poughkeepsiejournal.com', 'busName' => 'The Poughkeepsie Journal', 'palate' => 4),
+	'TJN' => array('siteName' => 'lohud', 'siteUrl' => 'http://www.lohud.com', 'busName' => 'The Journal News', 'palate' => 2)		
+);
+$palate = array(
+	1 => array('top' => '#292929', 'bottom' => '#080808', 'border' => '#2C2C2C'),
+	2 => array('top' => '#01588d', 'bottom' => '#0b396b', 'border' => '#87ABC0'),
+	3 => array('top' => '#01abf9', 'bottom' => '#038be6', 'border' => '#87ABC0'),
+	4 => array('top' => '#851719', 'bottom' => '#701612', 'border' => '#151515'),
+	5 => array('top' => '#000061', 'bottom' => '#00004c', 'border' => '#87ABC0'),
+	6 => array('top' => '#000079', 'bottom' => '#000054', 'border' => '#87ABC0'),
+	7 => array('top' => '#0000ae', 'bottom' => '#00007f', 'border' => '#87ABC0'),
+	8 => array('top' => '#00007b', 'bottom' => '#00005b', 'border' => '#87ABC0')
+);
+
+$httpHost = get_host();
+$domain = get_domain($httpHost);
+
+$siteCode = 'DES';
+
+if (isset($domain)&&(isset($domain2SiteCode[strtolower($domain)]))) {
+	$siteCode = $domain2SiteCode[strtolower($domain)];
+}
+
+if (isset($_GET['sc'])&&(isset($sites[strtoupper($_GET['sc'])]))) {
+	$siteCode = strtoupper($_GET['sc']);
+}
+$siteUrl = $sites[$siteCode]['siteUrl'];
+$siteName = $sites[$siteCode]['siteName'];
+$busName = $sites[$siteCode]['busName'];
+$palNum = $sites[$siteCode]['palate'];	
+
 class Navigation extends Database
 {
+	
+	function getSideNavigation()
+	{		
+	
+		$stmt = $this->db->prepare("SELECT * FROM `categories` where `placement_id` = 0 ");
+		$stmt->execute();
+		$random = rand(1, 1500);
+		$data = '';
+		foreach ($stmt as $row) 
+		{
+			$data .='<li>';
+
+			$data .='<div class="accordion-heading" style="padding-bottom:5px;">';
+			$data .='<a data-toggle="collapse" class="btn btn-default"  style="width:100%;" role="button" data-target="#accordion-heading-'.$row['id'].''.$random.'"><span class="nav-header-primary">'.$row['name'].'</span></a>';
+			$data .='</div>';
+		
+			$data .='<ul class="nav nav-list collapse" id="accordion-heading-'.$row['id'].''.$random.'">';
+				$data .= $this->getChildNav($row['id']);
+			$data .='</ul>';
+			
+			$data .='</li>';
+		}
+		
+		
+		return $data;
+	}
+	
+function getSideNavigationBuild()
+	{			
+		$stmt = $this->db->prepare("SELECT DISTINCT(ClassCode) FROM `listing`");
+		$stmt->execute();
+		$random = rand(1, 1500);
+		$data = '';
+
+		foreach ($stmt as $row) 
+		{
+			preg_match( '/-(.+)-/' , $row['ClassCode'], $matches);
+			
+			echo 'matches: ';
+			print_r($matches);
+			
+			if ($matches[1]) {
+				$data .='<li>';
+	
+				$data .='<div class="accordion-heading" style="padding-bottom:5px;">';
+				$data .='<a data-toggle="collapse" class="btn btn-default"  style="width:100%;" role="button" data-target="#accordion-heading-'.$random.'"><span class="nav-header-primary">'.$matches[1].'</span></a>';
+				$data .='</div>';
+			
+				$data .='<ul class="nav nav-list collapse" id="accordion-heading-'.$random.'">';					
+					$data .= $this->getChildNavByClassCode($row['id']);
+				$data .='</ul>';
+			
+			$data .='</li>';
+			}
+		}
+		
+		
+		return $data;
+	}
+	
+	function getChildNavByClassCode($classCode)
+	{
+		$stmt = $this->db->prepare("SELECT SubclassCode FROM `listing` where `ClassCode` = :classCode ");
+		$stmt->execute(Array(':classCode' => $classCode));
+		$data ="";
+		foreach ($stmt as $row) 
+		{
+			$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x='.$row['SubclassCode'].'" title="Title">'.$row['SubclassCode'].'</a>';
+		}
+		return $data;
+				
+	}		
+		
+	function getChildNav($id)
+	{
+		$stmt = $this->db->prepare("SELECT * FROM `categories` where `placement_id` = :id ");
+		$stmt->execute(Array(':id' => $id));
+		$data ="";
+		foreach ($stmt as $row) 
+		{
+			$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x='.$row['id'].'" title="Title">'.$row['name'].'</a>';
+		}
+		return $data;
+				
+	}
+	
+
+		
+		
 	function getTopNavigation()
 	{
 		
@@ -73,8 +230,50 @@ class Navigation extends Database
 		
 		return $data;
 	}
+
+	function getTopNavigationStatic($siteUrl, $palateNum)
+	{							
+		  global $palate;
+		  //background:url("'.$siteUrl.'/odygci/p2/spritesheet_x.png") repeat-x scroll 0 -332px -371px rgba(0, 0, 0, 0);
+			$data = '<style>.navbar-inverse {							
+			background: -webkit-linear-gradient('.$palate[$palateNum]['top'].', '.$palate[$palateNum]['bottom'].'); /* For Safari */
+			background: -o-linear-gradient('.$palate[$palateNum]['top'].', '.$palate[$palateNum]['bottom'].'); /* For Opera 11.1 to 12.0 */
+			background: -moz-linear-gradient('.$palate[$palateNum]['top'].', '.$palate[$palateNum]['bottom'].'); /* For Firefox 3.6 to 15 */
+			background: linear-gradient('.$palate[$palateNum]['top'].', '.$palate[$palateNum]['bottom'].'); /* Standard syntax */
+			border-bottom-color: '.$palate[$palateNum]['border'].';
+			}</style>';			
+			
+			$data .= '<nav id="grad" role="navigation" class="collapse navbar-collapse bs-navbar-collapse top-navbar"><ul class="nav navbar-nav">';
+			$data .= '<li><img style="padding-top:10px" class="img-responsive" src="'.$siteUrl.'/graphics/ody/cobrand_logo.gif"/></li>';
+			$data .= '<li><a href="'.$siteUrl.'/jobs">JOBS</a></li>';
+			$data .= '<li><a href="'.$siteUrl.'/cars">CARS</a></li>';
+			$data .= '<li><a href="'.$siteUrl.'/homes">HOMES</a></li>';
+			$data .= '<li><a href="'.$siteUrl.'/apartments">APARTMENTS</a></li>';
+			$data .= '<li><a href="'.$siteUrl.'/dating">DATING</a></li>';
+			$data .= '<li><a href="'.$siteUrl.'/newclass/front/">BUY & SELL</a></li>';						
+			$data .= '</ul></nav>';			
+		
+		return $data;
+	}		
 	
-	
+	function getBottomNavigationStatic() 
+	{
+		
+	}
+}
+
+class status extends Database
+{
+	function getStatus() {
+		try {	
+				$stmt = $this->db->prepare("SELECT * FROM `siteinfo`");
+				$stmt->execute();
+		} catch(PDOException $ex) {
+		    return false;
+		}	
+		
+		return true;
+	}
 }
 class Ads extends Database
 {
@@ -161,6 +360,64 @@ class Ads extends Database
 }
 class Content extends Database
 {	
+	
+	public function getAd($id)
+	{		
+		$stmt = $this->db->prepare("SELECT * FROM `listing` where `ID`= :id");
+		$stmt->execute(array(':id' => $id));
+		$data = '';	
+			
+		foreach ($stmt as $row) 
+		{		
+			$data .= " <div class='jumbotron' >
+              <p>".$row['AdDescription']."</p>
+              <button class='btn btn-primary btn-lg' class='btn btn-default'>Add To List</button>
+			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Tweet</button>
+			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Facebook</button>
+            </div>";	
+		}
+		
+		return $data;
+	}
+	
+	
+	public function getCategoryListing($id)
+	{		
+		$stmt = $this->db->prepare("SELECT * FROM `listing` where `placement_id`= :id");
+		$stmt->execute(array(':id' => $id));
+		$data = '';	
+			
+		foreach ($stmt as $row) 
+		{		
+			$data .= " <div class='jumbotron'>
+              <p>".$row['AdDescription']."</p>
+              <p>
+			  <a class='btn btn-primary btn-lg' role='button' href='item.php?x=". $row['ID']."'>Learn more</a>
+			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Add To List</button>
+			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Tweet</button>
+			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Facebook</button>
+			  </p>
+            </div>";	
+		}
+		
+		return $data;
+	}
+	public function getCategoryTitle($id)
+	{		
+		$stmt = $this->db->prepare("SELECT * FROM `categories` where `id`= :id");
+		$stmt->execute(array(':id' => $id));
+		$data = '';	
+			
+		foreach ($stmt as $row) 
+		{		
+			$data .= " <h1>". $row['name']."</h1>";
+            	
+		}
+		
+		return $data;
+	}
+	
+	
 	public function getPartners()
 	{		
 		$stmt = $this->db->prepare("SELECT * FROM `siteinfo`");
@@ -231,8 +488,8 @@ class Content extends Database
 			</div>		
 			<div class="col-md-3">
 				<h4>Rentals</h4>
-				<a href="'.$siteUrl.'/rentals"><img alt="apartments.com" src="images/130-apartments.gif" ></a>
-				<p><a class="button" href="'.$siteUrl.'/rentals"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Listings</button></a></p>
+				<a href="'.$siteUrl.'/apartments"><img alt="apartments.com" src="images/130-apartments.gif" ></a>
+				<p><a class="button" href="'.$siteUrl.'/apartments"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Listings</button></a></p>
 			</div>
 		</div>';
 		

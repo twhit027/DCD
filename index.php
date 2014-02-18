@@ -1,3 +1,16 @@
+<?php
+include(dirname(__FILE__) . '/includes/KLogger.php');
+include('includes/constants.php');
+
+$log = KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
+
+$log->logInfo('Landing Page');
+
+$log->logInfo('FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR']);
+$log->logInfo('REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR']);
+$log->logInfo('HTTP_HOST: '.@$_SERVER['HTTP_HOST']);
+$log->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,9 +19,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
 <meta name="author" content="">
-
 <link rel="shortcut icon" href="images/ico/favicon.png">
-
 <style type="text/css">
 body
 {
@@ -18,41 +29,37 @@ body
 
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/jasny-bootstrap.min.css" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
 </head>
 <body>
 <header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
 <div class="container">
 	<?php
-
-		$sites = array(
-			'DES' => array('siteName' => 'desmoinesregister', 'siteUrl' => 'http://www.desmoinesregister.com', 'busName' => 'The Des Moines Register'),
-			'INI' => array('siteName' => 'indystar', 'siteUrl' => 'http://www.indystar.com', 'busName' => 'The Indianapolis Star'),
-			'IOW' => array('siteName' => 'press-citizen', 'siteUrl' => 'http://www.press-citizen.com', 'busName' => 'The Press-Citizen'),
-			'POU' => array('siteName' => 'poughkeepsiejournal', 'siteUrl' => 'http://www.poughkeepsiejournal.com', 'busName' => 'The Poughkeepsie Journal'),
-			'DES' => array('siteName' => 'lohud', 'siteUrl' => 'http://www.lohud.com', 'busName' => 'The Journal News')		
-		);
-		
-		$url = $_SERVER['REQUEST_URI'];
-		$siteCode = 'DES';
-		if (isset($_GET['sc'])&&(isset($sites[$_GET['sc']]))) {
-			$siteCode = $_GET['sc'];
-		}
-		$siteUrl = $sites[$siteCode]['siteUrl'];
-		$siteName = $sites[$siteCode]['siteName'];
-		$busName = $sites[$siteCode]['busName'];	
-
-		include('includes/constants.php');
 		include('includes/functions.php');
-    //include('includes/header.php'); 
-		include('includes/mobilenavigation.php');
+    	include('includes/header.php');
+		
+		$nav = new Navigation();
+		
+		echo '<nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse side-navbar ">';
+    	echo '<div class="visible-xs">';
+      	echo '<h3 style="color:#3276B1;">View By Category</h3>';
+        echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
+		echo $nav->getSideNavigation();
+		
+		echo '</ul>';
+		echo '</div>';
+		echo '</nav>';
+
     include('includes/toggle.php'); 
 		
 		$ads = new Ads();
 		echo $ads->InitializeAds();	
 	?>
-	<div class="row-fluid">
-		<iframe src="http://<?=$siteName?>.gannettdigital.com/LI-header.html" style="position: absolute; border-width: 0px; height: 40px; width: 100%"></iframe>
-	</div>
 </div>
 </header>
   
@@ -73,15 +80,25 @@ body
             <p>Place a classified ad in <?=$busName?> in-paper and online. List all kinds of items including Merchandise, Pets, Garage Sales, Services, and much more. </p>
             
            	<?php
-            	$nav = new Content();
-							echo $nav->getPartnersString($siteUrl);
+            	$content = new Content();
+				echo $content->getPartnersString($siteUrl);
             ?>
         </div>
        
         <div class=" col-sm-4 card-suspender-color" style="background-color:#000;">
         	<div class="hidden-xs">
           <?php 
-						include('includes/navigation.php'); 
+						
+						
+						echo '<h3 style="color:#3276B1;">View By Category</h3>';			
+						echo '<div role="navigation" id="sidebar" >';
+						echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
+		
+						echo $nav->getSideNavigation();
+						
+						echo '</ul>';
+						echo '</div>';
+		
 						echo $ads->getFlex();
 					?>
         	</div>
@@ -92,23 +109,23 @@ body
 
 </div>
 
-<input type="hidden" name="SC" value="<?=$siteCode?>">
+<input type="hidden" name="SC" value="<?php echo $siteCode;?>">
+<input type="hidden" name="HH" value="<?php echo $httpHost;?>">
+<input type="hidden" name="DM" value="<?php echo $domain;?>">
 
 <?php 
 echo $ads->getLeaderBottom(); 
 include('includes/tracking.php'); 
 ?>
 
-<footer>
-<!-- start of (4) footer -->
-<div class="row-fluid">
-	<iframe src="http://<?=$siteName?>.gannettdigital.com/LI-footer.html" style="position: absolute; border-width: 0px; height: 250px; width: 100%" ></iframe>
-</div>
-<!-- end of (4) footer -->	
+<footer class="footer">
+<?php
+	include('includes/footer.php');
+?>
 </footer>
 
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+	<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 	<script src="scripts/bootstrap.min.js"></script>
-    <script src="scripts/jasny-bootstrap.min.js"></script>
+  <script src="scripts/jasny-bootstrap.min.js"></script>
 </body>
 </html>
