@@ -471,25 +471,20 @@ class Content extends Database
 		<p><a class="button" href="'.$siteUrl.'/placead"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">Place an Ad</button></a></p>             
     <h1>Featured Partner Classified Services</h1>
 		<div class="row">
-			<div class="col-md-3">
+			<div class="col-md-4">
 				<h4>Cars</h4>
 				<a href="'.$siteUrl.'/cars"><img alt="Cars.com" src="images/130-cars.gif"></a>
 				<p><a class="button" href="'.$siteUrl.'/cars"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Autos</button></a></p>
 			</div> 		
-			<div class="col-md-3">
+			<div class="col-md-4">
 				<h4>Jobs</h4>
 				<a href="'.$siteUrl.'/jobs"><img alt="micareerbuilder.com" src="images/130-careerbuilder.gif"></a>
 				<p><a class="button" href="'.$siteUrl.'/jobs"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Jobs</button></a></p>		
 			</div>		
-			<div class="col-md-3">
+			<div class="col-md-4">
 				<h4>Homes</h4>
 				<a href="'.$siteUrl.'/homes"><img alt="homefinder.com" src="images/130-homefinder.gif" ></a>
 				<p><a class="button" href="'.$siteUrl.'/homes"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Homes</button></a></p>
-			</div>		
-			<div class="col-md-3">
-				<h4>Rentals</h4>
-				<a href="'.$siteUrl.'/apartments"><img alt="apartments.com" src="images/130-apartments.gif" ></a>
-				<p><a class="button" href="'.$siteUrl.'/apartments"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Listings</button></a></p>
 			</div>
 		</div>';
 		
