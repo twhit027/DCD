@@ -91,12 +91,13 @@ class Navigation extends Database
 	function getSideNavigation()
 	{		
 	
-		$stmt = $this->db->prepare("SELECT * FROM `categories` where `placement_id` = 0 ");
+		$stmt = $this->db->prepare("SELECT * FROM `placements` ");
 		$stmt->execute();
 		$random = rand(1, 1500);
 		$data = '';
 		foreach ($stmt as $row) 
 		{
+				
 			$data .='<li>';
 
 			$data .='<div class="accordion-heading" style="padding-bottom:5px;">';
@@ -104,7 +105,7 @@ class Navigation extends Database
 			$data .='</div>';
 		
 			$data .='<ul class="nav nav-list collapse" id="accordion-heading-'.$row['id'].''.$random.'">';
-				$data .= $this->getChildNav($row['id']);
+				$data .= $this->getChildNav($row['name']);
 			$data .='</ul>';
 			
 			$data .='</li>';
@@ -160,14 +161,14 @@ function getSideNavigationBuild()
 				
 	}		
 		
-	function getChildNav($id)
+	function getChildNav($name)
 	{
-		$stmt = $this->db->prepare("SELECT * FROM `categories` where `placement_id` = :id ");
-		$stmt->execute(Array(':id' => $id));
+		$stmt = $this->db->prepare("SELECT * FROM `positions` where `placement` = :name ");
+		$stmt->execute(Array(':name' => $name));
 		$data ="";
 		foreach ($stmt as $row) 
 		{
-			$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x='.$row['id'].'" title="Title">'.$row['name'].'</a>';
+			$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x='.urlencode($row['name']).'" title="Title">'.$row['name'].'</a>';
 		}
 		return $data;
 				
@@ -370,7 +371,7 @@ class Content extends Database
 		foreach ($stmt as $row) 
 		{		
 			$data .= " <div class='jumbotron' >
-              <p>".$row['AdDescription']."</p>
+              <p>".$row['AdText']."</p>
               <button class='btn btn-primary btn-lg' class='btn btn-default'>Add To List</button>
 			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Tweet</button>
 			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Facebook</button>
@@ -381,16 +382,16 @@ class Content extends Database
 	}
 	
 	
-	public function getCategoryListing($id)
+	public function getCategoryListing($name)
 	{		
-		$stmt = $this->db->prepare("SELECT * FROM `listing` where `placement_id`= :id");
-		$stmt->execute(array(':id' => $id));
+		$stmt = $this->db->prepare("SELECT * FROM `listing` where `Position`= :name");
+		$stmt->execute(array(':name' => urldecode($name)));
 		$data = '';	
 			
 		foreach ($stmt as $row) 
 		{		
 			$data .= " <div class='jumbotron'>
-              <p>".$row['AdDescription']."</p>
+              <p>".$row['AdText']."</p>
               <p>
 			  <a class='btn btn-primary btn-lg' role='button' href='item.php?x=". $row['ID']."'>Learn more</a>
 			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Add To List</button>
@@ -402,20 +403,7 @@ class Content extends Database
 		
 		return $data;
 	}
-	public function getCategoryTitle($id)
-	{		
-		$stmt = $this->db->prepare("SELECT * FROM `categories` where `id`= :id");
-		$stmt->execute(array(':id' => $id));
-		$data = '';	
-			
-		foreach ($stmt as $row) 
-		{		
-			$data .= " <h1>". $row['name']."</h1>";
-            	
-		}
-		
-		return $data;
-	}
+
 	
 	
 	public function getPartners()

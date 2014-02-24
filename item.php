@@ -7,7 +7,9 @@ $log = KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
 $log->logInfo('Landing Page');
 
 $log->logInfo('FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR']);
-$log->logInfo('REMOTE_ADDR: '.$_SERVER['REMOTE_ADDR']);
+$log->logInfo('REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR']);
+$log->logInfo('HTTP_HOST: '.@$_SERVER['HTTP_HOST']);
+$log->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -17,8 +19,6 @@ $log->logInfo('REMOTE_ADDR: '.$_SERVER['REMOTE_ADDR']);
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
 <meta name="author" content="">
-<<<<<<< HEAD
-=======
 <link rel="shortcut icon" href="images/ico/favicon.png">
 <style type="text/css">
 body
@@ -35,70 +35,51 @@ body
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
-    
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
-<script type="text/javascript">
->>>>>>> remotes/origin/develop
-
 </head>
 <body>
 <header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
 <div class="container">
 	<?php
-	include('includes/functions.php');
-    include('includes/header.php'); 
-	$nav = new Navigation();
+		include('includes/functions.php');
+    	include('includes/header.php');
 		
-	echo '<nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse side-navbar ">';
-	echo '<div class="visible-xs">';
-	echo '<h3 style="color:#3276B1;">View By Category</h3>';
-	echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
-	echo $nav->getSideNavigation();
-	
-	echo '</ul>';
-	echo '</div>';
-	echo '</nav>';
+		$nav = new Navigation();
+		
+		echo '<nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse side-navbar ">';
+    	echo '<div class="visible-xs">';
+      	echo '<h3 style="color:#3276B1;">View By Category</h3>';
+        echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
+		echo $nav->getSideNavigation();
+		
+		echo '</ul>';
+		echo '</div>';
+		echo '</nav>';
+
     include('includes/toggle.php'); 
 		
-	$ads = new Ads();
-	echo $ads->InitializeAds();
-    ?>
-</div>            
+		$ads = new Ads();
+		echo $ads->InitializeAds();	
+	?>
+</div>
 </header>
   
-<style type="text/css">
-body
-{
-	min-width:10px!important;
-}
-</style>
-
-<link href="css/bootstrap.min.css" rel="stylesheet">
-<link href="css/jasny-bootstrap.min.css" rel="stylesheet">
-
 <?php
 	echo $ads->getLaunchpad(); 	
 ?>
 
 <div class="container" >     
-    <div class="row" style="background-color:#000;">
-        <div class="col-xs-11 col-sm-8" style="background-color:#FFF;">
+    <div class="row" style="background-color:#FFF;">
+        <div class="col-xs-11 col-sm-8">
     
             
-                
-        <?php  
-		   $content = new Content();
-		   
-           echo $content->getAd($_GET['x']);
-        
-       
-		   
-		    ?>
-        
-          
+            
+           	<?php
+            	$content = new Content();
+		   		echo $content->getAd($_GET['x']);
+            ?>
         </div>
        
-        <div class=" col-sm-4 card-suspender-color">
+        <div class=" col-sm-4 card-suspender-color" >
         	<div class="hidden-xs">
           <?php 																					
 						echo '<div role="navigation" id="sidebar" style="background-color:#000; padding-left:15px; padding-right:15px; padding-top:5px">';
@@ -114,14 +95,23 @@ body
         		<?php 
         		echo $ads->getFlex();	
         		?>
-        	</div>	
-        	</div>  
+        	</div>					
+        	</div>
         </div>
+        
+        
     </div>
-    
+
 </div>
 
-<?php echo $ads->getLeaderBottom(); ?>
+<input type="hidden" name="SC" value="<?php echo $siteCode;?>">
+<input type="hidden" name="HH" value="<?php echo $httpHost;?>">
+<input type="hidden" name="DM" value="<?php echo $domain;?>">
+
+<?php 
+echo $ads->getLeaderBottom(); 
+include('includes/tracking.php'); 
+?>
 
 <footer class="footer">
 <?php
@@ -129,8 +119,8 @@ body
 ?>
 </footer>
 
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+	<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 	<script src="scripts/bootstrap.min.js"></script>
-    <script src="scripts/jasny-bootstrap.min.js"></script>
+  <script src="scripts/jasny-bootstrap.min.js"></script>
 </body>
 </html>
