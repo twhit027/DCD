@@ -5,9 +5,13 @@ define("DB_PORT", "3306");
 //define("DB_USER", "classifiedsproject");
 define("DB_USER", "classifiedsproj");
 define("DB_PASS", "Classdb13!");
-define("DB_NAME", "classifiedsproje");
+define("DB_NAME", "classifiedsproj");
 define("TBL_LISTING", "listing");
-define("LOGGING_LEVEL", KLogger::DEBUG);
+define("TBL_PLACEMENT", "placements");
+define("TBL_POSITION", "positions");
+
+
+//define("LOGGING_LEVEL", KLogger::DEBUG);
 define("LOGGING_DIR", "logs");
 define("DCD_VERSION", "9.0");
 ?>
