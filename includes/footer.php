@@ -6,7 +6,6 @@
 	$data .= '<a href="'.$siteUrl.'/Entertainment">Entertainment</a>&nbsp;|&nbsp;';
 	$data .= '<a href="'.$siteUrl.'/life">Life</a>&nbsp;|&nbsp;';
 	$data .= '<a href="'.$siteUrl.'/Communities">Communities</a>&nbsp;|&nbsp;';
-	$data .= '<a href="'.$siteUrl.'/thingstodo">Things to Do</a>&nbsp;|&nbsp;';
 	$data .= '<a href="'.$siteUrl.'/opinion">Opinion</a>&nbsp;|&nbsp;';						
 	$data .= '<a href="http://www.legacy.com/obituaries/'.$siteName.'/">Obituaries</a>&nbsp;|&nbsp;';	
 	$data .= '<a href="'.$siteUrl.'/help">Help</a></p>';
