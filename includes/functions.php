@@ -245,7 +245,7 @@ function getSideNavigationBuild()
 			}</style>';			
 			
 			$data .= '<nav id="grad" role="navigation" class="collapse navbar-collapse bs-navbar-collapse top-navbar"><ul class="nav navbar-nav">';
-			$data .= '<li><a href="'.$siteUrl.'/"><img style="padding-top:10px" class="img-responsive" src="'.$siteUrl.'/graphics/ody/cobrand_logo.gif"/></a></li>';
+			$data .= '<li><a href="'.$siteUrl.'/" style="margin:0;padding:0;"><img style="padding-top:10px" class="img-responsive" src="'.$siteUrl.'/graphics/ody/cobrand_logo.gif"/></a></li>';
 			$data .= '<li><a href="'.$siteUrl.'/jobs">JOBS</a></li>';
 			$data .= '<li><a href="'.$siteUrl.'/cars">CARS</a></li>';
 			$data .= '<li><a href="'.$siteUrl.'/homes">HOMES</a></li>';
