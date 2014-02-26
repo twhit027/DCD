@@ -116,7 +116,7 @@ class Admin extends Database
 		global $usercount;
 		global $userdata;
 		global $state;
-	
+		
 		for($i=0;$i<$usercount; $i++) 
 		{
 			
@@ -143,6 +143,7 @@ class Admin extends Database
 			
 			
 		}	
+		$this->DeleteOld();
 	}
 	
 	
@@ -161,6 +162,27 @@ class Admin extends Database
 		
 		
 	}
+	
+	function DeleteOld()
+	{
+		$data = "";
+		$date = date("Y-m-d");
+		
+		$stmt = $this->db->prepare("SELECT * FROM " . TBL_LISTING . " WHERE `EndDate` < :date ");
+		$stmt->execute(array(':date' => $date));
+		foreach ($stmt as $row) 
+		{
+			$stmt = $this->db->prepare("DELETE FROM " . TBL_LISTING . " WHERE `ID` = :id ");
+			$stmt->execute(array(':id' => $row['ID'] ));
+			echo "delete ". $row['ID']. " here <br/>";
+		}
+		
+		return $data;
+		
+		
+	}
+	
+	
 	
 	function checkPlacement($name)
 	{
