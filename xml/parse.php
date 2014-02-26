@@ -84,7 +84,7 @@ function char($parser,$data)
 	if ($state['name']=="END-DATE") { $userdata[$usercount]["END-DATE"] = $data;}
 	if ($state['name']=="PLACEMENT") { $userdata[$usercount]["PLACEMENT"] = $data;}
 	if ($state['name']=="POSITION") { $userdata[$usercount]["POSITION"] = $data;}
-	if ($state['name']=="AD-TEXT") { $userdata[$usercount]["AD-TEXT"] = $data;}
+	if ($state['name']=="AD-TEXT") { $userdata[$usercount]["AD-TEXT"] = strip_tags ($data);}
 
 }
 

@@ -115,7 +115,7 @@ class Navigation extends Database
 		return $data;
 	}
 	
-function getSideNavigationBuild()
+	function getSideNavigationBuild()
 	{			
 		$stmt = $this->db->prepare("SELECT DISTINCT(ClassCode) FROM `listing`");
 		$stmt->execute();
@@ -168,14 +168,31 @@ function getSideNavigationBuild()
 		$data ="";
 		foreach ($stmt as $row) 
 		{
-			$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x='.urlencode($row['name']).'" title="Title">'.$row['name'].'</a>';
+			$count = $this->categoryAdCheck($row['name']);
+			if($count != 0)
+			{
+				$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x='.urlencode($row['name']).'" title="Title">'.$row['name'].'('.$count.')</a>';
+			}
 		}
 		return $data;
 				
 	}
 	
 
+	public function categoryAdCheck($name)
+	{		
+		$stmt = $this->db->prepare("SELECT * FROM `listing` where `Position`= :name");
+		$stmt->execute(array(':name' => urldecode($name)));
+		$count = 0;	
+			
+		foreach ($stmt as $row) 
+		{		
+			$count += 1;		
+		}
 		
+		return $count;
+	}
+				
 		
 	function getTopNavigation()
 	{
@@ -390,10 +407,20 @@ class Content extends Database
 			
 		foreach ($stmt as $row) 
 		{		
+		
+		
+			if(strlen($row['AdText']) > 200)
+			{  
+				$string = substr($row['AdText'],0,200)."... <a  href='item.php?x=". $row['ID']."'>Click for full text</a>";
+			}
+			else
+			{	
+				$string = $row['AdText'];
+			}
 			$data .= " <div class='jumbotron'>
-              <p>".$row['AdText']."</p>
+              <p>".$string."</p>
               <p>
-			  <a class='btn btn-primary btn-lg' role='button' href='item.php?x=". $row['ID']."'>Learn more</a>
+			  
 			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Add To List</button>
 			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Tweet</button>
 			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Facebook</button>
