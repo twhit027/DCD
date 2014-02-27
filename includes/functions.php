@@ -101,11 +101,11 @@ class Navigation extends Database
 			$data .='<li>';
 
 			$data .='<div class="accordion-heading" style="padding-bottom:5px;">';
-			$data .='<a data-toggle="collapse" class="btn btn-default"  style="width:100%;" role="button" data-target="#accordion-heading-'.$row['id'].''.$random.'"><span class="nav-header-primary">'.$row['name'].'</span></a>';
+			$data .='<a data-toggle="collapse" class="btn btn-default"  style="width:100%;" role="button" data-target="#accordion-heading-'.$row['ID'].''.$random.'"><span class="nav-header-primary">'.$row['Name'].'</span></a>';
 			$data .='</div>';
 		
-			$data .='<ul class="nav nav-list collapse" id="accordion-heading-'.$row['id'].''.$random.'">';
-				$data .= $this->getChildNav($row['name']);
+			$data .='<ul class="nav nav-list collapse" id="accordion-heading-'.$row['ID'].''.$random.'">';
+				$data .= $this->getChildNav($row['Name']);
 			$data .='</ul>';
 			
 			$data .='</li>';
@@ -168,10 +168,10 @@ class Navigation extends Database
 		$data ="";
 		foreach ($stmt as $row) 
 		{
-			$count = $this->categoryAdCheck($row['name']);
+			$count = $this->categoryAdCheck($row['Name']);
 			if($count != 0)
 			{
-				$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x='.urlencode($row['name']).'" title="Title">'.$row['name'].'('.$count.')</a>';
+				$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x='.urlencode($row['Name']).'" title="Title">'.$row['Name'].'('.$count.')</a>';
 			}
 		}
 		return $data;
@@ -449,28 +449,28 @@ class Content extends Database
 		<div class="row">
 		<div class="col-sm-3">
 		<h4>Cars</h4>
-		<a href="'.$row['cars'].'"><img alt="Cars.com" src="images/130-cars.gif"></a>
+		<a href="'.$row['cars'].'"><img alt="Cars.com" src="img/partners/130-cars.gif"></a>
 		<p><a class="button" href="'.$row['cars'].'"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Autos</button></a></p>
 		
 		</div> 
 		
 		<div class="col-md-3">
 		<h4>Jobs</h4>
-		<a href="'.$row['jobs'].'"><img alt="micareerbuilder.com" src="images/130-careerbuilder.gif"></a>
+		<a href="'.$row['jobs'].'"><img alt="micareerbuilder.com" src="img/partners/130-careerbuilder.gif"></a>
 		<p><a class="button" href="'.$row['jobs'].'"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Jobs</button></a></p>
 		
 		</div>
 		
 		<div class="col-md-3">
 		<h4>Homes</h4>
-		<a href="'.$row['homes'].'"><img alt="homefinder.com" src="images/130-homefinder.gif" ></a>
+		<a href="'.$row['homes'].'"><img alt="homefinder.com" src="img/partners/130-homefinder.gif" ></a>
 		<p><a class="button" href="'.$row['homes'].'"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Homes</button></a></p>
 		
 		</div>
 		
 		<div class="col-md-3">
 		<h4>Rentals</h4>
-		<a href="'.$row['rentals'].'"><img alt="apartments.com" src="images/130-apartments.gif" ></a>
+		<a href="'.$row['rentals'].'"><img alt="apartments.com" src="img/partners/130-apartments.gif" ></a>
 		<p><a class="button" href="'.$row['rentals'].'"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Listings</button></a></p>
 		
 		</div>
@@ -488,22 +488,22 @@ class Content extends Database
 		<div class="row">
 			<div class="col-md-3">
 				<h4>Cars</h4>
-				<a href="'.$siteUrl.'/cars"><img alt="Cars.com" src="images/130-cars.gif"></a>
+				<a href="'.$siteUrl.'/cars"><img alt="Cars.com" src="img/partners/130-cars.gif"></a>
 				<p><a class="button" href="'.$siteUrl.'/cars"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Autos</button></a></p>
 			</div> 		
 			<div class="col-md-3">
 				<h4>Jobs</h4>
-				<a href="'.$siteUrl.'/jobs"><img alt="micareerbuilder.com" src="images/130-careerbuilder.gif"></a>
+				<a href="'.$siteUrl.'/jobs"><img alt="micareerbuilder.com" src="img/partners/130-careerbuilder.gif"></a>
 				<p><a class="button" href="'.$siteUrl.'/jobs"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Jobs</button></a></p>		
 			</div>		
 			<div class="col-md-3">
 				<h4>Homes</h4>
-				<a href="'.$siteUrl.'/homes"><img alt="homefinder.com" src="images/130-homefinder.gif" ></a>
+				<a href="'.$siteUrl.'/homes"><img alt="homefinder.com" src="img/partners/130-homefinder.gif" ></a>
 				<p><a class="button" href="'.$siteUrl.'/homes"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Homes</button></a></p>
 			</div>
 			<div class="col-md-3">
 				<h4>Rentals</h4>
-				<a href="'.$siteUrl.'/apartments"><img alt="apartments.com" src="images/130-apartments.gif" ></a>
+				<a href="'.$siteUrl.'/apartments"><img alt="apartments.com" src="img/partners/130-apartments.gif" ></a>
 				<p><a class="button" href="'.$siteUrl.'/apartments"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Listings</button></a></p>
 			</div>			
 		</div>';

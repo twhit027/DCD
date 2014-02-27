@@ -27,8 +27,8 @@ body
 }
 </style>
 
-<link href="css/bootstrap.min.css" rel="stylesheet">
-<link href="css/jasny-bootstrap.min.css" rel="stylesheet">
+<link href="3rdParty/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="3rdParty/jasny-bootstrap/css/jasny-bootstrap.min.css" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
