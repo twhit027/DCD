@@ -1,4 +1,0 @@
-DCD
-===
-
-Digital Classified Display

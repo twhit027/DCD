@@ -1,6 +1,6 @@
 <?php
-include(dirname(__FILE__) . '/includes/KLogger.php');
-include('includes/constants.php');
+include(dirname(__FILE__) . '/3rdParty/klogger/KLogger.php');
+include('conf/constants.php');
 
 $log   = KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
 
@@ -55,8 +55,8 @@ body
 }
 </style>
 
-<link href="css/bootstrap.min.css" rel="stylesheet">
-<link href="css/jasny-bootstrap.min.css" rel="stylesheet">
+<link href="3rdParty/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="3rdParty/jasny-bootstrap/css/jasny-bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 	<table>
