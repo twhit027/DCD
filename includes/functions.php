@@ -101,11 +101,11 @@ class Navigation extends Database
 			$data .='<li>';
 
 			$data .='<div class="accordion-heading" style="padding-bottom:5px;">';
-			$data .='<a data-toggle="collapse" class="btn btn-default"  style="width:100%;" role="button" data-target="#accordion-heading-'.$row['ID'].''.$random.'"><span class="nav-header-primary">'.$row['Name'].'</span></a>';
+			$data .='<a data-toggle="collapse" class="btn btn-default"  style="width:100%;" role="button" data-target="#accordion-heading-'.$row['id'].''.$random.'"><span class="nav-header-primary">'.$row['name'].'</span></a>';
 			$data .='</div>';
 		
-			$data .='<ul class="nav nav-list collapse" id="accordion-heading-'.$row['ID'].''.$random.'">';
-				$data .= $this->getChildNav($row['Name']);
+			$data .='<ul class="nav nav-list collapse" id="accordion-heading-'.$row['id'].''.$random.'">';
+				$data .= $this->getChildNav($row['name']);
 			$data .='</ul>';
 			
 			$data .='</li>';
@@ -115,7 +115,7 @@ class Navigation extends Database
 		return $data;
 	}
 	
-function getSideNavigationBuild()
+	function getSideNavigationBuild()
 	{			
 		$stmt = $this->db->prepare("SELECT DISTINCT(ClassCode) FROM `listing`");
 		$stmt->execute();
@@ -168,14 +168,31 @@ function getSideNavigationBuild()
 		$data ="";
 		foreach ($stmt as $row) 
 		{
-			$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x='.urlencode($row['Name']).'" title="Title">'.$row['Name'].'</a>';
+			$count = $this->categoryAdCheck($row['name']);
+			if($count != 0)
+			{
+				$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x='.urlencode($row['name']).'" title="Title">'.$row['name'].'('.$count.')</a>';
+			}
 		}
 		return $data;
 				
 	}
 	
 
+	public function categoryAdCheck($name)
+	{		
+		$stmt = $this->db->prepare("SELECT * FROM `listing` where `Position`= :name");
+		$stmt->execute(array(':name' => urldecode($name)));
+		$count = 0;	
+			
+		foreach ($stmt as $row) 
+		{		
+			$count += 1;		
+		}
 		
+		return $count;
+	}
+				
 		
 	function getTopNavigation()
 	{
@@ -245,7 +262,7 @@ function getSideNavigationBuild()
 			}</style>';			
 			
 			$data .= '<nav id="grad" role="navigation" class="collapse navbar-collapse bs-navbar-collapse top-navbar"><ul class="nav navbar-nav">';
-			$data .= '<li><img style="padding-top:10px" class="img-responsive" src="'.$siteUrl.'/graphics/ody/cobrand_logo.gif"/></li>';
+			$data .= '<li><a href="'.$siteUrl.'/" style="margin:0;padding:0;"><img style="padding-top:10px" class="img-responsive" src="'.$siteUrl.'/graphics/ody/cobrand_logo.gif"/></a></li>';
 			$data .= '<li><a href="'.$siteUrl.'/jobs">JOBS</a></li>';
 			$data .= '<li><a href="'.$siteUrl.'/cars">CARS</a></li>';
 			$data .= '<li><a href="'.$siteUrl.'/homes">HOMES</a></li>';
@@ -390,10 +407,20 @@ class Content extends Database
 			
 		foreach ($stmt as $row) 
 		{		
+		
+		
+			if(strlen($row['AdText']) > 200)
+			{  
+				$string = substr($row['AdText'],0,200)."... <a  href='item.php?x=". $row['ID']."'>Click for full text</a>";
+			}
+			else
+			{	
+				$string = $row['AdText'];
+			}
 			$data .= " <div class='jumbotron'>
-              <p>".$row['AdText']."</p>
+              <p>".$string."</p>
               <p>
-			  <a class='btn btn-primary btn-lg' role='button' href='item.php?x=". $row['ID']."'>Learn more</a>
+			  
 			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Add To List</button>
 			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Tweet</button>
 			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Facebook</button>
