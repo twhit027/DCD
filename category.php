@@ -1,6 +1,6 @@
 <?php
-include(dirname(__FILE__) . '/includes/KLogger.php');
-include('includes/constants.php');
+include(dirname(__FILE__) . '/3rdParty/klogger/KLogger.php');
+include('conf/constants.php');
 
 $log = KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
 
@@ -41,7 +41,7 @@ body
 <div class="container">
 	<?php
 		include('includes/functions.php');
-    	include('includes/header.php');
+    include('includes/header.php');
 		
 		$nav = new Navigation();
 		
@@ -69,10 +69,7 @@ body
 
 <div class="container" >     
     <div class="row" style="background-color:#FFF;">
-        <div class="col-xs-11 col-sm-8">
-    
-           
-            
+        <div class="col-xs-11 col-sm-8">                           
            	<?php
             		$content = new Content();
 		   
@@ -99,9 +96,7 @@ body
         		?>
         	</div>					
         	</div>
-        </div>
-        
-        
+        </div>                
     </div>
 
 </div>
@@ -122,8 +117,8 @@ include('includes/tracking.php');
 </footer>
 
 	<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-	<script src="scripts/bootstrap.min.js"></script>
-  <script src="scripts/jasny-bootstrap.min.js"></script>
+	<script src="3rdParty/bootstrap/js/bootstrap.min.js"></script>
+  <script src="3rdParty/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>
 </body>
 </html>
 		  

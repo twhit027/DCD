@@ -101,11 +101,11 @@ class Navigation extends Database
 			$data .='<li>';
 
 			$data .='<div class="accordion-heading" style="padding-bottom:5px;">';
-			$data .='<a data-toggle="collapse" class="btn btn-default"  style="width:100%;" role="button" data-target="#accordion-heading-'.$row['id'].''.$random.'"><span class="nav-header-primary">'.$row['name'].'</span></a>';
+			$data .='<a data-toggle="collapse" class="btn btn-default"  style="width:100%;" role="button" data-target="#accordion-heading-'.$row['ID'].''.$random.'"><span class="nav-header-primary">'.$row['Name'].'</span></a>';
 			$data .='</div>';
 		
-			$data .='<ul class="nav nav-list collapse" id="accordion-heading-'.$row['id'].''.$random.'">';
-				$data .= $this->getChildNav($row['name']);
+			$data .='<ul class="nav nav-list collapse" id="accordion-heading-'.$row['ID'].''.$random.'">';
+				$data .= $this->getChildNav($row['Name']);
 			$data .='</ul>';
 			
 			$data .='</li>';
@@ -168,7 +168,7 @@ function getSideNavigationBuild()
 		$data ="";
 		foreach ($stmt as $row) 
 		{
-			$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x='.urlencode($row['name']).'" title="Title">'.$row['name'].'</a>';
+			$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x='.urlencode($row['Name']).'" title="Title">'.$row['Name'].'</a>';
 		}
 		return $data;
 				
