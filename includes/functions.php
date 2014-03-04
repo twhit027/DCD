@@ -388,11 +388,33 @@ class Content extends Database
 		foreach ($stmt as $row) 
 		{		
 			$data .= " <div class='jumbotron' >
-              <p>".$row['AdText']."</p>
-              <button class='btn btn-primary btn-lg' class='btn btn-default'>Add To List</button>
-			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Tweet</button>
-			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Facebook</button>
-            </div>";	
+              <p>".$row['AdText']."</p>";
+			  
+			  $status = substr($row['AdText'],0,120);
+			$data .= '<a class="btn btn-primary" href="http://twitter.com/home?status='.$status.'" target="_blank">twitter</a>';
+
+			$data.="<a class='btn btn-primary' href='https://www.facebook.com/sharer/sharer.php?u=http://".$_SERVER['SERVER_NAME']."/item.php?x=". $row['ID']."' target='_blank'>Facebook</a>";
+	
+			$data .= '<a class="btn btn-primary" href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://'.$_SERVER['SERVER_NAME'].'/item.php?x='. $row['ID'].'" target="_blank">google</a>';
+				
+			$data .= "</div>";	
+		}
+		
+		return $data;
+	}
+	
+	public function getMeta($id)
+	{		
+		$stmt = $this->db->prepare("SELECT * FROM `listing` where `ID`= :id");
+		$stmt->execute(array(':id' => $id));
+		$data = '';	
+			
+		foreach ($stmt as $row) 
+		{		
+			$data .= "<meta property='og:title' content='".substr($row['AdText'],0,200)."' />";
+			$data .= "<meta property='og:url' content='".$_SERVER['SERVER_NAME']."/item.php?x=". $row['ID']."' />";
+			$data .= "<meta property='og:description' content='".$row['AdText']."' />";
+				
 		}
 		
 		return $data;
@@ -407,25 +429,36 @@ class Content extends Database
 			
 		foreach ($stmt as $row) 
 		{		
-		
-		
 			if(strlen($row['AdText']) > 200)
 			{  
 				$string = substr($row['AdText'],0,200)."... <a  href='item.php?x=". $row['ID']."'>Click for full text</a>";
+				
 			}
 			else
 			{	
 				$string = $row['AdText'];
+				
 			}
-			$data .= " <div class='jumbotron'>
-              <p>".$string."</p>
-              <p>
-			  
-			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Add To List</button>
-			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Tweet</button>
-			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Facebook</button>
-			  </p>
-            </div>";	
+			
+			
+			
+			
+			$data .= "<div class='jumbotron'>";
+			$data .= "<p>".$string."</p>";
+			
+			$status = substr($row['AdText'],0,120);
+			
+			
+			
+			$data .= '<a class="btn btn-primary" href="http://twitter.com/home?status='.$status.'" target="_blank">twitter</a>';
+
+			$data.="<a class='btn btn-primary' href='https://www.facebook.com/sharer/sharer.php?u=http://".$_SERVER['SERVER_NAME']."/item.php?x=". $row['ID']."' target='_blank'>Facebook</a>";
+
+			$data .= '<a class="btn btn-primary" href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://'.$_SERVER['SERVER_NAME'].'/item.php?x='. $row['ID'].'" target="_blank">google</a>';
+			
+			
+
+			$data .='</div>';	
 		}
 		
 		return $data;
