@@ -10,6 +10,7 @@ $log->logInfo('FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR']);
 $log->logInfo('REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR']);
 $log->logInfo('HTTP_HOST: '.@$_SERVER['HTTP_HOST']);
 $log->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);
+include('includes/functions.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -17,8 +18,11 @@ $log->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="">
-<meta name="author" content="">
+<?php
+$content = new Content();
+echo $content->getMeta($_GET['x']);    
+?>
+
 <link rel="shortcut icon" href="images/ico/favicon.png">
 <style type="text/css">
 body
@@ -34,12 +38,13 @@ body
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
+
 </head>
 <body>
 <header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
 <div class="container">
 	<?php
-		include('includes/functions.php');
+		
    	include('includes/header.php');
 		
 		$nav = new Navigation();
@@ -73,7 +78,7 @@ body
             
             
            	<?php
-            	$content = new Content();
+            	
 		   		echo $content->getAd($_GET['x']);
             ?>
         </div>

@@ -6,7 +6,7 @@ define("DB_PORT", "3306");
 //define("DB_USER", "classifiedsproject");
 define("DB_USER", "classifiedsproj");
 define("DB_PASS", "Classdb13!");
-define("DB_NAME", "classifiedsproje");
+define("DB_NAME", "classifiedsproj");
 //feed tables
 define("TBL_LISTING", "listing");
 define("TBL_PLACEMENT", "placements");
