@@ -6,14 +6,13 @@ include('includes/FindRummages.php');
 
 $log = KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
 
-$log->logInfo('Rummage Page Listing');
+$log->logInfo('Rummage Page Directions');
 
 $log->logInfo('FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR']);
 $log->logInfo('REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR']);
 $log->logInfo('HTTP_HOST: '.@$_SERVER['HTTP_HOST']);
 $log->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);
-	
-	
+
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,18 +49,30 @@ $log->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);
 			$params = array(
 				'PubCode' => 'DES-RM Des Moines Register'
 			);
+			$ids = explode(",",$_POST['locations']);
+			foreach($ids as $i)
+				$params['where']['ID'][] = $i;
 			@$myRummages = new FindRummages(DB_SERVER, DB_USER, DB_PASS, DB_NAME, DB_PORT);
 			$listOfRummages = $myRummages->getRummages($params);
-			if($myRummages->connect_errno)
+			if($myRummages->connect_errno){
 				echo "console.log(\"Connect Error: Could not connect to Database\");";
-			else
+			}
+			else{
+				$address = array(
+					"street" => $_POST['address'],
+					"city" => $_POST['city'],
+					"zip" => $_POST['zip']
+				);
+				echo "DCDMAPGLOBAL.address = ".json_encode($address).";\r\n";
 				echo "DCDMAPGLOBAL.points = ".json_encode($listOfRummages).";\r\n";
+			}
+			if($_POST['avoidHighways'] == "true")
+				echo "DCDMAPGLOBAL.avoidHighways = true;\r\n";
+			if($_POST['avoidTolls'] == "true")
+				echo "DCDMAPGLOBAL.avoidTolls = true;\r\n";
 			
 		?>
 	</script>
-	
-	<link rel="stylesheet" href="css/rummage.css">
-	
 </head>
 <body>
 	<header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
@@ -97,66 +108,8 @@ $log->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);
 	<div class="container" >     
 		<div class="row" style="background-color:#FFF;">
 			<div class="col-xs-11 col-sm-8">
-				
-				<div id="map">
-					<div id="dcd-map-container"></div>
-				</div>
-				<br>
-				<form action="route.php" method="post" target="_blank" onsubmit="mapRoute();" class="form-horizontal" role="form">
-					<input type="hidden" id="locations" name="locations" value="" />
-					<div id="map-it">
-						<?php /*<p>Locations to visit: <div id="num-of-locations">0</div></p>*/ ?>
-						<div class="form-group">
-							<label for="Address" class="col-sm-2 control-label">Address</label>
-							<div class="col-sm-10">
-								<input type="text" name="address" class="form-control" id="Address" placeholder="Address">
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="City" class="col-sm-2 control-label">City</label>
-							<div class="col-sm-10">
-								<input type="text" name="city" class="form-control" id="City" placeholder="City">
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="Zip" class="col-sm-2 control-label">Zip</label>
-							<div class="col-sm-10">
-								<input type="text" name="zip" class="form-control" id="Zip" placeholder="Zip">
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="col-sm-offset-2 col-sm-10">
-								<div class="checkbox">
-									<label>
-										<input type="checkbox" value="true" name="avoidHighways"> Avoid Highways
-									</label>
-								</div>
-								<div class="checkbox">
-									<label>
-										<input type="checkbox" value="true" name="avoidTolls"> Avoid Tolls
-									</label>
-								</div>
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="col-sm-offset-2 col-sm-10">
-								<button type="submit" class="btn btn-default">Map Route</button>
-							</div>
-						</div>
-					</div>
-					<table class="table table-striped">
-					<?php
-						foreach($listOfRummages as $k=>$v){
-							echo "<tr>
-								<td><input type='button' value='Add' onclick=\"visit(this,'".$k."');\" class='add btn btn-default' /></td>
-								<td>".$v["street"]."</td>
-							</tr>";
-						}
-						//		<td><input type='button' value='Add' onclick=\"visit(this,'".$k."');\" class='add btn btn-default' /></td>
-					?>
-					</table>
-				</form>
-				
+				<div id="direction-canvas" style="width:100%; height:400px;"></div>
+				<div id="directions-panel" style="width:100%"></div>
 			</div>
 			
 			<div class=" col-sm-4 card-suspender-color" >
@@ -201,6 +154,6 @@ $log->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);
 	<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 	<script src="3rdParty/bootstrap/js/bootstrap.min.js"></script>
 	<script src="3rdParty/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>
-	<script src="js/rummage.js"></script>
+	<script src="js/route.js"></script>
 </body>
 </html>
