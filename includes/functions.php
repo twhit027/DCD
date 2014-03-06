@@ -51,11 +51,11 @@ $domain2SiteCode = array(
 	'lohud.com' => 'TJN'
 );
 $sites = array(
-	'DES' => array('siteName' => 'desmoinesregister', 'siteUrl' => 'http://www.desmoinesregister.com', 'busName' => 'The Des Moines Register', 'palate' => 2),
-	'INI' => array('siteName' => 'indystar', 'siteUrl' => 'http://www.indystar.com', 'busName' => 'The Indianapolis Star', 'palate' => 1),
-	'IOW' => array('siteName' => 'press-citizen', 'siteUrl' => 'http://www.press-citizen.com', 'busName' => 'The Press-Citizen', 'palate' => 4),
-	'POU' => array('siteName' => 'poughkeepsiejournal', 'siteUrl' => 'http://www.poughkeepsiejournal.com', 'busName' => 'The Poughkeepsie Journal', 'palate' => 4),
-	'TJN' => array('siteName' => 'lohud', 'siteUrl' => 'http://www.lohud.com', 'busName' => 'The Journal News', 'palate' => 2)		
+	'DES' => array('siteName' => 'desmoinesregister', 'siteUrl' => 'http://www.desmoinesregister.com', 'busName' => 'The Des Moines Register', 'palate' => 2, 'sitePulls' => '[DES]'),
+	'INI' => array('siteName' => 'indystar', 'siteUrl' => 'http://www.indystar.com', 'busName' => 'The Indianapolis Star', 'palate' => 1, 'sitePulls' => '[INI]'),
+	'IOW' => array('siteName' => 'press-citizen', 'siteUrl' => 'http://www.press-citizen.com', 'busName' => 'The Press-Citizen', 'palate' => 4, 'sitePulls' => '[IOW]'),
+	'POU' => array('siteName' => 'poughkeepsiejournal', 'siteUrl' => 'http://www.poughkeepsiejournal.com', 'busName' => 'The Poughkeepsie Journal', 'palate' => 4, 'sitePulls' => '[POU]'),
+	'TJN' => array('siteName' => 'lohud', 'siteUrl' => 'http://www.lohud.com', 'busName' => 'The Journal News', 'palate' => 2, 'sitePulls' => '[TJN]')		
 );
 $palate = array(
 	1 => array('top' => '#292929', 'bottom' => '#080808', 'border' => '#2C2C2C'),
@@ -84,6 +84,7 @@ $siteUrl = $sites[$siteCode]['siteUrl'];
 $siteName = $sites[$siteCode]['siteName'];
 $busName = $sites[$siteCode]['busName'];
 $palNum = $sites[$siteCode]['palate'];	
+
 
 class Navigation extends Database
 {
@@ -378,6 +379,9 @@ class Ads extends Database
 }
 class Content extends Database
 {	
+
+	
+
 	
 	public function getAd($id)
 	{		
@@ -401,13 +405,46 @@ class Content extends Database
 	
 	public function getCategoryListing($name)
 	{		
-		$stmt = $this->db->prepare("SELECT * FROM `listing` where `Position`= :name");
-		$stmt->execute(array(':name' => urldecode($name)));
-		$data = '';	
+		
+		
+		$siteCodes['codes'] = array('DES', 'IOW', 'GPG');
+		
+		$where = "SELECT * FROM `listing` where `Position`= ?  AND `site` IN(";
+		$z = 0;
+		foreach($siteCodes['codes'] as $cd)
+		{
 			
+			if($z == 0)
+			{
+				$where .= "?";
+			}
+			else
+			{
+				$where .= ", ?";
+			}
+			$z += 1;
+		}
+		$where .= ")";
+	
+		
+		$stmt = $this->db->prepare($where);
+		
+		$stmt->bindParam(1, urldecode($name));
+		
+		
+		
+		foreach($siteCodes['codes'] as $key => &$value)
+		{
+			$count = $key + 2;
+			$stmt->bindParam($count, $value);
+			
+		}
+
+		$stmt->execute();
+		$data = '';	
+		
 		foreach ($stmt as $row) 
 		{		
-		
 		
 			if(strlen($row['AdText']) > 200)
 			{  
