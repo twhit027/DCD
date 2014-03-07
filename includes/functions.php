@@ -431,7 +431,7 @@ class Content extends Database
 		{		
 			if(strlen($row['AdText']) > 200)
 			{  
-				$string = substr($row['AdText'],0,200)."... <a  href='item.php?x=". $row['ID']."'>Click for full text</a>";
+				$string = substr($row['AdText'],0,200)."... <a  href='item.php?x=". $row['ID']."&c=".$name."'>Click for full text</a>";
 				
 			}
 			else

@@ -47,7 +47,7 @@ body
 		
 		echo '<nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse side-navbar ">';
     	echo '<div class="visible-xs">';
-      	echo '<h3 style="color:#3276B1;">View By Category</h3>';
+      	echo '<h3 style="color:#3276B1;">View By Category 01</h3>';
         echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
 		echo $nav->getSideNavigation();
 		
@@ -62,14 +62,21 @@ body
 	?>
 </div>
 </header>
-  
+ 
+
 <?php
 	echo $ads->getLaunchpad(); 	
 ?>
 
 <div class="container" >     
     <div class="row" style="background-color:#FFF;">
-        <div class="col-xs-11 col-sm-8">                           
+        <div class="col-xs-11 col-sm-8">           
+        	
+		<ol class="breadcrumb">
+		  <li><a href="<?php echo APP_ROOT; ?>">Home</a></li>
+		  <li class="active">Category</li>
+		</ol>
+		        	                
            	<?php
             		$content = new Content();
 		   
