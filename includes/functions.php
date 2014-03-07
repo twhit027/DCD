@@ -421,11 +421,51 @@ class Content extends Database
 	}
 	
 	
-	public function getCategoryListing($name)
+	public function getCategoryListing($name,$page=0)
 	{		
-		$stmt = $this->db->prepare("SELECT * FROM `listing` where `Position`= :name");
+		//Add pagination
+		//First find how many rows we have
+		$stmt = $this->db->prepare("SELECT COUNT(*) FROM `listing` where `Position`= :name");
 		$stmt->execute(array(':name' => urldecode($name)));
+		$numOfRows = $stmt->fetchColumn();
+		//Set the max to show per page
+		$maxPerPage = 10;
+		//Get what page we're on
+		$page = (int)$page;
+		//If there was no page passed, it'll be zero. Need to bump it to page 1
+		if($page < 1)
+			$page = 1;
+		//Find where to start our limit for the LIMIT SQL call below
+		$limitStart = ($page-1)*$maxPerPage;
+		//Get our pagination code
+		$pagination = "";
+		if($numOfRows > $maxPerPage){
+			$numOfPages = ceil($numOfRows/$maxPerPage);
+			
+			if($page > 1)
+				$pagination .= '<ul class="pagination"><li><a href="category.php?x='.$name.'&page='.($page-1).'">&laquo;</a></li>';
+			else
+				$pagination .= '<ul class="pagination"><li class="disabled"><a href="#">&laquo;</a></li>';
+			
+			for($pge = 1; $pge <= $numOfPages; $pge++){
+				if($pge == $page)
+					$pagination .= '<li class="active"><a href="category.php?x='.$name.'&page='.$pge.'">'.$pge.' <span class="sr-only">(currecnt)</span></a></li>';
+				else
+					$pagination .= '<li><a href="category.php?x='.$name.'&page='.$pge.'">'.$pge.'</a></li>';
+			}
+			
+			if($page < $numOfPages)
+				$pagination .= '<li><a href="category.php?x='.$name.'&page='.($page+1).'">&raquo;</a></li></ul>';
+			else
+				$pagination .= '<li class="disabled"><a href="#">&raquo;</a></li></ul>';
+		}
+		
+		$stmt = $this->db->prepare("SELECT * FROM `listing` where `Position`= :name LIMIT :page,:max");
+		$stmt->execute(array(':name' => urldecode($name), ':page' => $limitStart, ':max' => $maxPerPage));
 		$data = '';	
+		
+		//Add pagination
+		$data .= $pagination;
 			
 		foreach ($stmt as $row) 
 		{		
@@ -460,6 +500,9 @@ class Content extends Database
 
 			$data .='</div>';	
 		}
+		
+		//Add pagination
+		$data .= $pagination;
 		
 		return $data;
 	}
