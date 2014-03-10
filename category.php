@@ -101,9 +101,6 @@ body
 
 </div>
 
-<input type="hidden" name="SC" value="<?php echo $siteCode;?>">
-<input type="hidden" name="HH" value="<?php echo $httpHost;?>">
-<input type="hidden" name="DM" value="<?php echo $domain;?>">
 
 <?php 
 echo $ads->getLeaderBottom(); 
