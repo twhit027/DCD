@@ -1,6 +1,7 @@
 <?php
 include(dirname(__FILE__) . '/3rdParty/klogger/KLogger.php');
 include('conf/constants.php');
+include('includes/functions.php');
 
 $log = KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
 
@@ -10,6 +11,10 @@ $log->logInfo('FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR']);
 $log->logInfo('REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR']);
 $log->logInfo('HTTP_HOST: '.@$_SERVER['HTTP_HOST']);
 $log->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);
+
+$app = new App();
+
+print_r($app);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -40,25 +45,7 @@ body
 <header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
 <div class="container">
 	<?php
-		include('includes/functions.php');
-    include('includes/header.php');
-		
-		$nav = new Navigation();
-		
-		echo '<nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse side-navbar ">';
-    	echo '<div class="visible-xs">';
-      	echo '<h3 style="color:#3276B1;">View By Category</h3>';
-        echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
-		echo $nav->getSideNavigation();
-		
-		echo '</ul>';
-		echo '</div>';
-		echo '</nav>';
-
-    include('includes/toggle.php'); 
-		
-		$ads = new Ads();
-		echo $ads->InitializeAds();	
+		include('includes/header.php');
 	?>
 </div>
 </header>
@@ -110,9 +97,9 @@ body
 
 </div>
 
-<input type="hidden" name="SC" value="<?php echo $siteCode;?>">
-<input type="hidden" name="HH" value="<?php echo $httpHost;?>">
-<input type="hidden" name="DM" value="<?php echo $domain;?>">
+<input type="hidden" name="SC" value="<?php echo $app->siteCode;?>">
+<input type="hidden" name="HH" value="<?php echo $app->Host;?>">
+<input type="hidden" name="DM" value="<?php echo $app->domain;?>">
 
 <?php 
 echo $ads->getLeaderBottom(); 
