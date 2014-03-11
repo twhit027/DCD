@@ -71,17 +71,12 @@ body
     <div class="row" style="background-color:#FFF;">
         <div class="col-xs-11 col-sm-8">
     
-            <h1><?=$busName?> &amp; Online Classifieds</h1>
             
-            <a href="<?=$siteUrl?>"><img target="_blank" alt="<?=$siteName?> Logo" title="<?=$siteName?>" style="margin-bottom: 10px;background-color: black" src="<?=$siteUrl?>/graphics/ody/cobrand_logo.gif"></a>
-                        
-            <p>We have many ad packages to suit your classified needs.</p>
-            
-            <p>Place a classified ad in <?=$busName?> in-paper and online. List all kinds of items including Merchandise, Pets, Garage Sales, Services, and much more. </p>
             
            	<?php
             	$content = new Content();
-				echo $content->getPartnersString($siteUrl);
+				echo $content->introText();
+				echo $content->getPartnersString();
             ?>
         </div>
        
@@ -110,9 +105,7 @@ body
 
 </div>
 
-<input type="hidden" name="SC" value="<?php echo $siteCode;?>">
-<input type="hidden" name="HH" value="<?php echo $httpHost;?>">
-<input type="hidden" name="DM" value="<?php echo $domain;?>">
+
 
 <?php 
 echo $ads->getLeaderBottom(); 
