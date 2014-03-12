@@ -120,29 +120,122 @@ class Navigation extends Database
 	function getSideNavigation()
 	{		
 	
-		$stmt = $this->db->prepare("SELECT * FROM `placements` ");
-		$stmt->execute();
-		$random = rand(1, 1500);
-		$data = '';
-		foreach ($stmt as $row) 
-		{
-				
-			$data .='<li>';
-
-			$data .='<div class="accordion-heading" style="padding-bottom:5px;">';
-			$data .='<a data-toggle="collapse" class="btn btn-default"  style="width:100%;" role="button" data-target="#accordion-heading-'.$row['ID'].''.$random.'"><span class="nav-header-primary">'.$row['Placement'].'</span></a>';
-			$data .='</div>';
+		$siteCodes['codes'] = explode(",", $this->siteGroup);
 		
-			$data .='<ul class="nav nav-list collapse" id="accordion-heading-'.$row['ID'].''.$random.'">';
-				$data .= $this->getChildNav($row['Placement']);
-			$data .='</ul>';
+
+		$where = "SELECT DISTINCT (Placement), ID FROM `positions` where `site` IN(";
+		$z = 0;
+		foreach($siteCodes['codes'] as $cd)
+		{
+
+			if($z == 0)
+			{
+				$where .= "?";
+			}
+			else
+			{
+				$where .= ", ?";
+			}
+			$z += 1;
+		}
+		$where .= ") GROUP BY Placement ORDER BY Placement";
+	
+		$stmt = $this->db->prepare($where);
+
+		foreach($siteCodes['codes'] as $key => &$value)
+		{
+			$count = $key + 1;
 			
-			$data .='</li>';
+			$stmt->bindParam($count, $value);
+		
 		}
 		
+		$stmt->execute();
+	
+		$data = "";
+		$count = 0;
+		
+		foreach ($stmt as $row)
+		{	
+			$random = rand(1, 1500);
+			$data .= '<li>';
+				$data .='<div class="accordion-heading" style="padding-bottom:5px;">';
+				$data .= '<a data-toggle="collapse" class="btn btn-default" role="button" data-target="#accordion-heading-'.$random.'"  style="width:100%;" >';
+				$data .= '<span class="nav-header-primary">'.$row['Placement'].'</span>';
+				$data .= '</a>';
+				$data .= '</div>';
+				
+				$data .='<ul class="nav nav-list collapse" id="accordion-heading-'.$random.'">';
+				$data .= $this->getNavSubItems($row['Placement']);
+				$data .= '</ul>';
+			
+			$data .= '</li>';
+			
+			
+			$count += 1;
+			
+			
+		}
+		
+	
 		
 		return $data;
+
 	}
+	
+	
+	function getNavSubItems($placement)
+	{		
+	
+		$siteCodes['codes'] = explode(",", $this->siteGroup);
+
+		$where = "SELECT * FROM `positions` where `Placement`= ? AND `site` IN(";
+		$z = 0;
+		foreach($siteCodes['codes'] as $cd)
+		{
+
+			if($z == 0)
+			{
+				$where .= "?";
+			}
+			else
+			{
+				$where .= ", ?";
+			}
+			$z += 1;
+		}
+		$where .= ") ORDER BY Position ";
+	
+		$stmt = $this->db->prepare($where);
+		
+		$stmt->bindParam(1, urldecode($placement));
+		
+		foreach($siteCodes['codes'] as $key => &$value)
+		{
+			$count = $key + 2;
+			
+			$stmt->bindParam($count, $value);
+		
+		}
+		
+		$stmt->execute();
+		$data = '';
+		
+		foreach ($stmt as $row)
+		{	
+		
+			
+			$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x='.$row['Position'].'" title="Title">'.$row['Position'].'('.$row['Count'].')</a>';
+		}
+		
+
+		
+		return $data;
+
+
+	}
+	
+	
 	
 	function getSideNavigationBuild()
 	{			
