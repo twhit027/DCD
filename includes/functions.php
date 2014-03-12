@@ -80,6 +80,7 @@ if (isset($domain)&&(isset($domain2SiteCode[strtolower($domain)]))) {
 if (isset($_GET['sc'])&&(isset($sites[strtoupper($_GET['sc'])]))) {
 	$siteCode = strtoupper($_GET['sc']);
 }
+
 $siteUrl = $sites[$siteCode]['siteUrl'];
 $siteName = $sites[$siteCode]['siteName'];
 $busName = $sites[$siteCode]['busName'];
@@ -274,9 +275,23 @@ class Navigation extends Database
 		return $data;
 	}		
 	
-	function getBottomNavigationStatic() 
+	function getBottomNavigationStatic($siteUrl, $siteName) 
 	{
-		
+		$data = '<hr /><div class="container" style="font-size: 12px;line-height: 16px;text-align: center"><p>';
+		$data .= '<a href="'.$siteUrl.'/news">News</a>&nbsp;|&nbsp;';
+		$data .= '<a href="'.$siteUrl.'/sports">Sports</a>&nbsp;|&nbsp;';
+		$data .= '<a href="'.$siteUrl.'/business">Business</a>&nbsp;|&nbsp;';
+		$data .= '<a href="'.$siteUrl.'/Entertainment">Entertainment</a>&nbsp;|&nbsp;';
+		$data .= '<a href="'.$siteUrl.'/life">Life</a>&nbsp;|&nbsp;';
+		$data .= '<a href="'.$siteUrl.'/Communities">Communities</a>&nbsp;|&nbsp;';
+		$data .= '<a href="'.$siteUrl.'/opinion">Opinion</a>&nbsp;|&nbsp;';						
+		$data .= '<a href="http://www.legacy.com/obituaries/'.$siteName.'/">Obituaries</a>&nbsp;|&nbsp;';	
+		$data .= '<a href="'.$siteUrl.'/help">Help</a></p>';
+		$data .= '<p>Copyright &copy; 2014 www.'.$siteName.'.com. All rights reserved. Users of this site agree to the ';
+		$data .= '<a href="'.$siteUrl.'/section/terms">Terms of Service</a>, ';
+		$data .= '<a href="'.$siteUrl.'/section/privacy">Privacy Notice</a>, and <a href="'.$siteUrl.'/section/privacy#adchoices">Ad Choices</a></p></div>';
+	
+	return $data;		
 	}
 }
 
@@ -565,22 +580,22 @@ class Content extends Database
 			<div class="col-md-3">
 				<h4>Cars</h4>
 				<a href="'.$siteUrl.'/cars"><img alt="Cars.com" src="img/partners/130-cars.gif"></a>
-				<p><a class="button" href="'.$siteUrl.'/cars"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Autos</button></a></p>
+				<p><a class="button" href="'.$siteUrl.'/cars" target="_blank"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Autos</button></a></p>
 			</div> 		
 			<div class="col-md-3">
 				<h4>Jobs</h4>
 				<a href="'.$siteUrl.'/jobs"><img alt="micareerbuilder.com" src="img/partners/130-careerbuilder.gif"></a>
-				<p><a class="button" href="'.$siteUrl.'/jobs"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Jobs</button></a></p>		
+				<p><a class="button" href="'.$siteUrl.'/jobs" target="_blank"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Jobs</button></a></p>		
 			</div>		
 			<div class="col-md-3">
 				<h4>Homes</h4>
 				<a href="'.$siteUrl.'/homes"><img alt="homefinder.com" src="img/partners/130-homefinder.gif" ></a>
-				<p><a class="button" href="'.$siteUrl.'/homes"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Homes</button></a></p>
+				<p><a class="button" href="'.$siteUrl.'/homes" target="_blank"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Homes</button></a></p>
 			</div>
 			<div class="col-md-3">
 				<h4>Rentals</h4>
 				<a href="'.$siteUrl.'/apartments"><img alt="apartments.com" src="img/partners/130-apartments.gif" ></a>
-				<p><a class="button" href="'.$siteUrl.'/apartments"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Listings</button></a></p>
+				<p><a class="button" href="'.$siteUrl.'/apartments" target="_blank"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Listings</button></a></p>
 			</div>			
 		</div>';
 		
