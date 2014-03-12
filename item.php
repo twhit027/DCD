@@ -75,8 +75,8 @@ body
     <div class="row" style="background-color:#FFF;">
         <div class="col-xs-11 col-sm-8">
     		<ol class="breadcrumb">
-		  <li><a href="<?php echo APP_ROOT; ?>">Home</a></li>
-		  <li><a href="<?php echo APP_ROOT .'/category.php?x='.$_GET['c']; ?>">Category</a></li>
+		  <li><a href=".">Home</a></li>
+		  <li><a href="./category.php?x=<?php echo$_GET['c']; ?>">Category</a></li>
 		  <li class="active">Item</li>
 		</ol>
             
