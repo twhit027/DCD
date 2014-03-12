@@ -92,7 +92,7 @@ class Navigation extends Database
 	function getSideNavigation()
 	{		
 	
-		$stmt = $this->db->prepare("SELECT * FROM `placements` ");
+		$stmt = $this->db->prepare("SELECT * FROM `positions` ");
 		$stmt->execute();
 		$random = rand(1, 1500);
 		$data = '';
@@ -102,11 +102,11 @@ class Navigation extends Database
 			$data .='<li>';
 
 			$data .='<div class="accordion-heading" style="padding-bottom:5px;">';
-			$data .='<a data-toggle="collapse" class="btn btn-default"  style="width:100%;" role="button" data-target="#accordion-heading-'.$row['ID'].''.$random.'"><span class="nav-header-primary">'.$row['Name'].'</span></a>';
+			$data .='<a data-toggle="collapse" class="btn btn-default"  style="width:100%;" role="button" data-target="#accordion-heading-'.$row['ID'].''.$random.'"><span class="nav-header-primary">'.$row['Position'].'</span></a>';
 			$data .='</div>';
 		
 			$data .='<ul class="nav nav-list collapse" id="accordion-heading-'.$row['ID'].''.$random.'">';
-				$data .= $this->getChildNav($row['Name']);
+				$data .= $this->getChildNav($row['Position']);
 			$data .='</ul>';
 			
 			$data .='</li>';
@@ -115,6 +115,20 @@ class Navigation extends Database
 		
 		return $data;
 	}
+	
+	function getChildNav($name)
+	{
+		$stmt = $this->db->prepare("SELECT * FROM `positions` where `placement` = :name ");
+		$stmt->execute(Array(':name' => $name));
+		$data ="";
+		foreach ($stmt as $row) 
+		{
+				$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x='.urlencode($row['Placement']).'" title="Title">'.$row['Placement'].'('.$row['Count'].')</a>';
+		}
+		return $data;
+				
+	}
+		
 	
 	function getSideNavigationBuild()
 	{			
@@ -161,23 +175,6 @@ class Navigation extends Database
 		return $data;
 				
 	}		
-		
-	function getChildNav($name)
-	{
-		$stmt = $this->db->prepare("SELECT * FROM `positions` where `placement` = :name ");
-		$stmt->execute(Array(':name' => $name));
-		$data ="";
-		foreach ($stmt as $row) 
-		{
-			$count = $this->categoryAdCheck($row['Name']);
-			if($count != 0)
-			{
-				$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x='.urlencode($row['Name']).'" title="Title">'.$row['Name'].'('.$count.')</a>';
-			}
-		}
-		return $data;
-				
-	}
 	
 
 	public function categoryAdCheck($name)
@@ -609,6 +606,47 @@ class Tracking extends Database
 	{
 	}
 
+}
+
+class FindRummages extends Database {	
+	private function createWhere($column,$values){
+		foreach($values as $k=>$v)
+			$values[$k] = sprintf("'%s'",$v);
+		
+		$where = $column." IN (".implode(",",$values).")";
+		
+		return $where;
+	}
+	
+	public function getRummages($params){
+		$data = array();
+		$where = '';
+
+		if (!empty($params['where'])) {
+				$where = "AND ";
+				foreach($params['where'] as $k=>$v) {
+					$where .= $this->createWhere($k,$v);
+				}
+		}
+		
+		$stmt = $this->db->prepare("SELECT * FROM `listing` WHERE SiteCode in ('IOW') ".$where);
+		$stmt->execute(array(':siteCode' => $params['PubCode']));
+			
+		$results = $stmt->fetchAll();
+					
+		foreach ($results as $row) {
+			$data[$row['ID']] = array(
+				"street"=>$row['Street'],
+				"city"=>$row['City'],
+				"state"=>$row['State'],
+				"zip"=>$row['Zip'],
+				"lat"=>$row['Lat'],
+				"lon"=>$row['Lon']
+			);
+		}
+
+		return $data;
+	}	
 }
 
 ?>

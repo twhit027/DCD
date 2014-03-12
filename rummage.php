@@ -1,8 +1,7 @@
 <?php
-
 include(dirname(__FILE__) . '/3rdParty/klogger/KLogger.php');
 include('conf/constants.php');
-include('includes/FindRummages.php');
+include('includes/functions.php');
 
 $log = KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
 
@@ -11,9 +10,7 @@ $log->logInfo('Rummage Page Listing');
 $log->logInfo('FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR']);
 $log->logInfo('REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR']);
 $log->logInfo('HTTP_HOST: '.@$_SERVER['HTTP_HOST']);
-$log->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);
-	
-	
+$log->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);	
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,12 +47,13 @@ $log->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);
 			$params = array(
 				'PubCode' => 'DES-RM Des Moines Register'
 			);
-			@$myRummages = new FindRummages(DB_SERVER, DB_USER, DB_PASS, DB_NAME, DB_PORT);
-			$listOfRummages = $myRummages->getRummages($params);
-			if($myRummages->connect_errno)
-				echo "console.log(\"Connect Error: Could not connect to Database\");";
-			else
-				echo "DCDMAPGLOBAL.points = ".json_encode($listOfRummages).";\r\n";
+			
+			$myRummages = new FindRummages();
+			print_r($myRummages);
+			$listOfRummages = $myRummages->getRummages($params);			
+			print_r($listOfRummages);
+
+			//echo "DCDMAPGLOBAL.points = ".json_encode($listOfRummages).";\r\n";
 			
 		?>
 	</script>
@@ -67,7 +65,6 @@ $log->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);
 	<header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
 	<div class="container">
 		<?php
-			include('includes/functions.php');
 			include('includes/header.php');
 			
 			$nav = new Navigation();
