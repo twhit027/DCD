@@ -25,6 +25,10 @@ body
 {
 	min-width:10px!important;
 }
+.dcd-content-text
+{
+	display:none;
+}
 </style>
 
 <link href="3rdParty/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -123,6 +127,7 @@ include('includes/tracking.php');
 	<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 	<script src="3rdParty/bootstrap/js/bootstrap.min.js"></script>
   <script src="3rdParty/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>
+  <script src="js/category.js"></script>
 </body>
 </html>
 		  

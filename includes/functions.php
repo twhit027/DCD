@@ -426,13 +426,14 @@ class Content extends Database
 		$stmt = $this->db->prepare("SELECT * FROM `listing` where `Position`= :name");
 		$stmt->execute(array(':name' => urldecode($name)));
 		$data = '';	
-			
+		
+		$count = 1;
 		foreach ($stmt as $row) 
 		{		
 			if(strlen($row['AdText']) > 200)
 			{  
-				$string = substr($row['AdText'],0,200)."... <a  href='item.php?x=". $row['ID']."&c=".$name."'>Click for full text</a>";
-				
+				$string = "<div id='dcd-short-".$count."'>".substr(strip_tags($row['AdText']),0,200)."... </div><div class='dcd-content-text' id='dcd-content-".$count."'>".strip_tags($row['AdText'])."</div><a  href='item.php?x=". $row['ID']."&c=".$name."' class='dcd-expand-text' data-id='".$count."'>Click for full test</a>";
+				$count++;
 			}
 			else
 			{	
@@ -446,13 +447,13 @@ class Content extends Database
 			$data .= "<div class='jumbotron'>";
 			$data .= "<p>".$string."</p>";
 			
-			$status = substr($row['AdText'],0,120);
+			$status = substr(strip_tags($row['AdText']),0,120);
 			
 			
 			
 			$data .= '<a class="btn btn-primary" href="http://twitter.com/home?status='.$status.'" target="_blank">twitter</a>';
 
-			$data.="<a class='btn btn-primary' href='https://www.facebook.com/sharer/sharer.php?u=http://".$_SERVER['SERVER_NAME']."/item.php?x=". $row['ID']."' target='_blank'>Facebook</a>";
+			$data .= "<a class='btn btn-primary' href='https://www.facebook.com/sharer/sharer.php?u=http://".$_SERVER['SERVER_NAME']."/item.php?x=". $row['ID']."' target='_blank'>Facebook</a>";
 
 			$data .= '<a class="btn btn-primary" href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://'.$_SERVER['SERVER_NAME'].'/item.php?x='. $row['ID'].'" target="_blank">google</a>';
 			
