@@ -6,9 +6,9 @@ define("APP_ROOT", "/DCD");
 define("DB_HOST", "localhost");
 define("DB_PORT", "3306");
 //define("DB_USER", "classifiedsproject");
-define("DB_USER", "classifiedsproj");
-define("DB_PASS", "Classdb13!");
-define("DB_NAME", "classifiedsproje");
+define("DB_USER", "classifieds");
+define("DB_PASS", "ClassDB13!");
+define("DB_NAME", "classifieds");
 //feed tables
 define("TBL_LISTING", "listing");
 define("TBL_PLACEMENT", "placements");

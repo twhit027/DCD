@@ -1,6 +1,7 @@
 <?php
 include(dirname(__FILE__) . '/3rdParty/klogger/KLogger.php');
 include('conf/constants.php');
+include('includes/functions.php');
 
 $log = KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
 
@@ -10,6 +11,8 @@ $log->logInfo('FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR']);
 $log->logInfo('REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR']);
 $log->logInfo('HTTP_HOST: '.@$_SERVER['HTTP_HOST']);
 $log->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);
+
+$app = new App();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -40,16 +43,22 @@ body
 <header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
 <div class="container">
 	<?php
-		include('includes/functions.php');
-    include('includes/header.php');
-		
 		$nav = new Navigation();
-		
+		$palette = $app->getSite()->getPalette();
+		$top = site::$paletteArray[$palette]['top'];
+		$bottom = site::$paletteArray[$palette]['bottom'];
+		$border = site::$paletteArray[$palette]['border'];
+		$siteName = $app->getSite()->getSiteName();
+		$siteUrl = $app->getSite()->getSiteUrl();
+		$busName = $app->getSite()->getBusName();
+		echo $nav->getTopNavigationStatic($app->getSite()->getSiteUrl(), $top, $bottom, $border);
 		echo '<nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse side-navbar ">';
-    	echo '<div class="visible-xs">';
-      	echo '<h3 style="color:#3276B1;">View By Category</h3>';
-        echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
-		echo $nav->getSideNavigation();
+    echo '<div class="visible-xs">';
+    echo '<h3 style="color:#3276B1;">View By Category</h3>';
+    echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
+    echo 'here1';
+		echo $nav->getSideNavigation($app->getCategories());
+		echo 'here2';
 		
 		echo '</ul>';
 		echo '</div>';
@@ -57,27 +66,53 @@ body
 
     include('includes/toggle.php'); 
 		
-		$ads = new Ads();
-		echo $ads->InitializeAds();	
+		//$ads = new Ads();
+		//echo $ads->InitializeAds();	
 	?>
 </div>
 </header>
   
 <?php
-	echo $ads->getLaunchpad(); 	
+	//echo $ads->getLaunchpad(); 	
 ?>
 
 <div class="container" >     
     <div class="row" style="background-color:#FFF;">
-        <div class="col-xs-11 col-sm-8">
-    
+        <div class="col-xs-11 col-sm-8">                        
+
+            <h1><?=$busName?> &amp; Online Classifieds</h1>
             
+            <a href="<?=$siteUrl?>"><img target="_blank" alt="<?=$siteName?> Logo" title="<?=$siteName?>" style="margin-bottom: 10px;background-color: black" src="<?=$siteUrl?>/graphics/ody/cobrand_logo.gif"></a>
+                        
+            <p>We have many ad packages to suit your classified needs.</p>
             
-           	<?php
-            	$content = new Content();
-				echo $content->introText();
-				echo $content->getPartnersString();
-            ?>
+            <p>Place a classified ad in <?=$busName?> in-paper and online. List all kinds of items including Merchandise, Pets, Garage Sales, Services, and much more. </p>
+
+
+		<p><a class="button" href="'.$siteUrl.'/placead"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">Place an Ad</button></a></p>             
+    <h1>Featured Partner Classified Services</h1>
+		<div class="row">
+			<div class="col-md-3">
+				<h4>Cars</h4>
+				<a href="'.$siteUrl.'/cars"><img alt="Cars.com" src="img/partners/130-cars.gif"></a>
+				<p><a class="button" href="'.$siteUrl.'/cars"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Autos</button></a></p>
+			</div> 		
+			<div class="col-md-3">
+				<h4>Jobs</h4>
+				<a href="'.$siteUrl.'/jobs"><img alt="micareerbuilder.com" src="img/partners/130-careerbuilder.gif"></a>
+				<p><a class="button" href="'.$siteUrl.'/jobs"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Jobs</button></a></p>		
+			</div>		
+			<div class="col-md-3">
+				<h4>Homes</h4>
+				<a href="'.$siteUrl.'/homes"><img alt="homefinder.com" src="img/partners/130-homefinder.gif" ></a>
+				<p><a class="button" href="'.$siteUrl.'/homes"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Homes</button></a></p>
+			</div>
+			<div class="col-md-3">
+				<h4>Rentals</h4>
+				<a href="'.$siteUrl.'/apartments"><img alt="apartments.com" src="img/partners/130-apartments.gif" ></a>
+				<p><a class="button" href="'.$siteUrl.'/apartments"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Listings</button></a></p>
+			</div>			
+		</div>';            
         </div>
        
         <div class=" col-sm-4 card-suspender-color" >
@@ -87,14 +122,14 @@ body
 						echo '<h3 style="color:#3276B1;">Search Our Classifieds</h3>';						
 						echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
 		
-						echo $nav->getSideNavigation();
+						echo $nav->getSideNavigation($app->getCategories());
 						
 						echo '</ul>';
 						echo '</div>';								
 					?>
         	<div style="padding:10px">
         		<?php 
-        		echo $ads->getFlex();	
+        		//echo $ads->getFlex();	
         		?>
         	</div>					
         	</div>
@@ -108,13 +143,13 @@ body
 
 
 <?php 
-echo $ads->getLeaderBottom(); 
+//echo $ads->getLeaderBottom(); 
 include('includes/tracking.php'); 
 ?>
 
 <footer class="footer">
 <?php
-	include('includes/footer.php');
+	echo $nav->getBottomNavigationStatic($app->getSite()->getSiteUrl(), $app->getSite()->getSiteName());
 ?>
 </footer>
 
