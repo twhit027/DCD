@@ -77,15 +77,21 @@ body
         <div class="col-xs-11 col-sm-8">           
         	
 		<ol class="breadcrumb">
-		  <li><a href="<?php echo APP_ROOT; ?>">Home</a></li>
+		  <li><a href=".">Home</a></li>
 		  <li class="active">Category</li>
 		</ol>
 		        	                
            	<?php
             		$content = new Content();
 		   
+            		$page = 1;
+            		
+            		if (isset($_GET['page'])) {
+            			$page = $_GET['page'];
+            		}
+		   
 				   echo "<h1>".urldecode($_GET['x'])."</h1>";
-				   echo $content->getCategoryListing($_GET['x'],$_GET['page']);
+				   echo $content->getCategoryListing($_GET['x'],$page);
             ?>
         </div>
        
