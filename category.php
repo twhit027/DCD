@@ -85,7 +85,7 @@ body
             		$content = new Content();
 		   
 				   echo "<h1>".urldecode($_GET['x'])."</h1>";
-				   echo $content->getCategoryListing($_GET['x']);
+				   echo $content->getCategoryListing($_GET['x'],$_GET['page']);
             ?>
         </div>
        
