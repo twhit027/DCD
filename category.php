@@ -25,6 +25,10 @@ body
 {
 	min-width:10px!important;
 }
+.dcd-content-text
+{
+	display:none;
+}
 </style>
 
 <link href="3rdParty/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -89,7 +93,7 @@ body
         	<div class="hidden-xs">
           <?php 																					
 						echo '<div role="navigation" id="sidebar" style="background-color:#000; padding-left:15px; padding-right:15px; padding-top:5px">';
-						echo '<h3 style="color:#3276B1;">View By Category</h3>';						
+						echo '<h3 style="color:#3276B1;">Search Our Classifieds</h3>';						
 						echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
 		
 						echo $nav->getSideNavigation();
@@ -108,9 +112,6 @@ body
 
 </div>
 
-<input type="hidden" name="SC" value="<?php echo $siteCode;?>">
-<input type="hidden" name="HH" value="<?php echo $httpHost;?>">
-<input type="hidden" name="DM" value="<?php echo $domain;?>">
 
 <?php 
 echo $ads->getLeaderBottom(); 
@@ -126,6 +127,7 @@ include('includes/tracking.php');
 	<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 	<script src="3rdParty/bootstrap/js/bootstrap.min.js"></script>
   <script src="3rdParty/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>
+  <script src="js/category.js"></script>
 </body>
 </html>
 		  
