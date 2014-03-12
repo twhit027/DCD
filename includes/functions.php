@@ -436,19 +436,58 @@ class Content extends Database
 	}
 	
 	
-	public function getCategoryListing($name)
+	public function getCategoryListing($name,$page=0)
 	{		
-		$stmt = $this->db->prepare("SELECT * FROM `listing` where `Position`= :name");
+		//Add pagination
+		//First find how many rows we have
+		$stmt = $this->db->prepare("SELECT COUNT(*) FROM `listing` where `Position`= :name");
 		$stmt->execute(array(':name' => urldecode($name)));
+		$numOfRows = $stmt->fetchColumn();
+		//Set the max to show per page
+		$maxPerPage = 10;
+		//Get what page we're on
+		$page = (int)$page;
+		//If there was no page passed, it'll be zero. Need to bump it to page 1
+		if($page < 1)
+			$page = 1;
+		//Find where to start our limit for the LIMIT SQL call below
+		$limitStart = ($page-1)*$maxPerPage;
+		//Get our pagination code
+		$pagination = "";
+		if($numOfRows > $maxPerPage){
+			$numOfPages = ceil($numOfRows/$maxPerPage);
+			
+			if($page > 1)
+				$pagination .= '<ul class="pagination"><li><a href="category.php?x='.$name.'&page='.($page-1).'">&laquo;</a></li>';
+			else
+				$pagination .= '<ul class="pagination"><li class="disabled"><a href="#">&laquo;</a></li>';
+			
+			for($pge = 1; $pge <= $numOfPages; $pge++){
+				if($pge == $page)
+					$pagination .= '<li class="active"><a href="category.php?x='.$name.'&page='.$pge.'">'.$pge.' <span class="sr-only">(currecnt)</span></a></li>';
+				else
+					$pagination .= '<li><a href="category.php?x='.$name.'&page='.$pge.'">'.$pge.'</a></li>';
+			}
+			
+			if($page < $numOfPages)
+				$pagination .= '<li><a href="category.php?x='.$name.'&page='.($page+1).'">&raquo;</a></li></ul>';
+			else
+				$pagination .= '<li class="disabled"><a href="#">&raquo;</a></li></ul>';
+		}
+		
+		$stmt = $this->db->prepare("SELECT * FROM `listing` where `Position`= :name LIMIT :page,:max");
+		$stmt->execute(array(':name' => urldecode($name), ':page' => $limitStart, ':max' => $maxPerPage));
 		$data = '';	
 		
-		$count = 1;
+		//Add pagination
+		$data .= $pagination;
+			
 		foreach ($stmt as $row) 
 		{		
 			if(strlen($row['AdText']) > 200)
 			{  
-				$string = "<div id='dcd-short-".$count."'>".substr(strip_tags($row['AdText']),0,200)."... </div><div class='dcd-content-text' id='dcd-content-".$count."'>".strip_tags($row['AdText'])."</div><a  href='item.php?x=". $row['ID']."&c=".$name."' class='dcd-expand-text' data-id='".$count."'>Click for full test</a>";
-				$count++;
+				$string = substr($row['AdText'],0,200)."... <a  href='item.php?x=". $row['ID']."&c=".$name."'>Click for full text</a>";
+				
 			}
 			else
 			{	
@@ -462,13 +501,13 @@ class Content extends Database
 			$data .= "<div class='jumbotron'>";
 			$data .= "<p>".$string."</p>";
 			
-			$status = substr(strip_tags($row['AdText']),0,120);
+			$status = substr($row['AdText'],0,120);
 			
 			
 			
 			$data .= '<a class="btn btn-primary" href="http://twitter.com/home?status='.$status.'" target="_blank">twitter</a>';
 
-			$data .= "<a class='btn btn-primary' href='https://www.facebook.com/sharer/sharer.php?u=http://".$_SERVER['SERVER_NAME']."/item.php?x=". $row['ID']."' target='_blank'>Facebook</a>";
+			$data.="<a class='btn btn-primary' href='https://www.facebook.com/sharer/sharer.php?u=http://".$_SERVER['SERVER_NAME']."/item.php?x=". $row['ID']."' target='_blank'>Facebook</a>";
 
 			$data .= '<a class="btn btn-primary" href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://'.$_SERVER['SERVER_NAME'].'/item.php?x='. $row['ID'].'" target="_blank">google</a>';
 			
@@ -476,6 +515,9 @@ class Content extends Database
 
 			$data .='</div>';	
 		}
+		
+		//Add pagination
+		$data .= $pagination;
 		
 		return $data;
 	}
