@@ -25,6 +25,10 @@ body
 {
 	min-width:10px!important;
 }
+.dcd-content-text
+{
+	display:none;
+}
 </style>
 
 <link href="3rdParty/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -47,7 +51,7 @@ body
 		
 		echo '<nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse side-navbar ">';
     	echo '<div class="visible-xs">';
-      	echo '<h3 style="color:#3276B1;">View By Category</h3>';
+      	echo '<h3 style="color:#3276B1;">View By Category 01</h3>';
         echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
 		echo $nav->getSideNavigation();
 		
@@ -62,19 +66,32 @@ body
 	?>
 </div>
 </header>
-  
+ 
+
 <?php
 	echo $ads->getLaunchpad(); 	
 ?>
 
 <div class="container" >     
     <div class="row" style="background-color:#FFF;">
-        <div class="col-xs-11 col-sm-8">                           
+        <div class="col-xs-11 col-sm-8">           
+        	
+		<ol class="breadcrumb">
+		  <li><a href=".">Home</a></li>
+		  <li class="active">Category</li>
+		</ol>
+		        	                
            	<?php
             		$content = new Content();
 		   
+            		$page = 1;
+            		
+            		if (isset($_GET['page'])) {
+            			$page = $_GET['page'];
+            		}
+		   
 				   echo "<h1>".urldecode($_GET['x'])."</h1>";
-				   echo $content->getCategoryListing($_GET['x']);
+				   echo $content->getCategoryListing($_GET['x'],$page);
             ?>
         </div>
        
@@ -82,7 +99,7 @@ body
         	<div class="hidden-xs">
           <?php 																					
 						echo '<div role="navigation" id="sidebar" style="background-color:#000; padding-left:15px; padding-right:15px; padding-top:5px">';
-						echo '<h3 style="color:#3276B1;">View By Category</h3>';						
+						echo '<h3 style="color:#3276B1;">Search Our Classifieds</h3>';						
 						echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
 		
 						echo $nav->getSideNavigation();
@@ -116,6 +133,7 @@ include('includes/tracking.php');
 	<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 	<script src="3rdParty/bootstrap/js/bootstrap.min.js"></script>
   <script src="3rdParty/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>
+  <script src="js/category.js"></script>
 </body>
 </html>
 		  

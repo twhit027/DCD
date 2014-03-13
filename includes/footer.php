@@ -1,6 +1,6 @@
 <?php
 $nav = new Navigation();
 
-echo $nav->getBottomNavigationStatic();
+echo $nav->getBottomNavigationStatic($siteUrl, $siteName);
 	
 ?>

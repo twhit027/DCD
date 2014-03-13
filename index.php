@@ -70,13 +70,18 @@ body
 <div class="container" >     
     <div class="row" style="background-color:#FFF;">
         <div class="col-xs-11 col-sm-8">
-    
+           	
+            <h1><?=$busName?> &amp; Online Classifieds</h1>
             
+            <a href="<?=$siteUrl?>"><img target="_blank" alt="<?=$siteName?> Logo" title="<?=$siteName?>" style="margin-bottom: 10px;background-color: black" src="<?=$siteUrl?>/graphics/ody/cobrand_logo.gif"></a>
+                        
+            <p>We have many ad packages to suit your classified needs.</p>
             
+            <p>Place a classified ad in <?=$busName?> in-paper and online. List all kinds of items including Merchandise, Pets, Garage Sales, Services, and much more. </p>           	
+           	
            	<?php
             	$content = new Content();
-				echo $content->introText();
-				echo $content->getPartnersString();
+							echo $content->getPartnersString($siteUrl);
             ?>
         </div>
        
@@ -84,7 +89,7 @@ body
         	<div class="hidden-xs">
           <?php 																					
 						echo '<div role="navigation" id="sidebar" style="background-color:#000; padding-left:15px; padding-right:15px; padding-top:5px">';
-						echo '<h3 style="color:#3276B1;">View By Category</h3>';						
+						echo '<h3 style="color:#3276B1;">Search Our Classifieds</h3>';						
 						echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
 		
 						echo $nav->getSideNavigation();
