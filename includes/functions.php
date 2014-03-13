@@ -4,11 +4,15 @@ class Database
 	public $db;
 	
 	function __construct() {
+		try {
 		$this->db = new PDO('mysql:dbname='.DB_NAME.';host='.DB_SERVER.';port='.DB_PORT.';charset=utf8', DB_USER, DB_PASS);
 		//$this->db = new PDO('mysql:dbname=classifiedsproje;host=localhost;port=3306;charset=utf8', 'classifiedsproj', 'Classdb13!');
 		$this->db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 		//error mode on
 		$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	  }catch (PDOException $e) {
+	    die($e->getMessage());
+	  }
 	}
 
 	function __destruct() {
@@ -51,11 +55,11 @@ $domain2SiteCode = array(
 	'lohud.com' => 'TJN'
 );
 $sites = array(
-	'DES' => array('siteName' => 'desmoinesregister', 'siteUrl' => 'http://www.desmoinesregister.com', 'busName' => 'The Des Moines Register', 'palate' => 2),
-	'INI' => array('siteName' => 'indystar', 'siteUrl' => 'http://www.indystar.com', 'busName' => 'The Indianapolis Star', 'palate' => 1),
-	'IOW' => array('siteName' => 'press-citizen', 'siteUrl' => 'http://www.press-citizen.com', 'busName' => 'The Press-Citizen', 'palate' => 4),
-	'POU' => array('siteName' => 'poughkeepsiejournal', 'siteUrl' => 'http://www.poughkeepsiejournal.com', 'busName' => 'The Poughkeepsie Journal', 'palate' => 4),
-	'TJN' => array('siteName' => 'lohud', 'siteUrl' => 'http://www.lohud.com', 'busName' => 'The Journal News', 'palate' => 2)		
+	'DES' => array('siteName' => 'desmoinesregister', 'siteUrl' => 'http://www.desmoinesregister.com', 'busName' => 'The Des Moines Register', 'palate' => 2, 'sitePulls' => '[DES]'),
+	'INI' => array('siteName' => 'indystar', 'siteUrl' => 'http://www.indystar.com', 'busName' => 'The Indianapolis Star', 'palate' => 1, 'sitePulls' => '[INI]'),
+	'IOW' => array('siteName' => 'press-citizen', 'siteUrl' => 'http://www.press-citizen.com', 'busName' => 'The Press-Citizen', 'palate' => 4, 'sitePulls' => '[IOW]'),
+	'POU' => array('siteName' => 'poughkeepsiejournal', 'siteUrl' => 'http://www.poughkeepsiejournal.com', 'busName' => 'The Poughkeepsie Journal', 'palate' => 4, 'sitePulls' => '[POU]'),
+	'TJN' => array('siteName' => 'lohud', 'siteUrl' => 'http://www.lohud.com', 'busName' => 'The Journal News', 'palate' => 2, 'sitePulls' => '[TJN]')		
 );
 $palate = array(
 	1 => array('top' => '#292929', 'bottom' => '#080808', 'border' => '#2C2C2C'),
@@ -89,30 +93,33 @@ $palNum = $sites[$siteCode]['palate'];
 class Navigation extends Database
 {
 	
-	function getSideNavigation()
-	{		
-	
-		$stmt = $this->db->prepare("SELECT * FROM `positions` ");
-		$stmt->execute();
+	function getSideNavigation($siteCode = 'IOW')
+	{			
+		$stmt = $this->db->prepare("SELECT * FROM `positions` where `siteCode`= :siteCode");
+		$stmt->execute(array(':siteCode' => urldecode($siteCode)));		
+		
 		$random = rand(1, 1500);
+		$categories = array();
+		
+		foreach ($stmt as $row) {		
+			$categories[$row['Placement']][] = array('id'=>$row['ID'],'position'=>$row['Position'], 'count'=> $row['Count']);	
+		}					
+		
 		$data = '';
-		foreach ($stmt as $row) 
-		{
-				
+		foreach ($categories as $placement => $placementValues) {
 			$data .='<li>';
-
 			$data .='<div class="accordion-heading" style="padding-bottom:5px;">';
-			$data .='<a data-toggle="collapse" class="btn btn-default"  style="width:100%;" role="button" data-target="#accordion-heading-'.$row['ID'].''.$random.'"><span class="nav-header-primary">'.$row['Position'].'</span></a>';
-			$data .='</div>';
-		
-			$data .='<ul class="nav nav-list collapse" id="accordion-heading-'.$row['ID'].''.$random.'">';
-				$data .= $this->getChildNav($row['Position']);
-			$data .='</ul>';
+			$data .='<a data-toggle="collapse" class="btn btn-default"  style="width:100%;" role="button" data-target="#accordion-heading-'.$placementValues[0]['id'].''.$random.'"><span class="nav-header-primary">'.$placement.'</span></a>';
+			$data .='</div>';		
+			$data .='<ul class="nav nav-list collapse" id="accordion-heading-'.$placementValues[0]['id'].''.$random.'">';				
+			foreach ($placementValues as $position) {
+					$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x='.urlencode($position['position']).'" title="Title">'.$position['position'].'('.$position['count'].')</a>';
+			}								
+			$data .='</ul>';			
+			$data .='</li>';		
 			
-			$data .='</li>';
 		}
-		
-		
+				
 		return $data;
 	}
 	
