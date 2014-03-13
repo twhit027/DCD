@@ -49,7 +49,7 @@ body
     	echo '<div class="visible-xs">';
       	echo '<h3 style="color:#3276B1;">View By Category</h3>';
         echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
-		echo $nav->getSideNavigation();
+		echo $nav->getSideNavigation($siteCode);
 		
 		echo '</ul>';
 		echo '</div>';
@@ -92,7 +92,7 @@ body
 						echo '<h3 style="color:#3276B1;">Search Our Classifieds</h3>';						
 						echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
 		
-						echo $nav->getSideNavigation();
+						echo $nav->getSideNavigation($siteCode);
 						
 						echo '</ul>';
 						echo '</div>';								
