@@ -10,6 +10,7 @@ $log->logInfo('FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR']);
 $log->logInfo('REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR']);
 $log->logInfo('HTTP_HOST: '.@$_SERVER['HTTP_HOST']);
 $log->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);
+include('includes/functions.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -17,8 +18,11 @@ $log->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="">
-<meta name="author" content="">
+<?php
+$content = new Content();
+echo $content->getMeta($_GET['x']);    
+?>
+
 <link rel="shortcut icon" href="images/ico/favicon.png">
 <style type="text/css">
 body
@@ -34,12 +38,13 @@ body
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
+
 </head>
 <body>
 <header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
 <div class="container">
 	<?php
-		include('includes/functions.php');
+		
    	include('includes/header.php');
 		
 		$nav = new Navigation();
@@ -69,11 +74,15 @@ body
 <div class="container" >     
     <div class="row" style="background-color:#FFF;">
         <div class="col-xs-11 col-sm-8">
-    
+    		<ol class="breadcrumb">
+		  <li><a href=".">Home</a></li>
+		  <li><a href="./category.php?x=<?php echo$_GET['c']; ?>">Category</a></li>
+		  <li class="active">Item</li>
+		</ol>
             
             
            	<?php
-            	$content = new Content();
+            	
 		   		echo $content->getAd($_GET['x']);
             ?>
         </div>
@@ -82,7 +91,7 @@ body
         	<div class="hidden-xs">
           <?php 																					
 						echo '<div role="navigation" id="sidebar" style="background-color:#000; padding-left:15px; padding-right:15px; padding-top:5px">';
-						echo '<h3 style="color:#3276B1;">View By Category</h3>';						
+						echo '<h3 style="color:#3276B1;">Search Our Classifieds</h3>';						
 						echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
 		
 						echo $nav->getSideNavigation();
@@ -103,9 +112,6 @@ body
 
 </div>
 
-<input type="hidden" name="SC" value="<?php echo $siteCode;?>">
-<input type="hidden" name="HH" value="<?php echo $httpHost;?>">
-<input type="hidden" name="DM" value="<?php echo $domain;?>">
 
 <?php 
 echo $ads->getLeaderBottom(); 

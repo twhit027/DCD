@@ -51,11 +51,11 @@ $domain2SiteCode = array(
 	'lohud.com' => 'TJN'
 );
 $sites = array(
-	'DES' => array('siteName' => 'desmoinesregister', 'siteUrl' => 'http://www.desmoinesregister.com', 'busName' => 'The Des Moines Register', 'palate' => 2, 'sitePulls' => '[DES]'),
-	'INI' => array('siteName' => 'indystar', 'siteUrl' => 'http://www.indystar.com', 'busName' => 'The Indianapolis Star', 'palate' => 1, 'sitePulls' => '[INI]'),
-	'IOW' => array('siteName' => 'press-citizen', 'siteUrl' => 'http://www.press-citizen.com', 'busName' => 'The Press-Citizen', 'palate' => 4, 'sitePulls' => '[IOW]'),
-	'POU' => array('siteName' => 'poughkeepsiejournal', 'siteUrl' => 'http://www.poughkeepsiejournal.com', 'busName' => 'The Poughkeepsie Journal', 'palate' => 4, 'sitePulls' => '[POU]'),
-	'TJN' => array('siteName' => 'lohud', 'siteUrl' => 'http://www.lohud.com', 'busName' => 'The Journal News', 'palate' => 2, 'sitePulls' => '[TJN]')		
+	'DES' => array('siteName' => 'desmoinesregister', 'siteUrl' => 'http://www.desmoinesregister.com', 'busName' => 'The Des Moines Register', 'palate' => 2),
+	'INI' => array('siteName' => 'indystar', 'siteUrl' => 'http://www.indystar.com', 'busName' => 'The Indianapolis Star', 'palate' => 1),
+	'IOW' => array('siteName' => 'press-citizen', 'siteUrl' => 'http://www.press-citizen.com', 'busName' => 'The Press-Citizen', 'palate' => 4),
+	'POU' => array('siteName' => 'poughkeepsiejournal', 'siteUrl' => 'http://www.poughkeepsiejournal.com', 'busName' => 'The Poughkeepsie Journal', 'palate' => 4),
+	'TJN' => array('siteName' => 'lohud', 'siteUrl' => 'http://www.lohud.com', 'busName' => 'The Journal News', 'palate' => 2)		
 );
 $palate = array(
 	1 => array('top' => '#292929', 'bottom' => '#080808', 'border' => '#2C2C2C'),
@@ -80,11 +80,11 @@ if (isset($domain)&&(isset($domain2SiteCode[strtolower($domain)]))) {
 if (isset($_GET['sc'])&&(isset($sites[strtoupper($_GET['sc'])]))) {
 	$siteCode = strtoupper($_GET['sc']);
 }
+
 $siteUrl = $sites[$siteCode]['siteUrl'];
 $siteName = $sites[$siteCode]['siteName'];
 $busName = $sites[$siteCode]['busName'];
 $palNum = $sites[$siteCode]['palate'];	
-
 
 class Navigation extends Database
 {
@@ -92,7 +92,7 @@ class Navigation extends Database
 	function getSideNavigation()
 	{		
 	
-		$stmt = $this->db->prepare("SELECT * FROM `placements` ");
+		$stmt = $this->db->prepare("SELECT * FROM `positions` ");
 		$stmt->execute();
 		$random = rand(1, 1500);
 		$data = '';
@@ -102,11 +102,11 @@ class Navigation extends Database
 			$data .='<li>';
 
 			$data .='<div class="accordion-heading" style="padding-bottom:5px;">';
-			$data .='<a data-toggle="collapse" class="btn btn-default"  style="width:100%;" role="button" data-target="#accordion-heading-'.$row['ID'].''.$random.'"><span class="nav-header-primary">'.$row['Name'].'</span></a>';
+			$data .='<a data-toggle="collapse" class="btn btn-default"  style="width:100%;" role="button" data-target="#accordion-heading-'.$row['ID'].''.$random.'"><span class="nav-header-primary">'.$row['Position'].'</span></a>';
 			$data .='</div>';
 		
 			$data .='<ul class="nav nav-list collapse" id="accordion-heading-'.$row['ID'].''.$random.'">';
-				$data .= $this->getChildNav($row['Name']);
+				$data .= $this->getChildNav($row['Position']);
 			$data .='</ul>';
 			
 			$data .='</li>';
@@ -115,6 +115,20 @@ class Navigation extends Database
 		
 		return $data;
 	}
+	
+	function getChildNav($name)
+	{
+		$stmt = $this->db->prepare("SELECT * FROM `positions` where `placement` = :name ");
+		$stmt->execute(Array(':name' => $name));
+		$data ="";
+		foreach ($stmt as $row) 
+		{
+				$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x='.urlencode($row['Placement']).'" title="Title">'.$row['Placement'].'('.$row['Count'].')</a>';
+		}
+		return $data;
+				
+	}
+		
 	
 	function getSideNavigationBuild()
 	{			
@@ -161,23 +175,6 @@ class Navigation extends Database
 		return $data;
 				
 	}		
-		
-	function getChildNav($name)
-	{
-		$stmt = $this->db->prepare("SELECT * FROM `positions` where `placement` = :name ");
-		$stmt->execute(Array(':name' => $name));
-		$data ="";
-		foreach ($stmt as $row) 
-		{
-			$count = $this->categoryAdCheck($row['Name']);
-			if($count != 0)
-			{
-				$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x='.urlencode($row['Name']).'" title="Title">'.$row['Name'].'('.$count.')</a>';
-			}
-		}
-		return $data;
-				
-	}
 	
 
 	public function categoryAdCheck($name)
@@ -275,9 +272,23 @@ class Navigation extends Database
 		return $data;
 	}		
 	
-	function getBottomNavigationStatic() 
+	function getBottomNavigationStatic($siteUrl, $siteName) 
 	{
-		
+		$data = '<hr /><div class="container" style="font-size: 12px;line-height: 16px;text-align: center"><p>';
+		$data .= '<a href="'.$siteUrl.'/news">News</a>&nbsp;|&nbsp;';
+		$data .= '<a href="'.$siteUrl.'/sports">Sports</a>&nbsp;|&nbsp;';
+		$data .= '<a href="'.$siteUrl.'/business">Business</a>&nbsp;|&nbsp;';
+		$data .= '<a href="'.$siteUrl.'/Entertainment">Entertainment</a>&nbsp;|&nbsp;';
+		$data .= '<a href="'.$siteUrl.'/life">Life</a>&nbsp;|&nbsp;';
+		$data .= '<a href="'.$siteUrl.'/Communities">Communities</a>&nbsp;|&nbsp;';
+		$data .= '<a href="'.$siteUrl.'/opinion">Opinion</a>&nbsp;|&nbsp;';						
+		$data .= '<a href="http://www.legacy.com/obituaries/'.$siteName.'/">Obituaries</a>&nbsp;|&nbsp;';	
+		$data .= '<a href="'.$siteUrl.'/help">Help</a></p>';
+		$data .= '<p>Copyright &copy; 2014 www.'.$siteName.'.com. All rights reserved. Users of this site agree to the ';
+		$data .= '<a href="'.$siteUrl.'/section/terms">Terms of Service</a>, ';
+		$data .= '<a href="'.$siteUrl.'/section/privacy">Privacy Notice</a>, and <a href="'.$siteUrl.'/section/privacy#adchoices">Ad Choices</a></p></div>';
+	
+	return $data;		
 	}
 }
 
@@ -379,9 +390,6 @@ class Ads extends Database
 }
 class Content extends Database
 {	
-
-	
-
 	
 	public function getAd($id)
 	{		
@@ -392,78 +400,121 @@ class Content extends Database
 		foreach ($stmt as $row) 
 		{		
 			$data .= " <div class='jumbotron' >
-              <p>".$row['AdText']."</p>
-              <button class='btn btn-primary btn-lg' class='btn btn-default'>Add To List</button>
-			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Tweet</button>
-			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Facebook</button>
-            </div>";	
+              <p>".$row['AdText']."</p>";
+			  
+			  $status = substr($row['AdText'],0,120);
+			$data .= '<a class="btn btn-primary" href="http://twitter.com/home?status='.$status.'" target="_blank">twitter</a>';
+
+			$data.="<a class='btn btn-primary' href='https://www.facebook.com/sharer/sharer.php?u=http://".$_SERVER['SERVER_NAME']."/item.php?x=". $row['ID']."' target='_blank'>Facebook</a>";
+	
+			$data .= '<a class="btn btn-primary" href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://'.$_SERVER['SERVER_NAME'].'/item.php?x='. $row['ID'].'" target="_blank">google</a>';
+				
+			$data .= "</div>";	
+		}
+		
+		return $data;
+	}
+	
+	public function getMeta($id)
+	{		
+		$stmt = $this->db->prepare("SELECT * FROM `listing` where `ID`= :id");
+		$stmt->execute(array(':id' => $id));
+		$data = '';	
+			
+		foreach ($stmt as $row) 
+		{		
+			$data .= "<meta property='og:title' content='".substr($row['AdText'],0,200)."' />";
+			$data .= "<meta property='og:url' content='".$_SERVER['SERVER_NAME']."/item.php?x=". $row['ID']."' />";
+			$data .= "<meta property='og:description' content='".$row['AdText']."' />";
+				
 		}
 		
 		return $data;
 	}
 	
 	
-	public function getCategoryListing($name)
+	public function getCategoryListing($name,$page=0)
 	{		
-		
-		
-		$siteCodes['codes'] = array('DES', 'IOW', 'GPG');
-		
-		$where = "SELECT * FROM `listing` where `Position`= ?  AND `site` IN(";
-		$z = 0;
-		foreach($siteCodes['codes'] as $cd)
-		{
+		//Add pagination
+		//First find how many rows we have
+		$stmt = $this->db->prepare("SELECT COUNT(*) FROM `listing` where `Position`= :name");
+		$stmt->execute(array(':name' => urldecode($name)));
+		$numOfRows = $stmt->fetchColumn();
+		//Set the max to show per page
+		$maxPerPage = 10;
+		//Get what page we're on
+		$page = (int)$page;
+		//If there was no page passed, it'll be zero. Need to bump it to page 1
+		if($page < 1)
+			$page = 1;
+		//Find where to start our limit for the LIMIT SQL call below
+		$limitStart = ($page-1)*$maxPerPage;
+		//Get our pagination code
+		$pagination = "";
+		if($numOfRows > $maxPerPage){
+			$numOfPages = ceil($numOfRows/$maxPerPage);
 			
-			if($z == 0)
-			{
-				$where .= "?";
-			}
+			if($page > 1)
+				$pagination .= '<ul class="pagination"><li><a href="category.php?x='.$name.'&page='.($page-1).'">&laquo;</a></li>';
 			else
-			{
-				$where .= ", ?";
-			}
-			$z += 1;
-		}
-		$where .= ")";
-	
-		
-		$stmt = $this->db->prepare($where);
-		
-		$stmt->bindParam(1, urldecode($name));
-		
-		
-		
-		foreach($siteCodes['codes'] as $key => &$value)
-		{
-			$count = $key + 2;
-			$stmt->bindParam($count, $value);
+				$pagination .= '<ul class="pagination"><li class="disabled"><a href="#">&laquo;</a></li>';
 			
+			for($pge = 1; $pge <= $numOfPages; $pge++){
+				if($pge == $page)
+					$pagination .= '<li class="active"><a href="category.php?x='.$name.'&page='.$pge.'">'.$pge.' <span class="sr-only">(currecnt)</span></a></li>';
+				else
+					$pagination .= '<li><a href="category.php?x='.$name.'&page='.$pge.'">'.$pge.'</a></li>';
+			}
+			
+			if($page < $numOfPages)
+				$pagination .= '<li><a href="category.php?x='.$name.'&page='.($page+1).'">&raquo;</a></li></ul>';
+			else
+				$pagination .= '<li class="disabled"><a href="#">&raquo;</a></li></ul>';
 		}
-
-		$stmt->execute();
+		
+		$stmt = $this->db->prepare("SELECT * FROM `listing` where `Position`= :name LIMIT :page,:max");
+		$stmt->execute(array(':name' => urldecode($name), ':page' => $limitStart, ':max' => $maxPerPage));
 		$data = '';	
 		
+		//Add pagination
+		$data .= $pagination;
+			
 		foreach ($stmt as $row) 
 		{		
-		
 			if(strlen($row['AdText']) > 200)
 			{  
-				$string = substr($row['AdText'],0,200)."... <a  href='item.php?x=". $row['ID']."'>Click for full text</a>";
+				$string = substr($row['AdText'],0,200)."... <a  href='item.php?x=". $row['ID']."&c=".$name."'>Click for full text</a>";
+				
 			}
 			else
 			{	
 				$string = $row['AdText'];
+				
 			}
-			$data .= " <div class='jumbotron'>
-              <p>".$string."</p>
-              <p>
-			  
-			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Add To List</button>
-			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Tweet</button>
-			  <button class='btn btn-primary btn-lg' class='btn btn-default'>Facebook</button>
-			  </p>
-            </div>";	
+			
+			
+			
+			
+			$data .= "<div class='jumbotron'>";
+			$data .= "<p>".$string."</p>";
+			
+			$status = substr($row['AdText'],0,120);
+			
+			
+			
+			$data .= '<a class="btn btn-primary" href="http://twitter.com/home?status='.$status.'" target="_blank">twitter</a>';
+
+			$data.="<a class='btn btn-primary' href='https://www.facebook.com/sharer/sharer.php?u=http://".$_SERVER['SERVER_NAME']."/item.php?x=". $row['ID']."' target='_blank'>Facebook</a>";
+
+			$data .= '<a class="btn btn-primary" href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://'.$_SERVER['SERVER_NAME'].'/item.php?x='. $row['ID'].'" target="_blank">google</a>';
+			
+			
+
+			$data .='</div>';	
 		}
+		
+		//Add pagination
+		$data .= $pagination;
 		
 		return $data;
 	}
@@ -526,22 +577,22 @@ class Content extends Database
 			<div class="col-md-3">
 				<h4>Cars</h4>
 				<a href="'.$siteUrl.'/cars"><img alt="Cars.com" src="img/partners/130-cars.gif"></a>
-				<p><a class="button" href="'.$siteUrl.'/cars"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Autos</button></a></p>
+				<p><a class="button" href="'.$siteUrl.'/cars" target="_blank"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Autos</button></a></p>
 			</div> 		
 			<div class="col-md-3">
 				<h4>Jobs</h4>
 				<a href="'.$siteUrl.'/jobs"><img alt="micareerbuilder.com" src="img/partners/130-careerbuilder.gif"></a>
-				<p><a class="button" href="'.$siteUrl.'/jobs"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Jobs</button></a></p>		
+				<p><a class="button" href="'.$siteUrl.'/jobs" target="_blank"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Jobs</button></a></p>		
 			</div>		
 			<div class="col-md-3">
 				<h4>Homes</h4>
 				<a href="'.$siteUrl.'/homes"><img alt="homefinder.com" src="img/partners/130-homefinder.gif" ></a>
-				<p><a class="button" href="'.$siteUrl.'/homes"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Homes</button></a></p>
+				<p><a class="button" href="'.$siteUrl.'/homes" target="_blank"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Homes</button></a></p>
 			</div>
 			<div class="col-md-3">
 				<h4>Rentals</h4>
 				<a href="'.$siteUrl.'/apartments"><img alt="apartments.com" src="img/partners/130-apartments.gif" ></a>
-				<p><a class="button" href="'.$siteUrl.'/apartments"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Listings</button></a></p>
+				<p><a class="button" href="'.$siteUrl.'/apartments" target="_blank"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Listings</button></a></p>
 			</div>			
 		</div>';
 		
@@ -555,6 +606,47 @@ class Tracking extends Database
 	{
 	}
 
+}
+
+class FindRummages extends Database {	
+	private function createWhere($column,$values){
+		foreach($values as $k=>$v)
+			$values[$k] = sprintf("'%s'",$v);
+		
+		$where = $column." IN (".implode(",",$values).")";
+		
+		return $where;
+	}
+	
+	public function getRummages($params){
+		$data = array();
+		$where = '';
+
+		if (!empty($params['where'])) {
+				$where = "AND ";
+				foreach($params['where'] as $k=>$v) {
+					$where .= $this->createWhere($k,$v);
+				}
+		}
+		
+		$stmt = $this->db->prepare("SELECT * FROM `listing` WHERE SiteCode in ('IOW') ".$where);
+		$stmt->execute(array(':siteCode' => $params['PubCode']));
+			
+		$results = $stmt->fetchAll();
+					
+		foreach ($results as $row) {
+			$data[$row['ID']] = array(
+				"street"=>$row['Street'],
+				"city"=>$row['City'],
+				"state"=>$row['State'],
+				"zip"=>$row['Zip'],
+				"lat"=>$row['Lat'],
+				"lon"=>$row['Lon']
+			);
+		}
+
+		return $data;
+	}	
 }
 
 ?>

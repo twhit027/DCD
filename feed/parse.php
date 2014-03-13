@@ -1,6 +1,6 @@
 <?php
 include('../includes/functions.php');
-include('../includes/constants.php');
+include('../conf/constants.php');
 
 
 global $db;
@@ -20,11 +20,14 @@ function __destruct() {
 global $usercount;
 global $userdata;
 global $state;
+global $site;
 
 $usercount=0;
 $userdata=array();
 
-$file = "out-dcd.txt";
+//$file = "IOW/dcd-IOW.xml";
+$file = $_GET['location'];
+
 
 $parser=xml_parser_create();
 
@@ -40,7 +43,7 @@ function start($parser,$element_name,$element_attrs)
 	global $usercount;
 	global $userdata;
 	global $state;
-	
+
 	$state['name'] = $element_name;
 	if(count($element_attrs)>=1)
 	{
@@ -76,9 +79,12 @@ function char($parser,$data)
 	global $usercount;
 	global $userdata;
 	global $state;
-	
+	global $site;
 	if (!$state) {return;}
 	
+	
+	
+	if ($state['name']=="DCD") {  $site = $state['SITECODE']; }
 	if ($state['name']=="AD") {  $userdata[$usercount]["AD"] = $state['ID'];}
 	if ($state['name']=="START-DATE") {  $userdata[$usercount]["START-DATE"] = $data;}
 	if ($state['name']=="END-DATE") { $userdata[$usercount]["END-DATE"] = $data;}
@@ -108,48 +114,46 @@ xml_parser_free($parser);
 
 class Admin extends Database
 {
-	
-	
-	
+
 	function putData()
 	{
 		global $usercount;
 		global $userdata;
 		global $state;
-		
+		global $site;
 		for($i=0;$i<$usercount; $i++) 
 		{
 			
 			$check = $this->checkAd($userdata[$i]["AD"]);
-			
-			$this->checkPlacement($userdata[$i]["PLACEMENT"]);
-			$this->checkPosition($userdata[$i]["POSITION"], $userdata[$i]["PLACEMENT"]);
+
+			$this->checkPosition($userdata[$i]["POSITION"], $userdata[$i]["PLACEMENT"], $site);
 			
 			
 			if($check != "update")
 			{
-				$stmt = $this->db->prepare("INSERT INTO " . TBL_LISTING . "(`ID`, `StartDate`, `EndDate`, `Position`, `AdText`) VALUES(:ID, :StartDate, :EndDate, :Position, :AdText)");
+				$stmt = $this->db->prepare("INSERT INTO " . TBL_LISTING . "(`ID`, `StartDate`, `EndDate`, `Placement`,`Position`, `AdText`, `Site`) VALUES(:ID, :StartDate, :EndDate, :Placement, :Position, :AdText, :Site)");
 						
-				$stmt->execute(array(':ID' => $userdata[$i]["AD"], ':StartDate' => $userdata[$i]["START-DATE"], ':EndDate' => $userdata[$i]["END-DATE"]  , ':Position' => $userdata[$i]["POSITION"], ':AdText' => $userdata[$i]["AD-TEXT"]));
+				$stmt->execute(array(':ID' => $userdata[$i]["AD"], ':StartDate' => $userdata[$i]["START-DATE"], ':EndDate' => $userdata[$i]["END-DATE"]  , ':Placement' => $userdata[$i]["PLACEMENT"], ':Position' => $userdata[$i]["POSITION"], ':AdText' => $userdata[$i]["AD-TEXT"] , ':Site' => $site ));
 			}
 			else
 			{
 				
-				$stmt = $this->db->prepare("UPDATE " . TBL_LISTING . " SET `StartDate`=:StartDate, `EndDate`=:EndDate, `Position`=:Position, `AdText`=:AdText WHERE `ID`=:ID");
+				$stmt = $this->db->prepare("UPDATE " . TBL_LISTING . " SET `StartDate`=:StartDate, `EndDate`=:EndDate, `Placement`=:Placement, `Position`=:Position, `AdText`=:AdText, `Site` = :Site WHERE `ID`=:ID");
 				
-				$stmt->execute(array(':ID' => $userdata[$i]["AD"], ':StartDate' => $userdata[$i]["START-DATE"], ':EndDate' => $userdata[$i]["END-DATE"]  , ':Position' => $userdata[$i]["POSITION"], ':AdText' => $userdata[$i]["AD-TEXT"]));
+				$stmt->execute(array(':ID' => $userdata[$i]["AD"], ':StartDate' => $userdata[$i]["START-DATE"], ':EndDate' => $userdata[$i]["END-DATE"]  , ':Placement' => $userdata[$i]["PLACEMENT"], ':Position' => $userdata[$i]["POSITION"], ':AdText' => $userdata[$i]["AD-TEXT"], ':Site' => $site));
 				
 			}
 			
 			
 		}	
-		$this->DeleteOld();
+	
 	}
 	
 	
 	function checkAd($id)
 	{
 		$data = "";
+		echo $id ."<br />";
 		$stmt = $this->db->prepare("SELECT * FROM " . TBL_LISTING . " WHERE `ID` = :id ");
 		$stmt->execute(array(':id' => $id));
 		foreach ($stmt as $row) 
@@ -159,69 +163,34 @@ class Admin extends Database
 		}
 		
 		return $data;
-		
-		
+
 	}
-	
-	function DeleteOld()
+
+	function checkPosition($position, $placement, $site)
 	{
+		
+		
 		$data = "";
-		$date = date("Y-m-d");
+		$stmt = $this->db->prepare("SELECT * FROM " .  TBL_POSITION . " WHERE `Position` = :position AND `Placement` = :placement AND `Site` = :site");
+		$stmt->execute(array(':position' => $position, ':placement' => $placement, ':site' => $site));
 		
-		$stmt = $this->db->prepare("SELECT * FROM " . TBL_LISTING . " WHERE `EndDate` < :date ");
-		$stmt->execute(array(':date' => $date));
-		foreach ($stmt as $row) 
-		{
-			$stmt = $this->db->prepare("DELETE FROM " . TBL_LISTING . " WHERE `ID` = :id ");
-			$stmt->execute(array(':id' => $row['ID'] ));
-			echo "delete ". $row['ID']. " here <br/>";
-		}
-		
-		return $data;
-		
-		
-	}
-	
-	
-	
-	function checkPlacement($name)
-	{
-		$data = "";
-		$stmt = $this->db->prepare("SELECT * FROM " .TBL_PLACEMENT . " WHERE `name` = :name ");
-		$stmt->execute(array(':name' => $name));
 		foreach ($stmt as $row) 
 		{
 			$data = "checked";
+
+			$id = $row['ID'];
+
+			echo "<br />";
+			echo $id;
 		}
 		
+
 		if($data != "checked")
 		{
-			$stmt = $this->db->prepare("INSERT INTO " .TBL_PLACEMENT . "(`name`) VALUES(:name)");	
-			$stmt->execute(array(':name' => $name));
+			$stmt = $this->db->prepare("INSERT INTO " .  TBL_POSITION . "(`Position`, `Placement`, `Site`) VALUES(:position, :placement, :site)");	
+			$stmt->execute(array(':position' => $position, ':placement' => $placement , ':site' => $site));
 		}
 		
-		return $data;
-		
-		
-	}
-	
-	function checkPosition($name, $placement)
-	{
-		
-	
-		$data = "";
-		$stmt = $this->db->prepare("SELECT * FROM " .  TBL_POSITION . " WHERE `name` = :name AND `placement` = :placement ");
-		$stmt->execute(array(':name' => $name, ':placement' => $placement));
-		foreach ($stmt as $row) 
-		{
-			$data = "checked";
-		}
-		
-		if($data != "checked")
-		{
-			$stmt = $this->db->prepare("INSERT INTO " .  TBL_POSITION . "(`name`, `placement`) VALUES(:name, :placement)");	
-			$stmt->execute(array(':name' => $name, ':placement' => $placement));
-		}
 		
 		return $data;
 		
