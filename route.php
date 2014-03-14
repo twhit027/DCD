@@ -87,7 +87,7 @@ $log->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);
 			echo '<div class="visible-xs">';
 			echo '<h3 style="color:#3276B1;">View By Category</h3>';
 			echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
-			echo $nav->getSideNavigation();
+			echo $nav->getSideNavigation($siteGroup);
 			
 			echo '</ul>';
 			echo '</div>';

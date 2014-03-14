@@ -45,73 +45,157 @@ function get_host()
 	return trim($host);
 }
 
+function get_domain($host)
+{  
+  if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $host, $regs))
+  {
+	return $regs['domain'];
+  }
+  
+  return false;
+}
 
 function get_siteData($code)
-{		
-
-	$stmt = $this->db->prepare("SELECT * FROM `siteinfo` WHERE `url` = :code ");
+{
+			
+	$db = new PDO('mysql:dbname='.DB_NAME.';host='.DB_SERVER.';port='.DB_PORT.';charset=utf8', DB_USER, DB_PASS);
+	//$this->db = new PDO('mysql:dbname=classifiedsproje;host=localhost;port=3306;charset=utf8', 'classifiedsproj', 'Classdb13!');
+	$db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+	//error mode on
+	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
+	$stmt = $db->prepare("SELECT * FROM `siteinfo` WHERE `Url` = :code ");
+	
 	$stmt->execute(array(':code' => $code));
 	$data = '';
 	foreach ($stmt as $row) 
 	{
-		$data['siteUrl'] = $row['siteUrl'];
-		$data['siteName'] = $row['siteName'];
-		$data['busName'] = $row['busName'];
-		$data['palette'] = $row['palette'];	
-		$data['sitegroup'] = $row['siteGroup'];	
-		$data['siteCode'] = $row['siteCode'];
+			$data['siteUrl'] = $row['SiteUrl'];
+			$data['siteName'] = $row['SiteName'];
+			$data['busName'] = $row['BusName'];
+			$data['palette'] = $row['Palette'];	
+			$data['sitegroup'] = $row['SiteGroup'];	
+			$data['siteCode'] = $row['SiteCode'];
 	}
 	return $data;
+	
 }
 
 
 
 $httpHost = get_host();
-$sitedata = get_siteData($httpHost);
+$domain = get_domain($httpHost);
+
+$sitedata = get_siteData($domain);
+$siteUrl = $sitedata['siteUrl'];
+$palNum = $sitedata['palette'];
+$siteCode = $sitedata['siteCode'];
+$siteName = $sitedata['siteName'];
+$siteGroup = $sitedata['sitegroup'];
+$busName = $sitedata['busName'];
+
+
+$palate = array(
+			1 => array('top' => '#292929', 'bottom' => '#080808', 'border' => '#2C2C2C'),
+			2 => array('top' => '#01588d', 'bottom' => '#0b396b', 'border' => '#87ABC0'),
+			3 => array('top' => '#01abf9', 'bottom' => '#038be6', 'border' => '#87ABC0'),
+			4 => array('top' => '#851719', 'bottom' => '#701612', 'border' => '#151515'),
+			5 => array('top' => '#000061', 'bottom' => '#00004c', 'border' => '#87ABC0'),
+			6 => array('top' => '#000079', 'bottom' => '#000054', 'border' => '#87ABC0'),
+			7 => array('top' => '#0000ae', 'bottom' => '#00007f', 'border' => '#87ABC0'),
+			8 => array('top' => '#00007b', 'bottom' => '#00005b', 'border' => '#87ABC0')
+		);
+		
+		
 
 class Navigation extends Database
 {
 	
-	function getSideNavigation($siteCode = 'IOW')
+
+	function getSideNavigation($siteGroup)
 	{			
-		$stmt = $this->db->prepare("SELECT * FROM `position` where `siteCode`= :siteCode");
-		$stmt->execute(array(':siteCode' => urldecode($siteCode)));		
+	
+		$siteCodes = explode(",", $siteGroup);
+		$navigation = array();
 		
-		$random = rand(1, 1500);
-		$categories = array();
 		
-		foreach ($stmt as $row) {		
-			$categories[$row['Placement']][] = array('id'=>$row['ID'],'position'=>$row['Position'], 'count'=> $row['Count']);	
-		}					
+		//for each site code in the site list
+		foreach($siteCodes as $cd)
+		{
+			//only get me one placement (parent cat) from positions conating site code
+			$stmt = $this->db->prepare("SELECT DISTINCT Placement FROM `position` where `siteCode`= :siteCode");
+			$stmt->execute(array(':siteCode' => urldecode($cd)));		
+			
+			$random = rand(1, 1500);
+			
+			
+			foreach ($stmt as $row) 
+			{		
+				//lets build an array naviation[placementname][positionname]['count']= count where 
+				$navigation = $this->getChildNav($navigation, $row['Placement'], $cd);
+				
+			}					
+					
+		}
 		
 		$data = '';
-		foreach ($categories as $placement => $placementValues) {
+		
+		//go back through array that's holding our navigation
+		foreach ($navigation as $placement => $placementValues) 
+		{
+
+			$random = rand(1, 1500);
 			$data .='<li>';
 			$data .='<div class="accordion-heading" style="padding-bottom:5px;">';
-			$data .='<a data-toggle="collapse" class="btn btn-default"  style="width:100%;" role="button" data-target="#accordion-heading-'.$placementValues[0]['id'].''.$random.'"><span class="nav-header-primary">'.$placement.'</span></a>';
+			$data .='<a data-toggle="collapse" class="btn btn-default"  style="width:100%;" role="button" data-target="#accordion-heading-'.$placement.''.$random.'"><span class="nav-header-primary">'.$placement.'</span></a>';
 			$data .='</div>';		
-			$data .='<ul class="nav nav-list collapse" id="accordion-heading-'.$placementValues[0]['id'].''.$random.'">';				
-			foreach ($placementValues as $position) {
-					$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x='.urlencode($position['position']).'" title="Title">'.$position['position'].'('.$position['count'].')</a>';
+			$data .='<ul class="nav nav-list collapse" id="accordion-heading-'.$placement.''.$random.'">';	
+			
+			//for each position in the current placement		
+			foreach ($placementValues as $position  => $positionValues ) 
+			{
+					$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x='.urlencode($position).'" title="Title">'.$position.'('.$positionValues['Count'].')</a>';
 			}								
 			$data .='</ul>';			
-			$data .='</li>';		
-			
+			$data .='</li>';	
+
 		}
+		
 				
 		return $data;
 	}
 	
-	function getChildNav($name)
+	function getChildNav($navigation, $name, $siteCode)
 	{
-		$stmt = $this->db->prepare("SELECT * FROM `position` where `placement` = :name ");
-		$stmt->execute(Array(':name' => $name));
+		$data = '';
+		
+		//get all the positions that have the current site code and placement
+		$stmt = $this->db->prepare("SELECT * FROM `position` where `Placement` = :name AND `SiteCode`= :siteCode");
+		$stmt->execute(Array(':name' => $name, ':siteCode' => urldecode($siteCode)));
 		$data ="";
 		foreach ($stmt as $row) 
 		{
-				$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x='.urlencode($row['Placement']).'" title="Title">'.$row['Placement'].'('.$row['Count'].')</a>';
+			
+			//if the position already exists in our array, add on to the count otherwise set it
+		
+			if (isset($navigation[$row['Placement']][$row['Position']]['Count']))
+			{
+				
+				
+				$count = $navigation[$row['Placement']][$row['Position']]['Count'] + $row['Count'];
+				$navigation[$row['Placement']][$row['Position']]['Count'] = $count;
+				
+			}
+			else
+			{
+				
+				$navigation[$row['Placement']][$row['Position']]['Count'] = $row['Count'];
+				
+			}
 		}
-		return $data;
+			
+	
+		return $navigation;
 				
 	}
 		
@@ -148,6 +232,7 @@ class Navigation extends Database
 		
 		return $data;
 	}
+
 	
 	function getChildNavByClassCode($classCode)
 	{
@@ -419,12 +504,43 @@ class Content extends Database
 	}
 	
 	
-	public function getCategoryListing($name,$page=0)
+	public function getCategoryListing($name,$page=0,$siteGroup)
 	{		
-		//Add pagination
-		//First find how many rows we have
-		$stmt = $this->db->prepare("SELECT COUNT(*) FROM `listing` where `Position`= :name");
-		$stmt->execute(array(':name' => urldecode($name)));
+	
+		$siteCodes = explode(",", $siteGroup);
+		
+		$where = "SELECT COUNT(*) FROM `listing` where `Position`= ? AND `SiteCode` IN(";
+		$z = 0;
+		foreach($siteCodes as $cd)
+		{
+	
+			if($z == 0)
+			{
+				$where .= "?";
+			}
+			else
+			{
+				$where .= ", ?";
+			}
+			$z += 1;
+		}
+		$where .= ")";
+		
+
+		
+		$stmt = $this->db->prepare($where);
+	
+		$stmt->bindParam(1, urldecode($name));
+	
+		foreach($siteCodes as $key => &$value)
+		{
+			$count = $key + 2;
+			
+			$stmt->bindParam($count, $value);
+		}
+
+		
+		$stmt->execute();
 		$numOfRows = $stmt->fetchColumn();
 		//Set the max to show per page
 		$maxPerPage = 10;
@@ -458,8 +574,46 @@ class Content extends Database
 				$pagination .= '<li class="disabled"><a href="#">&raquo;</a></li></ul>';
 		}
 		
-		$stmt = $this->db->prepare("SELECT * FROM `listing` where `Position`= :name LIMIT :page,:max");
-		$stmt->execute(array(':name' => urldecode($name), ':page' => $limitStart, ':max' => $maxPerPage));
+		
+		
+		$where = "SELECT * FROM `listing` where `Position`= ? AND `SiteCode` IN(";
+		$z = 0;
+		foreach($siteCodes as $cd)
+		{
+		
+			if($z == 0)
+			{
+				$where .= "?";
+			}
+			else
+			{
+				$where .= ", ?";
+			}
+			$z += 1;
+		}
+		$where .= ") LIMIT ?, ?";
+	
+		$stmt = $this->db->prepare($where);
+		
+		$stmt->bindParam(1, urldecode($name));
+		
+		
+		
+		foreach($siteCodes as $key => &$value)
+		{
+			$count = $key + 2;
+			
+			$stmt->bindParam($count, $value);
+		
+		}
+	
+		$count +=1;
+
+		$stmt->bindParam($count, $limitStart);
+		$count +=1;
+		$stmt->bindParam($count, $maxPerPage);
+		$stmt->execute();
+		
 		$data = '';	
 		
 		//Add pagination
