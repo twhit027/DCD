@@ -12,8 +12,8 @@ class Database extends PDO
 	
 	public function __construct() {
 		try {
-			//		$this->db = new PDO('mysql:dbname='.DB_NAME.';host='.DB_SERVER.';port='.DB_PORT.';charset=utf8', DB_USER, DB_PASS);
-			$this->connection_string = 'mysql:dbname='.DB_NAME.';host='.DB_HOST.';port='.DB_PORT.';charset=utf8';
+		//$this->db = new PDO('mysql:dbname='.DB_NAME.';host='.DB_SERVER.';port='.DB_PORT.';charset=utf8', DB_USER, DB_PASS);
+		$this->connection_string = 'mysql:dbname='.DB_NAME.';host='.DB_HOST.';port='.DB_PORT.';charset=utf8';
 	    parent::__construct($this->connection_string,$this->db_user, $this->db_pass);
 	    $this->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 	    $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -23,7 +23,6 @@ class Database extends PDO
 	    die($e->getMessage());
 	  }
 	}
-
 }
 
 class App
@@ -31,7 +30,7 @@ class App
 	private $database;
 	private $site;
 	private $catagories;
-	private $search;
+	private $listings;
 	private $host;
 	private $domain;
 	
@@ -49,7 +48,7 @@ class App
 		$this->site = $site;
 	}		
 	
-	function setSitefromDomain($domain = '') {	
+	function setSitefromDomain($domain = 'desmoinesregister.com') {
 		if (empty($domain)) {
 			$domain = $this->getDomain();
 		}
@@ -77,32 +76,50 @@ class App
 	
 	function getCategories() {	
 		return $this->categories;
-	}	
+	}
+
+    private function createSiteGroupString($siteGroup) {
+        $siteArray = explode(',', $siteGroup);
+        $siteGroupString = '';
+        foreach ($siteArray as $siteCode) {
+            if (!empty($siteGroupString)) {$siteGroupString .= ', ';}
+            $siteGroupString .= "'$siteCode'";
+        }
+        return $siteGroupString;
+    }
 	
-	function setCategories() {	
-		$sitecode = $this->getSite()->getSiteCode();
-		$stmt = $this->database->prepare("SELECT * FROM `position` where SiteCode = :siteCode");
-		$stmt->execute(array(':siteCode' => $sitecode));	
-		
+	function setCategories() {
+        $siteGroupString = $this->createSiteGroupString($this->getSite()->getSiteGroup());
+
+        $stmt = $this->database->prepare("SELECT * FROM `position` WHERE SiteCode in( $siteGroupString )");
+		//$stmt->execute(array(':siteGroup' => $this->getSite()->getSiteGroup()));
+        $stmt->execute();
 		$results = $stmt->fetchAll();
-			
-		foreach ($results as $row) {		
-			$this->categories[$row['Placement']][] = array('id' => $row['ID'], 'position'=>$row['Position'], 'count'=> $row['Count']);	
-		}						
+
+        $categoriesArray = array();
+		foreach ($results as $row) {
+            @$categoriesArray[$row['Placement']][$row['Position']] += $row['Count'];
+		}
+
+        $this->categories = $categoriesArray;
 	}
 	
-	function getAds ($placement, $position, $siteGroup = null) {
-		if ($siteGroup == null) {
-			$siteGroup = 	$this->site->getSiteGroup();
-		}
-		$stmt = $this->database->prepare("SELECT * FROM `listings` where placement = ':placement' and position = :position siteCode in (:siteGroup)");
-		$stmt->execute(array(':placement' => $placement, ':position' => $position, ':siteGroup' => implode(', ', $siteGroup)));		
-		$dataArray = array();
-		foreach ($stmt as $row) {		
-			$dataArray[] = array('id'=>$row['id'], 'adtext'=>$row['adText']);
-		}			
-		
-		return $dataArray;
+	function getListings ($placement = '', $position = '', $siteGroup = '') {
+		if (empty($this->listings) && (isset($placement) && isset($position) && isset($siteGroup))) {
+            if ($siteGroup == null) {
+                $siteGroup = 	$this->site->getSiteGroup();
+            }
+            $stmt = $this->database->prepare("SELECT * FROM `listings` where placement = ':placement' and position = :position siteCode in (:siteGroup)");
+            $stmt->execute(array(':placement' => $placement, ':position' => $position, ':siteGroup' => implode(', ', $siteGroup)));
+            $dataArray = array();
+            foreach ($stmt as $row) {
+                $dataArray[] = array('id'=>$row['id'], 'adtext'=>$row['adText']);
+            }
+
+            $this->listings = $dataArray;
+        }
+
+		return $this->listings;
 	}
 	
 	function getHost() {
@@ -139,7 +156,7 @@ class Site
 	
 	private $siteCode;
 	private $siteName;
-	private $url;
+	private $domain;
 	private $siteUrl;
 	private $busName;
 	private $palette;
@@ -152,12 +169,10 @@ class Site
 	}	
 	
 	function setSiteData($db, $domain) {
-		$url = 'classifieds.'.$domain;
+		echo "Domain: $domain";
 		
-		echo "URL: $url";
-		
-		$stmt = $db->prepare("SELECT * FROM `siteinfo` where Url = :url");
-		$stmt->execute(array(':url' => $url));		
+		$stmt = $db->prepare("SELECT * FROM `siteinfo` where Domain = :domain");
+		$stmt->execute(array(':domain' => $domain));
 				
 		$data = $stmt->fetch(PDO::FETCH_ASSOC);
 		
@@ -173,8 +188,8 @@ class Site
 
 		$this->siteCode = $data['SiteCode'];
 		$this->siteName = $data['SiteName'];
-		$this->url = $data['Url'];
-		$this->siteUrl = $data['SiteUrl'];		
+		$this->domain = $data['Domain'];
+		$this->siteUrl = $data['SiteUrl'];
 		$this->busName = $data['BusName'];			
 		$this->palette = $data['Palette'];			
 		$this->siteGroup = $data['SiteGroup'];
@@ -200,18 +215,21 @@ class Site
 	
 	function getPalette() {
 		return $this->palette;
-	}		
+	}
+
+    function getSiteGroup() {
+        return $this->siteGroup;
+    }
 }	
 
 class Navigation
 {
-	
 	function getSideNavigation($catagories)
-	{		
-		$random = rand(1, 1500);
+	{
+        $random = rand(1, 1500);
 		$data = '';
 		$placementId = 0;
-		foreach ($catagories as $placement => $placementValue) {	
+		foreach ($catagories as $placement => $positions) {
 			$placementId++;			
 			$data .='<li>';
 			$data .='<div class="accordion-heading" style="padding-bottom:5px;">';
@@ -219,8 +237,8 @@ class Navigation
 			$data .='</div>';
 		
 			$data .='<ul class="nav nav-list collapse" id="accordion-heading-'.$placementId.''.$random.'">';
-			foreach ($placementValue as $position) {
-					$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x='.urlencode($position['position']).'" title="Title">'.$position['position'].'('.$position['count'].')</a>';
+			foreach ($positions as $position => $count) {
+					$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?x='.urlencode($position).'" title="Title">'.$position.'('.$count.')</a>';
 			}
 			$data .='</ul>';
 			
