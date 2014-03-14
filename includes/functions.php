@@ -95,7 +95,7 @@ class Navigation extends Database
 	
 	function getSideNavigation($siteCode = 'IOW')
 	{			
-		$stmt = $this->db->prepare("SELECT * FROM `positions` where `siteCode`= :siteCode");
+		$stmt = $this->db->prepare("SELECT * FROM `position` where `siteCode`= :siteCode");
 		$stmt->execute(array(':siteCode' => urldecode($siteCode)));		
 		
 		$random = rand(1, 1500);
@@ -125,7 +125,7 @@ class Navigation extends Database
 	
 	function getChildNav($name)
 	{
-		$stmt = $this->db->prepare("SELECT * FROM `positions` where `placement` = :name ");
+		$stmt = $this->db->prepare("SELECT * FROM `position` where `placement` = :name ");
 		$stmt->execute(Array(':name' => $name));
 		$data ="";
 		foreach ($stmt as $row) 
