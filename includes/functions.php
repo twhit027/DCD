@@ -21,74 +21,53 @@ class Database
 
 }
 
-function get_host() {
-    if ($host = @$_SERVER['HTTP_X_FORWARDED_HOST'])
-    {
-        $elements = explode(',', $host);
-        $host = trim(end($elements));
-    } else {
-        if (!$host = @$_SERVER['HTTP_HOST']) {
-            if (!$host = $_SERVER['SERVER_NAME']) {
-                $host = !empty($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '';
-            }
-        }
-    }
+function get_host() 
+{
+	if ($host = @$_SERVER['HTTP_X_FORWARDED_HOST'])
+	{
+		$elements = explode(',', $host);
+		$host = trim(end($elements));
+	} 
+	else 
+	{
+		if (!$host = @$_SERVER['HTTP_HOST']) 
+		{
+			if (!$host = $_SERVER['SERVER_NAME']) 
+			{
+				$host = !empty($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '';
+			}
+		}
+	}
 
-    // Remove port number from host
-    $host = preg_replace('/:\d+$/', '', $host);
-    return trim($host);
+	// Remove port number from host
+	$host = preg_replace('/:\d+$/', '', $host);
+	
+	return trim($host);
 }
 
-function get_domain($host)
-{  
-  if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $host, $regs)) {
-    return $regs['domain'];
-  }
-  return false;
+
+function get_siteData($code)
+{		
+
+	$stmt = $this->db->prepare("SELECT * FROM `siteinfo` WHERE `url` = :code ");
+	$stmt->execute(array(':code' => $code));
+	$data = '';
+	foreach ($stmt as $row) 
+	{
+		$data['siteUrl'] = $row['siteUrl'];
+		$data['siteName'] = $row['siteName'];
+		$data['busName'] = $row['busName'];
+		$data['palette'] = $row['palette'];	
+		$data['sitegroup'] = $row['siteGroup'];	
+		$data['siteCode'] = $row['siteCode'];
+	}
+	return $data;
 }
 
-$domain2SiteCode = array(
-	'desmoinesregister.com' => 'DES',
-	'indystar.com' => 'INI',
-	'press-citizen.com' => 'IOW',
-	'poughkeepsiejournal.com' => 'POU',
-	'lohud.com' => 'TJN'
-);
-$sites = array(
-	'DES' => array('siteName' => 'desmoinesregister', 'siteUrl' => 'http://www.desmoinesregister.com', 'busName' => 'The Des Moines Register', 'palate' => 2, 'sitePulls' => '[DES]'),
-	'INI' => array('siteName' => 'indystar', 'siteUrl' => 'http://www.indystar.com', 'busName' => 'The Indianapolis Star', 'palate' => 1, 'sitePulls' => '[INI]'),
-	'IOW' => array('siteName' => 'press-citizen', 'siteUrl' => 'http://www.press-citizen.com', 'busName' => 'The Press-Citizen', 'palate' => 4, 'sitePulls' => '[IOW]'),
-	'POU' => array('siteName' => 'poughkeepsiejournal', 'siteUrl' => 'http://www.poughkeepsiejournal.com', 'busName' => 'The Poughkeepsie Journal', 'palate' => 4, 'sitePulls' => '[POU]'),
-	'TJN' => array('siteName' => 'lohud', 'siteUrl' => 'http://www.lohud.com', 'busName' => 'The Journal News', 'palate' => 2, 'sitePulls' => '[TJN]')		
-);
-$palate = array(
-	1 => array('top' => '#292929', 'bottom' => '#080808', 'border' => '#2C2C2C'),
-	2 => array('top' => '#01588d', 'bottom' => '#0b396b', 'border' => '#87ABC0'),
-	3 => array('top' => '#01abf9', 'bottom' => '#038be6', 'border' => '#87ABC0'),
-	4 => array('top' => '#851719', 'bottom' => '#701612', 'border' => '#151515'),
-	5 => array('top' => '#000061', 'bottom' => '#00004c', 'border' => '#87ABC0'),
-	6 => array('top' => '#000079', 'bottom' => '#000054', 'border' => '#87ABC0'),
-	7 => array('top' => '#0000ae', 'bottom' => '#00007f', 'border' => '#87ABC0'),
-	8 => array('top' => '#00007b', 'bottom' => '#00005b', 'border' => '#87ABC0')
-);
+
 
 $httpHost = get_host();
-$domain = get_domain($httpHost);
-
-$siteCode = 'DES';
-
-if (isset($domain)&&(isset($domain2SiteCode[strtolower($domain)]))) {
-	$siteCode = $domain2SiteCode[strtolower($domain)];
-}
-
-if (isset($_GET['sc'])&&(isset($sites[strtoupper($_GET['sc'])]))) {
-	$siteCode = strtoupper($_GET['sc']);
-}
-
-$siteUrl = $sites[$siteCode]['siteUrl'];
-$siteName = $sites[$siteCode]['siteName'];
-$busName = $sites[$siteCode]['busName'];
-$palNum = $sites[$siteCode]['palate'];	
+$sitedata = get_siteData($httpHost);
 
 class Navigation extends Database
 {
