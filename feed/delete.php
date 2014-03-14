@@ -23,20 +23,9 @@ class Update
 	
 	function delete()
 	{
-		
-		$date = date("Y-m-d");
-		
-		$stmt = $this->db->prepare("SELECT * FROM " . TBL_LISTING . " WHERE `EndDate` < :date ");
+		$date = date("Y-m-d");	
+		$stmt = $this->db->prepare("DELETE FROM " . TBL_LISTING . " WHERE `EndDate` < :date ");
 		$stmt->execute(array(':date' => $date));
-		foreach ($stmt as $row) 
-		{
-			$stmt = $this->db->prepare("DELETE FROM " . TBL_LISTING . " WHERE `ID` = :id ");
-			$stmt->execute(array(':id' => $row['ID'] ));
-			echo "delete ". $row['ID']. " here <br/>";
-		}
-			
-	
-	
 	}
 }
 

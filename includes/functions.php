@@ -81,7 +81,7 @@ class App
 	
 	function setCategories() {	
 		$sitecode = $this->getSite()->getSiteCode();
-		$stmt = $this->database->prepare("SELECT * FROM `positions` where SiteCode = :siteCode");
+		$stmt = $this->database->prepare("SELECT * FROM `position` where SiteCode = :siteCode");
 		$stmt->execute(array(':siteCode' => $sitecode));	
 		
 		$results = $stmt->fetchAll();

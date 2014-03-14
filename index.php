@@ -82,7 +82,7 @@ body
 
             <h1><?=$busName?> &amp; Online Classifieds</h1>
             
-            <a href="<?=$siteUrl?>"><img target="_blank" alt="<?=$siteName?> Logo" title="<?=$siteName?>" style="margin-bottom: 10px;background-color: black" src="<?=$siteUrl?>/graphics/ody/cobrand_logo.gif"></a>
+            <a href="<?=$siteUrl?>" target="_blank"><img alt="<?=$siteName?> Logo" title="<?=$siteName?>" style="margin-bottom: 10px;background-color: black" src="<?=$siteUrl?>/graphics/ody/cobrand_logo.gif"></a>
                         
             <p>We have many ad packages to suit your classified needs.</p>
             
