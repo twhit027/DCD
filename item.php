@@ -38,4 +38,4 @@ $mainContent = <<<EOS
             <br />$data
 EOS;
 
-include("master.php");
+include("includes/master.php");

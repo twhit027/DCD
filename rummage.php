@@ -10,7 +10,7 @@ include('includes/GCI/Ads.php');
 
 $app = new \GCI\App();
 
-$app->logInfo('Category Page');
+$app->logInfo('Rummage Page');
 $app->logInfo('FORWARDED_FOR: ' . @$_SERVER['HTTP_X_FORWARDED_FOR']);
 $app->logInfo('REMOTE_ADDR: ' . @$_SERVER['REMOTE_ADDR']);
 $app->logInfo('HTTP_HOST: ' . @$_SERVER['HTTP_HOST']);
@@ -71,4 +71,4 @@ $mainContent = <<<EOS
             $googleApiScript
 EOS;
 
-include("master.php");
+include("includes/master.php");

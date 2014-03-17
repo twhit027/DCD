@@ -81,4 +81,4 @@ $mainContent = <<<EOS
             $pagination
 EOS;
 
-include("master.php");
+include("includes/master.php");

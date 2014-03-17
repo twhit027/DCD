@@ -15,7 +15,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link rel="shortcut icon" href="/images/ico/favicon.png">
     <style type="text/css">
     body {
     min-width: 10px !important;
@@ -52,7 +52,7 @@
         echo $nav->getSideNavigation($app->getCategories());
         echo '</ul></div></nav>';
 
-        include('includes/toggle.php');
+        include('toggle.php');
 
         $ads = new \GCI\Ads();
         echo $ads->InitializeAds();
@@ -91,7 +91,7 @@ echo $ads->getLaunchpad();
 </div>
 <?php
 echo $ads->getLeaderBottom();
-include('includes/tracking.php');
+include('tracking.php');
 ?>
 <footer class="footer">
     <?php
