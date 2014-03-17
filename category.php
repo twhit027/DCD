@@ -1,139 +1,84 @@
 <?php
 include(dirname(__FILE__) . '/3rdParty/klogger/KLogger.php');
+include(dirname(__FILE__) . '/3rdParty/Mobile_Detect/Mobile_Detect.php');
 include('conf/constants.php');
+include('includes/GCI/Database.php');
+include('includes/GCI/Site.php');
+include('includes/GCI/App.php');
+include('includes/GCI/Navigation.php');
+include('includes/GCI/Ads.php');
 
-$log = KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
+$app = new \GCI\App();
 
-$log->logInfo('Landing Page');
+$app->logInfo('Category Page');
+$app->logInfo('FORWARDED_FOR: ' . @$_SERVER['HTTP_X_FORWARDED_FOR']);
+$app->logInfo('REMOTE_ADDR: ' . @$_SERVER['REMOTE_ADDR']);
+$app->logInfo('HTTP_HOST: ' . @$_SERVER['HTTP_HOST']);
+$app->logInfo('SERVER_NAME: ' . @$_SERVER['SERVER_NAME']);
 
-$log->logInfo('FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR']);
-$log->logInfo('REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR']);
-$log->logInfo('HTTP_HOST: '.@$_SERVER['HTTP_HOST']);
-$log->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="">
-<meta name="author" content="">
-<link rel="shortcut icon" href="images/ico/favicon.png">
-<style type="text/css">
-body
-{
-	min-width:10px!important;
+//$content = new Content();
+$page = 1;
+
+if (isset($_REQUEST['page'])) {
+    $page = urldecode($_REQUEST['page']);
 }
-.dcd-content-text
-{
-	display:none;
+$placement = urldecode($_REQUEST['place']);
+$position = urldecode($_REQUEST['posit']);
+
+$siteCodes = array();
+
+$listings = $app->getListings($placement, $position, $page);
+
+$pagination = "";
+if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
+    $numOfPages = ceil($listings['totalRows'] / LISTINGS_PER_PAGE);
+
+    if ($page > 1)
+        $pagination .= '<ul class="pagination"><li><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . ($page - 1) . '">&laquo;</a></li>';
+    else
+        $pagination .= '<ul class="pagination"><li class="disabled"><a href="#">&laquo;</a></li>';
+
+    for ($pge = 1; $pge <= $numOfPages; $pge++) {
+        if ($pge == $page)
+            $pagination .= '<li class="active"><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . $pge . '">' . $pge . ' <span class="sr-only">(currecnt)</span></a></li>';
+        else
+            $pagination .= '<li><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . $pge . '">' . $pge . '</a></li>';
+    }
+
+    if ($page < $numOfPages)
+        $pagination .= '<li><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . ($page + 1) . '">&raquo;</a></li></ul>';
+    else
+        $pagination .= '<li class="disabled"><a href="#">&raquo;</a></li></ul>';
 }
-</style>
 
-<link href="3rdParty/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-<link href="3rdParty/jasny-bootstrap/css/jasny-bootstrap.min.css" rel="stylesheet">
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-    <![endif]-->
-</head>
-<body>
-<header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
-<div class="container">
-	<?php
-		include('includes/functions.php');
-    include('includes/header.php');
-		
-		$nav = new Navigation();
-		
-		echo '<nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse side-navbar ">';
-    	echo '<div class="visible-xs">';
-      	echo '<h3 style="color:#3276B1;">View By Category 01</h3>';
-        echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
-		echo $nav->getSideNavigation($siteGroup);
-		
-		echo '</ul>';
-		echo '</div>';
-		echo '</nav>';
+$data = '';
+foreach ($listings['results'] as $row) {
+    $row['adText'] = htmlspecialchars($row['adText']);
+    if (strlen($row['adText']) > 200) {
+        $string = substr($row['adText'], 0, 200) . "... <a  href='item.php?id=" . $row['id'] . "&place=".$placement."&posit=" . $position . "'>Click for full text</a>";
+    } else {
+        $string = $row['adText'];
+    }
 
-    include('includes/toggle.php'); 
-		
-		$ads = new Ads();
-		echo $ads->InitializeAds();	
-	?>
-</div>
-</header>
- 
+    $data .= "<div class='jumbotron'>";
+    $data .= "<p>" . $string . "</p>";
+    $data .= '<a class="btn btn-primary" href="http://twitter.com/home?status=' . substr($row['adText'], 0, 120) . '" target="_blank"><img src="img/twitter1.png" /></a>';
+    $data .= '<a class="btn btn-primary" href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/facebook2.png" /></a>';
+    $data .= '<a class="btn btn-primary" href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/google-plus2.png" /></a>';
+    $data .= '<a class="btn btn-primary" href="mailto:youremailaddress" target="_blank"><img src="img/email2.png" /></a>';
+    $data .= '</div>';
+}
 
-<?php
-	echo $ads->getLaunchpad(); 	
-?>
+$mainContent = <<<EOS
+                <ol class="breadcrumb">
+                <li><a href="./">Home</a></li>
+                <li class="active">Category</li>
+            </ol>
+            <h1>$position</h1>
 
-<div class="container" >     
-    <div class="row" style="background-color:#FFF;">
-        <div class="col-xs-11 col-sm-8">           
-        	
-		<ol class="breadcrumb">
-		  <li><a href=".">Home</a></li>
-		  <li class="active">Category</li>
-		</ol>
-		        	                
-           	<?php
-            		$content = new Content();
-		   
-            		$page = 1;
-            		
-            		if (isset($_GET['page'])) {
-            			$page = $_GET['page'];
-            		}
-		   
-				   echo "<h1>".urldecode($_GET['x'])."</h1>";
-				   echo $content->getCategoryListing($_GET['x'],$page, $siteGroup);
-            ?>
-        </div>
-       
-        <div class=" col-sm-4 card-suspender-color" >
-        	<div class="hidden-xs">
-          <?php 																					
-						echo '<div role="navigation" id="sidebar" style="background-color:#000; padding-left:15px; padding-right:15px; padding-top:5px">';
-						echo '<h3 style="color:#3276B1;">Search Our Classifieds</h3>';						
-						echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
-		
-						echo $nav->getSideNavigation($siteGroup);
-						
-						echo '</ul>';
-						echo '</div>';								
-					?>
-        	<div style="padding:10px">
-        		<?php 
-        		echo $ads->getFlex();	
-        		?>
-        	</div>					
-        	</div>
-        </div>                
-    </div>
+            $pagination
+            <br />$data
+            $pagination
+EOS;
 
-</div>
-
-
-<?php 
-echo $ads->getLeaderBottom(); 
-include('includes/tracking.php'); 
-?>
-
-<footer class="footer">
-<?php
-	include('includes/footer.php');
-?>
-</footer>
-
-	<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-	<script src="3rdParty/bootstrap/js/bootstrap.min.js"></script>
-  <script src="3rdParty/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>
-  <script src="js/category.js"></script>
-</body>
-</html>
-		  
+include("includes/master.php");

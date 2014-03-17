@@ -10,7 +10,7 @@ $connBgColor = '#00FF00';
 $queryBgStatus = '#00FF00';
 
 try {
-		$dbh = new PDO('mysql:dbname='.DB_NAME.';host='.DB_SERVER.';port='.DB_PORT.';charset=utf8', DB_USER, DB_PASS);
+		$dbh = new PDO('mysql:dbname='.DB_NAME.';host='.DB_HOST.';port='.DB_PORT.';charset=utf8', DB_USER, DB_PASS);
 		$dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 		$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		try {	
@@ -60,6 +60,7 @@ body
 </head>
 <body>
 	<table>
+<tr><td>Apache status </td><td bgcolor="#00FF00">Passed</td></tr>		
 <tr><td>database Connection status </td><td bgcolor="<?php echo $connBgColor?>"><?php echo $connectionStatus?></td></tr>
 <tr><td>database Query status </td><td bgcolor="<?php echo $queryBgStatus?>"><?php echo $queryStatus?></td></tr>
 <tr><td>DCD Version </td><td><?php echo DCD_VERSION ?> </td>
