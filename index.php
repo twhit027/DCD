@@ -75,9 +75,11 @@ body
             
             <a href="<?=$siteUrl?>"><img target="_blank" alt="<?=$siteName?> Logo" title="<?=$siteName?>" style="margin-bottom: 10px;background-color: black" src="<?=$siteUrl?>/graphics/ody/cobrand_logo.gif"></a>
                         
-            <p>We have many ad packages to suit your classified needs.</p>
+            <p>SELL easy and SELL fast!</p>
             
-            <p>Place a classified ad in <?=$busName?> in-paper and online. List all kinds of items including Merchandise, Pets, Garage Sales, Services, and much more. </p>           	
+            <p>As the leading local media and trusted marketing solutions provider, we have a range of effective advertising packages to meet your needs.</p>
+			<p>From VEHICLES to PETS to GARAGE SALES to SERVICES, we provide the most effective ways to sell to potential local buyers through our leading mobile, online and print solutions.</p>
+			<p>Develop and launch your advertising program within minutes with just a few clicks, and begin connecting with local buyers TODAY!</p>
            	
            	<?php
             	$content = new Content();
