@@ -106,6 +106,21 @@ class Admin extends Database
 		global $site;
 		for($i=0;$i<$usercount; $i++) 
 		{
+			
+			if (!isset($userdata[$i]["STREET"])) {
+				$userdata[$i]["STREET"] = "";
+			}
+			if (!isset($userdata[$i]["CITY"])) {
+				$userdata[$i]["CITY"] = "";
+			}
+			if (!isset($userdata[$i]["STATE"])) {
+				$userdata[$i]["STATE"] = "";
+			}
+			if (!isset($userdata[$i]["ZIP"])) {
+				$userdata[$i]["ZIP"] = "";
+			}
+			
+			
 			echo 'user '.$i.'<br />';
 			echo 'usercount '.$usercount.'<br />';
 			
