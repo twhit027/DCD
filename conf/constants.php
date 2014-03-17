@@ -1,18 +1,12 @@
 <?php
-// application Root Directory
-define("APP_ROOT", "/DCD");
+// listings per page
+define("LISTINGS_PER_PAGE", "10");
 //db vars
-//define("DB_SERVER", "50.63.231.153");
 define("DB_HOST", "localhost");
 define("DB_PORT", "3306");
-//define("DB_USER", "classifiedsproject");
 define("DB_USER", "classifieds");
 define("DB_PASS", "ClassDB13!");
 define("DB_NAME", "classifieds");
-//feed tables
-define("TBL_LISTING", "listing");
-define("TBL_PLACEMENT", "placements");
-define("TBL_POSITION", "positions");
 //logging
 define("LOGGING_LEVEL", 7);
 define("LOGGING_DIR", "logs");

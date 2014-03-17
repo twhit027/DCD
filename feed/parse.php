@@ -1,14 +1,14 @@
 <?php
-include('../includes/functions.php');
-include('../conf/constants.php');
+require_once('../conf/constants.php');
+include('../includes/GCI/Database.php');
 
-global $usercount;
-global $userdata;
+global $userCount;
+global $userData;
 global $state;
 global $site;
 
-$usercount=0;
-$userdata=array();
+$userCount=0;
+$userData=array();
 
 $file = '';
 
@@ -59,57 +59,57 @@ function start($parser,$element_name,$element_attrs)
 
 function stop($parser,$element_name)
 {
-    global $usercount;
+    global $userCount;
     global $state;
     $state='';
 
     if($element_name == "AD") {
-        $usercount++;
+        $userCount++;
     }
 }
 
 function char($parser,$data)
 {
-    global $usercount;
-    global $userdata;
+    global $userCount;
+    global $userData;
     global $state;
     global $site;
     if (!$state) {return;}
 
     if ($state['name']=="DCD") {  $site = $state['SITECODE']; }
-    if ($state['name']=="AD") {  $userdata[$usercount]["AD"] = $state['ID'];}
-    if ($state['name']=="START-DATE") {  $userdata[$usercount]["START-DATE"] = $data;}
-    if ($state['name']=="END-DATE") { $userdata[$usercount]["END-DATE"] = $data;}
-    if ($state['name']=="PLACEMENT") { $userdata[$usercount]["PLACEMENT"] = $data;}
-    if ($state['name']=="POSITION") { $userdata[$usercount]["POSITION"] = $data;}
-    if ($state['name']=="AD-TEXT") { $userdata[$usercount]["AD-TEXT"] = strip_tags ($data);}
-    if ($state['name']=="STREET") { $userdata[$usercount]["STREET"] = $data;}
-    if ($state['name']=="CITY") { $userdata[$usercount]["CITY"] = $data;}
-    if ($state['name']=="STATE") { $userdata[$usercount]["STATE"] = $data;}
-    if ($state['name']=="ZIP") { $userdata[$usercount]["ZIP"] = $data;}
+    if ($state['name']=="AD") {  $userData[$userCount]["AD"] = $state['ID'];}
+    if ($state['name']=="START-DATE") {  $userData[$userCount]["START-DATE"] = $data;}
+    if ($state['name']=="END-DATE") { $userData[$userCount]["END-DATE"] = $data;}
+    if ($state['name']=="PLACEMENT") { $userData[$userCount]["PLACEMENT"] = $data;}
+    if ($state['name']=="POSITION") { $userData[$userCount]["POSITION"] = $data;}
+    if ($state['name']=="AD-TEXT") { $userData[$userCount]["AD-TEXT"] = strip_tags ($data);}
+    if ($state['name']=="STREET") { $userData[$userCount]["STREET"] = $data;}
+    if ($state['name']=="CITY") { $userData[$userCount]["CITY"] = $data;}
+    if ($state['name']=="STATE") { $userData[$userCount]["STATE"] = $data;}
+    if ($state['name']=="ZIP") { $userData[$userCount]["ZIP"] = $data;}
 }
 
-class ClassifiedsAdmin extends Database
+class ClassifiedsAdmin extends \GCI\Database
 {
     function insertListings()
     {
-        global $usercount;
-        global $userdata;
+        global $userCount;
+        global $userData;
         global $site;
-        for($i=0;$i<$usercount; $i++)
+        for($i=0;$i<$userCount; $i++)
         {
-            if (empty($userdata[$i]["STREET"])) {$userdata[$i]["STREET"] = '';}
-            if (empty($userdata[$i]["STATE"])) {$userdata[$i]["STATE"] = '';}
-            if (empty($userdata[$i]["CITY"])) {$userdata[$i]["CITY"] = '';}
-            if (empty($userdata[$i]["ZIP"])) {$userdata[$i]["ZIP"] = '';}
+            if (empty($userData[$i]["STREET"])) {$userData[$i]["STREET"] = '';}
+            if (empty($userData[$i]["STATE"])) {$userData[$i]["STATE"] = '';}
+            if (empty($userData[$i]["CITY"])) {$userData[$i]["CITY"] = '';}
+            if (empty($userData[$i]["ZIP"])) {$userData[$i]["ZIP"] = '';}
 
             $stmt = $this->prepare("DELETE FROM `listing` WHERE ID = :ID");
-            $stmt->execute(array(':ID' => $userdata[$i]["AD"]));
+            $stmt->execute(array(':ID' => $userData[$i]["AD"]));
 
             $stmt = $this->prepare("INSERT INTO `listing` (`ID`, `StartDate`, `EndDate`, `Placement`,`Position`, `AdText`, `SiteCode`, `Street`, `City`, `State`, `Zip`) VALUES(:ID, :StartDate, :EndDate, :Placement, :Position, :AdText, :Site, :Street, :City, :State, :Zip)");
-            $stmt->execute(array(':ID' => $userdata[$i]["AD"], ':StartDate' => $userdata[$i]["START-DATE"], ':EndDate' => $userdata[$i]["END-DATE"]  , ':Placement' => $userdata[$i]["PLACEMENT"], ':Position' => $userdata[$i]["POSITION"], ':AdText' => $userdata[$i]["AD-TEXT"] , ':Site' => $site, ':Street' =>  $userdata[$i]["STREET"], ':City' =>  $userdata[$i]["CITY"], ':State' =>  $userdata[$i]["STATE"], ':Zip' =>  $userdata[$i]["ZIP"] ));
+            $stmt->execute(array(':ID' => $userData[$i]["AD"], ':StartDate' => $userData[$i]["START-DATE"], ':EndDate' => $userData[$i]["END-DATE"]  , ':Placement' => $userData[$i]["PLACEMENT"], ':Position' => $userData[$i]["POSITION"], ':AdText' => $userData[$i]["AD-TEXT"] , ':Site' => $site, ':Street' =>  $userData[$i]["STREET"], ':City' =>  $userData[$i]["CITY"], ':State' =>  $userData[$i]["STATE"], ':Zip' =>  $userData[$i]["ZIP"] ));
         }
-        echo "inserted $usercount rows in listing<br />";
+        echo "inserted $userCount rows in listing<br />";
     }
 
     function deleteOldListings()
@@ -135,7 +135,7 @@ class ClassifiedsAdmin extends Database
 
 $user = new ClassifiedsAdmin();
 
-if ($usercount > 0) {
+if ($userCount > 0) {
     $user->insertListings();
 }
 
