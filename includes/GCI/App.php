@@ -80,7 +80,7 @@ class App
     {
         $sql = "SELECT * FROM `siteinfo`";
         $data = $this->database->getAssoc($sql);
-        return $data[0];
+        return $data;
     }
 
     public function getRummages($siteGroup = '')
@@ -117,7 +117,7 @@ class App
             $data = $this->getDefaultSiteData();
         }
 
-        $this->setSite(new Site($data));
+        $this->setSite(new Site($data[0]));
     }
 
     function setSiteFromDomain($domain = '')
@@ -135,7 +135,7 @@ class App
             $data = $this->getDefaultSiteData();
         }
 
-        $this->setSite(new Site($data));
+        $this->setSite(new Site($data[0]));
     }
 
     function getDomain()
