@@ -25,10 +25,11 @@ class App
     {
         $this->database = new Database();
         $this->detectDevice();
-        if (isset($siteCode)) {
-            $this->setSiteFromSiteCode($siteCode);
+        if (empty($siteCode)) {
+          $this->setSiteFromDomain();
+            
         } else {
-            $this->setSiteFromDomain();
+        	$this->setSiteFromSiteCode($siteCode);
         }
         $this->setCategories();
         $this->log = \KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
