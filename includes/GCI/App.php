@@ -256,4 +256,69 @@ class App
     {
         $this->log->logInfo($logText);
     }
+	function getSearch()
+	{
+
+		
+		$results = $this->database->prepare("SELECT DISTINCT (Placement) from `position`");
+		$results->execute();	
+		$end = "";	
+		$data="<form action='results.php' method='post'>";
+		$data.= "<select name='placement'>";
+		foreach ($results as $row) 
+		{
+			$data.=  "<option value='".$row['Placement']."'>".$row['Placement']."</option>";
+			$end .=  $this->getSearchSubcats($row['Placement']);
+		}
+		$data.= "</select>";
+		$data.= $end;
+		$data.= $this->getSites();
+		$data.="<br /><input type='submit' value='submit'>";
+		$data.="</form>";
+        return $data;
+  
+	
+	}
+	
+	function getSearchSubcats($placement)
+	{
+		
+		
+		$results = $this->database->prepare("SELECT DISTINCT Position FROM `position` WHERE `Placement` = :placement");
+		$results->execute(array(':placement' => $placement));	
+
+		$data = "<br /><select name='".$placement."' >";
+		foreach ($results as $row) 
+		{
+			$data.=  "<option value='".$row['Position']."'>".$row['Position']."</option>";
+			
+		}
+		$data.= "</select>";
+        return $data;
+  
+	
+	}
+	
+	function getSites()
+	{
+		
+		
+		$results = $this->database->prepare("SELECT * FROM `siteinfo`");
+		$results->execute();	
+
+		$data ="";
+		foreach ($results as $row) 
+		{
+			$data.=  "<br/><input type='checkbox' value='".$row['SiteCode']."'>".$row['SiteName']."</option>";
+			
+		}
+		
+        return $data;
+  
+	
+	}	
+	
+
+	
+	
 } 
