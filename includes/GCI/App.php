@@ -202,7 +202,7 @@ class App
             $siteGroup = $this->site->getSiteGroup();
         }
         if (empty($this->listings) && (isset($placement) && isset($position) && isset($siteGroup))) {
-            $rowCnt = LISTINGS_PER_PAGE;
+            $rowCnt = (defined(LISTINGS_PER_PAGE)) ? LISTINGS_PER_PAGE : 10;
             $offSet = (($page) - 1) * 10;
 
             $siteGroupString = $this->createSiteGroupString($siteGroup);
