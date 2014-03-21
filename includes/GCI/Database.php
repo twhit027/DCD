@@ -22,7 +22,6 @@ class Database extends \PDO
     public function __construct()
     {
         try {
-            //$this->db = new PDO('mysql:dbname='.DB_NAME.';host='.DB_SERVER.';port='.DB_PORT.';charset=utf8', DB_USER, DB_PASS);
             $this->connection_string = 'mysql:dbname=' . DB_NAME . ';host=' . DB_HOST . ';port=' . DB_PORT . ';charset=utf8';
             parent::__construct($this->connection_string, $this->db_user, $this->db_pass);
             $this->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
