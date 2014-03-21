@@ -2,13 +2,9 @@
 include(dirname(__FILE__) . '../3rdParty/klogger/KLogger.php');
 include(dirname(__FILE__) . '../conf/constants.php');
 
-global $userCount;
-global $userData;
-global $state;
-global $site;
-
-$userCount = 0;
+$userCount = $return = 0;
 $userData = array();
+$state = $site = '';
 
 $file = '';
 
@@ -71,7 +67,8 @@ function char($parser, $data)
     global $userData;
     global $state;
     global $site;
-    if (!$state) {
+
+    if (empty($state)) {
         return;
     }
 
@@ -158,6 +155,7 @@ class ClassifiedsAdmin extends PDO
                 $logText = "Message:(" . $e->getMessage . ") attempting to delete listing (" . $userData[$i]["AD"] . ") from the database";
                 $this->log->logError($logText);
                 fwrite(STDERR, $logText."\n");
+                $return = 2;
             }
 
             try {
@@ -168,6 +166,7 @@ class ClassifiedsAdmin extends PDO
                 $logText = "Message:(" . $e->getMessage . ") attempting to insert listing (" . $userData[$i]["AD"] . ") into the database";
                 $this->log->logError($logText);
                 fwrite(STDERR, $logText."\n");
+                $return = 4;
             }
         }
 
@@ -190,6 +189,7 @@ class ClassifiedsAdmin extends PDO
             $logText = "Message:(" . $e->getMessage . ") attempting to delete data prior to (" . $date . ") from the listing table";
             $this->log->logError($logText);
             fwrite(STDERR, $logText."\n");
+            $return = 6;
         }
     }
 
@@ -206,6 +206,7 @@ class ClassifiedsAdmin extends PDO
             $logText = "Message:(" . $e->getMessage . ") attempting to truncate the positions table";
             $this->log->logError($logText);
             fwrite(STDERR, $logText."\n");
+            $return = 8;
         }
 
         try {
@@ -215,6 +216,7 @@ class ClassifiedsAdmin extends PDO
             $logText = "Message:(" . $e->getMessage . ") attempting to insert the positions table";
             $this->log->logError($logText);
             fwrite(STDERR, $logText."\n");
+            $return = 10;
         }
     }
 }
@@ -228,5 +230,5 @@ if ($userCount > 0) {
 $user->deleteOldListings();
 $user->buildNav();
 
-exit(0);
+exit($return);
 ?>
