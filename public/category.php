@@ -19,6 +19,10 @@ $fullText = '';
 if (isset($_REQUEST['page'])) {
     $page = urldecode($_REQUEST['page']);
 }
+
+if (isset($_REQUEST['ft'])) {
+    $fullText = urldecode($_REQUEST['ft']);
+}
 $placement = urldecode($_REQUEST['place']);
 $position = urldecode($_REQUEST['posit']);
 
@@ -30,8 +34,7 @@ if(isset($_REQUEST['sites']))
 }
 else
 {
-
-	$listings = $app->getListings($placement, $position, $page);
+	$listings = $app->getListings($placement, $position, $page, '', $fullText);	
 	$search = $app->getSearch();
 }
 
@@ -78,10 +81,12 @@ else
 	
 		$data .= "<div class='jumbotron'>";
 		$data .= "<p>" . $string . "</p>";
+        $data .= '<span class="input-group-btn">';
 		$data .= '<a class="btn btn-primary" href="http://twitter.com/home?status=' . substr($row['adText'], 0, 120) . '" target="_blank"><img src="img/twitter1.png" /></a>';
 		$data .= '<a class="btn btn-primary" href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/facebook2.png" /></a>';
 		$data .= '<a class="btn btn-primary" href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/google-plus2.png" /></a>';
 		$data .= '<a class="btn btn-primary" href="mailto:youremailaddress" target="_blank"><img src="img/email2.png" /></a>';
+        $data .= '</span>';
 		$data .= '</div>';
 	}
 }
