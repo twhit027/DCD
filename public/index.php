@@ -1,22 +1,16 @@
 <?php
-include(dirname(__FILE__) . '/3rdParty/klogger/KLogger.php');
-include(dirname(__FILE__) . '/3rdParty/Mobile_Detect/Mobile_Detect.php');
-include('conf/constants.php');
-include('includes/GCI/Database.php');
-include('includes/GCI/Site.php');
-include('includes/GCI/App.php');
-include('includes/GCI/Navigation.php');
-include('includes/GCI/Ads.php');
+include('../vendor/klogger/KLogger.php');
+include('../vendor/Mobile_Detect/Mobile_Detect.php');
+include('../conf/constants.php');
+include('../includes/GCI/Database.php');
+include('../includes/GCI/Site.php');
+include('../includes/GCI/App.php');
+include('../includes/GCI/Navigation.php');
+include('../includes/GCI/Ads.php');
 
 $app = new \GCI\App();
 
-//echo 'Cat: '; print_r($app->getCategories());
-
-$app->logInfo('Landing Page');
-$app->logInfo('FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR']);
-$app->logInfo('REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR']);
-$app->logInfo('HTTP_HOST: '.@$_SERVER['HTTP_HOST']);
-$app->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);
+$app->logInfo('Landing Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].', REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].',HTTP_HOST: '.@$_SERVER['HTTP_HOST'].'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].')');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -63,10 +57,13 @@ $app->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);
 	echo $nav->getSideNavigation($app->getCategories());
 	echo '</ul></div></nav>';
 
-    include('includes/toggle.php');
+    include('../includes/toggle.php');
 
 	$ads = new \GCI\Ads();
 	echo $ads->InitializeAds();
+	
+	$search = $app->getSearch();
+	
 ?>
 </div>
 </header>
@@ -77,6 +74,14 @@ $app->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);
     <div class="row" style="background-color:#FFF;">
         <div class="col-xs-11 col-sm-8">
             <h1><?=$busName?> &amp; Online Classifieds</h1>
+            <div class="jumbotron" id="advancedsearch" style="display:none;">
+            <?php 
+			$search = $app->getSearch();
+			
+			echo  $search 
+			?>
+            </div>
+                
             <a href="<?=$siteUrl?>" target="_blank"><img alt="<?=$siteName?> Logo" title="<?=$siteName?>" style="margin-bottom: 10px;background-color: black" src="<?=$siteUrl?>/graphics/ody/cobrand_logo.gif"></a>
             <p>SELL easy and SELL fast!</p>
             <p>As the leading local media and trusted marketing solutions provider, we have a range of effective advertising packages to meet your needs.</p>
@@ -113,6 +118,20 @@ $app->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);
           <?php
 						echo '<div role="navigation" id="sidebar" style="background-color:#000; padding-left:15px; padding-right:15px; padding-top:5px">';
 						echo '<h3 style="color:#3276B1;">Search Our Classifieds</h3>';
+						
+						echo '<div class="input-group">';
+				
+				echo '<input type="text" class="form-control">';
+				echo '<span class="input-group-btn">';
+				echo '<button class="btn btn-default"  type="button">Search</button>';
+				echo '</span>';
+				echo '</div>';
+		
+		
+						echo '<div class="advbtn btn btn-default" style="width:100%;display:none;">Advanced Search</div>';
+		
+		
+                
 						echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
 
 						echo $nav->getSideNavigation($app->getCategories());
@@ -131,7 +150,7 @@ $app->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);
 </div>
 <?php
 echo $ads->getLeaderBottom();
-include('includes/tracking.php');
+include('../includes/tracking.php');
 ?>
 <footer class="footer">
 <?php

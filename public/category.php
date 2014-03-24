@@ -1,34 +1,30 @@
 <?php
-include(dirname(__FILE__) . '/3rdParty/klogger/KLogger.php');
-include(dirname(__FILE__) . '/3rdParty/Mobile_Detect/Mobile_Detect.php');
-include('conf/constants.php');
-include('includes/GCI/Database.php');
-include('includes/GCI/Site.php');
-include('includes/GCI/App.php');
-include('includes/GCI/Navigation.php');
-include('includes/GCI/Ads.php');
+include('../vendor/klogger/KLogger.php');
+include('../vendor/Mobile_Detect/Mobile_Detect.php');
+include('../conf/constants.php');
+include('../includes/GCI/Database.php');
+include('../includes/GCI/Site.php');
+include('../includes/GCI/App.php');
+include('../includes/GCI/Navigation.php');
+include('../includes/GCI/Ads.php');
 
 $app = new \GCI\App();
 
-$app->logInfo('Category Page');
-$app->logInfo('FORWARDED_FOR: ' . @$_SERVER['HTTP_X_FORWARDED_FOR']);
-$app->logInfo('REMOTE_ADDR: ' . @$_SERVER['REMOTE_ADDR']);
-$app->logInfo('HTTP_HOST: ' . @$_SERVER['HTTP_HOST']);
-$app->logInfo('SERVER_NAME: ' . @$_SERVER['SERVER_NAME']);
+$app->logInfo('Category Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].', REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].',HTTP_HOST: '.@$_SERVER['HTTP_HOST'].'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].')');
 
 //$content = new Content();
 $page = 1;
+$fullText = '';
 
 if (isset($_REQUEST['page'])) {
     $page = urldecode($_REQUEST['page']);
 }
+$placement = urldecode($_REQUEST['place']);
+$position = urldecode($_REQUEST['posit']);
 
-$placement = urldecode($_GET['place']);
-$position = urldecode($_GET['posit']);
-
-if(isset($_GET['sites']))
+if(isset($_REQUEST['sites']))
 {
-	$sitegroup = urldecode($_GET['sites']);
+	$sitegroup = urldecode($_REQUEST['sites']);
 	$listings = $app->getListings($placement, $position, $page, $sitegroup);
 	$search = $app->getSearch($sitegroup);
 }
@@ -89,8 +85,13 @@ else
 		$data .= '</div>';
 	}
 }
+
 $mainContent = <<<EOS
-                <ol class="breadcrumb">
+            <input type="hidden" id="place" name="place" value="$placement">
+            <input type="hidden" id="posit" name="posit" value="$position">
+            <input type="hidden" id="page" name="page" value="$page">
+            <input type="hidden" id="fullText" name="fullText" value="$fullText">
+            <ol class="breadcrumb">
                 <li><a href="./">Home</a></li>
                 <li class="active">Category</li>
 				
@@ -99,10 +100,10 @@ $mainContent = <<<EOS
 				$search
 				</div>
             <h1>$position</h1>
-			
+
             $pagination
             <br />$data
             $pagination
 EOS;
 
-include("includes/master.php");
+include("../includes/master.php");

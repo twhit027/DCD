@@ -25,10 +25,11 @@ class App
     {
         $this->database = new Database();
         $this->detectDevice();
-        if (isset($siteCode)) {
-            $this->setSiteFromSiteCode($siteCode);
+        if (empty($siteCode)) {
+          $this->setSiteFromDomain();
+            
         } else {
-            $this->setSiteFromDomain();
+        	$this->setSiteFromSiteCode($siteCode);
         }
         $this->setCategories();
         $this->log = \KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
@@ -80,7 +81,7 @@ class App
     {
         $sql = "SELECT * FROM `siteinfo`";
         $data = $this->database->getAssoc($sql);
-        return $data[0];
+        return $data;
     }
 
     public function getRummages($siteGroup = '')
@@ -125,7 +126,7 @@ class App
             $data = $this->getDefaultSiteData();
         }
 
-        $this->setSite(new Site($data));
+        $this->setSite(new Site($data[0]));
     }
 
     function setSiteFromDomain($domain = '')
@@ -143,7 +144,7 @@ class App
             $data = $this->getDefaultSiteData();
         }
 
-        $this->setSite(new Site($data));
+        $this->setSite(new Site($data[0]));
     }
 
     function getDomain()
@@ -209,7 +210,7 @@ class App
             $siteGroup = $this->site->getSiteGroup();
         }
         if (empty($this->listings) && (isset($placement) && isset($position) && isset($siteGroup))) {
-            $rowCnt = LISTINGS_PER_PAGE;
+            $rowCnt = (defined(LISTINGS_PER_PAGE)) ? LISTINGS_PER_PAGE : 10;
             $offSet = (($page) - 1) * 10;
 
             $siteGroupString = $this->createSiteGroupString($siteGroup);
@@ -264,4 +265,175 @@ class App
     {
         $this->log->logInfo($logText);
     }
+	function getSearch($siteGroup= '')
+	{
+		
+		
+		$data="<script>
+		window.onload=function(){
+			
+			$('#searchform')[0].reset();
+			$('.advbtn' ).show();
+			
+			var sitearray = new Array(); 
+			
+			
+			$('.advbtn').click(function() {
+				$('#advancedsearch' ).toggle();
+			});
+
+
+			$('#placement').change(function() {
+				var tring = $('#placement').val();
+				$('#positions' ).hide();
+				$('#position').val($('#'+tring).val() );
+				
+				$('.'+tring).show();
+				
+			}).change();
+		
+			$('input:checkbox').change(function(){
+	
+				var toggle= '';
+				var sitecodes ='';
+				for ( var i in sitearray ) 
+				{
+					if(sitearray[i] == this.value)
+					{
+						toggle = i;
+						sitearray[i] = '';
+					}
+					
+						sitecodes = sitecodes + ','+ sitearray[i];
+					
+				}
+				
+				if(toggle == '')
+				{
+					sitearray.push(this.value);
+					sitecodes = sitecodes + ','+ this.value
+				}
+				
+				$('#sites').val(sitecodes);
+				
+			});
+
+
+		}
+		 </script>";
+		 
+		 
+		if ($siteGroup == '') {
+            $siteGroup = $this->site->getSiteGroup();
+        }
+		
+		
+		$siteArray = explode(',', $siteGroup);
+        
+        
+		
+		
+		$results = $this->database->prepare("SELECT DISTINCT (Placement) from `position`");
+		$results->execute();	
+		$end = "";	
+		$data .="<form action='category.php' method='get' id='searchform' role='form' class='form-horizontal'>";
+		$data.= "<select id='placement' name='place' class='form-control'>";
+		$data.=  "<option >Pick A Category</option>";
+		foreach ($results as $row) 
+		{
+			$data.=  "<option value='".$row['Placement']."'>".$row['Placement']."</option>";
+			$end .=  $this->getSearchSubcats($row['Placement']);
+		}
+		$data.= "</select>";
+		$data.= $end;
+		$data.= $this->getSites($siteArray);
+		$data.="<br /><input type='submit' class='btn btn-primary' value='Search'>";
+		
+		
+		
+		
+		$data.='<input type="hidden" name="posit" id="position">';
+		$data.='<input type="hidden" name="sites" id="sites">';
+		$data.="</form>";
+        return $data;
+  
+	
+	}
+	
+	function getSearchSubcats($placement)
+	{
+		
+		
+		$results = $this->database->prepare("SELECT DISTINCT Position FROM `position` WHERE `Placement` = :placement");
+		$results->execute(array(':placement' => $placement));	
+
+		$data = "<div style='display:none;' id='positions' class='".$placement."' ><select  id='".$placement."' class='form-control'>";
+		foreach ($results as $row) 
+		{
+			$data.=  "<option value='".$row['Position']."'>".$row['Position']."</option>";
+			
+		}
+		$data.= "</select>";
+		$data.= "</div>";
+        return $data;
+  
+	
+	}
+	
+	function getSites($siteArray)
+	{
+		
+		
+		$results = $this->database->prepare("SELECT * FROM `siteinfo` order by State");
+		$results->execute();	
+
+	
+		$state = "";
+		
+		$data = "<table class='table'>";
+		$data .="<tr>";			
+		$x = 1;
+		$z = 0;
+		$w = 0;
+		foreach ($results as $row) 
+		{
+			if($x == 4)
+			{
+				$data .="</tr>";	
+				$data .="<tr>";		
+				$x = 1;	
+			}
+			
+	
+			
+			if($state != $row['State'])
+			{
+				if($z == 1)
+				{
+					$data .="</td>";
+				}
+				$z = 1;
+				$state = $row['State'];
+				$data .="<td>";
+				$data .="<h4>".$row['State']."</h4>";
+				
+			}
+			
+			$data.=  "<p><label class='checkbox-inline'><input type='checkbox' id='".$row['SiteCode']."' value='".$row['SiteCode']."'> : ".$row['City']."</label></p>";
+			
+			$x += 1;
+			
+		}
+		$data .="</td>";
+		$data .="</tr>";	
+		$data .= "</table>";
+
+        return $data;
+  
+	
+	}	
+	
+
+	
+	
 } 
