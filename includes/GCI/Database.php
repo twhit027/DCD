@@ -18,6 +18,7 @@ class Database extends \PDO
     private $db_name = DB_NAME;
     private $con = false;
     private $result = array();
+    private $log;
 
     public function __construct()
     {
@@ -27,8 +28,10 @@ class Database extends \PDO
             $this->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
             $this->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             $this->con = true;
+            $this->log = \KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
         } catch (\PDOException $e) {
-            echo 'Error: ' . $e->getMessage();
+            $logText = "Message:(" . $e->getMessage . ") attempting to connect to database";
+            $this->log->logError($logText);
         }
     }
 
@@ -36,13 +39,17 @@ class Database extends \PDO
     public function getAssoc($sql, $params = array())
     {
         try {
+            $time_start = microtime(true);
             $stmt = $this->prepare($sql);
             $params = is_array($params) ? $params : array($params);
             $stmt->execute($params);
 
+            $this->log->logInfo('sql: ($sql) took ('.(microtime(true) - $time_start).')');
+
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
         } catch (\PDOException $e) {
-            echo 'Error: ' . $e->getMessage();
+            $logText = "Message:(" . $e->getMessage . ") problem with query ($sql)";
+            $this->log->logError($logText);
 
             /*
              throw new Exception(
@@ -56,8 +63,15 @@ class Database extends \PDO
     }
 
     public function getCount($sql) {
-        $stmt = $this->prepare($sql);
-        $stmt->execute();
-        return $stmt->fetchColumn();
+        try {
+            $time_start = microtime(true);
+            $stmt = $this->prepare($sql);
+            $stmt->execute();
+            $this->log->logInfo('sql: ($sql) took ('.(microtime(true) - $time_start).')');
+            return $stmt->fetchColumn();
+        } catch (\PDOException $e) {
+            $logText = "Message:(" . $e->getMessage . ") problem with query ($sql)";
+            $this->log->logError($logText);
+        }
     }
 }
