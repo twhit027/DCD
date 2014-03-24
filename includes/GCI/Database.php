@@ -44,7 +44,7 @@ class Database extends \PDO
             $params = is_array($params) ? $params : array($params);
             $stmt->execute($params);
 
-            $this->log->logInfo('sql: ($sql) took ('.(microtime(true) - $time_start).')');
+            $this->log->logInfo('sql: ('.$sql,') took ('.(microtime(true) - $time_start).')');
 
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
         } catch (\PDOException $e) {
@@ -67,7 +67,7 @@ class Database extends \PDO
             $time_start = microtime(true);
             $stmt = $this->prepare($sql);
             $stmt->execute();
-            $this->log->logInfo('sql: ($sql) took ('.(microtime(true) - $time_start).')');
+            $this->log->logInfo('sql: ('.$sql.') took ('.(microtime(true) - $time_start).')');
             return $stmt->fetchColumn();
         } catch (\PDOException $e) {
             $logText = "Message:(" . $e->getMessage . ") problem with query ($sql)";
