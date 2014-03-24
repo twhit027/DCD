@@ -44,7 +44,7 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
-	<?php echo $googleApiScript; ?>
+	<?php if(!empty($googleApiScript)){ echo $googleApiScript; } ?>
 </head>
 <body>
 <header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
@@ -87,27 +87,19 @@ echo $ads->getLaunchpad();
             <div class="hidden-xs">	
 			
                 <div role="navigation" id="sidebar" style="background-color:#000; padding-left:15px; padding-right:15px; padding-top:5px">
-				<div class="input-group" style="margin-bottom:5px;">
-					<input type="text" class="form-control">
-					<span class="input-group-btn">
-						<button class="btn btn-default"  type="button">Search</button>
-					</span>
-				</div>	
-				<div class="advbtn btn btn-default" style="width:100%;display:none;margin-bottom:5px;">Advanced Search</div>			
-                    <h3 style="color:#3276B1;">Or Pick A Category</h3>
+                    <h3 style="color:#3276B1;">Search Our Classifieds</h3>
+                    <div class="input-group">
+                        <input id="fullTextBox" type="text" name="search" class="form-control" value="<?php echo $fullText; ?>">
+                        <span class="input-group-btn">
+                            <a id="ftSearch" class="btn btn-primary" style="vertical-align: bottom;"><img src="img/white-magnifying-glass-20.png"></a>
+                            <a id="ftSearchAdv" class="btn btn-primary" style="vertical-align: bottom;">+</a>
+                        </span>
+				    </div>
+                    <h3 style="color:#3276B1;">Or Select A Category</h3>
                     <ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">
                         <?php echo $nav->getSideNavigation($app->getCategories()); ?>
                     </ul>
                 </div>
-<br />
-                <div role="navigation" id="sidebar" style="background-color:#000; padding-left:15px; padding-right:15px; padding-top:10px">
-                    <ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;vertical-align: bottom;width: 100%;">
-                        <input id="fullTextBox" type="text" name="search" style="height:32px;font-size:14pt;width: 66%;" value="<?php echo $fullText; ?>">
-                        <a id="ftSearch" class="btn btn-primary" style="vertical-align: bottom;"><img src="img/white-magnifying-glass-20.png"></a>
-                        <a id="ftSearchAdv" class="btn btn-primary" style="vertical-align: bottom;">+</a>
-                    </ul>
-                </div>
-
                 <div style="padding:10px">
                     <?php echo $ads->getFlex(); ?>
                 </div>
@@ -125,14 +117,11 @@ echo $ads->getLeaderBottom();
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="3rdParty/bootstrap/js/bootstrap.min.js"></script>
 <script src="3rdParty/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>
-<<<<<<< HEAD
-<?php if(!empty($masterBottom)){ echo $masterBottom; } ?>
-=======
 <script>
     $( document ).ready(function() {
         $("#ftSearch").click(function(e) {
             e.preventDefault();
-            ft = trim($("#fullTextBox").val());
+            ft = $("#fullTextBox").val().trim();
             place= $('#place').val();
             posit= $('#posit').val();
             window.location.href = 'category.php?place='+encodeURIComponent(place)+'&posit='+encodeURIComponent(posit)+'&ft='+encodeURIComponent(ft);
@@ -140,10 +129,10 @@ echo $ads->getLeaderBottom();
 
         $("#ftSearchAdv").click(function(e) {
             e.preventDefault();
-            $("#advSearch").toggle();
+            $("#advancedsearch").toggle();
         });
     });
 </script>
->>>>>>> e0e8f877bb5feedd7782fff4a3935a9395be29f4
+<?php if(!empty($masterBottom)){ echo $masterBottom; } ?>
 </body>
 </html>

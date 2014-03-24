@@ -1,32 +1,20 @@
 <?php
-include(dirname(__FILE__) . '/3rdParty/klogger/KLogger.php');
-include(dirname(__FILE__) . '/3rdParty/Mobile_Detect/Mobile_Detect.php');
-include('conf/constants.php');
-include('includes/GCI/Database.php');
-include('includes/GCI/Site.php');
-include('includes/GCI/App.php');
-include('includes/GCI/Navigation.php');
-include('includes/GCI/Ads.php');
+include('../vendor/klogger/KLogger.php');
+include('../vendor/Mobile_Detect/Mobile_Detect.php');
+include('../conf/constants.php');
+include('../includes/GCI/Database.php');
+include('../includes/GCI/Site.php');
+include('../includes/GCI/App.php');
+include('../includes/GCI/Navigation.php');
+include('../includes/GCI/Ads.php');
 
 $app = new \GCI\App();
 
-$app->logInfo('Rummage Page');
-$app->logInfo('FORWARDED_FOR: ' . @$_SERVER['HTTP_X_FORWARDED_FOR']);
-$app->logInfo('REMOTE_ADDR: ' . @$_SERVER['REMOTE_ADDR']);
-$app->logInfo('HTTP_HOST: ' . @$_SERVER['HTTP_HOST']);
-$app->logInfo('SERVER_NAME: ' . @$_SERVER['SERVER_NAME']);
+$app->logInfo('Map Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].', REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].',HTTP_HOST: '.@$_SERVER['HTTP_HOST'].'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].')');
 
-$params = array(
-    'PubCode' => 'DES-RM Des Moines Register'
-);
-if (isset($_POST['locations'])) {
-    $ids = explode(",",$_POST['locations']);
-    foreach($ids as $i) {
-        $params['where']['ID'][] = $i;
-    }
-}
-
-$listOfRummages = $app->getRummages();
+$place = $_GET['place'];
+$position = $_GET['position'];
+$listOfRummages = $app->getRummages($place,$position);
 $mapPoints = json_encode($listOfRummages['map']);
 $rummages = $listOfRummages['list'];
 $rummageList = '';
@@ -58,7 +46,9 @@ $data = <<<EOS
 	<div id="dcd-map-container"></div>
 </div>
 <br>
-<form action="route.php" method="post" target="_blank" onsubmit="mapRoute();" class="form-horizontal" role="form">
+<form action="route.php" method="post" onsubmit="mapRoute();" class="form-horizontal" role="form">
+	<input type="hidden" name="place" value="$place" />
+	<input type="hidden" name="position" value="$position" />
 	<input type="hidden" id="locations" name="locations" value="" />
 	<div id="map-it">
 		<div class="form-group">
@@ -108,14 +98,12 @@ EOS;
 $mainContent = <<<EOS
 	<ol class="breadcrumb">
 		<li><a href="./">Home</a></li>
-		<li class="active">Rummage</li>
+		<li class="active">$place</li>
 	</ol>
 	
 	<br />
 	
-	
-	
 	$data
 EOS;
 
-include("includes/master.php");
+include("../includes/master.php");
