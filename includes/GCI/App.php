@@ -212,13 +212,24 @@ class App
                 $sql .= ", MATCH(adText) AGAINST('$fullText') AS score";
             }
 
-            $sql .= " FROM `listing` where placement = :placement and position = :position and siteCode in ( $siteGroupString )";
+            $sql .= " FROM `listing` where siteCode in ( $siteGroupString ) ";
+
+            if (!empty($placement)) {
+                $sql .= ' and placement = :placement';
+                $params[':placement'] = $placement;
+            }
+            if (!empty($position)) {
+                $sql .= ' and position = :position ';
+                $params[':position'] = $position;
+            }
             if (!empty($fullText)) {
-                $sql .= " and MATCH(adText) AGAINST('$fullText') ORDER BY score DESC";
+                $sql .= " and MATCH(adText) AGAINST( :fulltext ) ORDER BY score DESC";
+                $params[':fulltext'] = $fullText;
             }
 
             $sql .= " LIMIT :offSet, :rowCnt";
-            $params = array(':placement' => $placement, ':position' => $position, ':offSet' => $offSet, ':rowCnt' => $rowCnt);
+            $params[':offSet'] = $offSet;
+            $params[':rowCnt'] = $rowCnt;
             $results = $this->database->getAssoc($sql, $params);
             $dataArray['totalRows'] = $this->database->getCount("SELECT FOUND_ROWS()");
 

@@ -121,8 +121,14 @@ echo $ads->getLeaderBottom();
         $("#ftSearch").click(function(e) {
             e.preventDefault();
             ft = $("#fullTextBox").val().trim();
-            place= $('#place').val();
-            posit= $('#posit').val();
+            place='';
+            posit='';
+            if ($('#place').val()) {
+                place= $('#place').val();
+            }
+            if ($('#place').val()) {
+                posit= $('#posit').val();
+            }
             window.location.href = 'category.php?place='+encodeURIComponent(place)+'&posit='+encodeURIComponent(posit)+'&ft='+encodeURIComponent(ft);
         });
 
