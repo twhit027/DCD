@@ -61,9 +61,6 @@ $app->logInfo('Landing Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].'
 
 	$ads = new \GCI\Ads();
 	echo $ads->InitializeAds();
-	
-	$search = $app->getSearch();
-	
 ?>
 </div>
 </header>
@@ -75,11 +72,7 @@ $app->logInfo('Landing Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].'
         <div class="col-xs-11 col-sm-8">
             <h1><?=$busName?> &amp; Online Classifieds</h1>
             <div class="jumbotron" id="advancedsearch" style="display:none;">
-            <?php 
-			$search = $app->getSearch();
-			
-			echo  $search 
-			?>
+            <?php echo $app->getSearch(); ?>
             </div>
                 
             <a href="<?=$siteUrl?>" target="_blank"><img alt="<?=$siteName?> Logo" title="<?=$siteName?>" style="margin-bottom: 10px;background-color: black" src="<?=$siteUrl?>/graphics/ody/cobrand_logo.gif"></a>

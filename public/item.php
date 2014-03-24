@@ -26,6 +26,8 @@ $data .= '<a class="btn btn-primary" href="mailto:youremailaddress" target="_bla
 $data .= "</div>";
 
 $mainContent = <<<EOS
+            <input type="hidden" id="place" name="place" value="$placement">
+            <input type="hidden" id="posit" name="posit" value="$position">
                 <ol class="breadcrumb">
                 <li><a href="./">Home</a></li>
                 <li><a href="./category.php?place=$placement&posit=$position">Category</a></li>
