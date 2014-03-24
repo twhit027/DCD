@@ -91,15 +91,23 @@ class App
 
         $siteGroupString = $this->createSiteGroupString($siteGroup);
 
-        $sql = "SELECT * FROM `listing` where position = :position and siteCode in ( $siteGroupString )";
-        $params = array(':position' => 'Rummage Sale');
+        $sql = "SELECT * FROM `listing` where Position = :position and SiteCode in ( $siteGroupString )";
+        $params = array(':position' => 'Estate Sales');
         $results = $this->database->getAssoc($sql, $params);
-
+		
         $dataArray = array();
         //$dataArray['totalRows'] = $this->database->getCount("SELECT FOUND_ROWS()");
 
         foreach ($results as $row) {
-            $dataArray['results'][] = array('id' => $row['ID'], 'adText' => $row['AdText']);
+            $dataArray['list'][$row['ID']] = array('adText' => $row['AdText']);
+			$dataArray['map'][$row['ID']] = array(
+				"street"=>$row['Street'],
+				"city"=>$row['City'],
+				"state"=>$row['State'],
+				"zip"=>$row['Zip'],
+				"lat"=>$row['Lat'],
+				"lon"=>$row['Long']
+			);
         }
 
         $this->rummages = $dataArray;

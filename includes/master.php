@@ -30,6 +30,7 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
+	<?php echo $googleApiScript; ?>
 </head>
 <body>
 <header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
@@ -101,5 +102,6 @@ include('tracking.php');
 <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="3rdParty/bootstrap/js/bootstrap.min.js"></script>
 <script src="3rdParty/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>
+<?php if(!empty($masterBottom)){ echo $masterBottom; } ?>
 </body>
 </html>

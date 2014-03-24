@@ -27,48 +27,95 @@ if (isset($_POST['locations'])) {
 }
 
 $listOfRummages = $app->getRummages();
+$mapPoints = json_encode($listOfRummages['map']);
+$rummages = $listOfRummages['list'];
+$rummageList = '';
+foreach($rummages as $k=>$v){
+	$rummageList .= "
+	<tr>
+		<td><input type='button' value='Add' onclick=\"visit(this,'".$k."');\" class='add btn btn-default' /></td>
+		<td>".$v["adText"]."</td>
+	</tr>
+	";
+}
 
-    $address = array(
-        "street" => $_POST['address'],
-        "city" => $_POST['city'],
-        "zip" => $_POST['zip']
-    );
-
-$avoidHighways = '';
-$avoidTolls = '';
-$address = json_encode($address);
-$listOfRummages = json_encode($listOfRummages);
-
-if($_POST['avoidHighways'] == "true")
-    $avoidHighways = "DCDMAPGLOBAL.avoidHighways = true;\r\n";
-if($_POST['avoidTolls'] == "true")
-    $avoidTolls = "DCDMAPGLOBAL.avoidTolls = true;\r\n";
+$masterBottom = '<script src="js/rummage.js"></script>';
 
 $googleApiScript = <<<EOS
+	<link rel="stylesheet" href="css/rummage.css">
     <!-- Google Maps API V3 -->
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
     <!-- Google Maps API V3 -->
     <script type="text/javascript">
         //setup global namespace
         var DCDMAPGLOBAL = {};
-        DCDMAPGLOBAL.address = "$address";
-        DCDMAPGLOBAL.points = "$listOfRummages";
-        $avoidHighways
-        $avoidTolls
+        DCDMAPGLOBAL.points = $mapPoints;
     </script>
 EOS;
 
-$data = '';
+$data = <<<EOS
+<div id="map">
+	<div id="dcd-map-container"></div>
+</div>
+<br>
+<form action="route.php" method="post" target="_blank" onsubmit="mapRoute();" class="form-horizontal" role="form">
+	<input type="hidden" id="locations" name="locations" value="" />
+	<div id="map-it">
+		<div class="form-group">
+			<label for="Address" class="col-sm-2 control-label">Address</label>
+			<div class="col-sm-10">
+				<input type="text" name="address" class="form-control" id="Address" placeholder="Address">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="City" class="col-sm-2 control-label">City</label>
+			<div class="col-sm-10">
+				<input type="text" name="city" class="form-control" id="City" placeholder="City">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="Zip" class="col-sm-2 control-label">Zip</label>
+			<div class="col-sm-10">
+				<input type="text" name="zip" class="form-control" id="Zip" placeholder="Zip">
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" value="true" name="avoidHighways"> Avoid Highways
+					</label>
+				</div>
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" value="true" name="avoidTolls"> Avoid Tolls
+					</label>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<button type="submit" class="btn btn-default">Map Route</button>
+			</div>
+		</div>
+	</div>
+	<table class="table table-striped">
+		$rummageList
+	</table>
+</form>
+EOS;
 
 $mainContent = <<<EOS
-                <ol class="breadcrumb">
-                <li><a href="./">Home</a></li>
-                <li class="active">Rummage</li>
-            </ol>
-
-            <br />$data
-
-            $googleApiScript
+	<ol class="breadcrumb">
+		<li><a href="./">Home</a></li>
+		<li class="active">Rummage</li>
+	</ol>
+	
+	<br />
+	
+	
+	
+	$data
 EOS;
 
 include("includes/master.php");
