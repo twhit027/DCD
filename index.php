@@ -67,6 +67,9 @@ $app->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);
 
 	$ads = new \GCI\Ads();
 	echo $ads->InitializeAds();
+	
+	$search = $app->getSearch();
+	
 ?>
 </div>
 </header>
@@ -77,6 +80,14 @@ $app->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);
     <div class="row" style="background-color:#FFF;">
         <div class="col-xs-11 col-sm-8">
             <h1><?=$busName?> &amp; Online Classifieds</h1>
+            <div class="jumbotron" id="advancedsearch" style="display:none;">
+            <?php 
+			$search = $app->getSearch();
+			
+			echo  $search 
+			?>
+            </div>
+                
             <a href="<?=$siteUrl?>" target="_blank"><img alt="<?=$siteName?> Logo" title="<?=$siteName?>" style="margin-bottom: 10px;background-color: black" src="<?=$siteUrl?>/graphics/ody/cobrand_logo.gif"></a>
             <p>SELL easy and SELL fast!</p>
             <p>As the leading local media and trusted marketing solutions provider, we have a range of effective advertising packages to meet your needs.</p>
@@ -113,6 +124,20 @@ $app->logInfo('SERVER_NAME: '.@$_SERVER['SERVER_NAME']);
           <?php
 						echo '<div role="navigation" id="sidebar" style="background-color:#000; padding-left:15px; padding-right:15px; padding-top:5px">';
 						echo '<h3 style="color:#3276B1;">Search Our Classifieds</h3>';
+						
+						echo '<div class="input-group">';
+				
+				echo '<input type="text" class="form-control">';
+				echo '<span class="input-group-btn">';
+				echo '<button class="btn btn-default"  type="button">Search</button>';
+				echo '</span>';
+				echo '</div>';
+		
+		
+						echo '<div class="advbtn btn btn-default" style="width:100%;display:none;">Advanced Search</div>';
+		
+		
+                
 						echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
 
 						echo $nav->getSideNavigation($app->getCategories());
