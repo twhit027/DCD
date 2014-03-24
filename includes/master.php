@@ -83,9 +83,17 @@ echo $ads->getLaunchpad();
         </div>
 
         <div class=" col-sm-4 card-suspender-color">
-            <div class="hidden-xs">
+            <div class="hidden-xs">	
+			
                 <div role="navigation" id="sidebar" style="background-color:#000; padding-left:15px; padding-right:15px; padding-top:5px">
-                    <h3 style="color:#3276B1;">Search Our Classifieds</h3>
+				<div class="input-group" style="margin-bottom:5px;">
+					<input type="text" class="form-control">
+					<span class="input-group-btn">
+						<button class="btn btn-default"  type="button">Search</button>
+					</span>
+				</div>	
+				<div class="advbtn btn btn-default" style="width:100%;display:none;margin-bottom:5px;">Advanced Search</div>			
+                    <h3 style="color:#3276B1;">Or Pick A Category</h3>
                     <ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">
                         <?php echo $nav->getSideNavigation($app->getCategories()); ?>
                     </ul>
