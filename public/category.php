@@ -19,6 +19,10 @@ $fullText = '';
 if (isset($_REQUEST['page'])) {
     $page = urldecode($_REQUEST['page']);
 }
+
+if (isset($_REQUEST['ft'])) {
+    $fullText = urldecode($_REQUEST['ft']);
+}
 $placement = urldecode($_REQUEST['place']);
 $position = urldecode($_REQUEST['posit']);
 
@@ -30,8 +34,7 @@ if(isset($_REQUEST['sites']))
 }
 else
 {
-
-	$listings = $app->getListings($placement, $position, $page);
+	$listings = $app->getListings($placement, $position, $page, '', $fullText);	
 	$search = $app->getSearch();
 }
 
