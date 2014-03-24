@@ -22,12 +22,25 @@ $page = 1;
 if (isset($_REQUEST['page'])) {
     $page = urldecode($_REQUEST['page']);
 }
-$placement = urldecode($_REQUEST['place']);
-$position = urldecode($_REQUEST['posit']);
 
-$siteCodes = array();
+$placement = urldecode($_GET['place']);
+$position = urldecode($_GET['posit']);
 
-$listings = $app->getListings($placement, $position, $page);
+if(isset($_GET['sites']))
+{
+	$sitegroup = urldecode($_GET['sites']);
+	$listings = $app->getListings($placement, $position, $page, $sitegroup);
+	$search = $app->getSearch($sitegroup);
+}
+else
+{
+
+	$listings = $app->getListings($placement, $position, $page);
+	$search = $app->getSearch();
+}
+
+
+
 
 $pagination = "";
 if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
@@ -52,30 +65,41 @@ if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
 }
 
 $data = '';
-foreach ($listings['results'] as $row) {
-    $row['adText'] = htmlspecialchars($row['adText']);
-    if (strlen($row['adText']) > 200) {
-        $string = substr($row['adText'], 0, 200) . "... <a  href='item.php?id=" . $row['id'] . "&place=".$placement."&posit=" . $position . "'>Click for full text</a>";
-    } else {
-        $string = $row['adText'];
-    }
 
-    $data .= "<div class='jumbotron'>";
-    $data .= "<p>" . $string . "</p>";
-    $data .= '<a class="btn btn-primary" href="http://twitter.com/home?status=' . substr($row['adText'], 0, 120) . '" target="_blank"><img src="img/twitter1.png" /></a>';
-    $data .= '<a class="btn btn-primary" href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/facebook2.png" /></a>';
-    $data .= '<a class="btn btn-primary" href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/google-plus2.png" /></a>';
-    $data .= '<a class="btn btn-primary" href="mailto:youremailaddress" target="_blank"><img src="img/email2.png" /></a>';
-    $data .= '</div>';
+if(!isset($listings['results']))
+{
+	$data ='<h1 style="color:#FC0000;"> No results found, please pick a different category or expand your advanced search</h1>';
 }
-
+else
+{
+	foreach ($listings['results'] as $row) {
+		$row['adText'] = htmlspecialchars($row['adText']);
+		if (strlen($row['adText']) > 200) {
+			$string = substr($row['adText'], 0, 200) . "... <a  href='item.php?id=" . $row['id'] . "&place=".$placement."&posit=" . $position . "'>Click for full text</a>";
+		} else {
+			$string = $row['adText'];
+		}
+	
+		$data .= "<div class='jumbotron'>";
+		$data .= "<p>" . $string . "</p>";
+		$data .= '<a class="btn btn-primary" href="http://twitter.com/home?status=' . substr($row['adText'], 0, 120) . '" target="_blank"><img src="img/twitter1.png" /></a>';
+		$data .= '<a class="btn btn-primary" href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/facebook2.png" /></a>';
+		$data .= '<a class="btn btn-primary" href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/google-plus2.png" /></a>';
+		$data .= '<a class="btn btn-primary" href="mailto:youremailaddress" target="_blank"><img src="img/email2.png" /></a>';
+		$data .= '</div>';
+	}
+}
 $mainContent = <<<EOS
                 <ol class="breadcrumb">
                 <li><a href="./">Home</a></li>
                 <li class="active">Category</li>
-            </ol>
+				
+            	</ol>
+				<div class="jumbotron" id="advancedsearch" style="display:none;">
+				$search
+				</div>
             <h1>$position</h1>
-
+			
             $pagination
             <br />$data
             $pagination
