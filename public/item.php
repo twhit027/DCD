@@ -1,20 +1,16 @@
 <?php
-include(dirname(__FILE__) . '/3rdParty/klogger/KLogger.php');
-include(dirname(__FILE__) . '/3rdParty/Mobile_Detect/Mobile_Detect.php');
-include('conf/constants.php');
-include('includes/GCI/Database.php');
-include('includes/GCI/Site.php');
-include('includes/GCI/App.php');
-include('includes/GCI/Navigation.php');
-include('includes/GCI/Ads.php');
+include('../vendor/klogger/KLogger.php');
+include('../vendor/Mobile_Detect/Mobile_Detect.php');
+include('../conf/constants.php');
+include('../includes/GCI/Database.php');
+include('../includes/GCI/Site.php');
+include('../includes/GCI/App.php');
+include('../includes/GCI/Navigation.php');
+include('../includes/GCI/Ads.php');
 
 $app = new \GCI\App();
 
-$app->logInfo('Category Page');
-$app->logInfo('FORWARDED_FOR: ' . @$_SERVER['HTTP_X_FORWARDED_FOR']);
-$app->logInfo('REMOTE_ADDR: ' . @$_SERVER['REMOTE_ADDR']);
-$app->logInfo('HTTP_HOST: ' . @$_SERVER['HTTP_HOST']);
-$app->logInfo('SERVER_NAME: ' . @$_SERVER['SERVER_NAME']);
+$app->logInfo('Item Page(ID: '.urldecode($_REQUEST['id']).' FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].', REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].',HTTP_HOST: '.@$_SERVER['HTTP_HOST'].'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].')');
 
 $id = urldecode($_REQUEST['id']);
 $placement = urldecode($_REQUEST['place']);
@@ -39,4 +35,4 @@ $mainContent = <<<EOS
             <br />$data
 EOS;
 
-include("includes/master.php");
+include("../includes/master.php");

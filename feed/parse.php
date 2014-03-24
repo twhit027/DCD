@@ -1,6 +1,6 @@
 <?php
-include(dirname(__FILE__) . '../3rdParty/klogger/KLogger.php');
-include(dirname(__FILE__) . '../conf/constants.php');
+include(__DIR__.'../vendor/klogger/KLogger.php');
+include(__DIR__.'../vendor/constants.php');
 
 $userCount = $return = 0;
 $userData = array();
