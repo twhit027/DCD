@@ -93,16 +93,16 @@ function char($parser, $data)
     if ($state['name'] == "AD-TEXT") {
         $userData[$userCount]["AD-TEXT"] = strip_tags($data);
     }
-    if ($state['name'] == "STREET") {
+    if ($state['name'] == "GS_ADDRESS") {
         $userData[$userCount]["STREET"] = $data;
     }
-    if ($state['name'] == "CITY") {
+    if ($state['name'] == "GS_CITY") {
         $userData[$userCount]["CITY"] = $data;
     }
-    if ($state['name'] == "STATE") {
+    if ($state['name'] == "GS_STATE") {
         $userData[$userCount]["STATE"] = $data;
     }
-    if ($state['name'] == "ZIP") {
+    if ($state['name'] == "GS_ZIPCODE") {
         $userData[$userCount]["ZIP"] = $data;
     }
 }
