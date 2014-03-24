@@ -48,6 +48,9 @@
         echo '<nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse side-navbar ">';
         echo '<div class="visible-xs">';
         echo '<h3 style="color:#3276B1;">View By Category</h3>';
+		
+		
+		
         echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
         echo $nav->getSideNavigation($app->getCategories());
         echo '</ul></div></nav>';
@@ -73,6 +76,21 @@ echo $ads->getLaunchpad();
                 <?php
                 echo '<div role="navigation" id="sidebar" style="background-color:#000; padding-left:15px; padding-right:15px; padding-top:5px">';
                 echo '<h3 style="color:#3276B1;">Search Our Classifieds</h3>';
+				
+				echo '<div class="input-group" style="margin-bottom:5px;">';
+				
+				echo '<input type="text" class="form-control">';
+				echo '<span class="input-group-btn">';
+				echo '<button class="btn btn-default"  type="button">Search</button>';
+				echo '</span>';
+				echo '</div>';
+		
+		
+		
+				echo '<div class="advbtn btn btn-default" style="width:100%;display:none;margin-bottom:5px;">Advanced Search</div>';
+				
+				echo '<h3 style="color:#3276B1;">Or Pick A Category</h3>';
+		
                 echo '<ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">';
 
                 echo $nav->getSideNavigation($app->getCategories());
