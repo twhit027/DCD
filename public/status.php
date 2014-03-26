@@ -1,6 +1,6 @@
 <?php
-include(dirname(__FILE__) . '/3rdParty/klogger/KLogger.php');
-include('conf/constants.php');
+include('../vendor/klogger/KLogger.php');
+include('../conf/constants.php');
 
 $log   = KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
 
