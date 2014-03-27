@@ -86,23 +86,47 @@ class App
         return $data;
     }
 
-    public function getRummages($siteGroup = '')
+    public function getRummages($place = '', $position = '', $route = '', $siteGroup = '')
     {
         if ($siteGroup == '') {
             $siteGroup = $this->site->getSiteGroup();
         }
 
         $siteGroupString = $this->createSiteGroupString($siteGroup);
-
-        $sql = "SELECT * FROM `listing` where position = :position and siteCode in ( $siteGroupString )";
-        $params = array(':position' => 'Rummage Sale');
+		
+		if(!empty($route)){
+			$routeIDS = explode(",",$route);
+			$rts = array();
+			$c = 1;
+			foreach($routeIDS as $r){
+				$rts['string'][$c] = ':r'.$c;
+				$rts['params'][':r'.$c] = $r;
+				$c++;
+			}
+			$route = implode(",",$rts['string']);
+	        $sql = "SELECT * FROM `listing` WHERE Placement = :place AND Position = :position AND SiteCode IN ( ".$siteGroupString." ) AND ID IN ( ".$route." )";
+        	$params = array(':place' => $place, ':position' => $position);
+			$params = array_merge($params, $rts['params']);
+		}
+		else{
+	        $sql = "SELECT * FROM `listing` WHERE Placement = :place AND Position = :position AND SiteCode IN ( ".$siteGroupString." )";
+        	$params = array(':place' => $place, ':position' => $position);
+		}
         $results = $this->database->getAssoc($sql, $params);
-
+		
         $dataArray = array();
         //$dataArray['totalRows'] = $this->database->getCount("SELECT FOUND_ROWS()");
 
         foreach ($results as $row) {
-            $dataArray['results'][] = array('id' => $row['ID'], 'adText' => $row['AdText']);
+            $dataArray['list'][$row['ID']] = array('adText' => $row['AdText']);
+			$dataArray['map'][$row['ID']] = array(
+				"street"=>$row['Street'],
+				"city"=>$row['City'],
+				"state"=>$row['State'],
+				"zip"=>$row['Zip'],
+				"lat"=>$row['Lat'],
+				"lon"=>$row['Long']
+			);
         }
 
         $this->rummages = $dataArray;
@@ -214,13 +238,24 @@ class App
                 $sql .= ", MATCH(adText) AGAINST('$fullText') AS score";
             }
 
-            $sql .= " FROM `listing` where placement = :placement and position = :position and siteCode in ( $siteGroupString )";
+            $sql .= " FROM `listing` where siteCode in ( $siteGroupString ) ";
+
+            if (!empty($placement)) {
+                $sql .= ' and placement = :placement';
+                $params[':placement'] = $placement;
+            }
+            if (!empty($position)) {
+                $sql .= ' and position = :position ';
+                $params[':position'] = $position;
+            }
             if (!empty($fullText)) {
-                $sql .= " and MATCH(adText) AGAINST('$fullText') ORDER BY score DESC";
+                $sql .= " and MATCH(adText) AGAINST( :fulltext ) ORDER BY score DESC";
+                $params[':fulltext'] = $fullText;
             }
 
             $sql .= " LIMIT :offSet, :rowCnt";
-            $params = array(':placement' => $placement, ':position' => $position, ':offSet' => $offSet, ':rowCnt' => $rowCnt);
+            $params[':offSet'] = $offSet;
+            $params[':rowCnt'] = $rowCnt;
             $results = $this->database->getAssoc($sql, $params);
             $dataArray['totalRows'] = $this->database->getCount("SELECT FOUND_ROWS()");
 
