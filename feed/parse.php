@@ -1,5 +1,17 @@
 <?php
-include(__DIR__.'../vendor/klogger/KLogger.php');
+/**
+*
+* EXIT CODES:
+* 0  	- No errors
+* 1 	- unable to connect to database (die)
+* 2 	- DELETE FROM `listing` WHERE ID = :id failed 
+* 4 	- INSERT into `listing` failed 
+* 6 	- DELETE FROM `listing` WHERE `EndDate` < :date failed
+* 8 	- TRUNCATE TABLE `position` failed
+* 10 	- INSERT into `position` failed
+*
+*/
+
 include(__DIR__.'../conf/constants.php');
 
 $userCount = $return = 0;
@@ -91,7 +103,7 @@ function char($parser, $data)
         $userData[$userCount]["POSITION"] = $data;
     }
     if ($state['name'] == "AD-TEXT") {
-        $userData[$userCount]["AD-TEXT"] = strip_tags($data);
+        $userData[$userCount]["AD-TEXT"] = strip_tags($data, '<img><imgp>');
     }
     if ($state['name'] == "GS_ADDRESS") {
         $userData[$userCount]["STREET"] = $data;
@@ -109,20 +121,22 @@ function char($parser, $data)
 
 class ClassifiedsAdmin extends PDO
 {
-    private $log;
     private $con;
+    private $connection_string = NULL;
+    private $db_host = DB_HOST;
+    private $db_user = DB_USER;
+    private $db_pass = DB_PASS;
+    private $db_name = DB_NAME;    
     public function __construct()
     {
         try {
             $this->connection_string = 'mysql:dbname=' . DB_NAME . ';host=' . DB_HOST . ';port=' . DB_PORT . ';charset=utf8';
             parent::__construct($this->connection_string, $this->db_user, $this->db_pass);
-            $this->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
-            $this->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+            $this->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+            $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->con = true;
-            $this->log = \KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
-        } catch (\PDOException $e) {
-            $logText = "Message:(" . $e->getMessage . ") attempting to connect to database";
-            $this->log->logError($logText);
+        } catch (PDOException $e) {
+            $logText = "Message:(" . $e->getMessage() . ") attempting to connect to database";
             fwrite(STDERR, $logText."\n");
             exit(1);
         }
@@ -151,9 +165,8 @@ class ClassifiedsAdmin extends PDO
             try {
                 $stmt = $this->prepare("DELETE FROM `listing` WHERE ID = :ID");
                 $stmt->execute(array(':ID' => $userData[$i]["AD"]));
-            } catch (\PDOException $e) {
-                $logText = "Message:(" . $e->getMessage . ") attempting to delete listing (" . $userData[$i]["AD"] . ") from the database";
-                $this->log->logError($logText);
+            } catch (PDOException $e) {
+                $logText = "Message:(" . $e->getMessage() . ") attempting to delete listing (" . $userData[$i]["AD"] . ") from the database";
                 fwrite(STDERR, $logText."\n");
                 $return = 2;
             }
@@ -162,16 +175,14 @@ class ClassifiedsAdmin extends PDO
                 $stmt = $this->prepare("INSERT INTO `listing` (`ID`, `StartDate`, `EndDate`, `Placement`,`Position`, `AdText`, `SiteCode`, `Street`, `City`, `State`, `Zip`) VALUES(:ID, :StartDate, :EndDate, :Placement, :Position, :AdText, :Site, :Street, :City, :State, :Zip)");
                 $stmt->execute(array(':ID' => $userData[$i]["AD"], ':StartDate' => $userData[$i]["START-DATE"], ':EndDate' => $userData[$i]["END-DATE"], ':Placement' => $userData[$i]["PLACEMENT"], ':Position' => $userData[$i]["POSITION"], ':AdText' => $userData[$i]["AD-TEXT"], ':Site' => $site, ':Street' => $userData[$i]["STREET"], ':City' => $userData[$i]["CITY"], ':State' => $userData[$i]["STATE"], ':Zip' => $userData[$i]["ZIP"]));
                 $inserted++;
-            } catch (\PDOException $e) {
-                $logText = "Message:(" . $e->getMessage . ") attempting to insert listing (" . $userData[$i]["AD"] . ") into the database";
-                $this->log->logError($logText);
+            } catch (PDOException $e) {
+                $logText = "Message:(" . $e->getMessage() . ") attempting to insert listing (" . $userData[$i]["AD"] . ") into the database";
                 fwrite(STDERR, $logText."\n");
                 $return = 4;
             }
         }
 
         $logText = "inserted $inserted out of $userCount rows in listing for $site";
-        $this->log->logInfo($logText);
         fwrite(STDOUT, $logText."\n");
     }
 
@@ -183,11 +194,9 @@ class ClassifiedsAdmin extends PDO
             $stmt->execute(array(':date' => $date));
             $count = $stmt->rowCount();
             $logText = "deleted " . $count . " out of date rows from listing";
-            $this->log->logInfo($logText);
             fwrite(STDOUT, $logText."\n");
-        } catch (\PDOException $e) {
-            $logText = "Message:(" . $e->getMessage . ") attempting to delete data prior to (" . $date . ") from the listing table";
-            $this->log->logError($logText);
+        } catch (PDOException $e) {
+            $logText = "Message:(" . $e->getMessage() . ") attempting to delete data prior to (" . $date . ") from the listing table";
             fwrite(STDERR, $logText."\n");
             $return = 6;
         }
@@ -200,11 +209,9 @@ class ClassifiedsAdmin extends PDO
             $stmt->execute();
             $count = $stmt->rowCount();
             $logText = "deleted " . $count . " rows from position<";
-            $this->log->logInfo($logText);
             fwrite(STDOUT, $logText."\n");
         } catch (PDOException $e) {
-            $logText = "Message:(" . $e->getMessage . ") attempting to truncate the positions table";
-            $this->log->logError($logText);
+            $logText = "Message:(" . $e->getMessage() . ") attempting to truncate the positions table";
             fwrite(STDERR, $logText."\n");
             $return = 8;
         }
@@ -213,8 +220,7 @@ class ClassifiedsAdmin extends PDO
             $stmt = $this->prepare("INSERT into `position` (Placement, Position, SiteCode, Count) SELECT Placement, Position, SiteCode, count( * ) FROM listing GROUP BY Placement, Position, SiteCode");
             $stmt->execute();
         } catch (PDOException $e) {
-            $logText = "Message:(" . $e->getMessage . ") attempting to insert the positions table";
-            $this->log->logError($logText);
+            $logText = "Message:(" . $e->getMessage() . ") attempting to insert the positions table";
             fwrite(STDERR, $logText."\n");
             $return = 10;
         }
