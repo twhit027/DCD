@@ -12,7 +12,7 @@
 *
 */
 
-include(__DIR__.'../conf/constants.php');
+include(__DIR__.'/../conf/constants.php');
 
 $userCount = $return = 0;
 $userData = array();
