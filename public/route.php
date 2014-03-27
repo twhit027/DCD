@@ -1,33 +1,22 @@
 <?php
-include(dirname(__FILE__) . '/3rdParty/klogger/KLogger.php');
-include(dirname(__FILE__) . '/3rdParty/Mobile_Detect/Mobile_Detect.php');
-include('conf/constants.php');
-include('includes/GCI/Database.php');
-include('includes/GCI/Site.php');
-include('includes/GCI/App.php');
-include('includes/GCI/Navigation.php');
-include('includes/GCI/Ads.php');
+include('../vendor/klogger/KLogger.php');
+include('../vendor/Mobile_Detect/Mobile_Detect.php');
+include('../conf/constants.php');
+include('../includes/GCI/Database.php');
+include('../includes/GCI/Site.php');
+include('../includes/GCI/App.php');
+include('../includes/GCI/Navigation.php');
+include('../includes/GCI/Ads.php');
 
 $app = new \GCI\App();
 
-$app->logInfo('Route Page');
-$app->logInfo('FORWARDED_FOR: ' . @$_SERVER['HTTP_X_FORWARDED_FOR']);
-$app->logInfo('REMOTE_ADDR: ' . @$_SERVER['REMOTE_ADDR']);
-$app->logInfo('HTTP_HOST: ' . @$_SERVER['HTTP_HOST']);
-$app->logInfo('SERVER_NAME: ' . @$_SERVER['SERVER_NAME']);
+$app->logInfo('Directions Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].', REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].',HTTP_HOST: '.@$_SERVER['HTTP_HOST'].'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].')');
 
-$params = array(
-    'PubCode' => 'DES-RM Des Moines Register'
-);
-if (isset($_POST['locations'])) {
-    $ids = explode(",",$_POST['locations']);
-    foreach($ids as $i) {
-        $params['where']['ID'][] = $i;
-    }
-}
-
-$listOfRummages = $app->getRummages();
-
+$place = $_POST['place'];
+$position = $_POST['position'];
+$route = $_POST['locations'];
+$listOfRummages = $app->getRummages($place,$position,$route);
+$mapPoints = json_encode($listOfRummages['map']);
 $address = array(
     "street" => $_POST['address'],
     "city" => $_POST['city'],
@@ -37,38 +26,45 @@ $address = array(
 $avoidHighways = '';
 $avoidTolls = '';
 $address = json_encode($address);
-$listOfRummages = json_encode($listOfRummages);
-
-if($_POST['avoidHighways'] == "true")
+if(!empty($_POST['avoidHighways']))
     $avoidHighways = "DCDMAPGLOBAL.avoidHighways = true;\r\n";
-if($_POST['avoidTolls'] == "true")
+if(!empty($_POST['avoidTolls']))
     $avoidTolls = "DCDMAPGLOBAL.avoidTolls = true;\r\n";
 
+$masterBottom = '<script src="js/route.js"></script>';
+
 $googleApiScript = <<<EOS
+	<link rel="stylesheet" href="css/rummage.css">
     <!-- Google Maps API V3 -->
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
     <!-- Google Maps API V3 -->
     <script type="text/javascript">
         //setup global namespace
         var DCDMAPGLOBAL = {};
-        DCDMAPGLOBAL.address = "$address";
-        DCDMAPGLOBAL.points = "$listOfRummages";
+        DCDMAPGLOBAL.address = $address;
+        DCDMAPGLOBAL.points = $mapPoints;
         $avoidHighways
         $avoidTolls
     </script>
 EOS;
 
-$data = '';
-
-$mainContent = <<<EOS
-                <ol class="breadcrumb">
-                <li><a href="./">Home</a></li>
-                <li class="active">Rummage</li>
-            </ol>
-
-            <br />$data
-
-            $googleApiScript
+$data = <<<EOS
+<div class="col-xs-11 col-sm-8">
+	<div id="direction-canvas" style="width:100%; height:400px;"></div>
+	<div id="directions-panel" style="width:100%"></div>
+</div>
 EOS;
 
-include("includes/master.php");
+$mainContent = <<<EOS
+	<ol class="breadcrumb">
+		<li><a href="./">Home</a></li>
+		<li><a href="map.php?place=$place&position=$position">$place</a></li>
+		<li class="active">$position Directions</li>
+	</ol>
+	
+	<br />
+	
+	$data
+EOS;
+
+include("../includes/master.php");

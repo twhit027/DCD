@@ -44,6 +44,7 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
+	<?php if(!empty($googleApiScript)){ echo $googleApiScript; } ?>
 </head>
 <body>
 <header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
@@ -121,8 +122,14 @@ echo $ads->getLeaderBottom();
         $("#ftSearch").click(function(e) {
             e.preventDefault();
             ft = $("#fullTextBox").val().trim();
-            place= $('#place').val();
-            posit= $('#posit').val();
+            place='';
+            posit='';
+            if ($('#place').val()) {
+                place= $('#place').val();
+            }
+            if ($('#place').val()) {
+                posit= $('#posit').val();
+            }
             window.location.href = 'category.php?place='+encodeURIComponent(place)+'&posit='+encodeURIComponent(posit)+'&ft='+encodeURIComponent(ft);
         });
 
@@ -132,5 +139,6 @@ echo $ads->getLeaderBottom();
         });
     });
 </script>
+<?php if(!empty($masterBottom)){ echo $masterBottom; } ?>
 </body>
 </html>

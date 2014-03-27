@@ -14,17 +14,20 @@ $app->logInfo('Category Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].
 
 //$content = new Content();
 $page = 1;
-$fullText = '';
+$fullText = $placement = $position = '';
 
 if (isset($_REQUEST['page'])) {
     $page = urldecode($_REQUEST['page']);
 }
-
 if (isset($_REQUEST['ft'])) {
     $fullText = urldecode($_REQUEST['ft']);
 }
-$placement = urldecode($_REQUEST['place']);
-$position = urldecode($_REQUEST['posit']);
+if (isset($_REQUEST['place'])) {
+    $placement = urldecode($_REQUEST['place']);
+}
+if (isset($_REQUEST['posit'])) {
+    $position = urldecode($_REQUEST['posit']);
+}
 
 if(isset($_REQUEST['sites']))
 {
@@ -100,10 +103,10 @@ $mainContent = <<<EOS
                 <li><a href="./">Home</a></li>
                 <li class="active">Category</li>
 				
-            	</ol>
-				<div class="jumbotron" id="advancedsearch" style="display:none;">
+            </ol>
+			<div class="jumbotron" id="advancedsearch" style="display:none;">
 				$search
-				</div>
+	        </div>
             <h1>$position</h1>
 
             $pagination
