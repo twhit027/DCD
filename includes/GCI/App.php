@@ -24,7 +24,9 @@ class App
     function __construct($siteCode = '')
     {
         $this->database = new Database();
+		
         $this->detectDevice();
+		
         if (empty($siteCode)) {
           $this->setSiteFromDomain();
             

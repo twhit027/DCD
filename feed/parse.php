@@ -111,6 +111,17 @@ class ClassifiedsAdmin extends PDO
 {
     private $log;
     private $con;
+	
+    private $db = NULL;
+    private $connection_string = NULL;
+    private $db_host = DB_HOST;
+    private $db_user = DB_USER;
+    private $db_pass = DB_PASS;
+    private $db_name = DB_NAME;
+    private $con = false;
+    private $result = array();
+    private $log;
+
     public function __construct()
     {
         try {
@@ -123,8 +134,6 @@ class ClassifiedsAdmin extends PDO
         } catch (\PDOException $e) {
             $logText = "Message:(" . $e->getMessage . ") attempting to connect to database";
             $this->log->logError($logText);
-            fwrite(STDERR, $logText."\n");
-            exit(1);
         }
     }
 
