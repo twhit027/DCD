@@ -17,6 +17,8 @@ $siteName = $app->getSite()->getSiteName();
 $siteUrl = $app->getSite()->getSiteUrl();
 $busName = $app->getSite()->getBusName();
 
+echo "here:" . $app->getDeviceType();
+
 $mainContent = <<<EOS
 <h1>$busName &amp; Online Classifieds</h1>
 <div class="jumbotron" id="advancedsearch" style="display:none;">

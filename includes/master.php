@@ -70,12 +70,22 @@
         <?php
             include('../includes/toggle.php');
             $ads = new \GCI\Ads();
-            echo $ads->InitializeAds();
+            echo $ads->InitializeAds($app->getSite()->getDFP(), $app->getSite()->getDFPmobile());
         ?>
     </div>
 </header>
 <?php
-echo $ads->getLaunchpad();
+
+$device =  $app->getDeviceType();
+if($device =="computer")
+{
+	echo $ads->getLaunchpad();
+}
+else if($device =="phone")
+{
+	echo $ads->getMobileBannerTop();
+}
+
 ?>
 <div class="container">
     <div class="row" style="background-color:#FFF;">
@@ -101,14 +111,32 @@ echo $ads->getLaunchpad();
                     </ul>
                 </div>
                 <div style="padding:10px">
-                    <?php echo $ads->getFlex(); ?>
+                    <?php 
+							if($device =="computer")
+							{
+								echo $ads->getFlex();
+							}
+					?>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <?php
-echo $ads->getLeaderBottom();
+
+if($device =="computer")
+{
+	echo $ads->getLeaderBottom();
+}
+else if($device =="phone")
+{
+	echo $ads->getMobileBannerBottom();
+}
+else if($device == "tablet")
+{
+ 	echo $ads->getLandscapeInterstitial();	
+}
+
 //include('../includes/tracking.php');
 ?>
 <footer class="footer">
