@@ -102,7 +102,7 @@ else if($device =="phone")
                         <input id="fullTextBox" type="text" name="search" class="form-control" value="<?php echo $fullText; ?>">
                         <span class="input-group-btn">
                             <a id="ftSearch" class="btn btn-primary" style="vertical-align: bottom;"><img src="img/white-magnifying-glass-20.png"></a>
-                            <a id="ftSearchAdv" class="btn btn-primary" style="vertical-align: bottom;">+</a>
+                           
                         </span>
 				    </div>
                     <h3 style="color:#3276B1;">Or Select A Category</h3>
@@ -152,12 +152,12 @@ else if($device == "tablet")
             ft = $("#fullTextBox").val().trim();
             place='';
             posit='';
-            if ($('#place').val()) {
+            /*if ($('#place').val()) {
                 place= $('#place').val();
             }
             if ($('#place').val()) {
                 posit= $('#posit').val();
-            }
+            }*/
             window.location.href = 'category.php?place='+encodeURIComponent(place)+'&posit='+encodeURIComponent(posit)+'&ft='+encodeURIComponent(ft);
         });
 

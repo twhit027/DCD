@@ -28,17 +28,17 @@ if (isset($_REQUEST['place'])) {
 if (isset($_REQUEST['posit'])) {
     $position = urldecode($_REQUEST['posit']);
 }
-
+$search = "";
 if(isset($_REQUEST['sites']))
 {
 	$sitegroup = urldecode($_REQUEST['sites']);
 	$listings = $app->getListings($placement, $position, $page, $sitegroup);
-	$search = $app->getSearch($sitegroup);
+	//$search = $app->getSearch($sitegroup);
 }
 else
 {
 	$listings = $app->getListings($placement, $position, $page, '', $fullText);	
-	$search = $app->getSearch();
+	//$search = $app->getSearch();
 }
 
 
@@ -49,19 +49,19 @@ if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
     $numOfPages = ceil($listings['totalRows'] / LISTINGS_PER_PAGE);
 
     if ($page > 1)
-        $pagination .= '<ul class="pagination"><li><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . ($page - 1) . '">&laquo;</a></li>';
+        $pagination .= '<ul class="pagination"><li><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . ($page - 1) . '&ft='.$fullText.'">&laquo;</a></li>';
     else
         $pagination .= '<ul class="pagination"><li class="disabled"><a href="#">&laquo;</a></li>';
 
     for ($pge = 1; $pge <= $numOfPages; $pge++) {
         if ($pge == $page)
-            $pagination .= '<li class="active"><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . $pge . '">' . $pge . ' <span class="sr-only">(currecnt)</span></a></li>';
+            $pagination .= '<li class="active"><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . $pge . '&ft='.$fullText.'">' . $pge . ' <span class="sr-only">(currecnt)</span></a></li>';
         else
-            $pagination .= '<li><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . $pge . '">' . $pge . '</a></li>';
+            $pagination .= '<li><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . $pge . '&ft='.$fullText.'">' . $pge . '</a></li>';
     }
 
     if ($page < $numOfPages)
-        $pagination .= '<li><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . ($page + 1) . '">&raquo;</a></li></ul>';
+        $pagination .= '<li><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . ($page + 1) . '&ft='.$fullText.'">&raquo;</a></li></ul>';
     else
         $pagination .= '<li class="disabled"><a href="#">&raquo;</a></li></ul>';
 }
