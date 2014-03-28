@@ -215,10 +215,14 @@ class App
 
         $categoriesArray = array();
         foreach ($results as $row) {
-            @$categoriesArray[$row['Placement']][$row['Position']] += $row['Count'];
+            @$categoriesArray[$row['Placement']][$row['Position']]['count'] += $row['Count'];
+			@$categoriesArray[$row['Placement']][$row['Position']]['url'] = $row['ExternalURL'];
+
         }
 
         $this->categories = $categoriesArray;
+		
+		
     }
 
     function getListings($placement = '', $position = '', $page = 1, $siteGroup = '', $fullText = '')
