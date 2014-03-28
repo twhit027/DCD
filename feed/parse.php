@@ -117,6 +117,12 @@ function char($parser, $data)
     if ($state['name'] == "GS_ZIPCODE") {
         $userData[$userCount]["ZIP"] = $data;
     }
+	
+	if ($state['name'] == "EXTERNAL_URL") {
+        $userData[$userCount]["EXTERNAL"] = $data;
+    }
+	
+	
 }
 
 class ClassifiedsAdmin extends PDO
@@ -172,8 +178,8 @@ class ClassifiedsAdmin extends PDO
             }
 
             try {
-                $stmt = $this->prepare("INSERT INTO `listing` (`ID`, `StartDate`, `EndDate`, `Placement`,`Position`, `AdText`, `SiteCode`, `Street`, `City`, `State`, `Zip`) VALUES(:ID, :StartDate, :EndDate, :Placement, :Position, :AdText, :Site, :Street, :City, :State, :Zip)");
-                $stmt->execute(array(':ID' => $userData[$i]["AD"], ':StartDate' => $userData[$i]["START-DATE"], ':EndDate' => $userData[$i]["END-DATE"], ':Placement' => $userData[$i]["PLACEMENT"], ':Position' => $userData[$i]["POSITION"], ':AdText' => $userData[$i]["AD-TEXT"], ':Site' => $site, ':Street' => $userData[$i]["STREET"], ':City' => $userData[$i]["CITY"], ':State' => $userData[$i]["STATE"], ':Zip' => $userData[$i]["ZIP"]));
+                $stmt = $this->prepare("INSERT INTO `listing` (`ID`, `StartDate`, `EndDate`, `Placement`,`Position`, `AdText`, `SiteCode`, `Street`, `City`, `State`, `Zip`, `ExternalURL`) VALUES(:ID, :StartDate, :EndDate, :Placement, :Position, :AdText, :Site, :Street, :City, :State, :Zip, :ExternalURL)");
+                $stmt->execute(array(':ID' => $userData[$i]["AD"], ':StartDate' => $userData[$i]["START-DATE"], ':EndDate' => $userData[$i]["END-DATE"], ':Placement' => $userData[$i]["PLACEMENT"], ':Position' => $userData[$i]["POSITION"], ':AdText' => $userData[$i]["AD-TEXT"], ':Site' => $site, ':Street' => $userData[$i]["STREET"], ':City' => $userData[$i]["CITY"], ':State' => $userData[$i]["STATE"], ':Zip' => $userData[$i]["ZIP"], ':ExternalURL' => $userData[$i]["EXTERNAL"]));
                 $inserted++;
             } catch (PDOException $e) {
                 $logText = "Message:(" . $e->getMessage() . ") attempting to insert listing (" . $userData[$i]["AD"] . ") into the database";
@@ -217,11 +223,12 @@ class ClassifiedsAdmin extends PDO
         }
 
         try {
-            $stmt = $this->prepare("INSERT into `position` (Placement, Position, SiteCode, Count) SELECT Placement, Position, SiteCode, count( * ) FROM listing GROUP BY Placement, Position, SiteCode");
+            $stmt = $this->prepare("INSERT into `position` (Placement, Position, SiteCode, ExternalURL, Count ) SELECT Placement, Position, SiteCode, ExternalURL, count( * ) FROM listing GROUP BY Placement, Position, SiteCode");
             $stmt->execute();
         } catch (PDOException $e) {
             $logText = "Message:(" . $e->getMessage() . ") attempting to insert the positions table";
             fwrite(STDERR, $logText."\n");
+			fwrite(STDERR, $logText."\n");
             $return = 10;
         }
     }
