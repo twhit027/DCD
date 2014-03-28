@@ -30,6 +30,8 @@ class Site {
     private $siteGroup;
     private $city;
     private $state;
+    private $dfp;
+    private $dfpm;
 
     public function __construct($data = '') {
         if (isset($data)) {
