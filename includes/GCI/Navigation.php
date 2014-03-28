@@ -23,8 +23,24 @@ class Navigation {
             $data .='</div>';
 
             $data .='<ul class="nav nav-list collapse" id="accordion-heading-'.$placementId.''.$random.'">';
-            foreach ($positions as $position => $count) {
-                $data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?place='.urlencode($placement).'&posit='.urlencode($position).'" title="Title">'.$position.'('.$count.')</a>';
+            foreach ($positions as $position => $vals) {
+				
+				if($vals['url'] != '')
+				{
+					if($vals['url'] == '1')
+					{	
+						$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="map.php?place='.urlencode($placement).'&posit='.urlencode($position).'" title="Title">'.$position.'('.$vals['count'].')</a>';
+					}
+					else
+					{
+						$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="'.$vals['url'].'" target="_blank" title="Title">'.$position.'<img src="img/link.png" style="padding-left:10px;" /></a>';
+					}
+				}
+				else
+				{
+                	$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?place='.urlencode($placement).'&posit='.urlencode($position).'" title="Title">'.$position.'('.$vals['count'].')</a>';
+				}
+				
             }
             $data .='</ul>';
 
