@@ -18,6 +18,17 @@ $position = urldecode($_REQUEST['posit']);
 
 $listings = $app->getSingleListing($id);
 
+
+$metadata = '
+<title>'.substr($listings['adText'], 0, 70).'</title>
+<meta name="description" content="'.substr($listings['adText'], 0, 150).'" />
+
+<meta itemprop="name" content="'.substr($listings['adText'], 0, 70).'">
+<meta itemprop="description" content="'.substr($listings['adText'], 0, 150).'">';
+
+
+
+
 $data = " <div class='jumbotron' ><p>" . htmlspecialchars($listings['adText']) . "</p>";
 $data .= '<a class="btn btn-primary" href="http://twitter.com/home?status=' . substr($listings['adText'], 0, 120) . '" target="_blank"><img src="img/twitter1.png" /></a>';
 $data .= '<a class="btn btn-primary" href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $listings['id'] . '" target="_blank"><img src="img/facebook2.png" /></a>';
