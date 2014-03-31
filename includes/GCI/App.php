@@ -272,8 +272,7 @@ class App
         return $this->listings;
     }
 
-    public
-    function getSingleListing($id)
+    public function getSingleListing($id)
     {
         $sql = "SELECT ID, AdText FROM `listing` where ID = :id";
         $params = array(':id' => $id);
@@ -285,7 +284,7 @@ class App
         return $retArray;
     }
 
-    function getHost()
+    public static function getHost()
     {
         if ($host = @$_SERVER['HTTP_X_FORWARDED_HOST']) {
             $elements = explode(',', $host);

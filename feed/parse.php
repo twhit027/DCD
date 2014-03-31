@@ -117,12 +117,9 @@ function char($parser, $data)
     if ($state['name'] == "GS_ZIPCODE") {
         $userData[$userCount]["ZIP"] = $data;
     }
-	
-	if ($state['name'] == "EXTERNAL_URL") {
+		if ($state['name'] == "EXTERNAL_URL") {
         $userData[$userCount]["EXTERNAL"] = $data;
     }
-	
-	
 }
 
 class ClassifiedsAdmin extends PDO
@@ -228,8 +225,55 @@ class ClassifiedsAdmin extends PDO
         } catch (PDOException $e) {
             $logText = "Message:(" . $e->getMessage() . ") attempting to insert the positions table";
             fwrite(STDERR, $logText."\n");
-			fwrite(STDERR, $logText."\n");
             $return = 10;
+        }
+    }
+
+    function getLocation($address)
+    {
+        $url = "http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address=";
+        $json = file_get_contents($url . urlencode($address));
+        $json = json_decode($json, true);
+
+        if ($json['status'] == "OK") {
+            $latlon = array(
+                'lat' => $json["results"][0]["geometry"]["location"]["lat"],
+                'lon' => $json["results"][0]["geometry"]["location"]["lng"]
+            );
+            return $latlon;
+        } else {
+            return false;
+        }
+    }
+
+    function updateGeocodes()
+    {
+        $stmt = $this->prepare("SELECT ID, Street, City, State, Zip FROM `listing` WHERE `Street` > '' AND `Lat` > ''");
+        $stmt->execute();
+        $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $count = $stmt->rowCount();
+
+        foreach ($results as $row) {
+            $address = $row['Street'];
+            if (!empty($row['City'])) {
+                $address .= ", " . $row['City'];
+            }
+            if (!empty($row['State'])) {
+                $address .= ", " . $row['State'];
+            }
+            if (!empty($row['Zip'])) {
+                $address .= " " . $row['Zip'];
+            }
+
+            $latlon = $this->getLocation($address);
+
+            if ($latlon !== false) {
+                $stmt = $this->prepare("UPDATE `listing` SET `Lat` = :lat, `Long` = :lon WHERE `ID` = :id ");
+                $stmt->execute(array(":lat" => $latlon['lat'], ":lon" => $latlon['lon'], ":id" => $row['ID']));
+            }
+
+            //Slow this down so we don't run into problems with Google's Geocoding limits
+            sleep(1);
         }
     }
 }
