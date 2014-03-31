@@ -13,7 +13,7 @@ class Ads
 {
     function InitializeAds($dfpid, $dfpmobile)
     {
-        $data ="<script type='text/javascript'>
+        $data = "<script type='text/javascript'>
 		var googletag = googletag || {};
 		googletag.cmd = googletag.cmd || [];
 		(function() {
@@ -42,18 +42,17 @@ class Ads
 		</script>";
 
         return $data;
-
-
     }
     function getLaunchpad()
     {
         $data ="<!-- ia-desmoines-C1150/launchpad_SF/classifieds/main -->
-		<div id='div-gpt-ad-1395329372590-3' style='text-align:center;padding-top:50px;padding-bottom:10px;'>
+		<div id='div-gpt-ad-1395329372590-3' style='text-align:center;padding-bottom:10px;'>
 		<script type='text/javascript'>
 		googletag.cmd.push(function() { googletag.display('div-gpt-ad-1395329372590-3'); });
 		</script>
 		</div>
 		";
+
 		return $data;
     }
     function getLeaderBottom()
@@ -66,6 +65,7 @@ class Ads
 		</script>
 		</div>
 		</div>";
+
         return $data;
     }
     function getLeaderTop()
@@ -78,6 +78,7 @@ class Ads
 		</script>
 		</div></div>
 		";
+
         return $data;
     }
     function getFlex()
@@ -90,31 +91,34 @@ class Ads
 		</script>
 		</div>
 		</div>";
+
         return $data;
     }
 	function getLandscapeInterstitial()
 	{
-		$data ="<!-- ia-iowacity-mobile-C1033/html5_tablet/interstitial_landscape/classifieds/main -->
+		$data = "<!-- ia-iowacity-mobile-C1033/html5_tablet/interstitial_landscape/classifieds/main -->
 		<div id='div-gpt-ad-1395329372590-4' style='width:1024px; height:675px;'>
 		<script type='text/javascript'>
 		googletag.cmd.push(function() { googletag.display('div-gpt-ad-1395329372590-4'); });
 		</script>
 		</div>";
-		
+
+        return $data;
 	}
 	function getPortraitInterstitial()
 	{
-		
-		$data.="<!-- ia-iowacity-mobile-C1033/html5_tablet/interstitial_portrait/classifieds/main -->
+		$data ="<!-- ia-iowacity-mobile-C1033/html5_tablet/interstitial_portrait/classifieds/main -->
 		<div id='div-gpt-ad-1395329372590-5' style='width:768px; height:930px;'>
 		<script type='text/javascript'>
 		googletag.cmd.push(function() { googletag.display('div-gpt-ad-1395329372590-5'); });
 		</script>
 		</div>";
+
+        return $data;
 	}
 	function getMobileBannerBottom()
 	{
-		$data .="<!-- ia-iowacity-mobile-C1033/wap/banner_bottom/classifieds/main -->
+		$data ="<!-- ia-iowacity-mobile-C1033/wap/banner_bottom/classifieds/main -->
 		<div style='text-align:center;'>
 		<div id='div-gpt-ad-1395329372590-6'>
 		<script type='text/javascript'>
@@ -123,10 +127,11 @@ class Ads
 		</div>
 		</div>";
 
+        return $data;
 	}
 	function getMobileBannerTop()
 	{
-		$data .="<!-- ia-iowacity-mobile-C1033/wap/banner_top/classifieds/main -->
+		$data ="<!-- ia-iowacity-mobile-C1033/wap/banner_top/classifieds/main -->
 		<div style='text-align:center;'>
 		<div id='div-gpt-ad-1395329372590-7'>
 		<script type='text/javascript'>
@@ -134,5 +139,7 @@ class Ads
 		</script>
 		</div>
 		</div>";
+
+        return $data;
 	}
 } 

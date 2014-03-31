@@ -74,8 +74,8 @@
         ?>
     </div>
 </header>
+<div style="padding-top:60px;">
 <?php
-
 $device =  $app->getDeviceType();
 if($device =="computer")
 {
@@ -87,6 +87,7 @@ else if($device =="phone")
 }
 
 ?>
+</div>
 <div class="container">
     <div class="row" style="background-color:#FFF;">
         <div class="col-xs-11 col-sm-8">
