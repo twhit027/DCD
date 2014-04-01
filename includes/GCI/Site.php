@@ -30,6 +30,8 @@ class Site {
     private $siteGroup;
     private $city;
     private $state;
+    private $dfp;
+    private $dfpm;
 
     public function __construct($data = '') {
         if (isset($data)) {
@@ -47,6 +49,8 @@ class Site {
         $this->siteGroup = $data['SiteGroup'];
         $this->city = $data['City'];
         $this->state = $data['State'];
+		$this->dfp = $data['DFP'];
+		$this->dfpm = $data['DFPmobile'];
     }
 
     public function getSiteCode() {
@@ -72,4 +76,14 @@ class Site {
     public function getSiteGroup() {
         return $this->siteGroup;
     }
+	
+	public function getDFP() {
+        return $this->dfp;
+    }
+
+    public function getDFPmobile() {
+        return $this->dfpm;
+    }
+	
+	
 } 

@@ -70,13 +70,24 @@
         <?php
             include('../includes/toggle.php');
             $ads = new \GCI\Ads();
-            echo $ads->InitializeAds();
+            echo $ads->InitializeAds($app->getSite()->getDFP(), $app->getSite()->getDFPmobile());
         ?>
     </div>
 </header>
+<div style="padding-top:60px;">
 <?php
-echo $ads->getLaunchpad();
+$device =  $app->getDeviceType();
+if($device =="computer")
+{
+	echo $ads->getLaunchpad();
+}
+else if($device =="phone")
+{
+	echo $ads->getMobileBannerTop();
+}
+
 ?>
+</div>
 <div class="container">
     <div class="row" style="background-color:#FFF;">
         <div class="col-xs-11 col-sm-8">
@@ -92,7 +103,7 @@ echo $ads->getLaunchpad();
                         <input id="fullTextBox" type="text" name="search" class="form-control" value="<?php echo $fullText; ?>">
                         <span class="input-group-btn">
                             <a id="ftSearch" class="btn btn-primary" style="vertical-align: bottom;"><img src="img/white-magnifying-glass-20.png"></a>
-                            <a id="ftSearchAdv" class="btn btn-primary" style="vertical-align: bottom;">+</a>
+                           
                         </span>
 				    </div>
                     <h3 style="color:#3276B1;">Or Select A Category</h3>
@@ -101,14 +112,32 @@ echo $ads->getLaunchpad();
                     </ul>
                 </div>
                 <div style="padding:10px">
-                    <?php echo $ads->getFlex(); ?>
+                    <?php 
+							if($device =="computer")
+							{
+								echo $ads->getFlex();
+							}
+					?>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <?php
-echo $ads->getLeaderBottom();
+
+if($device =="computer")
+{
+	echo $ads->getLeaderBottom();
+}
+else if($device =="phone")
+{
+	echo $ads->getMobileBannerBottom();
+}
+else if($device == "tablet")
+{
+ 	echo $ads->getLandscapeInterstitial();	
+}
+
 //include('../includes/tracking.php');
 ?>
 <footer class="footer">
@@ -124,12 +153,12 @@ echo $ads->getLeaderBottom();
             ft = $("#fullTextBox").val().trim();
             place='';
             posit='';
-            if ($('#place').val()) {
+            /*if ($('#place').val()) {
                 place= $('#place').val();
             }
             if ($('#place').val()) {
                 posit= $('#posit').val();
-            }
+            }*/
             window.location.href = 'category.php?place='+encodeURIComponent(place)+'&posit='+encodeURIComponent(posit)+'&ft='+encodeURIComponent(ft);
         });
 
