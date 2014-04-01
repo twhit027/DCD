@@ -43,6 +43,14 @@ $log->logInfo('status Page');
 $log->logInfo('Connection Status: '. $connectionStatus);
 $log->logInfo('Query Status: '. $queryStatus);
 
+$default_opts = array(
+    'http'=>array(
+        'timeout'=>"5"
+    )
+);
+
+$default = stream_context_set_default($default_opts);
+
 function url_exists($url) {
     $headers = @get_headers($url);
     if(strpos($headers[0],'200')===false) {
