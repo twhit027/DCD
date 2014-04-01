@@ -1,49 +1,45 @@
 <?php
 /**
-*
-* EXIT CODES:
-* 0  	- No errors
-* 1 	- unable to connect to database (die)
-* 2 	- DELETE FROM `listing` WHERE ID = :id failed 
-* 4 	- INSERT into `listing` failed 
-* 6 	- DELETE FROM `listing` WHERE `EndDate` < :date failed
-* 8 	- TRUNCATE TABLE `position` failed
-* 10 	- INSERT into `position` failed
-*
-*/
+ *
+ * EXIT CODES:
+ * 0    - No errors
+ * 1    - unable to connect to database (die)
+ * 2    - DELETE FROM `listing` WHERE ID = :id failed
+ * 4    - INSERT into `listing` failed
+ * 6    - DELETE FROM `listing` WHERE `EndDate` < :date failed
+ * 8    - TRUNCATE TABLE `position` failed
+ * 10    - INSERT into `position` failed
+ *
+ */
 
-include(__DIR__.'/../conf/constants.php');
+include(__DIR__ . '/../conf/constants.php');
 
 $userCount = $return = 0;
 $userData = array();
 $state = $site = '';
 
-$file = '';
+$fileArray = array();
 
 if (isset($argv[1])) {
-    $file = $argv[1];
+    $fileArray = array_slice($argv, 1);
 } elseif (isset($_GET['location'])) {
-    $file = $_GET['location'];
+    $fileArray[1] = $_GET['location'];
 }
 
-if ($file != '') {
+function parseXMLFile($file)
+{
     $parser = xml_parser_create();
 
     xml_set_element_handler($parser, "start", "stop");
-
     xml_set_character_data_handler($parser, "char");
 
     $fp = fopen($file, "r");
 
     while ($data = fread($fp, 4096)) {
-
-        xml_parse($parser, $data, feof($fp)) or
-        die (sprintf("XML Error: %s at line %d",
+        xml_parse($parser, $data, feof($fp)) or die (sprintf("XML Error: %s at line %d",
             xml_error_string(xml_get_error_code($parser)),
             xml_get_current_line_number($parser)));
-
     }
-
 
     xml_parser_free($parser);
 }
@@ -117,7 +113,7 @@ function char($parser, $data)
     if ($state['name'] == "GS_ZIPCODE") {
         $userData[$userCount]["ZIP"] = $data;
     }
-		if ($state['name'] == "EXTERNAL_URL") {
+    if ($state['name'] == "EXTERNAL_URL") {
         $userData[$userCount]["EXTERNAL"] = $data;
     }
 }
@@ -129,7 +125,8 @@ class ClassifiedsAdmin extends PDO
     private $db_host = DB_HOST;
     private $db_user = DB_USER;
     private $db_pass = DB_PASS;
-    private $db_name = DB_NAME;    
+    private $db_name = DB_NAME;
+
     public function __construct()
     {
         try {
@@ -140,7 +137,7 @@ class ClassifiedsAdmin extends PDO
             $this->con = true;
         } catch (PDOException $e) {
             $logText = "Message:(" . $e->getMessage() . ") attempting to connect to database";
-            fwrite(STDERR, $logText."\n");
+            fwrite(STDERR, $logText . "\n");
             exit(1);
         }
     }
@@ -170,7 +167,7 @@ class ClassifiedsAdmin extends PDO
                 $stmt->execute(array(':ID' => $userData[$i]["AD"]));
             } catch (PDOException $e) {
                 $logText = "Message:(" . $e->getMessage() . ") attempting to delete listing (" . $userData[$i]["AD"] . ") from the database";
-                fwrite(STDERR, $logText."\n");
+                fwrite(STDERR, $logText . "\n");
                 $return = 2;
             }
 
@@ -180,14 +177,68 @@ class ClassifiedsAdmin extends PDO
                 $inserted++;
             } catch (PDOException $e) {
                 $logText = "Message:(" . $e->getMessage() . ") attempting to insert listing (" . $userData[$i]["AD"] . ") into the database";
-                fwrite(STDERR, $logText."\n");
+                fwrite(STDERR, $logText . "\n");
                 $return = 4;
             }
         }
 
         $logText = "inserted $inserted out of $userCount rows in listing for $site";
-        fwrite(STDOUT, $logText."\n");
+        fwrite(STDOUT, $logText . "\n");
     }
+
+    function insertListingsSimple($adData)
+    {
+        print_r($adData);
+
+        $siteCode = (string)$adData['sitecode'];
+
+        echo "siteCode: $siteCode \n";
+
+        $inserted = 0;
+        $userCount = count($adData->ad);
+        foreach ($adData->ad as $ad) {
+            $id = (string)$ad['id'];
+            echo "id: $id \n";
+            $startDate = $ad->start_date;
+            $endDate = $ad->end_date;
+            $placement = $ad['placement'];
+            $position = $ad['position'];
+            $adText = $ad['ad-text'];
+            $street = isset($ad['GS_ADDRESS']) ? $ad['GS_ADDRESS'] : '';
+            $state = isset($ad['GS_STATE']) ? $ad['GS_STATE'] : '';
+            $city = isset($ad['GS_CITY']) ? $ad['GS_CITY'] : '';
+            $zip = isset($ad['GS_ZIPCODE']) ? $ad['GS_ZIPCODE'] : '';
+
+            if (!empty($id)) {
+                try {
+                    $stmt = $this->prepare("DELETE FROM `listing` WHERE ID = :ID");
+                    $stmt->execute(array(':ID' => $id));
+                } catch (PDOException $e) {
+                    $logText = "Message:(" . $e->getMessage() . ") attempting to delete listing (" . $id . ") from the database";
+                    fwrite(STDERR, $logText . "\n");
+                    $return = 2;
+                }
+                print_r(array(':ID' => $id, ':StartDate' => $startDate, ':EndDate' => $endDate, ':Placement' => $placement,
+                    ':Position' => $position, ':AdText' => $adText, ':Site' => $siteCode, ':Street' => $street, ':City' => $city,
+                    ':State' => $state, ':Zip' => $zip));
+                try {
+                    $stmt = $this->prepare("INSERT INTO `listing` (`ID`, `StartDate`, `EndDate`, `Placement`,`Position`, `AdText`, `SiteCode`, `Street`, `City`, `State`, `Zip`) VALUES(:ID, :StartDate, :EndDate, :Placement, :Position, :AdText, :Site, :Street, :City, :State, :Zip)");
+                    $stmt->execute(array(':ID' => $id, ':StartDate' => $startDate, ':EndDate' => $endDate, ':Placement' => $placement,
+                        ':Position' => $position, ':AdText' => $adText, ':Site' => $siteCode, ':Street' => $street, ':City' => $city,
+                        ':State' => $state, ':Zip' => $zip));
+                    $inserted++;
+                } catch (PDOException $e) {
+                    $logText = "Message:(" . $e->getMessage() . ") attempting to insert listing (" . $id . ") into the database";
+                    fwrite(STDERR, $logText . "\n");
+                    $return = 4;
+                }
+            }
+        }
+
+        $logText = "inserted $inserted out of $userCount rows in listing for $siteCode";
+        fwrite(STDOUT, $logText . "\n");
+    }
+
 
     function deleteOldListings()
     {
@@ -197,10 +248,10 @@ class ClassifiedsAdmin extends PDO
             $stmt->execute(array(':date' => $date));
             $count = $stmt->rowCount();
             $logText = "deleted " . $count . " out of date rows from listing";
-            fwrite(STDOUT, $logText."\n");
+            fwrite(STDOUT, $logText . "\n");
         } catch (PDOException $e) {
             $logText = "Message:(" . $e->getMessage() . ") attempting to delete data prior to (" . $date . ") from the listing table";
-            fwrite(STDERR, $logText."\n");
+            fwrite(STDERR, $logText . "\n");
             $return = 6;
         }
     }
@@ -212,10 +263,10 @@ class ClassifiedsAdmin extends PDO
             $stmt->execute();
             $count = $stmt->rowCount();
             $logText = "deleted " . $count . " rows from position<";
-            fwrite(STDOUT, $logText."\n");
+            fwrite(STDOUT, $logText . "\n");
         } catch (PDOException $e) {
             $logText = "Message:(" . $e->getMessage() . ") attempting to truncate the positions table";
-            fwrite(STDERR, $logText."\n");
+            fwrite(STDERR, $logText . "\n");
             $return = 8;
         }
 
@@ -224,7 +275,7 @@ class ClassifiedsAdmin extends PDO
             $stmt->execute();
         } catch (PDOException $e) {
             $logText = "Message:(" . $e->getMessage() . ") attempting to insert the positions table";
-            fwrite(STDERR, $logText."\n");
+            fwrite(STDERR, $logText . "\n");
             $return = 10;
         }
     }
@@ -280,8 +331,23 @@ class ClassifiedsAdmin extends PDO
 
 $user = new ClassifiedsAdmin();
 
-if ($userCount > 0) {
-    $user->insertListings();
+foreach ($fileArray as $file) {
+    if ($useSimple) {
+        $adData = simplexml_load_file($file,'SimpleXMLElement', LIBXML_NOCDATA);
+        if (!empty($adData)) {
+            $user->insertListingsSimple($adData);
+        }
+    } else {
+        $userCount = 0;
+        $userData = array();
+        $state = $site = '';
+
+        parseXMLFile($file);
+
+        if ($userCount > 0) {
+            $user->insertListings();
+        }
+    }
 }
 
 $user->deleteOldListings();
