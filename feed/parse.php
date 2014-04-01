@@ -87,34 +87,34 @@ function char($parser, $data)
         $userData[$userCount]["AD"] = $state['ID'];
     }
     if ($state['name'] == "START-DATE") {
-        $userData[$userCount]["START-DATE"] = $data;
+        $userData[$userCount]["START-DATE"] .= $data;
     }
     if ($state['name'] == "END-DATE") {
-        $userData[$userCount]["END-DATE"] = $data;
+        $userData[$userCount]["END-DATE"] .= $data;
     }
     if ($state['name'] == "PLACEMENT") {
-        $userData[$userCount]["PLACEMENT"] = $data;
+        $userData[$userCount]["PLACEMENT"] .= $data;
     }
     if ($state['name'] == "POSITION") {
-        $userData[$userCount]["POSITION"] = $data;
+        $userData[$userCount]["POSITION"] .= $data;
     }
     if ($state['name'] == "AD-TEXT") {
-        $userData[$userCount]["AD-TEXT"] = strip_tags($data, '<img><imgp>');
+        $userData[$userCount]["AD-TEXT"] .= strip_tags($data, '<img><imgp>');
     }
     if ($state['name'] == "GS_ADDRESS") {
-        $userData[$userCount]["STREET"] = $data;
+        $userData[$userCount]["STREET"] .= $data;
     }
     if ($state['name'] == "GS_CITY") {
-        $userData[$userCount]["CITY"] = $data;
+        $userData[$userCount]["CITY"] .= $data;
     }
     if ($state['name'] == "GS_STATE") {
-        $userData[$userCount]["STATE"] = $data;
+        $userData[$userCount]["STATE"] .= $data;
     }
     if ($state['name'] == "GS_ZIPCODE") {
-        $userData[$userCount]["ZIP"] = $data;
+        $userData[$userCount]["ZIP"] .= $data;
     }
     if ($state['name'] == "EXTERNAL_URL") {
-        $userData[$userCount]["EXTERNAL"] = $data;
+        $userData[$userCount]["EXTERNAL"] .= $data;
     }
 }
 
@@ -262,7 +262,7 @@ class ClassifiedsAdmin extends PDO
             $stmt = $this->prepare("TRUNCATE TABLE `position`");
             $stmt->execute();
             $count = $stmt->rowCount();
-            $logText = "deleted " . $count . " rows from position<";
+            $logText = "deleted " . $count . " rows from position";
             fwrite(STDOUT, $logText . "\n");
         } catch (PDOException $e) {
             $logText = "Message:(" . $e->getMessage() . ") attempting to truncate the positions table";
@@ -271,7 +271,9 @@ class ClassifiedsAdmin extends PDO
         }
 
         try {
-            $stmt = $this->prepare("INSERT into `position` (Placement, Position, SiteCode, ExternalURL, Count ) SELECT Placement, Position, SiteCode, ExternalURL, count( * ) FROM listing GROUP BY Placement, Position, SiteCode");
+            $startDate = date("Y-m-d");
+            $sql = "INSERT into `position` (Placement, Position, SiteCode, ExternalURL, Count ) SELECT Placement, Position, SiteCode, ExternalURL, count( * ) FROM listing WHERE StartDate >= '$startDate' GROUP BY Placement, Position, SiteCode";
+            $stmt = $this->prepare($sql);
             $stmt->execute();
         } catch (PDOException $e) {
             $logText = "Message:(" . $e->getMessage() . ") attempting to insert the positions table";
@@ -299,7 +301,8 @@ class ClassifiedsAdmin extends PDO
 
     function updateGeocodes()
     {
-        $stmt = $this->prepare("SELECT ID, Street, City, State, Zip FROM `listing` WHERE `Street` > '' AND `Lat` > ''");
+        //$stmt = $this->prepare("SELECT ID, Street, City, State, Zip FROM `listing` WHERE `Street` != '' AND `Lat` = ''");
+        $stmt = $this->prepare("SELECT `ID`, `Street`, `City`, `State`, `Zip` FROM `listing` WHERE `Street` != '' AND (`Lat` IS NULL OR `Lat` = '')");
         $stmt->execute();
         $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         $count = $stmt->rowCount();
@@ -352,6 +355,7 @@ foreach ($fileArray as $file) {
 
 $user->deleteOldListings();
 $user->buildNav();
+$user->updateGeocodes();
 
 exit($return);
 ?>

@@ -75,7 +75,7 @@ if(!isset($listings['results']))
 else
 {
 	foreach ($listings['results'] as $row) {
-		$row['adText'] = htmlspecialchars($row['adText']);
+		$row['adText'] = $row['adText'];
 		if (strlen($row['adText']) > 200) {
 			$string = substr($row['adText'], 0, 200) . "... <a  href='item.php?id=" . $row['id'] . "&place=".$placement."&posit=" . $position . "'>Click for full text</a>";
 		} else {
@@ -84,12 +84,10 @@ else
 	
 		$data .= "<div class='jumbotron'>";
 		$data .= "<p>" . $string . "</p>";
-        $data .= '<span class="input-group-btn">';
 		$data .= '<a class="btn btn-primary" href="http://twitter.com/home?status=' . substr($row['adText'], 0, 120) . '" target="_blank"><img src="img/twitter1.png" /></a>';
 		$data .= '<a class="btn btn-primary" href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/facebook2.png" /></a>';
 		$data .= '<a class="btn btn-primary" href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/google-plus2.png" /></a>';
 		$data .= '<a class="btn btn-primary" href="mailto:youremailaddress" target="_blank"><img src="img/email2.png" /></a>';
-        $data .= '</span>';
 		$data .= '</div>';
 	}
 }
