@@ -28,40 +28,37 @@ if (isset($_REQUEST['place'])) {
 if (isset($_REQUEST['posit'])) {
     $position = urldecode($_REQUEST['posit']);
 }
-
+$search = "";
 if(isset($_REQUEST['sites']))
 {
 	$sitegroup = urldecode($_REQUEST['sites']);
 	$listings = $app->getListings($placement, $position, $page, $sitegroup);
-	$search = $app->getSearch($sitegroup);
+	//$search = $app->getSearch($sitegroup);
 }
 else
 {
 	$listings = $app->getListings($placement, $position, $page, '', $fullText);	
-	$search = $app->getSearch();
+	//$search = $app->getSearch();
 }
-
-
-
 
 $pagination = "";
 if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
     $numOfPages = ceil($listings['totalRows'] / LISTINGS_PER_PAGE);
 
     if ($page > 1)
-        $pagination .= '<ul class="pagination"><li><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . ($page - 1) . '">&laquo;</a></li>';
+        $pagination .= '<ul class="pagination"><li><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . ($page - 1) . '&ft='.$fullText.'">&laquo;</a></li>';
     else
         $pagination .= '<ul class="pagination"><li class="disabled"><a href="#">&laquo;</a></li>';
 
     for ($pge = 1; $pge <= $numOfPages; $pge++) {
         if ($pge == $page)
-            $pagination .= '<li class="active"><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . $pge . '">' . $pge . ' <span class="sr-only">(currecnt)</span></a></li>';
+            $pagination .= '<li class="active"><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . $pge . '&ft='.$fullText.'">' . $pge . ' <span class="sr-only">(currecnt)</span></a></li>';
         else
-            $pagination .= '<li><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . $pge . '">' . $pge . '</a></li>';
+            $pagination .= '<li><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . $pge . '&ft='.$fullText.'">' . $pge . '</a></li>';
     }
 
     if ($page < $numOfPages)
-        $pagination .= '<li><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . ($page + 1) . '">&raquo;</a></li></ul>';
+        $pagination .= '<li><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . ($page + 1) . '&ft='.$fullText.'">&raquo;</a></li></ul>';
     else
         $pagination .= '<li class="disabled"><a href="#">&raquo;</a></li></ul>';
 }
@@ -75,7 +72,7 @@ if(!isset($listings['results']))
 else
 {
 	foreach ($listings['results'] as $row) {
-		$row['adText'] = htmlspecialchars($row['adText']);
+		$row['adText'] = strip_tags($row['adText']);
 		if (strlen($row['adText']) > 200) {
 			$string = substr($row['adText'], 0, 200) . "... <a  href='item.php?id=" . $row['id'] . "&place=".$placement."&posit=" . $position . "'>Click for full text</a>";
 		} else {
@@ -84,12 +81,10 @@ else
 	
 		$data .= "<div class='jumbotron'>";
 		$data .= "<p>" . $string . "</p>";
-        $data .= '<span class="input-group-btn">';
 		$data .= '<a class="btn btn-primary" href="http://twitter.com/home?status=' . substr($row['adText'], 0, 120) . '" target="_blank"><img src="img/twitter1.png" /></a>';
 		$data .= '<a class="btn btn-primary" href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/facebook2.png" /></a>';
 		$data .= '<a class="btn btn-primary" href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/google-plus2.png" /></a>';
 		$data .= '<a class="btn btn-primary" href="mailto:youremailaddress" target="_blank"><img src="img/email2.png" /></a>';
-        $data .= '</span>';
 		$data .= '</div>';
 	}
 }
