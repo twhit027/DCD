@@ -8,7 +8,9 @@
  * 4    - INSERT into `listing` failed
  * 6    - DELETE FROM `listing` WHERE `EndDate` < :date failed
  * 8    - TRUNCATE TABLE `position` failed
- * 10    - INSERT into `position` failed
+ * 10   - INSERT into `position` failed
+ * 12   - SELECT from `listing` address failed
+ * 14   - INSERT into `listing` Lat and Long failed
  *
  */
 
@@ -301,11 +303,18 @@ class ClassifiedsAdmin extends PDO
 
     function updateGeocodes()
     {
-        //$stmt = $this->prepare("SELECT ID, Street, City, State, Zip FROM `listing` WHERE `Street` != '' AND `Lat` = ''");
-        $stmt = $this->prepare("SELECT `ID`, `Street`, `City`, `State`, `Zip` FROM `listing` WHERE `Street` != '' AND (`Lat` IS NULL OR `Lat` = '')");
-        $stmt->execute();
-        $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        $count = $stmt->rowCount();
+        $results = array();
+
+        try {
+            $stmt = $this->prepare("SELECT `ID`, `Street`, `City`, `State`, `Zip` FROM `listing` WHERE `Street` != '' AND (`Lat` IS NULL OR `Lat` = '')");
+            $stmt->execute();
+            $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            $count = $stmt->rowCount();
+        } catch (PDOException $e) {
+            $logText = "Message:(" . $e->getMessage() . ") Selecting addresses without Lat and Long from listing";
+            fwrite(STDERR, $logText . "\n");
+            $return = 12;
+        }
 
         foreach ($results as $row) {
             $address = $row['Street'];
@@ -322,8 +331,14 @@ class ClassifiedsAdmin extends PDO
             $latlon = $this->getLocation($address);
 
             if ($latlon !== false) {
-                $stmt = $this->prepare("UPDATE `listing` SET `Lat` = :lat, `Long` = :lon WHERE `ID` = :id ");
-                $stmt->execute(array(":lat" => $latlon['lat'], ":lon" => $latlon['lon'], ":id" => $row['ID']));
+                try {
+                    $stmt = $this->prepare("UPDATE `listing` SET `Lat` = :lat, `Long` = :lon WHERE `ID` = :id ");
+                    $stmt->execute(array(":lat" => $latlon['lat'], ":lon" => $latlon['lon'], ":id" => $row['ID']));
+                } catch (PDOException $e) {
+                    $logText = "Message:(" . $e->getMessage() . ") Updating listing, adding Long and Lat for ".$row['ID'];
+                    fwrite(STDERR, $logText . "\n");
+                    $return = 14;
+                }
             }
 
             //Slow this down so we don't run into problems with Google's Geocoding limits
