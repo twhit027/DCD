@@ -41,9 +41,6 @@ else
 	//$search = $app->getSearch();
 }
 
-
-
-
 $pagination = "";
 if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
     $numOfPages = ceil($listings['totalRows'] / LISTINGS_PER_PAGE);
@@ -75,7 +72,7 @@ if(!isset($listings['results']))
 else
 {
 	foreach ($listings['results'] as $row) {
-		$row['adText'] = $row['adText'];
+		$row['adText'] = strip_tags($row['adText']);
 		if (strlen($row['adText']) > 200) {
 			$string = substr($row['adText'], 0, 200) . "... <a  href='item.php?id=" . $row['id'] . "&place=".$placement."&posit=" . $position . "'>Click for full text</a>";
 		} else {

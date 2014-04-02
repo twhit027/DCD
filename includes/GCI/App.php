@@ -221,8 +221,6 @@ class App
         }
 
         $this->categories = $categoriesArray;
-		
-		
     }
 
     function getListings($placement = '', $position = '', $page = 1, $siteGroup = '', $fullText = '')
@@ -275,12 +273,13 @@ class App
 
     public function getSingleListing($id)
     {
-        $sql = "SELECT ID, AdText FROM `listing` where ID = :id";
+        $sql = "SELECT ID, AdText, SiteCode FROM `listing` where ID = :id";
         $params = array(':id' => $id);
         $results = $this->database->getAssoc($sql, $params);
 
         $retArray['id'] = $results[0]['ID'];
         $retArray['adText'] = $results[0]['AdText'];
+        $retArray['siteCode'] = $results[0]['SiteCode'];
 
         return $retArray;
     }

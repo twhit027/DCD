@@ -18,19 +18,23 @@ $position = urldecode($_REQUEST['posit']);
 
 $listings = $app->getSingleListing($id);
 
+$cleanAdText = stripTags($listings['adText']);
 
 $metadata = '
 <title>'.substr($listings['adText'], 0, 70).'</title>
-<meta name="description" content="'.substr($listings['adText'], 0, 150).'" />
+<meta name="description" content="'.substr($cleanAdText, 0, 150).'" />
 
-<meta itemprop="name" content="'.substr($listings['adText'], 0, 70).'">
-<meta itemprop="description" content="'.substr($listings['adText'], 0, 150).'">';
+<meta itemprop="name" content="'.substr($cleanAdText, 0, 70).'">
+<meta itemprop="description" content="'.substr($cleanAdText, 0, 150).'">';
 
+function convertImages($listingResults) {
+    //<imgp src="0000005351-01-1.jpg">
+    //<img src="0000005351-01-1.jpg">
+    return preg_replace('/src="([^"]*)"/i', 'src="img/images/'.$listingResults['SiteCode'].'/${1}"', $listingResults['adText']);
+}
 
-
-
-$data = " <div class='jumbotron' ><p>" . htmlspecialchars($listings['adText']) . "</p>";
-$data .= '<a class="btn btn-primary" href="http://twitter.com/home?status=' . substr($listings['adText'], 0, 120) . '" target="_blank"><img src="img/twitter1.png" /></a>';
+$data = " <div class='jumbotron' ><p>" . convertImages($listings) . "</p>";
+$data .= '<a class="btn btn-primary" href="http://twitter.com/home?status=' . substr($cleanAdText, 0, 120) . '" target="_blank"><img src="img/twitter1.png" /></a>';
 $data .= '<a class="btn btn-primary" href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $listings['id'] . '" target="_blank"><img src="img/facebook2.png" /></a>';
 $data .= '<a class="btn btn-primary" href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $listings['id'] . '" target="_blank"><img src="img/google-plus2.png" /></a>';
 $data .= '<a class="btn btn-primary" href="mailto:youremailaddress" target="_blank"><img src="img/email2.png" /></a>';
