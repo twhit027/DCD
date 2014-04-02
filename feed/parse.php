@@ -8,7 +8,9 @@
  * 4    - INSERT into `listing` failed
  * 6    - DELETE FROM `listing` WHERE `EndDate` < :date failed
  * 8    - TRUNCATE TABLE `position` failed
- * 10    - INSERT into `position` failed
+ * 10   - INSERT into `position` failed
+ * 12   - SELECT from `listing` address failed
+ * 14   - INSERT into `listing` Lat and Long failed
  *
  */
 
@@ -99,7 +101,7 @@ function char($parser, $data)
         $userData[$userCount]["POSITION"] .= $data;
     }
     if ($state['name'] == "AD-TEXT") {
-        $userData[$userCount]["AD-TEXT"] .= strip_tags($data, '<img><imgp>');
+        $userData[$userCount]["AD-TEXT"] .= $data;
     }
     if ($state['name'] == "GS_ADDRESS") {
         $userData[$userCount]["STREET"] .= $data;
@@ -161,6 +163,22 @@ class ClassifiedsAdmin extends PDO
             if (empty($userData[$i]["ZIP"])) {
                 $userData[$i]["ZIP"] = '';
             }
+            if (empty($userData[$i]["EXTERNAL"])) {
+                $userData[$i]["EXTERNAL"] = '';
+            }
+            $imagesCSV ='';
+            if (!empty($userData[$i]["AD-TEXT"])) {
+                //get all img tags
+                $regexp = '/<img[^>]*src="(.*?)"[^>]*>/i';
+                //$regexp = '/<img[^>]*src="([^"]+)"[^>]*>/i';
+                //$regexp = '/< *img[^>]*src *= *["\']?([^"\']*)/i';
+                $iResults = preg_match_all($regexp, $userData[$i]["AD-TEXT"], $aMatches);
+                if (!empty($aMatches[1])) {
+                    $imagesCSV = implode(',', $aMatches[1]);
+                }
+                //then strip all html tags
+                $userData[$i]["AD-TEXT"] = trim(strip_tags($userData[$i]["AD-TEXT"]));
+            }
 
             try {
                 $stmt = $this->prepare("DELETE FROM `listing` WHERE ID = :ID");
@@ -172,8 +190,8 @@ class ClassifiedsAdmin extends PDO
             }
 
             try {
-                $stmt = $this->prepare("INSERT INTO `listing` (`ID`, `StartDate`, `EndDate`, `Placement`,`Position`, `AdText`, `SiteCode`, `Street`, `City`, `State`, `Zip`, `ExternalURL`) VALUES(:ID, :StartDate, :EndDate, :Placement, :Position, :AdText, :Site, :Street, :City, :State, :Zip, :ExternalURL)");
-                $stmt->execute(array(':ID' => $userData[$i]["AD"], ':StartDate' => $userData[$i]["START-DATE"], ':EndDate' => $userData[$i]["END-DATE"], ':Placement' => $userData[$i]["PLACEMENT"], ':Position' => $userData[$i]["POSITION"], ':AdText' => $userData[$i]["AD-TEXT"], ':Site' => $site, ':Street' => $userData[$i]["STREET"], ':City' => $userData[$i]["CITY"], ':State' => $userData[$i]["STATE"], ':Zip' => $userData[$i]["ZIP"], ':ExternalURL' => $userData[$i]["EXTERNAL"]));
+                $stmt = $this->prepare("INSERT INTO `listing` (`ID`, `StartDate`, `EndDate`, `Placement`,`Position`, `AdText`, `Images`, `SiteCode`, `Street`, `City`, `State`, `Zip`, `ExternalURL`) VALUES(:ID, :StartDate, :EndDate, :Placement, :Position, :AdText, :Images, :Site, :Street, :City, :State, :Zip, :ExternalURL)");
+                $stmt->execute(array(':ID' => $userData[$i]["AD"], ':StartDate' => $userData[$i]["START-DATE"], ':EndDate' => $userData[$i]["END-DATE"], ':Placement' => $userData[$i]["PLACEMENT"], ':Position' => $userData[$i]["POSITION"], ':AdText' => $userData[$i]["AD-TEXT"], ':Images'=> $imagesCSV,':Site' => $site, ':Street' => $userData[$i]["STREET"], ':City' => $userData[$i]["CITY"], ':State' => $userData[$i]["STATE"], ':Zip' => $userData[$i]["ZIP"], ':ExternalURL' => $userData[$i]["EXTERNAL"]));
                 $inserted++;
             } catch (PDOException $e) {
                 $logText = "Message:(" . $e->getMessage() . ") attempting to insert listing (" . $userData[$i]["AD"] . ") into the database";
@@ -301,11 +319,18 @@ class ClassifiedsAdmin extends PDO
 
     function updateGeocodes()
     {
-        //$stmt = $this->prepare("SELECT ID, Street, City, State, Zip FROM `listing` WHERE `Street` != '' AND `Lat` = ''");
-        $stmt = $this->prepare("SELECT `ID`, `Street`, `City`, `State`, `Zip` FROM `listing` WHERE `Street` != '' AND (`Lat` IS NULL OR `Lat` = '')");
-        $stmt->execute();
-        $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        $count = $stmt->rowCount();
+        $results = array();
+
+        try {
+            $stmt = $this->prepare("SELECT `ID`, `Street`, `City`, `State`, `Zip` FROM `listing` WHERE `Street` != '' AND (`Lat` IS NULL OR `Lat` = '')");
+            $stmt->execute();
+            $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            $count = $stmt->rowCount();
+        } catch (PDOException $e) {
+            $logText = "Message:(" . $e->getMessage() . ") Selecting addresses without Lat and Long from listing";
+            fwrite(STDERR, $logText . "\n");
+            $return = 12;
+        }
 
         foreach ($results as $row) {
             $address = $row['Street'];
@@ -322,8 +347,14 @@ class ClassifiedsAdmin extends PDO
             $latlon = $this->getLocation($address);
 
             if ($latlon !== false) {
-                $stmt = $this->prepare("UPDATE `listing` SET `Lat` = :lat, `Long` = :lon WHERE `ID` = :id ");
-                $stmt->execute(array(":lat" => $latlon['lat'], ":lon" => $latlon['lon'], ":id" => $row['ID']));
+                try {
+                    $stmt = $this->prepare("UPDATE `listing` SET `Lat` = :lat, `Long` = :lon WHERE `ID` = :id ");
+                    $stmt->execute(array(":lat" => $latlon['lat'], ":lon" => $latlon['lon'], ":id" => $row['ID']));
+                } catch (PDOException $e) {
+                    $logText = "Message:(" . $e->getMessage() . ") Updating listing, adding Long and Lat for ".$row['ID'];
+                    fwrite(STDERR, $logText . "\n");
+                    $return = 14;
+                }
             }
 
             //Slow this down so we don't run into problems with Google's Geocoding limits
