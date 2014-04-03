@@ -72,14 +72,40 @@ if(!isset($listings['results']))
 else
 {
 	foreach ($listings['results'] as $row) {
-		$row['adText'] = strip_tags($row['adText']);
+        $map = '';
+        $imageArray = array();
+        if (!empty($row['images'])) {
+            $imageArray = explode(',', $row['images']);
+        }
+        $row['adText'] = strip_tags($row['adText']);
 		if (strlen($row['adText']) > 200) {
 			$string = substr($row['adText'], 0, 200) . "... <a  href='item.php?id=" . $row['id'] . "&place=".$placement."&posit=" . $position . "'>Click for full text</a>";
 		} else {
 			$string = $row['adText'];
 		}
-	
-		$data .= "<div class='jumbotron'>";
+
+        $dataInfo = '<div class=".small" style="padding-bottom:10px; color:#0052f4">'.$row['siteCode'];
+        if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
+        $dataInfo .= $row['position'];
+        if (count($imageArray)>0) {
+            if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
+            $imgCnt = 0;
+            foreach($imageArray as $imgSrc) {
+                if ($imgCnt == 0) {
+                    $dataInfo .= '<a class="fancybox" href="img/images/'.$row['siteCode'].'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox '.$row['id'].'_group">Pic</a>';
+                } else {
+                    $dataInfo .= '<div style="display: none"><a class="fancybox" href="img/images/'.$row['siteCode'].'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox '.$row['id'].'_group" >Pic</a></div>';
+                }
+                $imgCnt++;
+            }
+        }
+        if (!empty($map)) {
+            if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
+            $dataInfo .= '<a href="#" style="color:#00881A;">Map</a>';
+        }
+        $dataInfo .= '</div>';
+        $data .= "<div class='jumbotron' style='padding-top: 30px;'>";
+        $data .= "$dataInfo";
 		$data .= "<p>" . $string . "</p>";
 		$data .= '<a class="btn btn-primary" href="http://twitter.com/home?status=' . substr($row['adText'], 0, 120) . '" target="_blank"><img src="img/twitter1.png" /></a>';
 		$data .= '<a class="btn btn-primary" href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/facebook2.png" /></a>';
@@ -88,6 +114,19 @@ else
 		$data .= '</div>';
 	}
 }
+
+$masterBottom = '<link rel="stylesheet" href="//frontend.reklamor.com/fancybox/jquery.fancybox.css" media="screen">
+<script src="//frontend.reklamor.com/fancybox/jquery.fancybox.js"></script>
+<script>
+$(document).ready(function(){
+    //FANCYBOX
+    //https://github.com/fancyapps/fancyBox
+    $(".fancybox").fancybox({
+        openEffect: "none",
+        closeEffect: "none"
+    });
+});
+</script>';
 
 $mainContent = <<<EOS
             <input type="hidden" id="place" name="place" value="$placement">
