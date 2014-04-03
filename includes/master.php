@@ -36,9 +36,8 @@ if(isset($metadata))
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="msapplication-TileImage" content="/mstile-144x144.png">
     <style type="text/css">
-    body {
-    min-width: 10px !important;
-        }
+    body {min-width: 10px !important;}
+    .gallery{display: inline-block;margin-top: 20px;}
     </style>
 
     <link href="3rdParty/bootstrap/css/bootstrap.min.css" rel="stylesheet">

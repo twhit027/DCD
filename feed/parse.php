@@ -13,7 +13,7 @@
  * 14   - INSERT into `listing` Lat and Long failed
  *
  */
-
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
 include(__DIR__ . '/../conf/constants.php');
 
 $userCount = $return = 0;
