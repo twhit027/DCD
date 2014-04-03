@@ -239,7 +239,7 @@ class App
                 $sql .= ", MATCH(adText) AGAINST('$fullText') AS score";
             }
 
-            $sql .= " FROM `listing` where StartDate >= :startDate and siteCode in ( $siteGroupString ) ";
+            $sql .= " FROM `listing` where StartDate <= :startDate and siteCode in ( $siteGroupString ) ";
             $params[':startDate'] = date("Y-m-d");
 
             if (!empty($placement)) {
@@ -262,7 +262,14 @@ class App
             $dataArray['totalRows'] = $this->database->getCount("SELECT FOUND_ROWS()");
 
             foreach ($results as $row) {
-                $dataArray['results'][] = array('id' => $row['ID'], 'adText' => $row['AdText']);
+                $dataArray['results'][] = array(
+                    'id' => $row['ID'],
+                    'adText' => $row['AdText'],
+                    'siteCode' => $row['SiteCode'],
+                    'images' => $row['Images'],
+                    'position' => $row['Position'],
+                    'placement' => $row['Placement']
+                );
             }
 
             $this->listings = $dataArray;
