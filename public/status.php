@@ -2,6 +2,7 @@
 include('../vendor/klogger/KLogger.php');
 include('../conf/constants.php');
 include('../includes/GCI/App.php');
+include('../conf/version.php');
 
 use GCI\App;
 
@@ -195,7 +196,7 @@ function getSubDomain ($domain) {
         <tr>
             <td class="smallbold">DCD Version:</td>
             <td width="10"></td>
-            <td class="small"><?php echo DCD_VERSION;?></td>
+            <td class="small"><?php echo DCD_VERSION_STATUS;?></td>
         </tr>
         <tr class="headlin">
             <td colspan="3">Memory</td>
