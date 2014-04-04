@@ -18,7 +18,7 @@ $position = urldecode($_REQUEST['posit']);
 
 $listings = $app->getSingleListing($id);
 
-$cleanAdText = stripTags($listings['adText']);
+$cleanAdText = strip_tags($listings['adText']);
 
 $metadata = '
 <title>'.substr($listings['adText'], 0, 70).'</title>
