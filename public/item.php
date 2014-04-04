@@ -30,7 +30,7 @@ $metadata = '
 function convertImages($listingResults) {
     //<imgp src="0000005351-01-1.jpg">
     //<img src="0000005351-01-1.jpg">
-    return preg_replace('/src="([^"]*)"/i', 'src="img/images/'.$listingResults['SiteCode'].'/${1}"', $listingResults['adText']);
+    return preg_replace('/src="([^"]*)"/i', 'src="img/images/'.$listingResults['siteCode'].'/${1}"', $listingResults['adText']);
 }
 
 $data = " <div class='jumbotron' ><p>" . convertImages($listings) . "</p>";
