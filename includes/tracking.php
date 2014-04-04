@@ -1,7 +1,4 @@
 <!-- Start SiteCatalyst code version: H.3. -->
-
-
-
 <script type="text/javascript" src="http://content.gannettonline.com/global/scripts/revsci.js"></script>
 <script type="text/javascript" src="http://js.revsci.net/gateway/gw.js?csid=J06575" charset="ISO-8859-1"></script>
 <script type="text/javascript">
