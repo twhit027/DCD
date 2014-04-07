@@ -173,5 +173,6 @@ else if($device == "tablet")
     });
 </script>
 <?php if(!empty($masterBottom)){ echo $masterBottom; } ?>
+<?php include("../includes/tracking.php"); ?>
 </body>
 </html>
