@@ -1,12 +1,12 @@
 <?php
-include(dirname(__FILE__) . '/3rdParty/klogger/KLogger.php');
-include(dirname(__FILE__) . '/3rdParty/Mobile_Detect/Mobile_Detect.php');
-include('conf/constants.php');
-include('includes/GCI/Database.php');
-include('includes/GCI/Site.php');
-include('includes/GCI/App.php');
-include('includes/GCI/Navigation.php');
-include('includes/GCI/Ads.php');
+include('../vendor/klogger/KLogger.php');
+include('../vendor/Mobile_Detect/Mobile_Detect.php');
+include('../conf/constants.php');
+include('../includes/GCI/Database.php');
+include('../includes/GCI/Site.php');
+include('../includes/GCI/App.php');
+include('../includes/GCI/Navigation.php');
+include('../includes/GCI/Ads.php');
 
 $app = new \GCI\App();
 
