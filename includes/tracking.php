@@ -3,7 +3,7 @@
 <script type="text/javascript" src="http://js.revsci.net/gateway/gw.js?csid=J06575" charset="ISO-8859-1"></script>
 <script type="text/javascript" language="JavaScript">
 <!--
-s_account="gpaper183,gntbcstglobal";
+s_account="<?php echo $app->getSite()->getGpaper(); ?>,gntbcstglobal";
 //-->
 </script> 
 
@@ -15,7 +15,7 @@ http://www.omniture.com -->
 <script language="JavaScript"><!--
 /* You may give each page an identifying name, server, and channel on
 the next lines. */
-s.pageName="Classifieds"
+s.pageName="<?php echo $app->getSite()->getSiteName(); ?> Classifieds"
 s.server=""     // Do Not Alter
 s.channel=""
 s.pageType=""
@@ -33,7 +33,7 @@ s.prop17=""
 s.prop18=""
 s.prop19=""
 s.prop23=document.location
-s.prop25="Poughkeepsie:poughkeepsiejournal"
+s.prop25="<?php echo $app->getSite()->getSiteName(); ?>"
 s.prop49="DESCRIPTION"
 s.prop50="newspaper"
 var currentTime=new Date();
