@@ -14,7 +14,7 @@ class Database extends \PDO
     private $con = false;
     private $log;
 
-    public function __construct()
+    public function __construct($logDir = '')
     {
         try {
             $this->connection_string = 'mysql:dbname=' . DB_NAME . ';host=' . DB_HOST . ';port=' . DB_PORT . ';charset=utf8';
@@ -22,11 +22,19 @@ class Database extends \PDO
             $this->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
             $this->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             $this->con = true;
-            $this->log = \KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
+            if (empty($logDir)) {
+                $logDir = LOGGING_DIR;
+            }
+            $this->setLog($logDir);
         } catch (\PDOException $e) {
             $logText = "Message:(" . $e->getMessage() . ") attempting to connect to database";
             $this->log->logError($logText);
         }
+    }
+
+    public function setLog($logDir = LOGGING_DIR, $logLevel = LOGGING_LEVEL)
+    {
+        $this->log = \KLogger::instance($logDir, $logLevel);
     }
 
     /// Get an associative array of results for the sql.
