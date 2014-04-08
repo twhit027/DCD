@@ -32,7 +32,8 @@ class Site {
     private $state;
     private $dfp;
     private $dfpm;
-
+	private $gpaper;
+	
     public function __construct($data = '') {
         if (isset($data)) {
             $this->setSiteData($data);
@@ -51,6 +52,7 @@ class Site {
         $this->state = $data['State'];
 		$this->dfp = $data['DFP'];
 		$this->dfpm = $data['DFPmobile'];
+		$this->gpaper = $data['Gpaper'];
     }
 
     public function getSiteCode() {
@@ -84,6 +86,11 @@ class Site {
     public function getDFPmobile() {
         return $this->dfpm;
     }
+	
+	public function getGpaper() {
+        return $this->gpaper;
+    }
+	
 	
 	
 } 
