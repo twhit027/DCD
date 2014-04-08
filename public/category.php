@@ -95,9 +95,9 @@ else
             $imgCnt = 0;
             foreach($imageArray as $imgSrc) {
                 if ($imgCnt == 0) {
-                    $dataInfo .= '<a class="fancybox" href="img/images/'.$row['siteCode'].'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox '.$row['id'].'_group">Pic</a>';
+                    $dataInfo .= '<a class="fancybox" href="images/'.$row['siteCode'].'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox '.$row['id'].'_group">Pic</a>';
                 } else {
-                    $dataInfo .= '<div style="display: none"><a class="fancybox" href="img/images/'.$row['siteCode'].'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox '.$row['id'].'_group" >Pic</a></div>';
+                    $dataInfo .= '<div style="display: none"><a class="fancybox" href="images/'.$row['siteCode'].'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox '.$row['id'].'_group" >Pic</a></div>';
                 }
                 $imgCnt++;
             }
