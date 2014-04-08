@@ -15,7 +15,7 @@ include('../../includes/GCI/App.php');
 include('../../includes/GCI/Navigation.php');
 include('../../includes/GCI/Ads.php');
 
-$app = new \GCI\App();
+$app = new \GCI\App('', '../../logs');
 
 $placement = $position = '';
 
