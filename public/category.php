@@ -71,7 +71,8 @@ if(!isset($listings['results']))
 }
 else
 {
-	foreach ($listings['results'] as $row) {
+	$count = 1;
+    foreach ($listings['results'] as $row) {
         $map = '';
         $imageArray = array();
         if (!empty($row['images'])) {
@@ -79,7 +80,9 @@ else
         }
         $row['adText'] = strip_tags($row['adText']);
 		if (strlen($row['adText']) > 200) {
-			$string = substr($row['adText'], 0, 200) . "... <a  href='item.php?id=" . $row['id'] . "&place=".$placement."&posit=" . $position . "'>Click for full text</a>";
+			//$string = substr($row['adText'], 0, 200) . "... <a  href='item.php?id=" . $row['id'] . "&place=".$placement."&posit=" . $position . "'>Click for full text</a>";
+            $string = "<div id='dcd-short-".$count."'>".substr(strip_tags($row['adText']),0,200)."... </div><div class='dcd-content-text' style='display: none' id='dcd-content-".$count."'>".strip_tags($row['adText'])."</div><a href='item.php?id=" . $row['id'] . "&place=".$placement."&posit=" . $position . "' class='dcd-expand-text' data-id='".$count."'>Click for full test</a>";
+            $count++;
 		} else {
 			$string = $row['adText'];
 		}
@@ -92,9 +95,9 @@ else
             $imgCnt = 0;
             foreach($imageArray as $imgSrc) {
                 if ($imgCnt == 0) {
-                    $dataInfo .= '<a class="fancybox" href="img/images/'.$row['siteCode'].'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox '.$row['id'].'_group">Pic</a>';
+                    $dataInfo .= '<a class="fancybox" href="images/'.$row['siteCode'].'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox '.$row['id'].'_group">Pic</a>';
                 } else {
-                    $dataInfo .= '<div style="display: none"><a class="fancybox" href="img/images/'.$row['siteCode'].'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox '.$row['id'].'_group" >Pic</a></div>';
+                    $dataInfo .= '<div style="display: none"><a class="fancybox" href="images/'.$row['siteCode'].'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox '.$row['id'].'_group" >Pic</a></div>';
                 }
                 $imgCnt++;
             }
@@ -125,7 +128,13 @@ $(document).ready(function(){
         openEffect: "none",
         closeEffect: "none"
     });
+	$(".dcd-expand-text").click(function(){
+		$("#dcd-short-"+$(this).data("id")).slideToggle("slow");
+		$("#dcd-content-"+$(this).data("id")).slideToggle("slow");
+		return false;
+	});
 });
+
 </script>';
 
 $mainContent = <<<EOS

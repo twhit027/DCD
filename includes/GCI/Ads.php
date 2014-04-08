@@ -1,6 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
+ * Created by DCDGroup.
  * User: JHICKS
  * Date: 3/15/14
  * Time: 4:25 PM
@@ -59,7 +59,7 @@ class Ads
     {
         $data ="<!-- ia-desmoines-C1150/728x90_2/classifieds/main -->
 		<div style='text-align:center;'>
-		<div id='div-gpt-ad-1395329372590-1'  text-align:center;'>
+		<div id='div-gpt-ad-1395329372590-1'>
 		<script type='text/javascript'>
 		googletag.cmd.push(function() { googletag.display('div-gpt-ad-1395329372590-1'); });
 		</script>

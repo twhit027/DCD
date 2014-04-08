@@ -290,7 +290,7 @@ class ClassifiedsAdmin extends PDO
 
         try {
             $startDate = date("Y-m-d");
-            $sql = "INSERT into `position` (Placement, Position, SiteCode, ExternalURL, Count ) SELECT Placement, Position, SiteCode, ExternalURL, count( * ) FROM listing WHERE StartDate >= '$startDate' GROUP BY Placement, Position, SiteCode";
+            $sql = "INSERT into `position` (Placement, Position, SiteCode, ExternalURL, Count ) SELECT Placement, Position, SiteCode, ExternalURL, count( * ) FROM listing WHERE StartDate <= '$startDate' GROUP BY Placement, Position, SiteCode";
             $stmt = $this->prepare($sql);
             $stmt->execute();
         } catch (PDOException $e) {
@@ -346,16 +346,19 @@ class ClassifiedsAdmin extends PDO
 
             $latlon = $this->getLocation($address);
 
-            if ($latlon !== false) {
-                try {
-                    $stmt = $this->prepare("UPDATE `listing` SET `Lat` = :lat, `Long` = :lon WHERE `ID` = :id ");
-                    $stmt->execute(array(":lat" => $latlon['lat'], ":lon" => $latlon['lon'], ":id" => $row['ID']));
-                } catch (PDOException $e) {
-                    $logText = "Message:(" . $e->getMessage() . ") Updating listing, adding Long and Lat for ".$row['ID'];
-                    fwrite(STDERR, $logText . "\n");
-                    $return = 14;
-                }
+            if ($latlon === false) {
+				$latlon['lat'] = '';
+				$latlon['lon'] = '';
             }
+			
+			try {
+				$stmt = $this->prepare("UPDATE `listing` SET `Lat` = :lat, `Long` = :lon, `ExternalURL` = '1' WHERE `ID` = :id ");
+				$stmt->execute(array(":lat" => $latlon['lat'], ":lon" => $latlon['lon'], ":id" => $row['ID']));
+			} catch (PDOException $e) {
+				$logText = "Message:(" . $e->getMessage() . ") Updating listing, adding Long and Lat for ".$row['ID'];
+				fwrite(STDERR, $logText . "\n");
+				$return = 14;
+			}
 
             //Slow this down so we don't run into problems with Google's Geocoding limits
             sleep(1);
@@ -385,8 +388,8 @@ foreach ($fileArray as $file) {
 }
 
 $user->deleteOldListings();
-$user->buildNav();
 $user->updateGeocodes();
+$user->buildNav();
 
 exit($return);
 ?>

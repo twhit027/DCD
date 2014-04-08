@@ -18,7 +18,7 @@ $position = urldecode($_REQUEST['posit']);
 
 $listings = $app->getSingleListing($id);
 
-$cleanAdText = stripTags($listings['adText']);
+$cleanAdText = strip_tags($listings['adText']);
 
 $metadata = '
 <title>'.substr($listings['adText'], 0, 70).'</title>
@@ -30,7 +30,7 @@ $metadata = '
 function convertImages($listingResults) {
     //<imgp src="0000005351-01-1.jpg">
     //<img src="0000005351-01-1.jpg">
-    return preg_replace('/src="([^"]*)"/i', 'src="img/images/'.$listingResults['SiteCode'].'/${1}"', $listingResults['adText']);
+    return preg_replace('/src="([^"]*)"/i', 'src="img/images/'.$listingResults['siteCode'].'/${1}"', $listingResults['adText']);
 }
 
 $data = " <div class='jumbotron' ><p>" . convertImages($listings) . "</p>";
