@@ -51,6 +51,17 @@ if(isset($metadata))
 	<?php if(!empty($googleApiScript)){ echo $googleApiScript; } ?>
 </head>
 <body>
+<!--[if lt IE 8]>
+<div class="browser-warning-container">
+    <div class="browser-warning">
+        <h2 class="heading">oops!</h2>
+        <p>
+            It appears that your version of Internet Explorer is out of date.<br>
+            <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> for a better sitewide experience.
+        </p>
+    </div>
+</div>
+<![endif]-->
 <header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
     <div class="container">
         <?php

@@ -21,20 +21,28 @@ class App
     private $deviceType;
     private $log;
 
-    function __construct($siteCode = '')
+    function __construct($siteCode = '', $logDir = '')
     {
-        $this->database = new Database();
+        $this->database = new Database($logDir);
 
         $this->detectDevice();
 
         if (empty($siteCode)) {
             $this->setSiteFromDomain();
-
         } else {
             $this->setSiteFromSiteCode($siteCode);
         }
         $this->setCategories();
-        $this->log = \KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
+
+        if (empty($logDir)) {
+            $logDir = LOGGING_DIR;
+        }
+        $this->setLog($logDir);
+    }
+
+    public function setLog($logDir = LOGGING_DIR, $logLevel = LOGGING_LEVEL)
+    {
+        $this->log = \KLogger::instance($logDir, $logLevel);
     }
 
     private function detectDeviceOld()
