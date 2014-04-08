@@ -6,6 +6,8 @@ include('../conf/version.php');
 
 $log   = KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
 
+use GCI\App;
+
 $connectionStatus = 'Passed';
 $queryStatus = 'Passed';
 $connBgColor = '#00FF00';
@@ -42,14 +44,6 @@ if ($queryStatus == 'Failed') {
 $log->logInfo('status Page');
 $log->logInfo('Connection Status: '. $connectionStatus);
 $log->logInfo('Query Status: '. $queryStatus);
-
-$default_opts = array(
-    'http'=>array(
-        'timeout'=>"5"
-    )
-);
-
-$default = stream_context_set_default($default_opts);
 
 function url_exists($url) {
     $headers = @get_headers($url);
@@ -246,16 +240,23 @@ function getSubDomain ($domain) {
             <td style="width:10px"></td>
             <td class="small"><?php echo $_SERVER['CONTEXT_DOCUMENT_ROOT'];?></td>
         </tr>
-        <tr class="headlin">
-            <td colspan="3">All sub-domains</td>
-        </tr>
         <?php
+
+        if (!empty($_GET['dns'])) {
+            $default_opts = array(
+                'http'=>array(
+                    'timeout'=>"5"
+                )
+            );
+
+            $default = stream_context_set_default($default_opts);
+            echo '<tr class="headlin"><td colspan="3">All sub-domains</td></tr>';
             foreach($siteInfoArray as $siteInfo) {
-                $subDomain = 'classifieds';
-                /*$host = App::getHost();
+                //$subDomain = 'classifieds';
+                $host = App::getHost();
                 if (!empty($host)) {
                     $subDomain = getSubDomain($host);
-                }*/
+                }
                 $siteUrl = 'http://'.$subDomain.'.'.$siteInfo['Domain'];
                 $siteStatus = 'Failed';
                 if (url_exists($siteUrl)) {
@@ -263,6 +264,7 @@ function getSubDomain ($domain) {
                 }
                 echo '<tr><td class="smallbold">'.$siteUrl.'</td><td style="width:10px"></td><td class="small">'.$siteStatus.'</td></tr>';
             }
+        }
         ?>
     </table>
 </div>
