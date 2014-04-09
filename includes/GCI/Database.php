@@ -14,7 +14,7 @@ class Database extends \PDO
     private $con = false;
     private $log;
 
-    public function __construct($logDir = '')
+    public function __construct()
     {
         try {
             $this->connection_string = 'mysql:dbname=' . DB_NAME . ';host=' . DB_HOST . ';port=' . DB_PORT . ';charset=utf8';
