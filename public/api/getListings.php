@@ -2,8 +2,8 @@
 /**
  * Created by DCDGroup.
  * User: JHICKS
- * Date: 4/7/14
- * Time: 5:38 PM
+ * Date: 3/23/14
+ * Time: 3:23 PM
  */
 
 error_reporting(0);
@@ -19,14 +19,33 @@ include('../../includes/GCI/Ads.php');
 
 $app = new \GCI\App();
 
-$placement = $position = '';
+//$content = new Content();
+$page = 1;
+$fullText = $placement = $position = '';
 
+if (isset($_REQUEST['page'])) {
+    $page = urldecode($_REQUEST['page']);
+}
+if (isset($_REQUEST['ft'])) {
+    $fullText = urldecode($_REQUEST['ft']);
+}
 if (isset($_REQUEST['place'])) {
     $placement = urldecode($_REQUEST['place']);
 }
 if (isset($_REQUEST['posit'])) {
     $position = urldecode($_REQUEST['posit']);
 }
+$search = "";
+if(isset($_REQUEST['sites']))
+{
+    $sitegroup = urldecode($_REQUEST['sites']);
+    $listings = $app->getListings($placement, $position, $page, $sitegroup);
+}
+else
+{
+    $listings = $app->getListings($placement, $position, $page, '', $fullText);
+}
 
 header('Content-Type: application/json');
-echo json_encode($app->getCategories());
+echo json_encode($listings);
+
