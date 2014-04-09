@@ -6,6 +6,8 @@
  * Time: 5:38 PM
  */
 
+error_reporting(0);
+
 include('../../vendor/klogger/KLogger.php');
 include('../../vendor/Mobile_Detect/Mobile_Detect.php');
 include('../../conf/constants.php');
