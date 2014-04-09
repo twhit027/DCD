@@ -58,7 +58,7 @@ EOS;
 $mainContent = <<<EOS
 	<ol class="breadcrumb">
 		<li><a href="./">Home</a></li>
-		<li><a href="map.php?place=$place&position=$position">$place</a></li>
+		<li><a href="map.php?place=$place&posit=$position">$place</a></li>
 		<li class="active">$position Directions</li>
 	</ol>
 	
