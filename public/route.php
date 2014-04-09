@@ -13,7 +13,7 @@ $app = new \GCI\App();
 $app->logInfo('Directions Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].', REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].',HTTP_HOST: '.@$_SERVER['HTTP_HOST'].'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].')');
 
 $place = $_POST['place'];
-$position = $_POST['position'];
+$position = $_POST['posit'];
 $route = $_POST['locations'];
 $listOfRummages = $app->getRummages($place,$position,$route);
 $mapPoints = json_encode($listOfRummages['map']);
