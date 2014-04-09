@@ -21,9 +21,9 @@ class App
     private $deviceType;
     private $log;
 
-    function __construct($siteCode = '', $logDir = '')
+    function __construct($siteCode = '')
     {
-        $this->database = new Database($logDir);
+        $this->database = new Database();
 
         $this->detectDevice();
 
