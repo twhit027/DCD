@@ -107,7 +107,7 @@ else
             $dataInfo .= '<a href="#" style="color:#00881A;">Map</a>';
         }
         $dataInfo .= '</div>';
-        $data .= "<div class='jumbotron' style='padding-top: 30px;'>";
+        $data .= "<div class='jumbotron' style='padding-top: 30px; word-wrap: break-word;'>";
         $data .= "$dataInfo";
 		$data .= "<p>" . $string . "</p>";
 		$data .= '<a class="btn btn-primary" href="http://twitter.com/home?status=' . substr($row['adText'], 0, 120) . '" target="_blank"><img src="img/twitter1.png" /></a>';
