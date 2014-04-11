@@ -48,7 +48,7 @@ $data = <<<EOS
 <br>
 <form action="route.php" method="post" onsubmit="mapRoute();" class="form-horizontal" role="form">
 	<input type="hidden" name="place" value="$place" />
-	<input type="hidden" name="position" value="$position" />
+	<input type="hidden" name="posit" value="$position" />
 	<input type="hidden" id="locations" name="locations" value="" />
 	<div id="map-it">
 		<div class="form-group">
