@@ -278,7 +278,8 @@ class App
                     'siteCode' => $row['SiteCode'],
                     'images' => $row['Images'],
                     'position' => $row['Position'],
-                    'placement' => $row['Placement']
+                    'placement' => $row['Placement'],
+					'externalURL' => $row['ExternalURL']
                 );
             }
 

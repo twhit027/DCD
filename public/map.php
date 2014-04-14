@@ -15,9 +15,22 @@ $app->logInfo('Map Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].', RE
 $place = $_GET['place'];
 $position = $_GET['posit'];
 $listOfRummages = $app->getRummages($place,$position);
+if(isset($_GET['ad']) && !empty($_GET['ad'])) {
+    $showcase = $_GET['ad'];
+	$listOfRummages['map'][$showcase]['showcase'] = true;
+}
 $mapPoints = json_encode($listOfRummages['map']);
 $rummages = $listOfRummages['list'];
 $rummageList = '';
+if(!empty($showcase) && !empty($rummages[$showcase])){
+	$rummageList .= "
+	<tr id='dcd-showcase'>
+		<td><input type='button' value='Add' onclick=\"visit(this,'".$showcase."');\" class='add btn btn-default' /></td>
+		<td>".$rummages[$showcase]["adText"]."</td>
+	</tr>
+	";
+	unset($rummages[$showcase]);
+}
 foreach($rummages as $k=>$v){
 	$rummageList .= "
 	<tr>
