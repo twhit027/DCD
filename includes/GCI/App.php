@@ -102,6 +102,9 @@ class App
 
         $siteGroupString = $this->createSiteGroupString($siteGroup);
 
+        $sql = "SELECT * FROM `listing` WHERE Placement = :place AND Position = :position AND StartDate <= :startDate AND SiteCode IN ( " . $siteGroupString . " )";
+        $params = array(':place' => $place, ':position' => $position, ':startDate' => date("Y-m-d") );
+
         if (!empty($route)) {
             $routeIDS = explode(",", $route);
             $rts = array();
@@ -112,13 +115,10 @@ class App
                 $c++;
             }
             $route = implode(",", $rts['string']);
-            $sql = "SELECT * FROM `listing` WHERE Placement = :place AND Position = :position AND SiteCode IN ( " . $siteGroupString . " ) AND ID IN ( " . $route . " )";
-            $params = array(':place' => $place, ':position' => $position);
+            $sql .= " AND ID IN ( " . $route . " )";
             $params = array_merge($params, $rts['params']);
-        } else {
-            $sql = "SELECT * FROM `listing` WHERE Placement = :place AND Position = :position AND SiteCode IN ( " . $siteGroupString . " )";
-            $params = array(':place' => $place, ':position' => $position);
         }
+
         $results = $this->database->getAssoc($sql, $params);
 
         $dataArray = array();
