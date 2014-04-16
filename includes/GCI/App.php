@@ -233,6 +233,23 @@ class App
         $this->categories = $categoriesArray;
     }
 
+    function getSitemap()
+    {
+        $siteGroupString = $this->createSiteGroupString($this->getSite()->getSiteGroup());
+
+        $sql = "SELECT LEFT(AdText,50) AS ATEXT, ID, Placement, Position, ExternalURL FROM `listing` WHERE SiteCode in( $siteGroupString )";
+        $params = array();
+
+        $results = $this->database->getAssoc($sql, $params);
+
+        $sitemap = array();
+        foreach ($results as $row) {
+            @$sitemap[$row['Placement']][$row['Position']][$row['ExternalURL']][] = array("id"=>$row['ID'],"adText"=>$row['ATEXT']);
+        }
+
+        return $sitemap;
+    }
+
     function getListings($placement = '', $position = '', $page = 1, $siteGroup = '', $fullText = '')
     {
         if ($siteGroup == '') {
