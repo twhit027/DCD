@@ -38,7 +38,7 @@ class Navigation {
 				}
 				else
 				{
-                	$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?place='.urlencode($placement).'&posit='.urlencode($position).'" title="Title">'.$position.'('.$vals['count'].')</a>';
+                	$data .='<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="category.php?place='.urlencode($placement).'&posit='.urlencode($position).'" title="Title">'.$position.' <span class="badge">'.$vals['count'].'</span></a>';
 				}
 				
             }
@@ -46,7 +46,6 @@ class Navigation {
 
             $data .='</li>';
         }
-
 
         return $data;
     }
