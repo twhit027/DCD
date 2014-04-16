@@ -2,21 +2,32 @@
 function initializeMap() {
 	var lat_avg = 0.0,
 		lon_avg = 0.0,
-		count = 0;
+		count = 0,
+		no_showcase = true;
 	
 	for(x in DCDMAPGLOBAL.points){
-		lat_avg += parseFloat(DCDMAPGLOBAL.points[x].lat);
-		lon_avg += parseFloat(DCDMAPGLOBAL.points[x].lon);
-		count++;
+		if(DCDMAPGLOBAL.points[x].showcase != true){
+			lat_avg += parseFloat(DCDMAPGLOBAL.points[x].lat);
+			lon_avg += parseFloat(DCDMAPGLOBAL.points[x].lon);
+			count++;
+		}
+		else{
+			lat_avg = DCDMAPGLOBAL.points[x].lat;
+			lon_avg = DCDMAPGLOBAL.points[x].lon;
+			no_showcase = false;
+			break;
+		}
 	}
-	if(lat_avg != 0.0)
-		lat_avg = lat_avg/count;
-	else
-		lat_avg = 38.93206;
-	if(lon_avg != 0)
-		lon_avg = lon_avg/count;
-	else
-		lon_avg = -77.2191306;
+	if(no_showcase){
+		if(lat_avg != 0.0)
+			lat_avg = lat_avg/count;
+		else
+			lat_avg = 38.93206;
+		if(lon_avg != 0)
+			lon_avg = lon_avg/count;
+		else
+			lon_avg = -77.2191306;
+	}
 	
 	var latlng = new google.maps.LatLng(lat_avg,lon_avg),
 		myOptions = {
@@ -46,6 +57,10 @@ function createMarker(point){
 	google.maps.event.addListener(marker, 'click', function() {
 		infowindow.open(DCDMAPGLOBAL.map,marker);
 	});
+	
+	if(point.showcase == true){
+		infowindow.open(DCDMAPGLOBAL.map,marker);
+	}
 }
 // Google Maps Scripts
 
