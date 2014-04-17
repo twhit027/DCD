@@ -63,6 +63,7 @@ $data = <<<EOS
 	<input type="hidden" name="place" value="$place" />
 	<input type="hidden" name="posit" value="$position" />
 	<input type="hidden" id="locations" name="locations" value="" />
+	<p>Please enter a starting address and select up to 8 places to visit, then click on 'Map Route'.</p>
 	<div id="map-it">
 		<div class="form-group">
 			<label for="Address" class="col-sm-2 control-label">Address</label>
@@ -98,7 +99,7 @@ $data = <<<EOS
 		</div>
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
-				<button type="submit" class="btn btn-default">Map Route</button>
+				<button type="submit" id="dcd-route" class="btn btn-default">Map Route</button>
 			</div>
 		</div>
 	</div>
