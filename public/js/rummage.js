@@ -2,21 +2,32 @@
 function initializeMap() {
 	var lat_avg = 0.0,
 		lon_avg = 0.0,
-		count = 0;
+		count = 0,
+		no_showcase = true;
 	
 	for(x in DCDMAPGLOBAL.points){
-		lat_avg += parseFloat(DCDMAPGLOBAL.points[x].lat);
-		lon_avg += parseFloat(DCDMAPGLOBAL.points[x].lon);
-		count++;
+		if(DCDMAPGLOBAL.points[x].showcase != true){
+			lat_avg += parseFloat(DCDMAPGLOBAL.points[x].lat);
+			lon_avg += parseFloat(DCDMAPGLOBAL.points[x].lon);
+			count++;
+		}
+		else{
+			lat_avg = DCDMAPGLOBAL.points[x].lat;
+			lon_avg = DCDMAPGLOBAL.points[x].lon;
+			no_showcase = false;
+			break;
+		}
 	}
-	if(lat_avg != 0.0)
-		lat_avg = lat_avg/count;
-	else
-		lat_avg = 38.93206;
-	if(lon_avg != 0)
-		lon_avg = lon_avg/count;
-	else
-		lon_avg = -77.2191306;
+	if(no_showcase){
+		if(lat_avg != 0.0)
+			lat_avg = lat_avg/count;
+		else
+			lat_avg = 38.93206;
+		if(lon_avg != 0)
+			lon_avg = lon_avg/count;
+		else
+			lon_avg = -77.2191306;
+	}
 	
 	var latlng = new google.maps.LatLng(lat_avg,lon_avg),
 		myOptions = {
@@ -46,6 +57,10 @@ function createMarker(point){
 	google.maps.event.addListener(marker, 'click', function() {
 		infowindow.open(DCDMAPGLOBAL.map,marker);
 	});
+	
+	if(point.showcase == true){
+		infowindow.open(DCDMAPGLOBAL.map,marker);
+	}
 }
 // Google Maps Scripts
 
@@ -95,11 +110,57 @@ function visit(obj, id){
 	else{
 		alert("Sorry! We can only map 8 items at a time");
 	}
+	if(locations.selected > 0){
+		updateButton('moreThanOneRoute',true);
+	}
+	else{
+		updateButton('moreThanOneRoute',false);
+	}
 }
 function mapRoute(){
 	document.getElementById('locations').value = locations.list;
 }
+var allowDirections = {
+	moreThanOneRoute : false,
+	address : false,
+	city : false,
+	zip : false
+}
+function updateButton (value, toggle){
+	if(value == "moreThanOneRoute"){
+		allowDirections.moreThanOneRoute = toggle;
+	}
+	else if(value == "address"){
+		allowDirections.address = toggle;
+	}
+	else if(value == "city"){
+		allowDirections.city = toggle;
+	}
+	else if(value == "zip"){
+		allowDirections.zip = toggle;
+	}
+	
+	if(allowDirections.moreThanOneRoute && allowDirections.address && allowDirections.city && allowDirections.zip){
+		$("#dcd-route").removeAttr("disabled");
+	}
+	/*if(allowDirections.moreThanOneRoute){
+		$("#dcd-route").removeAttr("disabled");
+	}*/
+	else{
+		$("#dcd-route").attr("disabled","disabled");
+	}
+}
+function toggleState (_this){
+	if(!_this.val()){
+		updateButton(_this.attr('name'),false);
+	}
+	else{
+		updateButton(_this.attr('name'),true);
+	}
+}
 
 $(document).ready(function(){
 	initializeMap();
+	$("#dcd-route").attr("disabled","disabled");
+	$(".form-control").change(function() { toggleState($(this)); });
 });

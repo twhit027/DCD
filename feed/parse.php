@@ -189,13 +189,6 @@ class ClassifiedsAdmin extends PDO
                 $return = 2;
             }
 
-            if (preg_match_all('/([^\s]{30,})/', $userData[$i]["AD-TEXT"], $longMatches)) {
-                foreach($longMatches[1] as $longWord) {
-                    $longWordChunks = chunk_split($longWord, 29, ' ');
-                    $userData[$i]["AD-TEXT"] = str_replace($longWord, $longWordChunks, $userData[$i]["AD-TEXT"]);
-                }
-            }
-
             try {
                 $stmt = $this->prepare("INSERT INTO `listing` (`ID`, `StartDate`, `EndDate`, `Placement`,`Position`, `AdText`, `Images`, `SiteCode`, `Street`, `City`, `State`, `Zip`, `ExternalURL`) VALUES(:ID, :StartDate, :EndDate, :Placement, :Position, :AdText, :Images, :Site, :Street, :City, :State, :Zip, :ExternalURL)");
                 $stmt->execute(array(':ID' => $userData[$i]["AD"], ':StartDate' => $userData[$i]["START-DATE"], ':EndDate' => $userData[$i]["END-DATE"], ':Placement' => $userData[$i]["PLACEMENT"], ':Position' => $userData[$i]["POSITION"], ':AdText' => $userData[$i]["AD-TEXT"], ':Images'=> $imagesCSV,':Site' => $site, ':Street' => $userData[$i]["STREET"], ':City' => $userData[$i]["CITY"], ':State' => $userData[$i]["STATE"], ':Zip' => $userData[$i]["ZIP"], ':ExternalURL' => $userData[$i]["EXTERNAL"]));
