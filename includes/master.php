@@ -12,8 +12,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
+ <?php   
+if(isset($metadata))
+{ 
+ echo $metadata; 
+}
+ ?>
+
     <link rel="shortcut icon" href="img/ico/favicon-16x16.png">
     <link rel="apple-touch-icon" sizes="57x57" href="img/ico/apple-touch-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="114x114" href="img/ico/apple-touch-icon-114x114.png">
@@ -31,9 +36,8 @@
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="msapplication-TileImage" content="/mstile-144x144.png">
     <style type="text/css">
-    body {
-    min-width: 10px !important;
-        }
+    body {min-width: 10px !important;}
+    .gallery{display: inline-block;margin-top: 20px;}
     </style>
 
     <link href="3rdParty/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -47,6 +51,17 @@
 	<?php if(!empty($googleApiScript)){ echo $googleApiScript; } ?>
 </head>
 <body>
+<!--[if lt IE 8]>
+<div class="browser-warning-container">
+    <div class="browser-warning">
+        <h2 class="heading">oops!</h2>
+        <p>
+            It appears that your version of Internet Explorer is out of date.<br>
+            <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> for a better sitewide experience.
+        </p>
+    </div>
+</div>
+<![endif]-->
 <header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
     <div class="container">
         <?php
@@ -70,13 +85,24 @@
         <?php
             include('../includes/toggle.php');
             $ads = new \GCI\Ads();
-            echo $ads->InitializeAds();
+            echo $ads->InitializeAds($app->getSite()->getDFP(), $app->getSite()->getDFPmobile());
         ?>
     </div>
 </header>
+<div style="padding-top:60px;">
 <?php
-echo $ads->getLaunchpad();
+$device =  $app->getDeviceType();
+if($device =="computer")
+{
+	echo $ads->getLaunchpad();
+}
+else if($device =="phone")
+{
+	echo $ads->getMobileBannerTop();
+}
+
 ?>
+</div>
 <div class="container">
     <div class="row" style="background-color:#FFF;">
         <div class="col-xs-11 col-sm-8">
@@ -92,7 +118,7 @@ echo $ads->getLaunchpad();
                         <input id="fullTextBox" type="text" name="search" class="form-control" value="<?php echo $fullText; ?>">
                         <span class="input-group-btn">
                             <a id="ftSearch" class="btn btn-primary" style="vertical-align: bottom;"><img src="img/white-magnifying-glass-20.png"></a>
-                            <a id="ftSearchAdv" class="btn btn-primary" style="vertical-align: bottom;">+</a>
+                           
                         </span>
 				    </div>
                     <h3 style="color:#3276B1;">Or Select A Category</h3>
@@ -101,14 +127,32 @@ echo $ads->getLaunchpad();
                     </ul>
                 </div>
                 <div style="padding:10px">
-                    <?php echo $ads->getFlex(); ?>
+                    <?php 
+							if($device =="computer")
+							{
+								echo $ads->getFlex();
+							}
+					?>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <?php
-echo $ads->getLeaderBottom();
+
+if($device =="computer")
+{
+	echo $ads->getLeaderBottom();
+}
+else if($device =="phone")
+{
+	echo $ads->getMobileBannerBottom();
+}
+else if($device == "tablet")
+{
+ 	echo $ads->getLandscapeInterstitial();	
+}
+
 //include('../includes/tracking.php');
 ?>
 <footer class="footer">
@@ -124,12 +168,12 @@ echo $ads->getLeaderBottom();
             ft = $("#fullTextBox").val().trim();
             place='';
             posit='';
-            if ($('#place').val()) {
+            /*if ($('#place').val()) {
                 place= $('#place').val();
             }
             if ($('#place').val()) {
                 posit= $('#posit').val();
-            }
+            }*/
             window.location.href = 'category.php?place='+encodeURIComponent(place)+'&posit='+encodeURIComponent(posit)+'&ft='+encodeURIComponent(ft);
         });
 
@@ -140,5 +184,6 @@ echo $ads->getLeaderBottom();
     });
 </script>
 <?php if(!empty($masterBottom)){ echo $masterBottom; } ?>
+<?php include("../includes/tracking.php"); ?>
 </body>
 </html>

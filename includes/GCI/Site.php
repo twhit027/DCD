@@ -1,6 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
+ * Created by DCDGroup.
  * User: JHICKS
  * Date: 3/15/14
  * Time: 4:23 PM
@@ -30,7 +30,10 @@ class Site {
     private $siteGroup;
     private $city;
     private $state;
-
+    private $dfp;
+    private $dfpm;
+	private $gpaper;
+	
     public function __construct($data = '') {
         if (isset($data)) {
             $this->setSiteData($data);
@@ -47,6 +50,9 @@ class Site {
         $this->siteGroup = $data['SiteGroup'];
         $this->city = $data['City'];
         $this->state = $data['State'];
+		$this->dfp = $data['DFP'];
+		$this->dfpm = $data['DFPmobile'];
+		$this->gpaper = $data['Gpaper'];
     }
 
     public function getSiteCode() {
@@ -72,4 +78,19 @@ class Site {
     public function getSiteGroup() {
         return $this->siteGroup;
     }
+	
+	public function getDFP() {
+        return $this->dfp;
+    }
+
+    public function getDFPmobile() {
+        return $this->dfpm;
+    }
+	
+	public function getGpaper() {
+        return $this->gpaper;
+    }
+	
+	
+	
 } 

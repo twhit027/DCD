@@ -2,9 +2,11 @@
 /**
  * Created by DCDGroup.
  * User: JHICKS
- * Date: 3/23/14
- * Time: 3:23 PM
+ * Date: 4/7/14
+ * Time: 5:38 PM
  */
+
+error_reporting(0);
 
 include('../../vendor/klogger/KLogger.php');
 include('../../vendor/Mobile_Detect/Mobile_Detect.php');
@@ -17,7 +19,14 @@ include('../../includes/GCI/Ads.php');
 
 $app = new \GCI\App();
 
+$placement = $position = '';
 
+if (isset($_REQUEST['place'])) {
+    $placement = urldecode($_REQUEST['place']);
+}
+if (isset($_REQUEST['posit'])) {
+    $position = urldecode($_REQUEST['posit']);
+}
 
-$query = $_REQUEST['q'];
-
+header('Content-Type: application/json');
+echo json_encode($app->getCategories());

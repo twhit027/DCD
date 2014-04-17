@@ -24,15 +24,25 @@ class App
     function __construct($siteCode = '')
     {
         $this->database = new Database();
+
         $this->detectDevice();
+
         if (empty($siteCode)) {
-          $this->setSiteFromDomain();
-            
+            $this->setSiteFromDomain();
         } else {
-        	$this->setSiteFromSiteCode($siteCode);
+            $this->setSiteFromSiteCode($siteCode);
         }
         $this->setCategories();
-        $this->log = \KLogger::instance(LOGGING_DIR, LOGGING_LEVEL);
+
+        if (empty($logDir)) {
+            $logDir = LOGGING_DIR;
+        }
+        $this->setLog($logDir);
+    }
+
+    public function setLog($logDir = LOGGING_DIR, $logLevel = LOGGING_LEVEL)
+    {
+        $this->log = \KLogger::instance($logDir, $logLevel);
     }
 
     private function detectDeviceOld()
@@ -91,40 +101,41 @@ class App
         }
 
         $siteGroupString = $this->createSiteGroupString($siteGroup);
-		
-		if(!empty($route)){
-			$routeIDS = explode(",",$route);
-			$rts = array();
-			$c = 1;
-			foreach($routeIDS as $r){
-				$rts['string'][$c] = ':r'.$c;
-				$rts['params'][':r'.$c] = $r;
-				$c++;
-			}
-			$route = implode(",",$rts['string']);
-	        $sql = "SELECT * FROM `listing` WHERE Placement = :place AND Position = :position AND SiteCode IN ( ".$siteGroupString." ) AND ID IN ( ".$route." )";
-        	$params = array(':place' => $place, ':position' => $position);
-			$params = array_merge($params, $rts['params']);
-		}
-		else{
-	        $sql = "SELECT * FROM `listing` WHERE Placement = :place AND Position = :position AND SiteCode IN ( ".$siteGroupString." )";
-        	$params = array(':place' => $place, ':position' => $position);
-		}
+
+        $sql = "SELECT * FROM `listing` WHERE Placement = :place AND Position = :position AND StartDate <= :startDate AND SiteCode IN ( " . $siteGroupString . " )";
+        $params = array(':place' => $place, ':position' => $position, ':startDate' => date("Y-m-d") );
+
+        if (!empty($route)) {
+            $routeIDS = explode(",", $route);
+            $rts = array();
+            $c = 1;
+            foreach ($routeIDS as $r) {
+                $rts['string'][$c] = ':r' . $c;
+                $rts['params'][':r' . $c] = $r;
+                $c++;
+            }
+            $route = implode(",", $rts['string']);
+            $sql .= " AND ID IN ( " . $route . " )";
+            $params = array_merge($params, $rts['params']);
+        }
+
         $results = $this->database->getAssoc($sql, $params);
-		
+
         $dataArray = array();
         //$dataArray['totalRows'] = $this->database->getCount("SELECT FOUND_ROWS()");
 
         foreach ($results as $row) {
-            $dataArray['list'][$row['ID']] = array('adText' => $row['AdText']);
-			$dataArray['map'][$row['ID']] = array(
-				"street"=>$row['Street'],
-				"city"=>$row['City'],
-				"state"=>$row['State'],
-				"zip"=>$row['Zip'],
-				"lat"=>$row['Lat'],
-				"lon"=>$row['Long']
-			);
+			if(!empty($row['Street']) && !empty($row['Lat']) && !empty($row['Long'])){
+				$dataArray['list'][$row['ID']] = array('adText' => $row['AdText']);
+				$dataArray['map'][$row['ID']] = array(
+					"street" => $row['Street'],
+					"city" => $row['City'],
+					"state" => $row['State'],
+					"zip" => $row['Zip'],
+					"lat" => $row['Lat'],
+					"lon" => $row['Long']
+				);
+			}
         }
 
         $this->rummages = $dataArray;
@@ -139,7 +150,7 @@ class App
 
         // probably serve up a 404
         if (empty($data)) {
-            $data = $this->getDefaultSiteData();
+            header("Location: ./err/error404.php");
         }
 
         $this->setSite(new Site($data[0]));
@@ -157,7 +168,7 @@ class App
 
         // probably serve up a 404
         if (empty($data)) {
-            $data = $this->getDefaultSiteData();
+            header("Location: ./err/error404.php");
         }
 
         $this->setSite(new Site($data[0]));
@@ -214,10 +225,29 @@ class App
 
         $categoriesArray = array();
         foreach ($results as $row) {
-            @$categoriesArray[$row['Placement']][$row['Position']] += $row['Count'];
+            @$categoriesArray[$row['Placement']][$row['Position']]['count'] += $row['Count'];
+			@$categoriesArray[$row['Placement']][$row['Position']]['url'] = $row['ExternalURL'];
+
         }
 
         $this->categories = $categoriesArray;
+    }
+
+    function getSitemap()
+    {
+        $siteGroupString = $this->createSiteGroupString($this->getSite()->getSiteGroup());
+
+        $sql = "SELECT LEFT(AdText,50) AS ATEXT, ID, Placement, Position, ExternalURL FROM `listing` WHERE SiteCode in( $siteGroupString )";
+        $params = array();
+
+        $results = $this->database->getAssoc($sql, $params);
+
+        $sitemap = array();
+        foreach ($results as $row) {
+            @$sitemap[$row['Placement']][$row['Position']][$row['ExternalURL']][] = array("id"=>$row['ID'],"adText"=>$row['ATEXT']);
+        }
+
+        return $sitemap;
     }
 
     function getListings($placement = '', $position = '', $page = 1, $siteGroup = '', $fullText = '')
@@ -236,7 +266,8 @@ class App
                 $sql .= ", MATCH(adText) AGAINST('$fullText') AS score";
             }
 
-            $sql .= " FROM `listing` where siteCode in ( $siteGroupString ) ";
+            $sql .= " FROM `listing` where StartDate <= :startDate and siteCode in ( $siteGroupString ) ";
+            $params[':startDate'] = date("Y-m-d");
 
             if (!empty($placement)) {
                 $sql .= ' and placement = :placement';
@@ -258,7 +289,15 @@ class App
             $dataArray['totalRows'] = $this->database->getCount("SELECT FOUND_ROWS()");
 
             foreach ($results as $row) {
-                $dataArray['results'][] = array('id' => $row['ID'], 'adText' => $row['AdText']);
+                $dataArray['results'][] = array(
+                    'id' => $row['ID'],
+                    'adText' => $row['AdText'],
+                    'siteCode' => $row['SiteCode'],
+                    'images' => $row['Images'],
+                    'position' => $row['Position'],
+                    'placement' => $row['Placement'],
+					'externalURL' => $row['ExternalURL']
+                );
             }
 
             $this->listings = $dataArray;
@@ -267,20 +306,20 @@ class App
         return $this->listings;
     }
 
-    public
-    function getSingleListing($id)
+    public function getSingleListing($id)
     {
-        $sql = "SELECT ID, AdText FROM `listing` where ID = :id";
+        $sql = "SELECT ID, AdText, SiteCode FROM `listing` where ID = :id";
         $params = array(':id' => $id);
         $results = $this->database->getAssoc($sql, $params);
 
         $retArray['id'] = $results[0]['ID'];
         $retArray['adText'] = $results[0]['AdText'];
+        $retArray['siteCode'] = $results[0]['SiteCode'];
 
         return $retArray;
     }
 
-    function getHost()
+    public static function getHost()
     {
         if ($host = @$_SERVER['HTTP_X_FORWARDED_HOST']) {
             $elements = explode(',', $host);
@@ -302,11 +341,10 @@ class App
     {
         $this->log->logInfo($logText);
     }
-	function getSearch($siteGroup= '')
-	{
-		
-		
-		$data="<script>
+
+    function getSearch($siteGroup = '')
+    {
+        $data = "<script>
 		window.onload=function(){
 			
 			$('#searchform')[0].reset();
@@ -358,119 +396,94 @@ class App
 
 		}
 		 </script>";
-		 
-		 
-		if ($siteGroup == '') {
+
+        if ($siteGroup == '') {
             $siteGroup = $this->site->getSiteGroup();
         }
-		
-		
-		$siteArray = explode(',', $siteGroup);
-        
-        
-		
-		
-		$results = $this->database->prepare("SELECT DISTINCT (Placement) from `position`");
-		$results->execute();	
-		$end = "";	
-		$data .="<form action='category.php' method='get' id='searchform' role='form' class='form-horizontal'>";
-		$data.= "<select id='placement' name='place' class='form-control'>";
-		$data.=  "<option >Pick A Category</option>";
-		foreach ($results as $row) 
-		{
-			$data.=  "<option value='".$row['Placement']."'>".$row['Placement']."</option>";
-			$end .=  $this->getSearchSubcats($row['Placement']);
-		}
-		$data.= "</select>";
-		$data.= $end;
-		$data.= $this->getSites($siteArray);
-		$data.="<br /><input type='submit' class='btn btn-primary' value='Search'>";
-		
-		
-		
-		
-		$data.='<input type="hidden" name="posit" id="position">';
-		$data.='<input type="hidden" name="sites" id="sites">';
-		$data.="</form>";
-        return $data;
-  
-	
-	}
-	
-	function getSearchSubcats($placement)
-	{
-		
-		
-		$results = $this->database->prepare("SELECT DISTINCT Position FROM `position` WHERE `Placement` = :placement");
-		$results->execute(array(':placement' => $placement));	
 
-		$data = "<div style='display:none;' id='positions' class='".$placement."' ><select  id='".$placement."' class='form-control'>";
-		foreach ($results as $row) 
-		{
-			$data.=  "<option value='".$row['Position']."'>".$row['Position']."</option>";
-			
-		}
-		$data.= "</select>";
-		$data.= "</div>";
-        return $data;
-  
-	
-	}
-	
-	function getSites($siteArray)
-	{
-		
-		
-		$results = $this->database->prepare("SELECT * FROM `siteinfo` order by State");
-		$results->execute();	
+        $siteArray = explode(',', $siteGroup);
 
-	
-		$state = "";
-		
-		$data = "<table class='table'>";
-		$data .="<tr>";			
-		$x = 1;
-		$z = 0;
-		$w = 0;
-		foreach ($results as $row) 
-		{
-			if($x == 4)
-			{
-				$data .="</tr>";	
-				$data .="<tr>";		
-				$x = 1;	
-			}
-			
-	
-			
-			if($state != $row['State'])
-			{
-				if($z == 1)
-				{
-					$data .="</td>";
-				}
-				$z = 1;
-				$state = $row['State'];
-				$data .="<td>";
-				$data .="<h4>".$row['State']."</h4>";
-				
-			}
-			
-			$data.=  "<p><label class='checkbox-inline'><input type='checkbox' id='".$row['SiteCode']."' value='".$row['SiteCode']."'> : ".$row['City']."</label></p>";
-			
-			$x += 1;
-			
-		}
-		$data .="</td>";
-		$data .="</tr>";	
-		$data .= "</table>";
+        $results = $this->database->prepare("SELECT DISTINCT (Placement) from `position`");
+        $results->execute();
+        $end = "";
+        $data .= "<form action='category.php' method='get' id='searchform' role='form' class='form-horizontal'>";
+        $data .= "<select id='placement' name='place' class='form-control'>";
+        $data .= "<option >Pick A Category</option>";
+        foreach ($results as $row) {
+            $data .= "<option value='" . $row['Placement'] . "'>" . $row['Placement'] . "</option>";
+            $end .= $this->getSearchSubcats($row['Placement']);
+        }
+        $data .= "</select>";
+        $data .= $end;
+        $data .= $this->createSitesTable($this->getSites());
+        $data .= "<br /><input type='submit' class='btn btn-primary' value='Search'>";
+        $data .= '<input type="hidden" name="posit" id="position">';
+        $data .= '<input type="hidden" name="sites" id="sites">';
+        $data .= "</form>";
+        return $data;
+    }
+
+    function getSearchSubcats($placement)
+    {
+        $results = $this->database->prepare("SELECT DISTINCT Position FROM `position` WHERE `Placement` = :placement");
+        $results->execute(array(':placement' => $placement));
+
+        $data = "<div style='display:none;' id='positions' class='" . $placement . "' ><select  id='" . $placement . "' class='form-control'>";
+        foreach ($results as $row) {
+            $data .= "<option value='" . $row['Position'] . "'>" . $row['Position'] . "</option>";
+
+        }
+        $data .= "</select>";
+        $data .= "</div>";
+        return $data;
+
+
+    }
+
+    function getSites()
+    {
+        return $this->database->getAssoc("SELECT * FROM `siteinfo` order by State");
+    }
+
+    function createSitesTable($results)
+    {
+        $state = "";
+
+        $data = "<table class='table'>";
+        $data .= "<tr>";
+        $x = 1;
+        $z = 0;
+        $w = 0;
+        foreach ($results as $row) {
+            if ($x == 4) {
+                $data .= "</tr>";
+                $data .= "<tr>";
+                $x = 1;
+            }
+
+
+            if ($state != $row['State']) {
+                if ($z == 1) {
+                    $data .= "</td>";
+                }
+                $z = 1;
+                $state = $row['State'];
+                $data .= "<td>";
+                $data .= "<h4>" . $row['State'] . "</h4>";
+
+            }
+
+            $data .= "<p><label class='checkbox-inline'><input type='checkbox' id='" . $row['SiteCode'] . "' value='" . $row['SiteCode'] . "'> : " . $row['City'] . "</label></p>";
+
+            $x += 1;
+
+        }
+        $data .= "</td>";
+        $data .= "</tr>";
+        $data .= "</table>";
 
         return $data;
-  
-	
-	}	
-	
+    }
 
-	
-	
+
 } 

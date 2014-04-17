@@ -13,11 +13,24 @@ $app = new \GCI\App();
 $app->logInfo('Map Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].', REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].',HTTP_HOST: '.@$_SERVER['HTTP_HOST'].'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].')');
 
 $place = $_GET['place'];
-$position = $_GET['position'];
+$position = $_GET['posit'];
 $listOfRummages = $app->getRummages($place,$position);
+if(isset($_GET['ad']) && !empty($_GET['ad'])) {
+    $showcase = $_GET['ad'];
+	$listOfRummages['map'][$showcase]['showcase'] = true;
+}
 $mapPoints = json_encode($listOfRummages['map']);
 $rummages = $listOfRummages['list'];
 $rummageList = '';
+if(!empty($showcase) && !empty($rummages[$showcase])){
+	$rummageList .= "
+	<tr id='dcd-showcase'>
+		<td><input type='button' value='Add' onclick=\"visit(this,'".$showcase."');\" class='add btn btn-default' /></td>
+		<td>".$rummages[$showcase]["adText"]."</td>
+	</tr>
+	";
+	unset($rummages[$showcase]);
+}
 foreach($rummages as $k=>$v){
 	$rummageList .= "
 	<tr>
@@ -48,8 +61,9 @@ $data = <<<EOS
 <br>
 <form action="route.php" method="post" onsubmit="mapRoute();" class="form-horizontal" role="form">
 	<input type="hidden" name="place" value="$place" />
-	<input type="hidden" name="position" value="$position" />
+	<input type="hidden" name="posit" value="$position" />
 	<input type="hidden" id="locations" name="locations" value="" />
+	<p>Please enter a starting address and select up to 8 places to visit, then click on 'Map Route'.</p>
 	<div id="map-it">
 		<div class="form-group">
 			<label for="Address" class="col-sm-2 control-label">Address</label>
@@ -85,7 +99,7 @@ $data = <<<EOS
 		</div>
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
-				<button type="submit" class="btn btn-default">Map Route</button>
+				<button type="submit" id="dcd-route" class="btn btn-default">Map Route</button>
 			</div>
 		</div>
 	</div>

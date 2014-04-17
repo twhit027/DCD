@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="Windows-1252" ?>
+<dcd sitecode="DES">
+
+<ad id="desstaticdog123">
+  <start-date>2013-03-15</start-date>
+  <end-date>2099-03-27</end-date>
+  <placement>Pets</placement>
+  <position>Dogs</position>
+  <ad-text><![CDATA[
+  ]]></ad-text>
+  <custom-fields>
+    <external_url>http://www.gadzoo.com</external_url>
+  </custom-fields>
+</ad>
+
+
+</dcd>

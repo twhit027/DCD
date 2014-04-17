@@ -28,40 +28,37 @@ if (isset($_REQUEST['place'])) {
 if (isset($_REQUEST['posit'])) {
     $position = urldecode($_REQUEST['posit']);
 }
-
+$search = "";
 if(isset($_REQUEST['sites']))
 {
 	$sitegroup = urldecode($_REQUEST['sites']);
 	$listings = $app->getListings($placement, $position, $page, $sitegroup);
-	$search = $app->getSearch($sitegroup);
+	//$search = $app->getSearch($sitegroup);
 }
 else
 {
 	$listings = $app->getListings($placement, $position, $page, '', $fullText);	
-	$search = $app->getSearch();
+	//$search = $app->getSearch();
 }
-
-
-
 
 $pagination = "";
 if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
     $numOfPages = ceil($listings['totalRows'] / LISTINGS_PER_PAGE);
 
     if ($page > 1)
-        $pagination .= '<ul class="pagination"><li><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . ($page - 1) . '">&laquo;</a></li>';
+        $pagination .= '<ul class="pagination"><li><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . ($page - 1) . '&ft='.$fullText.'">&laquo;</a></li>';
     else
         $pagination .= '<ul class="pagination"><li class="disabled"><a href="#">&laquo;</a></li>';
 
     for ($pge = 1; $pge <= $numOfPages; $pge++) {
         if ($pge == $page)
-            $pagination .= '<li class="active"><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . $pge . '">' . $pge . ' <span class="sr-only">(currecnt)</span></a></li>';
+            $pagination .= '<li class="active"><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . $pge . '&ft='.$fullText.'">' . $pge . ' <span class="sr-only">(currecnt)</span></a></li>';
         else
-            $pagination .= '<li><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . $pge . '">' . $pge . '</a></li>';
+            $pagination .= '<li><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . $pge . '&ft='.$fullText.'">' . $pge . '</a></li>';
     }
 
     if ($page < $numOfPages)
-        $pagination .= '<li><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . ($page + 1) . '">&raquo;</a></li></ul>';
+        $pagination .= '<li><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . ($page + 1) . '&ft='.$fullText.'">&raquo;</a></li></ul>';
     else
         $pagination .= '<li class="disabled"><a href="#">&raquo;</a></li></ul>';
 }
@@ -74,25 +71,81 @@ if(!isset($listings['results']))
 }
 else
 {
-	foreach ($listings['results'] as $row) {
-		$row['adText'] = htmlspecialchars($row['adText']);
+	$count = 1;
+    foreach ($listings['results'] as $row) {
+        $map = '';
+        $imageArray = array();
+        if (!empty($row['images'])) {
+            $imageArray = explode(',', $row['images']);
+        }
+        $row['adText'] = strip_tags($row['adText']);
 		if (strlen($row['adText']) > 200) {
-			$string = substr($row['adText'], 0, 200) . "... <a  href='item.php?id=" . $row['id'] . "&place=".$placement."&posit=" . $position . "'>Click for full text</a>";
+			//$string = substr($row['adText'], 0, 200) . "... <a  href='item.php?id=" . $row['id'] . "&place=".$placement."&posit=" . $position . "'>Click for full text</a>";
+            $string = "<div id='dcd-short-".$count."'>".substr(strip_tags($row['adText']),0,200)."... </div><div class='dcd-content-text' style='display: none' id='dcd-content-".$count."'>".strip_tags($row['adText'])."</div><a href='item.php?id=" . $row['id'] . "&place=".$placement."&posit=" . $position . "' class='dcd-expand-text' data-id='".$count."'>Click for full text</a>";
+            $count++;
 		} else {
 			$string = $row['adText'];
 		}
-	
-		$data .= "<div class='jumbotron'>";
+
+        $dataInfo = '<div class=".small" style="padding-bottom:10px; color:#0052f4">'.$row['siteCode'];
+        if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
+        $dataInfo .= $row['position'];
+        if (count($imageArray)>0) {
+            if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
+            $imgCnt = 0;
+            foreach($imageArray as $imgSrc) {
+                if ($imgCnt == 0) {
+                    $dataInfo .= '<a class="fancybox" href="images/'.$row['siteCode'].'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox '.$row['id'].'_group">Pic</a>';
+                } else {
+                    $dataInfo .= '<div style="display: none"><a class="fancybox" href="images/'.$row['siteCode'].'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox '.$row['id'].'_group" >Pic</a></div>';
+                }
+                $imgCnt++;
+            }
+        }
+        if (!empty($map)) {
+            if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
+            $dataInfo .= '<a href="#" style="color:#00881A;">Map</a>';
+        }
+        $dataInfo .= '</div>';
+        $data .= "<div class='jumbotron' style='padding-top: 30px; word-wrap: break-word;'>";
+        $data .= "$dataInfo";
 		$data .= "<p>" . $string . "</p>";
-        $data .= '<span class="input-group-btn">';
+		if($row['externalURL'] === "1"){
+			$data .= '<p><a href="map.php?place='.$row['placement'].'&posit='.$row['position'].'&ad='.$row['id'].'">View on map</a><p>';
+		}
 		$data .= '<a class="btn btn-primary" href="http://twitter.com/home?status=' . substr($row['adText'], 0, 120) . '" target="_blank"><img src="img/twitter1.png" /></a>';
 		$data .= '<a class="btn btn-primary" href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/facebook2.png" /></a>';
 		$data .= '<a class="btn btn-primary" href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/google-plus2.png" /></a>';
-		$data .= '<a class="btn btn-primary" href="mailto:youremailaddress" target="_blank"><img src="img/email2.png" /></a>';
-        $data .= '</span>';
+        $data .= '<a class="btn btn-primary" href="mailto:emailaddress?subject='.substr($row['adText'], 0, 80).'&body='.substr($row['adText'], 0, 120).'%0D%0A%0D%0A http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] .'" target="_top"><img src="img/email2.png" /></a>';
 		$data .= '</div>';
 	}
 }
+
+$masterBottom = '<link rel="stylesheet" href="//frontend.reklamor.com/fancybox/jquery.fancybox.css" media="screen">
+<script src="//frontend.reklamor.com/fancybox/jquery.fancybox.js"></script>
+<script>
+$(document).ready(function(){
+    //FANCYBOX
+    //https://github.com/fancyapps/fancyBox
+    $(".fancybox").fancybox({
+        openEffect: "none",
+        closeEffect: "none"
+    });
+	$(".dcd-expand-text").click(function(){
+		$("#dcd-short-"+$(this).data("id")).slideToggle("slow");
+		$("#dcd-content-"+$(this).data("id")).slideToggle("slow");
+		$orgText = "Click for full text";
+		if ($orgText == $(this).html()) {
+		    $(this).html("Click for less text");
+		} else {
+		    $(this).html($orgText);
+		}
+
+		return false;
+	});
+});
+
+</script>';
 
 $mainContent = <<<EOS
             <input type="hidden" id="place" name="place" value="$placement">
