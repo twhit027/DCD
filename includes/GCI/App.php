@@ -102,6 +102,9 @@ class App
 
         $siteGroupString = $this->createSiteGroupString($siteGroup);
 
+        $sql = "SELECT * FROM `listing` WHERE Placement = :place AND Position = :position AND StartDate <= :startDate AND SiteCode IN ( " . $siteGroupString . " )";
+        $params = array(':place' => $place, ':position' => $position, ':startDate' => date("Y-m-d") );
+
         if (!empty($route)) {
             $routeIDS = explode(",", $route);
             $rts = array();
@@ -112,13 +115,10 @@ class App
                 $c++;
             }
             $route = implode(",", $rts['string']);
-            $sql = "SELECT * FROM `listing` WHERE Placement = :place AND Position = :position AND SiteCode IN ( " . $siteGroupString . " ) AND ID IN ( " . $route . " )";
-            $params = array(':place' => $place, ':position' => $position);
+            $sql .= " AND ID IN ( " . $route . " )";
             $params = array_merge($params, $rts['params']);
-        } else {
-            $sql = "SELECT * FROM `listing` WHERE Placement = :place AND Position = :position AND SiteCode IN ( " . $siteGroupString . " )";
-            $params = array(':place' => $place, ':position' => $position);
         }
+
         $results = $this->database->getAssoc($sql, $params);
 
         $dataArray = array();
@@ -233,6 +233,23 @@ class App
         $this->categories = $categoriesArray;
     }
 
+    function getSitemap()
+    {
+        $siteGroupString = $this->createSiteGroupString($this->getSite()->getSiteGroup());
+
+        $sql = "SELECT LEFT(AdText,50) AS ATEXT, ID, Placement, Position, ExternalURL FROM `listing` WHERE SiteCode in( $siteGroupString )";
+        $params = array();
+
+        $results = $this->database->getAssoc($sql, $params);
+
+        $sitemap = array();
+        foreach ($results as $row) {
+            @$sitemap[$row['Placement']][$row['Position']][$row['ExternalURL']][] = array("id"=>$row['ID'],"adText"=>$row['ATEXT']);
+        }
+
+        return $sitemap;
+    }
+
     function getListings($placement = '', $position = '', $page = 1, $siteGroup = '', $fullText = '')
     {
         if ($siteGroup == '') {
@@ -278,7 +295,8 @@ class App
                     'siteCode' => $row['SiteCode'],
                     'images' => $row['Images'],
                     'position' => $row['Position'],
-                    'placement' => $row['Placement']
+                    'placement' => $row['Placement'],
+					'externalURL' => $row['ExternalURL']
                 );
             }
 
