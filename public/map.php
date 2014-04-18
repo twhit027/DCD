@@ -26,7 +26,7 @@ if(!empty($showcase) && !empty($rummages[$showcase])){
 	$rummageList .= "
 	<tr id='dcd-showcase'>
 		<td><input type='button' value='Add' onclick=\"visit(this,'".$showcase."');\" class='add btn btn-default' /></td>
-		<td>".$rummages[$showcase]["adText"]."</td>
+		<td class='dcd-adText' dcd-id='". $showcase."'>".$rummages[$showcase]["adText"]."</td>
 	</tr>
 	";
 	unset($rummages[$showcase]);
@@ -35,7 +35,7 @@ foreach($rummages as $k=>$v){
 	$rummageList .= "
 	<tr>
 		<td><input type='button' value='Add' onclick=\"visit(this,'".$k."');\" class='add btn btn-default' /></td>
-		<td>".$v["adText"]."</td>
+		<td class='dcd-adText' dcd-id='". $k."'>".$v["adText"]."</td>
 	</tr>
 	";
 }
@@ -103,6 +103,7 @@ $data = <<<EOS
 			</div>
 		</div>
 	</div>
+	<p>Click or Tap on any entry to find on the map.</p>
 	<table class="table table-striped">
 		$rummageList
 	</table>
