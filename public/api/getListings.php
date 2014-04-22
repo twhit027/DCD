@@ -46,6 +46,11 @@ else
     $listings = $app->getListings($placement, $position, $page, '', $fullText);
 }
 
+$json = json_encode($listings);
+
+$jsonp_callback = isset($_GET['callback']) ? $_GET['callback'] : null;
+
 header('Content-Type: application/json');
-echo json_encode($listings);
+echo $jsonp_callback ? "$jsonp_callback($json)" : $json;
+
 

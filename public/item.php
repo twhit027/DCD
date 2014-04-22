@@ -19,9 +19,16 @@ $position = urldecode($_REQUEST['posit']);
 $listings = $app->getSingleListing($id);
 
 $cleanAdText = strip_tags($listings['adText']);
+$siteCode = $listings['position'];
+$placement = $listings['placement'];
+$position = $listings['position'];
+$imageArray = array();
+if (!empty($listings['images'])) {
+    $imageArray = explode(',', $listings['images']);
+}
 
 $metadata = '
-<title>'.substr($listings['adText'], 0, 70).'</title>
+<title>'.substr($cleanAdText, 0, 70).'</title>
 <meta name="description" content="'.substr($cleanAdText, 0, 150).'" />
 
 <meta itemprop="name" content="'.substr($cleanAdText, 0, 70).'">
@@ -33,7 +40,18 @@ function convertImages($listingResults) {
     return preg_replace('/src="([^"]*)"/i', 'src="img/images/'.$listingResults['siteCode'].'/${1}"', $listingResults['adText']);
 }
 
-$data = " <div class='jumbotron' ><p>" . convertImages($listings) . "</p>";
+$data = " <div class='jumbotron' ><p>" . $cleanAdText . "</p>";
+
+if (count($imageArray)>0) {
+    if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
+    $imgCnt = 0;
+    $data .= '<p>';
+    foreach($imageArray as $imgSrc) {
+        $data .= '<a class="fancybox" href="images/'.$siteCode.'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox 1_group"><img src="images/'.$siteCode.'/'.$imgSrc.'" class="img-responsive" alt="image '.$imgSrc.'"></a>';
+    }
+    $data .= '</p>';
+}
+
 $data .= '<a class="btn btn-primary" href="http://twitter.com/home?status=' . substr($cleanAdText, 0, 120) . '" target="_blank"><img src="img/twitter1.png" /></a>';
 $data .= '<a class="btn btn-primary" href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $listings['id'] . '" target="_blank"><img src="img/facebook2.png" /></a>';
 $data .= '<a class="btn btn-primary" href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $listings['id'] . '" target="_blank"><img src="img/google-plus2.png" /></a>';
