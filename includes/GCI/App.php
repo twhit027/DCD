@@ -86,6 +86,7 @@ class App
     {
         $this->site = $site;
     }
+	
 
     private function getDefaultSiteData()
     {
@@ -484,6 +485,36 @@ class App
 
         return $data;
     }
+	
+	
+	
+
+
+	function report($app, $fp) 
+	{
+	
+
+		$sql = "SELECT * FROM `listing` WHERE `SiteCode` = :site ";
+        $params = array(':site' => $app->getSite()->getSiteCode());
+
+      
+        $results = $this->database->getAssoc($sql, $params);
+
+
+
+		foreach ($results as $row) 
+		{
+
+			fputcsv($fp, $row);
+        }
+        
+        
+
+	}
+		
+
+
+
 
 
 } 
