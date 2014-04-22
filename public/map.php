@@ -63,7 +63,7 @@ $data = <<<EOS
 	<input type="hidden" name="place" value="$place" />
 	<input type="hidden" name="posit" value="$position" />
 	<input type="hidden" id="locations" name="locations" value="" />
-	<p>Please enter a starting address and select up to 8 places to visit, then click on 'Map Route'.</p>
+	<h4>Please enter a starting address and select up to 8 places to visit, then click on 'Map Route'.</h4>
 	<div id="map-it">
 		<div class="form-group">
 			<label for="Address" class="col-sm-2 control-label">Address</label>
@@ -85,12 +85,12 @@ $data = <<<EOS
 		</div>
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
-				<div class="checkbox">
+				<div class="checkbox-inline">
 					<label>
 						<input type="checkbox" value="true" name="avoidHighways"> Avoid Highways
 					</label>
 				</div>
-				<div class="checkbox">
+				<div class="checkbox-inline">
 					<label>
 						<input type="checkbox" value="true" name="avoidTolls"> Avoid Tolls
 					</label>
