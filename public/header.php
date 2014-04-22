@@ -70,8 +70,9 @@ include('../includes/GCI/Ads.php');
         $border = \GCI\site::$paletteArray[$palette]['border'];
         $siteName = $app->getSite()->getSiteName();
         $siteUrl = $app->getSite()->getSiteUrl();
+        $siteCode = $app->getSite()->getSiteCode();
         $busName = $app->getSite()->getBusName();
-        echo $nav->getTopNavigationStatic($siteUrl, $top, $bottom, $border);
+        echo $nav->getTopNavigationStatic($siteUrl, $top, $bottom, $border,$siteCode);
         ?>
     </div>
 </header>

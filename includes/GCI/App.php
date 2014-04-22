@@ -309,13 +309,16 @@ class App
 
     public function getSingleListing($id)
     {
-        $sql = "SELECT ID, AdText, SiteCode FROM `listing` where ID = :id";
+        $sql = "SELECT ID, AdText, SiteCode, Placement, Position, Images FROM `listing` where ID = :id";
         $params = array(':id' => $id);
         $results = $this->database->getAssoc($sql, $params);
 
         $retArray['id'] = $results[0]['ID'];
         $retArray['adText'] = $results[0]['AdText'];
         $retArray['siteCode'] = $results[0]['SiteCode'];
+        $retArray['placement'] = $results[0]['Placement'];
+        $retArray['position'] = $results[0]['Position'];
+        $retArray['images'] = $results[0]['Images'];
 
         return $retArray;
     }

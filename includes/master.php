@@ -73,8 +73,9 @@ if(isset($metadata))
             $border = \GCI\site::$paletteArray[$palette]['border'];
             $siteName = $app->getSite()->getSiteName();
             $siteUrl = $app->getSite()->getSiteUrl();
+            $siteCode = $app->getSite()->getSiteCode();
             $busName = $app->getSite()->getBusName();
-            echo $nav->getTopNavigationStatic($siteUrl, $top, $bottom, $border);
+            echo $nav->getTopNavigationStatic($siteUrl, $top, $bottom, $border, $siteCode);
         ?>
         <nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse side-navbar ">
         <div class="visible-xs">
@@ -123,10 +124,12 @@ else if($device =="phone")
                     <div class="input-group">
                         <input id="fullTextBox" type="text" name="search" class="form-control" value="<?php echo $fullText; ?>">
                         <span class="input-group-btn">
-                            <a id="ftSearch" class="btn btn-primary" style="vertical-align: bottom;"><img src="img/white-magnifying-glass-20.png"></a>
-                           
+                            <button id="ftSearch" class="btn btn-primary" type="button">
+                                <img src="img/white-magnifying-glass-20.png">
+                            </button>
                         </span>
 				    </div>
+
                     <h3 style="color:#3276B1;">Or Select A Category</h3>
                     <ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">
                         <?php echo $nav->getSideNavigation($app->getCategories()); ?>
