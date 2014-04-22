@@ -80,6 +80,12 @@ if(isset($metadata))
         <nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse side-navbar ">
         <div class="visible-xs">
         <h3 style="color:#3276B1;">Search Our Classifieds</h3>
+        <input id="fullTextBox" type="text" name="search" class="form-control" value="<?php echo $fullText; ?>">
+                <span class="input-group-btn">
+                    <a id="ftSearch" class="btn btn-primary" style="vertical-align: bottom;width:100%;margin-bottom:5px;"><img src="img/white-magnifying-glass-20.png"></a>
+                   
+                </span>
+                        
         <ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">
         <?php echo $nav->getSideNavigation($app->getCategories()) ?>
         </ul></div></nav>
