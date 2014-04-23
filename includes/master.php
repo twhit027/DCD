@@ -180,13 +180,17 @@ else if($device == "tablet")
             ft = $("#fullTextBox1").val().trim();
             place='';
             posit='';
-            /*if ($('#place').val()) {
-                place= $('#place').val();
-            }
-            if ($('#place').val()) {
-                posit= $('#posit').val();
-            }*/
             window.location.href = 'category.php?place='+encodeURIComponent(place)+'&posit='+encodeURIComponent(posit)+'&ft='+encodeURIComponent(ft);
+        });
+
+        $('#fullTextBox1').keypress(function(e) {
+            if (e.which == '13') {
+                e.preventDefault();
+                ft = $("#fullTextBox1").val().trim();
+                place='';
+                posit='';
+                window.location.href = 'category.php?place='+encodeURIComponent(place)+'&posit='+encodeURIComponent(posit)+'&ft='+encodeURIComponent(ft);
+            }
         });
 
         $("#ftSearchbtn2").click(function(e) {
@@ -194,13 +198,17 @@ else if($device == "tablet")
             ft = $("#fullTextBox2").val().trim();
             place='';
             posit='';
-            /*if ($('#place').val()) {
-             place= $('#place').val();
-             }
-             if ($('#place').val()) {
-             posit= $('#posit').val();
-             }*/
             window.location.href = 'category.php?place='+encodeURIComponent(place)+'&posit='+encodeURIComponent(posit)+'&ft='+encodeURIComponent(ft);
+        });
+
+        $('#fullTextBox2').keypress(function(e) {
+            if (e.which == '13') {
+                e.preventDefault();
+                ft = $("#fullTextBox2").val().trim();
+                place='';
+                posit='';
+                window.location.href = 'category.php?place='+encodeURIComponent(place)+'&posit='+encodeURIComponent(posit)+'&ft='+encodeURIComponent(ft);
+            }
         });
 
         $("#ftSearchAdv").click(function(e) {
