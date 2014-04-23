@@ -278,7 +278,9 @@ class App
                 $sql .= ' and position = :position ';
                 $params[':position'] = $position;
             }
-            if (!empty($fullText)) {
+            if (empty($fullText)) {
+                $sql .= ' ORDER BY adText';
+            } else {
                 $sql .= " and MATCH(adText) AGAINST( :fulltext ) ORDER BY score DESC";
                 $params[':fulltext'] = $fullText;
             }
