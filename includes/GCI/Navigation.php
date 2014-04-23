@@ -28,7 +28,7 @@ class Navigation
 
                 if ($vals['url'] != '') {
                     if ($vals['url'] == '1') {
-                        $data .= '<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="map.php?place=' . urlencode($placement) . '&posit=' . urlencode($position) . '" title="Title">' . $position . '(' . $vals['count'] . ')</a>';
+                        $data .= '<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="map.php?place=' . urlencode($placement) . '&posit=' . urlencode($position) . '" title="Title">' . $position . ' <span class="badge">' . $vals['count'] . '</span></a>';
                     } else {
                         $data .= '<a class="btn btn-primary" role="button" style="width:100%;margin-bottom:2px;" href="' . $vals['url'] . '" target="_blank" title="Title">' . $position . '<img src="img/link.png" style="padding-left:10px;" /></a>';
                     }
