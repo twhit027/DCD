@@ -52,10 +52,10 @@ if (count($imageArray)>0) {
     $data .= '</p>';
 }
 
-$data .= '<a class="btn btn-primary" href="http://twitter.com/home?status=' . substr($cleanAdText, 0, 120) . '" target="_blank"><img src="img/twitter1.png" /></a>';
-$data .= '<a class="btn btn-primary" href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $listings['id'] . '" target="_blank"><img src="img/facebook2.png" /></a>';
-$data .= '<a class="btn btn-primary" href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $listings['id'] . '" target="_blank"><img src="img/google-plus2.png" /></a>';
-$data .= '<a class="btn btn-primary" href="mailto:emailaddress?subject='.substr($cleanAdText, 0, 80).'&body='.substr($cleanAdText, 0, 120).'%0D%0A%0D%0A http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $listings['id'] .'" target="_top"><img src="img/email2.png" /></a>';
+$data .= '<a href="http://twitter.com/home?status=' . substr($cleanAdText, 0, 120) . '" target="_blank"><img src="img/twitter-24.png" /></a>';
+$data .= '<a href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $listings['id'] . '" target="_blank"><img src="img/facebook-24.png" /></a>';
+$data .= '<a href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $listings['id'] . '" target="_blank"><img src="img/google-plus-24.png" /></a>';
+$data .= '<a href="mailto:emailaddress?subject='.substr($cleanAdText, 0, 80).'&body='.substr($cleanAdText, 0, 120).'%0D%0A%0D%0A http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $listings['id'] .'" target="_top"><img src="img/email-24.png" /></a>';
 $data .= "</div>";
 
 $mainContent = <<<EOS
