@@ -86,6 +86,7 @@ class App
     {
         $this->site = $site;
     }
+	
 
     private function getDefaultSiteData()
     {
@@ -277,7 +278,9 @@ class App
                 $sql .= ' and position = :position ';
                 $params[':position'] = $position;
             }
-            if (!empty($fullText)) {
+            if (empty($fullText)) {
+                $sql .= ' ORDER BY adText';
+            } else {
                 $sql .= " and MATCH(adText) AGAINST( :fulltext ) ORDER BY score DESC";
                 $params[':fulltext'] = $fullText;
             }
@@ -308,13 +311,16 @@ class App
 
     public function getSingleListing($id)
     {
-        $sql = "SELECT ID, AdText, SiteCode FROM `listing` where ID = :id";
+        $sql = "SELECT ID, AdText, SiteCode, Placement, Position, Images FROM `listing` where ID = :id";
         $params = array(':id' => $id);
         $results = $this->database->getAssoc($sql, $params);
 
         $retArray['id'] = $results[0]['ID'];
         $retArray['adText'] = $results[0]['AdText'];
         $retArray['siteCode'] = $results[0]['SiteCode'];
+        $retArray['placement'] = $results[0]['Placement'];
+        $retArray['position'] = $results[0]['Position'];
+        $retArray['images'] = $results[0]['Images'];
 
         return $retArray;
     }
@@ -484,6 +490,36 @@ class App
 
         return $data;
     }
+	
+	
+	
+
+
+	function report($app, $fp) 
+	{
+	
+
+		$sql = "SELECT * FROM `listing` WHERE `SiteCode` = :site ";
+        $params = array(':site' => $app->getSite()->getSiteCode());
+
+      
+        $results = $this->database->getAssoc($sql, $params);
+
+
+
+		foreach ($results as $row) 
+		{
+
+			fputcsv($fp, $row);
+        }
+        
+        
+
+	}
+		
+
+
+
 
 
 } 

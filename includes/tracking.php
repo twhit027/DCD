@@ -15,27 +15,33 @@ http://www.omniture.com -->
 <script language="JavaScript"><!--
 /* You may give each page an identifying name, server, and channel on
 the next lines. */
-s.pageName="<?php echo $app->getSite()->getSiteName(); ?> Classifieds"
+s.pageName="<?php echo $app->getSite()->getSiteName(); ?>:/classifieds/"
 s.server=""     // Do Not Alter
 s.channel=""
 s.pageType=""
 s.pageValue=""
 s.prop1=""
-s.prop2="classifieds"
-s.prop3="other_classifieds"
+s.prop2=""
+s.prop3=""
 s.prop4=""
 s.prop5=""
-s.prop6="classifieds"
-s.prop7="other_classifieds"
-s.prop8=""
-s.prop16=""
-s.prop17=""
-s.prop18=""
+s.prop6=""
+s.prop7=""
+s.prop8="<?php echo $app->getSite()->getSiteName(); ?>"
+s.prop13="<?php echo date('l'); ?>"
+s.prop16="vendor"
+s.prop17="classifieds"
+s.prop18="classifieds:<?php if ($_GET['posit'] != ""){ echo $_GET['posit']; }?>"
 s.prop19=""
+s.prop20=""
 s.prop23=document.location
-s.prop25="<?php echo $app->getSite()->getSiteName(); ?>"
-s.prop49="DESCRIPTION"
+s.prop25="<?php echo $app->getSite()->getGpaper(); ?>"
+s.prop33="classifieds"
+s.prop34="classifieds:main"
+s.prop35=""
 s.prop50="newspaper"
+s.prop64=document.referrer
+s.eVars="<?php echo $app->getSite()->getSiteName(); ?>:/classifieds/"
 var currentTime=new Date();
  
 var gciYear = currentTime.getFullYear();
