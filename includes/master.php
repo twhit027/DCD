@@ -49,6 +49,7 @@ if(isset($metadata))
     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
 	<?php if(!empty($googleApiScript)){ echo $googleApiScript; } ?>
+    <link type="text/css" href="css/dcd.css" rel="stylesheet">
 </head>
 <body>
 <!--[if lt IE 8]>
