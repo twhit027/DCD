@@ -116,7 +116,7 @@ class Navigation
             'Help' => $siteUrl . '/help',
         );
 
-        $data = '<hr /><div class="container" style="font-size: 12px;line-height: 16px;text-align: center">';
+        $data = '<hr /><div class="container" style="font-size:12px;line-height:16px;text-align: center">';
         $data .= '<div id="footlinks" class="footlinks"><ul>';
         foreach ($siteLinks as $linkName => $linkHref) {
             $data .= '<li><a href="'.$linkHref.'">'.$linkName.'</a></li>';
