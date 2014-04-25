@@ -18,12 +18,11 @@ include('../includes/GCI/Ads.php');
 $app = new \GCI\App();
 $nav = new \GCI\Navigation();
 $palette = $app->getSite()->getPalette();
-$top = \GCI\site::$paletteArray[$palette]['top'];
-$bottom = \GCI\site::$paletteArray[$palette]['bottom'];
-$border = \GCI\site::$paletteArray[$palette]['border'];
 $siteName = $app->getSite()->getSiteName();
 $siteUrl = $app->getSite()->getSiteUrl();
+$siteCode = $app->getSite()->getSiteCode();
 $busName = $app->getSite()->getBusName();
+$siteBottomData = $app->getSite()->getBottomLinks();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -72,7 +71,7 @@ if(isset($metadata))
 <body>
 <!-- footer begin-->
 <footer class="footer">
-    <?php echo $nav->getBottomNavigationStatic($siteUrl, $siteName); ?>
+    <?php echo $nav->getBottomNavigationStatic($siteUrl, $palette, $siteName, $siteBottomData); ?>
 </footer>
 <!-- footer end-->
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>

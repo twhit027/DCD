@@ -45,41 +45,34 @@ class Navigation
         return $data;
     }
 
-    function getTopNavigationStatic($siteUrl, $top, $bottom, $border, $siteCode = '')
+    function getTopNavigationStatic($siteUrl, $palletNumber = '', $siteName = '', $siteData = '')
     {
-        $siteData = @file_get_contents("./images/$siteCode/top.json");
-        $siteImage = $siteUrl . '/graphics/ody/cobrand_logo.gif';
+        $top = $bottom = $border = '';
+        if (!empty($palletNumber)&& $palletNumber < 90) {
+            $top = \GCI\site::$paletteArray[$palletNumber]['top'];
+            $bottom = \GCI\site::$paletteArray[$palletNumber]['bottom'];
+            $border = \GCI\site::$paletteArray[$palletNumber]['border'];
+        }
+
+        //$siteImage = $siteUrl . '/graphics/ody/cobrand_logo.gif';
         //$siteImage = $siteUrl . '/graphics/ody/mast_logo.gif"';
+        $siteImage = "http://www.gannett-cdn.com/sites/$siteName/images/site-nav-logo@2x.png";
 
         $siteLinks = array(
             'JOBS' => $siteUrl . '/jobs',
             'CARS' => $siteUrl . '/cars',
             'HOMES' => $siteUrl . '/homes',
-            'APARTMENTS' => $siteUrl . '/apartments',
             'DATING' => $siteUrl . '/dating',
             'BUY & SELL' => $siteUrl . '/newclass/front/'
         );
 
-        if ($siteData !== false) {
-            $siteDataArray = json_decode($siteData, true);
-
-            $siteUrl = $siteDataArray['siteUrl'];
-            $siteImage = $siteDataArray['siteImage'];
-            $siteLinks = $siteDataArray['siteLinks'];
-
-            $top = $bottom = $border = '';
-            if (isset($siteDataArray['saxo'])) {
-                $top = $siteDataArray['saxo']['top'];
-                $bottom = $siteDataArray['saxo']['bottom'];
-                $border = $siteDataArray['saxo']['border'];
-
-                //$imageLi = '<li><a href="'.$siteUrl.'/"><img style="height:40;" class="img-responsive" src="'.$siteImage.'"/></a></li>';
-            }
+        if (!empty($siteData)) {
+            $siteLinks = json_decode($siteData, true);
         }
 
         $data = '';
 
-        if (isset($top) && isset($bottom) && isset($border)) {
+        if (!empty($top) && !empty($bottom) && !empty($border)) {
             $data .= '<style>.navbar-inverse {
                 background: -webkit-linear-gradient(' . $top . ', ' . $bottom . '); /* For Safari */
                 background: -o-linear-gradient(' . $top . ', ' . $bottom . '); /* For Opera 11.1 to 12.0 */
@@ -91,7 +84,9 @@ class Navigation
 
         $data .= '<nav id="grad" role="navigation" class="collapse navbar-collapse bs-navbar-collapse top-navbar"><ul class="nav navbar-nav">';
 
-        $data .= '<li style="height:40px"><a href="'.$siteUrl.'/" style="margin:0;padding:0;"><img style="padding-top:10px;height:40px" src="'.$siteImage.'"/></a></li>';
+        $data .=  '<li style="height:40px"><a style="margin:5px;padding:0;" href="'.$siteUrl.'/"><img style="height:40px" class="img-responsive" src="'.$siteImage.'"/></a></li>';
+
+        //$data .= '<li style="height:40px"><a href="'.$siteUrl.'/" style="margin:0;padding:0;"><img style="padding-top:10px;height:40px" src="'.$siteImage.'"/></a></li>';
 
         foreach ($siteLinks as $linkName => $linkHref) {
             $data .= '<li><a href="'.$linkHref.'">'.$linkName.'</a></li>';
@@ -102,7 +97,7 @@ class Navigation
         return $data;
     }
 
-    function getBottomNavigationStatic($siteUrl, $siteName)
+    function getBottomNavigationStatic($siteUrl, $palletNumber = '', $siteName, $siteData = '')
     {
         $siteLinks = array(
             'News' => $siteUrl . '/news',
@@ -116,15 +111,26 @@ class Navigation
             'Help' => $siteUrl . '/help',
         );
 
+        if (!empty($siteData)) {
+            $siteLinks = json_decode($siteData, true);
+        }
+
         $data = '<hr /><div class="container" style="font-size:12px;line-height:16px;text-align: center">';
         $data .= '<div id="footlinks" class="footlinks"><ul>';
         foreach ($siteLinks as $linkName => $linkHref) {
             $data .= '<li><a href="'.$linkHref.'">'.$linkName.'</a></li>';
         }
         $data .= '</ul></div>';
-        $data .= '<p>Copyright &copy; 2014 www.' . $siteName . '.com. All rights reserved. Users of this site agree to the ';
-        $data .= '<a href="' . $siteUrl . '/section/terms">Terms of Service</a>, ';
-        $data .= '<a href="' . $siteUrl . '/section/privacy">Privacy Notice</a>, and <a href="' . $siteUrl . '/section/privacy#adchoices">Ad Choices</a></p>';
+        if ($palletNumber < 90) {
+            $data .= '<p>Copyright &copy; '.date('Y').' www.' . $siteName . '.com. All rights reserved. Users of this site agree to the ';
+            $data .= '<a href="' . $siteUrl . '/section/terms">Terms of Service</a>, ';
+            $data .= '<a href="' . $siteUrl . '/section/privacy">Privacy Notice</a>, and <a href="' . $siteUrl . '/section/privacy#adchoices">Ad Choices</a></p>';
+        } else {
+            $data .= '<p>All rights reserved. Users of this site agree to the <a href="'.$siteUrl.'/legal/tos.html">Terms of Service</a>,';
+            $data .= ' <a href="'.$siteUrl.'/legal/privacynotice.html">Privacy Notice/Your California Privacy Rights</a>, and';
+            $data .= ' <a href="'.$siteUrl.'/legal/privacynotice.html#adchoices">Ad Choices</a></p>';
+        }
+
         $data .= '</div>';
 
         return $data;

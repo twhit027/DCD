@@ -2,8 +2,8 @@
 /**
  * Created by DCDGroup.
  * User: JHICKS
- * Date: 4/22/14
- * Time: 12:44 PM
+ * Date: 4/24/14
+ * Time: 1:32 PM
  */
 
 error_reporting(0);
@@ -33,7 +33,7 @@ if (!empty($_REQUEST['nocache'])) {
 }
 
 if (empty($siteLinks)) {
-    $prestoUrl = $siteUrl . '/services/cobrand/header/';
+    $prestoUrl = $siteUrl . '/services/cobrand/footer/';
     $saxoUrl = $siteUrl . '/section/cobrandheaderlite/';
 
     //simplehtmldom
@@ -54,7 +54,7 @@ if (empty($siteLinks)) {
             }
         }
     } elseif ($html = @file_get_html($saxoUrl)) {
-        foreach ($html->find('div.ody-cobrandLinksLite li a') as $element) {
+        foreach ($html->find('div.ody-footLite li a') as $element) {
             $siteLinks[trim($element->plaintext)] = $element->href;
         }
     }
@@ -63,7 +63,7 @@ if (empty($siteLinks)) {
         $data = json_encode($siteLinks);
 
         if ($_REQUEST['write'] == 'True') {
-            $app->setTopLinks($siteCode, $data);
+            $app->setBottomLinks($siteCode, $data);
         }
     }
 }
