@@ -71,7 +71,7 @@ if(isset($metadata))
 <body>
 <!-- footer begin-->
 <footer class="footer">
-    <?php echo $nav->getBottomNavigationStatic($siteUrl, $palette, $siteName, $siteBottomData); ?>
+    <?php echo $nav->getBottomNavigation($siteUrl, $palette, $siteName, $siteBottomData); ?>
 </footer>
 <!-- footer end-->
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>

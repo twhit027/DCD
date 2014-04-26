@@ -70,7 +70,7 @@ include('../includes/GCI/Ads.php');
         $siteCode = $app->getSite()->getSiteCode();
         $busName = $app->getSite()->getBusName();
         $siteTopData = $app->getSite()->getTopLinks();
-        echo $nav->getTopNavigationStatic($siteUrl, $palette, $siteName, $siteTopData);
+        echo $nav->getTopNavigation($siteUrl, $palette, $siteName, $siteTopData);
         ?>
     </div>
 </header>

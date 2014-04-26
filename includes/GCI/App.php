@@ -504,6 +504,7 @@ class App
         }
     }
 
+    // these functions will only work on the feed side
     public function setTopLinks($siteCode, $jsonString)
     {
         try {
@@ -524,5 +525,19 @@ class App
             $logText = "Message:(" . $e->getMessage() . ") attempting to insert BottomLinks into the siteInfo table";
             $this->log->logError($logText);
         }
+
+    }
+
+    function getAllSite()
+    {
+        $sql = "SELECT * FROM `siteinfo`";
+        $data = $this->database->getAssoc($sql);
+
+        // probably serve up a 404
+        if (empty($data)) {
+            header("Location: ./err/error404.php");
+        }
+
+        return $data;
     }
 }

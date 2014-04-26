@@ -45,7 +45,7 @@ class Navigation
         return $data;
     }
 
-    function getTopNavigationStatic($siteUrl, $palletNumber = '', $siteName = '', $siteData = '')
+    function getTopNavigation($siteUrl, $palletNumber = '', $siteName = '', $siteData = '')
     {
         $top = $bottom = $border = '';
         if (!empty($palletNumber)&& $palletNumber < 90) {
@@ -97,7 +97,7 @@ class Navigation
         return $data;
     }
 
-    function getBottomNavigationStatic($siteUrl, $palletNumber = '', $siteName, $siteData = '')
+    function getBottomNavigation($siteUrl, $palletNumber = '', $siteName, $siteData = '')
     {
         $siteLinks = array(
             'News' => $siteUrl . '/news',

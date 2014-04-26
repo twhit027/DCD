@@ -75,7 +75,7 @@ if(isset($metadata))
             $busName = $app->getSite()->getBusName();
             $siteTopData = $app->getSite()->getTopLinks();
             $siteBottomData = $app->getSite()->getBottomLinks();
-            echo $nav->getTopNavigationStatic($siteUrl, $palette, $siteName, $siteTopData);
+            echo $nav->getTopNavigation($siteUrl, $palette, $siteName, $siteTopData);
         ?>
         <nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse side-navbar ">
         <div class="visible-xs">
@@ -168,7 +168,7 @@ else if($device == "tablet")
 //include('../includes/tracking.php');
 ?>
 <footer class="footer">
-<?php echo $nav->getBottomNavigationStatic($siteUrl, $palette, $siteName, $siteBottomData); ?>
+<?php echo $nav->getBottomNavigation($siteUrl, $palette, $siteName, $siteBottomData); ?>
 </footer>
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="3rdParty/bootstrap/js/bootstrap.min.js"></script>
