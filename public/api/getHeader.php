@@ -17,6 +17,20 @@ include('../../includes/GCI/App.php');
 include('../../includes/GCI/Navigation.php');
 include('../../includes/GCI/Ads.php');
 
+function url_exists($url){
+    if ((strpos($url, "http")) === false) $url = "http://" . $url;
+    $headers = @get_headers($url);
+    if (is_array($headers)){
+        if(strpos($headers[0], '404')) {
+            return false;
+        } else {
+            return true;
+        }
+    } else {
+        return false;
+    }
+}
+
 $app = new \GCI\App();
 
 $siteCode = $app->getSite()->getSiteCode();
@@ -28,13 +42,9 @@ $siteName = $app->getSite()->getSiteName();
 //$siteImage = $siteUrl . '/graphics/ody/mast_logo.gif';
 $siteImage = "http://www.gannett-cdn.com/sites/$siteName/images/site-nav-logo@2x.png";
 
-if (!empty($_REQUEST['nocache'])) {
-    $siteLinks = '';
-}
-
-if (empty($siteLinks)) {
-    $prestoUrl = $siteUrl . '/services/cobrand/header/';
-    $saxoUrl = $siteUrl . '/section/cobrandheaderlite/';
+if (isset($_REQUEST['nocache']) && ($_REQUEST['nocache'] == '1')) {
+    $prestoUrl = rtrim($siteUrl,'/') . '/services/cobrand/header/';
+    $saxoUrl = rtrim($siteUrl, '/') . '/section/cobrandheaderlite/';
 
     //simplehtmldom
     require_once '../../vendor/simplehtmldom/simple_html_dom.php';
@@ -42,27 +52,28 @@ if (empty($siteLinks)) {
     $siteLinks = array();
     $data = '';
 
-    if ($html = @file_get_html($prestoUrl)) {
-        foreach ($html->find('img.site-nav-logo-img') as $element) {
-            $siteImage = $element->src;
-        }
-
-        // Find all links
-        foreach ($html->find('a.site-nav-link') as $element) {
-            if (trim($element->plaintext) != '') {
-                $siteLinks[trim($element->plaintext)] = $element->href;
+    if (url_exists($prestoUrl)) {
+        if ($html = @file_get_html($prestoUrl)) {
+            // Find all links
+            foreach ($html->find('a.site-nav-link') as $element) {
+                if (trim($element->plaintext) != '') {
+                    $siteLinks[trim($element->plaintext)] = $element->href;
+                }
             }
         }
-    } elseif ($html = @file_get_html($saxoUrl)) {
-        foreach ($html->find('div.ody-cobrandLinksLite li a') as $element) {
-            $siteLinks[trim($element->plaintext)] = $element->href;
+    } elseif (url_exists($saxoUrl)) {
+        if ($html = @file_get_html($saxoUrl)) {
+            $saxo = true;
+            foreach ($html->find('div.ody-cobrandLinksLite li a') as $element) {
+                $siteLinks[trim($element->plaintext)] = $element->href;
+            }
         }
     }
 
     if (!empty($siteLinks)) {
         $data = json_encode($siteLinks);
 
-        if ($_REQUEST['write'] == 'True') {
+        if (isset($_REQUEST['write']) && ($_REQUEST['write'] == 'True')) {
             $app->setTopLinks($siteCode, $data);
         }
     }

@@ -1,4 +1,4 @@
 <?php
 $nav = new Navigation();
 
-echo $nav->getBottomNavigationStatic($siteUrl, $siteName);
+echo $nav->getBottomNavigation($siteUrl, $siteName);
