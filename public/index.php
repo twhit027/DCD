@@ -29,6 +29,7 @@ $mainContent = <<<EOS
 <p>From VEHICLES to PETS to GARAGE SALES to SERVICES, we provide the most effective ways to sell to potential local buyers through our leading mobile, online and print solutions.</p>
 <p>Develop and launch your advertising program within minutes with just a few clicks, and begin connecting with local buyers TODAY!</p>
 <p><a class="button" href="http://$siteName.gannettclassifieds.com"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">Place an Ad</button></a></p>
+<p><a class="button" href="http://$siteName.com/classifiedshelp" target="_blank"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">Classifieds Help</button></a></p>
 <h1>Featured Partner Classified Services</h1>
 <div class="row">
     <div class="col-md-4">
