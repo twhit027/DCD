@@ -45,13 +45,13 @@ class Navigation
         return $data;
     }
 
-    function getTopNavigation($siteUrl, $palletNumber = '', $siteName = '', $siteData = '')
+    function getTopNavigation($siteUrl, $paletteNumber = '', $siteName = '', $siteData = '')
     {
         $top = $bottom = $border = '';
-        if (!empty($palletNumber)&& $palletNumber < 90) {
-            $top = \GCI\site::$paletteArray[$palletNumber]['top'];
-            $bottom = \GCI\site::$paletteArray[$palletNumber]['bottom'];
-            $border = \GCI\site::$paletteArray[$palletNumber]['border'];
+        if (!empty($paletteNumber)&& $paletteNumber < 90) {
+            $top = \GCI\site::$paletteArray[$paletteNumber]['top'];
+            $bottom = \GCI\site::$paletteArray[$paletteNumber]['bottom'];
+            $border = \GCI\site::$paletteArray[$paletteNumber]['border'];
         }
 
         //$siteImage = $siteUrl . '/graphics/ody/cobrand_logo.gif';
@@ -97,7 +97,7 @@ class Navigation
         return $data;
     }
 
-    function getBottomNavigation($siteUrl, $palletNumber = '', $siteName, $siteData = '')
+    function getBottomNavigation($siteUrl, $paletteNumber = '', $siteName, $siteData = '')
     {
         $siteLinks = array(
             'News' => $siteUrl . '/news',
@@ -121,7 +121,7 @@ class Navigation
             $data .= '<li><a href="'.$linkHref.'">'.$linkName.'</a></li>';
         }
         $data .= '</ul></div>';
-        if ($palletNumber < 90) {
+        if ($paletteNumber < 90) {
             $data .= '<p>Copyright &copy; '.date('Y').' www.' . $siteName . '.com. All rights reserved. Users of this site agree to the ';
             $data .= '<a href="' . $siteUrl . '/section/terms">Terms of Service</a>, ';
             $data .= '<a href="' . $siteUrl . '/section/privacy">Privacy Notice</a>, and <a href="' . $siteUrl . '/section/privacy#adchoices">Ad Choices</a></p>';

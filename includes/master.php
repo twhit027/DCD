@@ -75,6 +75,9 @@ if(isset($metadata))
             $busName = $app->getSite()->getBusName();
             $siteTopData = $app->getSite()->getTopLinks();
             $siteBottomData = $app->getSite()->getBottomLinks();
+            if ($palette > 89 && empty($siteBottomData)) {
+                $siteBottomData = $siteTopData;
+            }
             echo $nav->getTopNavigation($siteUrl, $palette, $siteName, $siteTopData);
         ?>
         <nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse side-navbar ">
