@@ -113,9 +113,9 @@ else
 		if($row['externalURL'] === "1"){
 			$data .= '<p><a href="map.php?place='.$row['placement'].'&posit='.$row['position'].'&ad='.$row['id'].'">View on map</a><p>';
 		}
-		$data .= '<a href="http://twitter.com/home?status=' . substr($row['adText'], 0, 120) . '" target="_blank"><img src="img/twitter-24.png" /></a>';
-		$data .= '<a href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/facebook-24.png" /></a>';
-		$data .= '<a href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/google-plus-24.png" /></a>';
+		$data .= '<a href="http://twitter.com/home?status=' . substr($row['adText'], 0, 120) . '" target="_blank"><img src="img/twitter-24.png" /></a>&nbsp';
+		$data .= '<a href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/facebook-24.png" /></a>&nbsp';
+		$data .= '<a href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/google-plus-24.png" /></a>&nbsp';
         $data .= '<a href="mailto:emailaddress?subject='.substr($row['adText'], 0, 80).'&body='.substr($row['adText'], 0, 120).'%0D%0A%0D%0A http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] .'" target="_top"><img src="img/email-24.png" /></span></a>';
 		$data .= '</div>';
 	}

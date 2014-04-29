@@ -49,6 +49,7 @@ if(isset($metadata))
     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
 	<?php if(!empty($googleApiScript)){ echo $googleApiScript; } ?>
+    <link type="text/css" href="css/dcd.css" rel="stylesheet">
 </head>
 <body>
 <!--[if lt IE 8]>
@@ -68,14 +69,16 @@ if(isset($metadata))
             if (!isset($fullText)) {$fullText = '';}
             $nav = new \GCI\Navigation();
             $palette = $app->getSite()->getPalette();
-            $top = \GCI\site::$paletteArray[$palette]['top'];
-            $bottom = \GCI\site::$paletteArray[$palette]['bottom'];
-            $border = \GCI\site::$paletteArray[$palette]['border'];
             $siteName = $app->getSite()->getSiteName();
             $siteUrl = $app->getSite()->getSiteUrl();
             $siteCode = $app->getSite()->getSiteCode();
             $busName = $app->getSite()->getBusName();
-            echo $nav->getTopNavigationStatic($siteUrl, $top, $bottom, $border, $siteCode);
+            $siteTopData = $app->getSite()->getTopLinks();
+            $siteBottomData = $app->getSite()->getBottomLinks();
+            if ($palette > 89 && empty($siteBottomData)) {
+                $siteBottomData = $siteTopData;
+            }
+            echo $nav->getTopNavigation($siteUrl, $palette, $siteName, $siteTopData);
         ?>
         <nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse side-navbar ">
         <div class="visible-xs">
@@ -168,7 +171,7 @@ else if($device == "tablet")
 //include('../includes/tracking.php');
 ?>
 <footer class="footer">
-<?php echo $nav->getBottomNavigationStatic($siteUrl, $siteName); ?>
+<?php echo $nav->getBottomNavigation($siteUrl, $palette, $siteName, $siteBottomData); ?>
 </footer>
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="3rdParty/bootstrap/js/bootstrap.min.js"></script>
