@@ -23,6 +23,9 @@ $siteUrl = $app->getSite()->getSiteUrl();
 $siteCode = $app->getSite()->getSiteCode();
 $busName = $app->getSite()->getBusName();
 $siteBottomData = $app->getSite()->getBottomLinks();
+if ($palette > 89 && empty($siteBottomData)) {
+    $siteBottomData = $app->getSite()->getTopLinks();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
