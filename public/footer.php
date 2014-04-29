@@ -18,12 +18,14 @@ include('../includes/GCI/Ads.php');
 $app = new \GCI\App();
 $nav = new \GCI\Navigation();
 $palette = $app->getSite()->getPalette();
-$top = \GCI\site::$paletteArray[$palette]['top'];
-$bottom = \GCI\site::$paletteArray[$palette]['bottom'];
-$border = \GCI\site::$paletteArray[$palette]['border'];
 $siteName = $app->getSite()->getSiteName();
 $siteUrl = $app->getSite()->getSiteUrl();
+$siteCode = $app->getSite()->getSiteCode();
 $busName = $app->getSite()->getBusName();
+$siteBottomData = $app->getSite()->getBottomLinks();
+if ($palette > 89 && empty($siteBottomData)) {
+    $siteBottomData = $app->getSite()->getTopLinks();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -67,11 +69,12 @@ if(isset($metadata))
 <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
 <![endif]-->
+<link type="text/css" href="css/dcd.css" rel="stylesheet">
 </head>
 <body>
 <!-- footer begin-->
 <footer class="footer">
-    <?php echo $nav->getBottomNavigationStatic($siteUrl, $siteName); ?>
+    <?php echo $nav->getBottomNavigation($siteUrl, $palette, $siteName, $siteBottomData); ?>
 </footer>
 <!-- footer end-->
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>

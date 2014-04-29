@@ -49,6 +49,7 @@ if(isset($metadata))
     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
 	<?php if(!empty($googleApiScript)){ echo $googleApiScript; } ?>
+    <link type="text/css" href="css/dcd.css" rel="stylesheet">
 </head>
 <body>
 <!--[if lt IE 8]>
@@ -68,17 +69,29 @@ if(isset($metadata))
             if (!isset($fullText)) {$fullText = '';}
             $nav = new \GCI\Navigation();
             $palette = $app->getSite()->getPalette();
-            $top = \GCI\site::$paletteArray[$palette]['top'];
-            $bottom = \GCI\site::$paletteArray[$palette]['bottom'];
-            $border = \GCI\site::$paletteArray[$palette]['border'];
             $siteName = $app->getSite()->getSiteName();
             $siteUrl = $app->getSite()->getSiteUrl();
+            $siteCode = $app->getSite()->getSiteCode();
             $busName = $app->getSite()->getBusName();
-            echo $nav->getTopNavigationStatic($siteUrl, $top, $bottom, $border);
+            $siteTopData = $app->getSite()->getTopLinks();
+            $siteBottomData = $app->getSite()->getBottomLinks();
+            if ($palette > 89 && empty($siteBottomData)) {
+                $siteBottomData = $siteTopData;
+            }
+            echo $nav->getTopNavigation($siteUrl, $palette, $siteName, $siteTopData);
         ?>
         <nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse side-navbar ">
         <div class="visible-xs">
         <h3 style="color:#3276B1;">Search Our Classifieds</h3>
+            <div class="input-group">
+                <input id="fullTextBox1" type="text" name="search" class="form-control" value="<?php echo $fullText; ?>">
+                        <span class="input-group-btn">
+                            <button id="ftSearchbtn1" class="btn btn-primary" type="button">
+                                <img src="img/white-magnifying-glass-20.png">
+                            </button>
+                        </span>
+            </div>
+            <h3 style="color:#3276B1;">Or Select A Category</h3>
         <ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">
         <?php echo $nav->getSideNavigation($app->getCategories()) ?>
         </ul></div></nav>
@@ -115,12 +128,14 @@ else if($device =="phone")
                 <div role="navigation" id="sidebar" style="background-color:#000; padding-left:15px; padding-right:15px; padding-top:5px">
                     <h3 style="color:#3276B1;">Search Our Classifieds</h3>
                     <div class="input-group">
-                        <input id="fullTextBox" type="text" name="search" class="form-control" value="<?php echo $fullText; ?>">
+                        <input id="fullTextBox2" type="text" name="search" class="form-control" value="<?php echo $fullText; ?>">
                         <span class="input-group-btn">
-                            <a id="ftSearch" class="btn btn-primary" style="vertical-align: bottom;"><img src="img/white-magnifying-glass-20.png"></a>
-                           
+                            <button id="ftSearchbtn2" class="btn btn-primary" type="button">
+                                <img src="img/white-magnifying-glass-20.png">
+                            </button>
                         </span>
 				    </div>
+
                     <h3 style="color:#3276B1;">Or Select A Category</h3>
                     <ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">
                         <?php echo $nav->getSideNavigation($app->getCategories()); ?>
@@ -156,25 +171,47 @@ else if($device == "tablet")
 //include('../includes/tracking.php');
 ?>
 <footer class="footer">
-<?php echo $nav->getBottomNavigationStatic($siteUrl, $siteName); ?>
+<?php echo $nav->getBottomNavigation($siteUrl, $palette, $siteName, $siteBottomData); ?>
 </footer>
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="3rdParty/bootstrap/js/bootstrap.min.js"></script>
 <script src="3rdParty/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>
 <script>
     $( document ).ready(function() {
-        $("#ftSearch").click(function(e) {
+        $("#ftSearchbtn1").click(function(e) {
             e.preventDefault();
-            ft = $("#fullTextBox").val().trim();
+            ft = $("#fullTextBox1").val().trim();
             place='';
             posit='';
-            /*if ($('#place').val()) {
-                place= $('#place').val();
-            }
-            if ($('#place').val()) {
-                posit= $('#posit').val();
-            }*/
             window.location.href = 'category.php?place='+encodeURIComponent(place)+'&posit='+encodeURIComponent(posit)+'&ft='+encodeURIComponent(ft);
+        });
+
+        $('#fullTextBox1').keypress(function(e) {
+            if (e.which == '13') {
+                e.preventDefault();
+                ft = $("#fullTextBox1").val().trim();
+                place='';
+                posit='';
+                window.location.href = 'category.php?place='+encodeURIComponent(place)+'&posit='+encodeURIComponent(posit)+'&ft='+encodeURIComponent(ft);
+            }
+        });
+
+        $("#ftSearchbtn2").click(function(e) {
+            e.preventDefault();
+            ft = $("#fullTextBox2").val().trim();
+            place='';
+            posit='';
+            window.location.href = 'category.php?place='+encodeURIComponent(place)+'&posit='+encodeURIComponent(posit)+'&ft='+encodeURIComponent(ft);
+        });
+
+        $('#fullTextBox2').keypress(function(e) {
+            if (e.which == '13') {
+                e.preventDefault();
+                ft = $("#fullTextBox2").val().trim();
+                place='';
+                posit='';
+                window.location.href = 'category.php?place='+encodeURIComponent(place)+'&posit='+encodeURIComponent(posit)+'&ft='+encodeURIComponent(ft);
+            }
         });
 
         $("#ftSearchAdv").click(function(e) {

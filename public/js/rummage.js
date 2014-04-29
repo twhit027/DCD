@@ -36,30 +36,35 @@ function initializeMap() {
 			mapTypeId: google.maps.MapTypeId.ROADMAP
 		};
 	DCDMAPGLOBAL.map = new google.maps.Map(document.getElementById("dcd-map-container"),myOptions);
+	DCDMAPGLOBAL.markersArray = new Array();
 	
 	for(x in DCDMAPGLOBAL.points)
-		createMarker(DCDMAPGLOBAL.points[x]);
+		createMarker(DCDMAPGLOBAL.points[x],x);
 }
-function createMarker(point){
-	//icons
-	var marker = new google.maps.Marker({
-		position: new google.maps.LatLng(point.lat,point.lon),
-		map: DCDMAPGLOBAL.map,
-		animation: google.maps.Animation.DROP,
-		title: point.street
-	});
+function createMarker(point,id){
 	
-	//info window
-	var infowindow = new google.maps.InfoWindow({
-		content: point.street + ", " + point.city + ", " + point.state + " " + point.zip
-	});
+	//icons & info window
+	var json = { 
+		marker : new google.maps.Marker({
+			position: new google.maps.LatLng(point.lat,point.lon),
+			map: DCDMAPGLOBAL.map,
+			animation: google.maps.Animation.DROP,
+			title: point.street,
+			icon: 'img/map.png'
+		}),
+		infoWindow :  new google.maps.InfoWindow({
+			content: point.street + ", " + point.city + ", " + point.state + " " + point.zip
+		})
+	};
 	
-	google.maps.event.addListener(marker, 'click', function() {
-		infowindow.open(DCDMAPGLOBAL.map,marker);
+	DCDMAPGLOBAL.markersArray[id] = json;
+	
+	google.maps.event.addListener(json.marker, 'click', function() {
+		json.infoWindow.open(DCDMAPGLOBAL.map,json.marker);
 	});
 	
 	if(point.showcase == true){
-		infowindow.open(DCDMAPGLOBAL.map,marker);
+		json.infoWindow.open(DCDMAPGLOBAL.map,json.marker);
 	}
 }
 // Google Maps Scripts
@@ -158,9 +163,20 @@ function toggleState (_this){
 		updateButton(_this.attr('name'),true);
 	}
 }
+function showMarker (_this){
+	closeMarkers();
+	//_this = $(this);
+	var _id = _this.attr('dcd-id');
+	google.maps.event.trigger(DCDMAPGLOBAL.markersArray[_id].marker,'click');
+}
+function closeMarkers (){
+	for(x in DCDMAPGLOBAL.markersArray)
+		DCDMAPGLOBAL.markersArray[x].infoWindow.close();
+}
 
 $(document).ready(function(){
 	initializeMap();
 	$("#dcd-route").attr("disabled","disabled");
 	$(".form-control").change(function() { toggleState($(this)); });
+	$(".dcd-adText").click(function() { showMarker($(this)); });
 });
