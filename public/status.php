@@ -1,4 +1,6 @@
 <?php
+set_time_limit(0);
+
 include('../vendor/klogger/KLogger.php');
 include('../conf/constants.php');
 include('../includes/GCI/App.php');
@@ -20,8 +22,10 @@ try {
     $dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     try {
-        $siteInfoArray = $dbh->query("SELECT * FROM `siteinfo`");
-         //= $dbh->fetchAll(PDO::FETCH_ASSOC);
+        $sth = $dbh->prepare("SELECT * FROM `siteinfo`");
+        $sth->execute();
+        $siteInfoArray  = $sth->fetchAll();
+        //$siteInfoArray = $dbh->query("SELECT * FROM `siteinfo`");
         $serverInfoArray = $dbh->getAttribute(PDO::ATTR_SERVER_INFO);
     } catch(PDOException $ex) {
         $queryStatus = 'Failed';
@@ -47,7 +51,7 @@ $log->logInfo('Query Status: '. $queryStatus);
 
 function url_exists($url) {
     $headers = @get_headers($url);
-    if(strpos($headers[0],'200')===false) {
+    if((strpos($headers[0],'200')===false) && (strpos($headers[0],'302')===false)) {
         return false;
     }
     return true;
@@ -250,7 +254,7 @@ function getSubDomain ($domain) {
             );
 
             $default = stream_context_set_default($default_opts);
-            echo '<tr class="headlin"><td colspan="3">All sub-domains</td></tr>';
+            echo '<tr class="headlin"><td colspan="3">Classifieds URLs</td></tr>';
             foreach($siteInfoArray as $siteInfo) {
                 //$subDomain = 'classifieds';
                 $host = App::getHost();
@@ -264,6 +268,24 @@ function getSubDomain ($domain) {
                 }
                 echo '<tr><td class="smallbold">'.$siteUrl.'</td><td style="width:10px"></td><td class="small">'.$siteStatus.'</td></tr>';
             }
+            // http://desmoinesregister.gannettclassifieds.com/
+            echo '<tr class="headlin"><td colspan="3">AdbaseE URLs</td></tr>';
+            foreach($siteInfoArray as $siteInfo) {
+                $siteUrl = 'http://'.$siteInfo['SiteName'].'.gannettclassifieds.com/';
+                $siteStatus = 'Failed';
+                if (url_exists($siteUrl)) {
+                    $siteStatus = 'Passed';
+                }
+                echo '<tr><td class="smallbold">'.$siteUrl.'</td><td style="width:10px"></td><td class="small">'.$siteStatus.'</td></tr>';
+            }
+
+            $siteUrl= 'http://maps.googleapis.com/maps/api/js?sensor=false';
+            $siteStatus = 'Failed';
+            if (url_exists("http://maps.googleapis.com/maps/api/js?sensor=false")) {
+                $siteStatus = 'Passed';
+            }
+            echo '<tr class="headlin"><td colspan="3">Google API</td></tr>';
+            echo '<tr><td class="smallbold">'.$siteUrl.'</td><td style="width:10px"></td><td class="small">'.$siteStatus.'</td></tr>';
         }
         ?>
     </table>
