@@ -28,5 +28,9 @@ if (isset($_REQUEST['posit'])) {
     $position = urldecode($_REQUEST['posit']);
 }
 
+$json = json_encode($app->getCategories());
+
+$jsonp_callback = isset($_GET['callback']) ? $_GET['callback'] : null;
+
 header('Content-Type: application/json');
-echo json_encode($app->getCategories());
+echo $jsonp_callback ? "$jsonp_callback($json)" : $json;

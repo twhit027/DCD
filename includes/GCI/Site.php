@@ -18,7 +18,19 @@ class Site {
         5 => array('top' => '#000061', 'bottom' => '#00004c', 'border' => '#87ABC0'),
         6 => array('top' => '#000079', 'bottom' => '#000054', 'border' => '#87ABC0'),
         7 => array('top' => '#0000ae', 'bottom' => '#00007f', 'border' => '#87ABC0'),
-        8 => array('top' => '#00007b', 'bottom' => '#00005b', 'border' => '#87ABC0')
+        8 => array('top' => '#666156', 'bottom' => '#5A5347', 'border' => '#A9B55F'),
+        9 => array('top' => '#00007b', 'bottom' => '#00005b', 'border' => '#87ABC0'),
+        10 => array('top' => '#285737', 'bottom' => '#224F35', 'border' => '#151515'),
+        91 => array('top' => '#141414', 'bottom' => '#141414', 'border' => '#141414'),
+        92 => array('top' => '#141414', 'bottom' => '#141414', 'border' => '#141414'),
+        93 => array('top' => '#141414', 'bottom' => '#141414', 'border' => '#141414'),
+        94 => array('top' => '#141414', 'bottom' => '#141414', 'border' => '#141414'),
+        95 => array('top' => '#141414', 'bottom' => '#141414', 'border' => '#141414'),
+        96 => array('top' => '#141414', 'bottom' => '#141414', 'border' => '#141414'),
+        97 => array('top' => '#141414', 'bottom' => '#141414', 'border' => '#141414'),
+        98 => array('top' => '#141414', 'bottom' => '#141414', 'border' => '#141414'),
+        99 => array('top' => '#141414', 'bottom' => '#141414', 'border' => '#141414'),
+        100 => array('top' => '#141414', 'bottom' => '#141414', 'border' => '#141414')
     );
 
     private $siteCode;
@@ -33,6 +45,8 @@ class Site {
     private $dfp;
     private $dfpm;
 	private $gpaper;
+    private $topLinks;
+    private $bottomLinks;
 	
     public function __construct($data = '') {
         if (isset($data)) {
@@ -53,6 +67,8 @@ class Site {
 		$this->dfp = $data['DFP'];
 		$this->dfpm = $data['DFPmobile'];
 		$this->gpaper = $data['Gpaper'];
+        $this->topLinks = $data['TopLinks'];
+        $this->bottomLinks = $data['BottomLinks'];
     }
 
     public function getSiteCode() {
@@ -90,7 +106,12 @@ class Site {
 	public function getGpaper() {
         return $this->gpaper;
     }
-	
-	
-	
+
+    public function getBottomLinks() {
+        return $this->bottomLinks;
+    }
+
+    public function getTopLinks() {
+        return $this->topLinks;
+    }
 } 

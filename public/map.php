@@ -26,7 +26,7 @@ if(!empty($showcase) && !empty($rummages[$showcase])){
 	$rummageList .= "
 	<tr id='dcd-showcase'>
 		<td><input type='button' value='Add' onclick=\"visit(this,'".$showcase."');\" class='add btn btn-default' /></td>
-		<td>".$rummages[$showcase]["adText"]."</td>
+		<td class='dcd-adText' dcd-id='". $showcase."'>".$rummages[$showcase]["adText"]."</td>
 	</tr>
 	";
 	unset($rummages[$showcase]);
@@ -35,7 +35,7 @@ foreach($rummages as $k=>$v){
 	$rummageList .= "
 	<tr>
 		<td><input type='button' value='Add' onclick=\"visit(this,'".$k."');\" class='add btn btn-default' /></td>
-		<td>".$v["adText"]."</td>
+		<td class='dcd-adText' dcd-id='". $k."'>".$v["adText"]."</td>
 	</tr>
 	";
 }
@@ -63,7 +63,7 @@ $data = <<<EOS
 	<input type="hidden" name="place" value="$place" />
 	<input type="hidden" name="posit" value="$position" />
 	<input type="hidden" id="locations" name="locations" value="" />
-	<p>Please enter a starting address and select up to 8 places to visit, then click on 'Map Route'.</p>
+	<h4>Please enter a starting address and select up to 8 places to visit, then click on 'Map Route'.</h4>
 	<div id="map-it">
 		<div class="form-group">
 			<label for="Address" class="col-sm-2 control-label">Address</label>
@@ -85,12 +85,12 @@ $data = <<<EOS
 		</div>
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
-				<div class="checkbox">
+				<div class="checkbox-inline">
 					<label>
 						<input type="checkbox" value="true" name="avoidHighways"> Avoid Highways
 					</label>
 				</div>
-				<div class="checkbox">
+				<div class="checkbox-inline">
 					<label>
 						<input type="checkbox" value="true" name="avoidTolls"> Avoid Tolls
 					</label>
@@ -103,6 +103,7 @@ $data = <<<EOS
 			</div>
 		</div>
 	</div>
+	<p>Click or Tap on any entry to find on the map.</p>
 	<table class="table table-striped">
 		$rummageList
 	</table>

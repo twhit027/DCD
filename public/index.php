@@ -23,34 +23,31 @@ $mainContent = <<<EOS
     $search
 </div>
 
-<a href="$siteUrl" target="_blank"><img alt="$siteName Logo" title="$siteName" style="margin-bottom: 10px;background-color: black" src="$siteUrl/graphics/ody/cobrand_logo.gif"></a>
+<a href="$siteUrl" target="_blank"><img alt="$siteName Logo" title="$siteName" style="padding:10px;background-color:black;height:60px" src="http://www.gannett-cdn.com/sites/$siteName/images/site-nav-logo@2x.png"></a>
 <p>SELL easy and SELL fast!</p>
 <p>As the leading local media and trusted marketing solutions provider, we have a range of effective advertising packages to meet your needs.</p>
 <p>From VEHICLES to PETS to GARAGE SALES to SERVICES, we provide the most effective ways to sell to potential local buyers through our leading mobile, online and print solutions.</p>
 <p>Develop and launch your advertising program within minutes with just a few clicks, and begin connecting with local buyers TODAY!</p>
 <p><a class="button" href="http://$siteName.gannettclassifieds.com"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">Place an Ad</button></a></p>
+<p><a class="button" href="http://$siteName.com/classifiedshelp" target="_blank"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">Classifieds Help</button></a></p>
 <h1>Featured Partner Classified Services</h1>
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-4">
         <h4>Cars</h4>
         <a href="$siteUrl/cars"><img alt="Cars.com" src="img/partners/130-cars.gif"></a>
         <p><a class="button" href="$siteUrl/cars"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Autos</button></a></p>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
         <h4>Jobs</h4>
         <a href="$siteUrl/jobs"><img alt="micareerbuilder.com" src="img/partners/130-careerbuilder.gif"></a>
         <p><a class="button" href="$siteUrl/jobs"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Jobs</button></a></p>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
         <h4>Homes</h4>
         <a href="$siteUrl/homes"><img alt="homefinder.com" src="img/partners/130-homefinder.gif" ></a>
         <p><a class="button" href="$siteUrl/homes"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Homes</button></a></p>
     </div>
-    <div class="col-md-3">
-        <h4>Rentals</h4>
-        <a href="$siteUrl/apartments"><img alt="apartments.com" src="img/partners/130-apartments.gif" ></a>
-        <p><a class="button" href="$siteUrl/apartments"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Listings</button></a></p>
-    </div>
+    
 </div>
 EOS;
 
