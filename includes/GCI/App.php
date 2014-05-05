@@ -86,7 +86,7 @@ class App
     {
         $this->site = $site;
     }
-	
+
 
     private function getDefaultSiteData()
     {
@@ -104,7 +104,7 @@ class App
         $siteGroupString = $this->createSiteGroupString($siteGroup);
 
         $sql = "SELECT * FROM `listing` WHERE Placement = :place AND Position = :position AND StartDate <= :startDate AND SiteCode IN ( " . $siteGroupString . " )";
-        $params = array(':place' => $place, ':position' => $position, ':startDate' => date("Y-m-d") );
+        $params = array(':place' => $place, ':position' => $position, ':startDate' => date("Y-m-d"));
 
         if (!empty($route)) {
             $routeIDS = explode(",", $route);
@@ -126,17 +126,17 @@ class App
         //$dataArray['totalRows'] = $this->database->getCount("SELECT FOUND_ROWS()");
 
         foreach ($results as $row) {
-			if(!empty($row['Street']) && !empty($row['Lat']) && !empty($row['Long'])){
-				$dataArray['list'][$row['ID']] = array('adText' => $row['AdText']);
-				$dataArray['map'][$row['ID']] = array(
-					"street" => $row['Street'],
-					"city" => $row['City'],
-					"state" => $row['State'],
-					"zip" => $row['Zip'],
-					"lat" => $row['Lat'],
-					"lon" => $row['Long']
-				);
-			}
+            if (!empty($row['Street']) && !empty($row['Lat']) && !empty($row['Long'])) {
+                $dataArray['list'][$row['ID']] = array('adText' => $row['AdText']);
+                $dataArray['map'][$row['ID']] = array(
+                    "street" => $row['Street'],
+                    "city" => $row['City'],
+                    "state" => $row['State'],
+                    "zip" => $row['Zip'],
+                    "lat" => $row['Lat'],
+                    "lon" => $row['Long']
+                );
+            }
         }
 
         $this->rummages = $dataArray;
@@ -227,7 +227,7 @@ class App
         $categoriesArray = array();
         foreach ($results as $row) {
             @$categoriesArray[$row['Placement']][$row['Position']]['count'] += $row['Count'];
-			@$categoriesArray[$row['Placement']][$row['Position']]['url'] = $row['ExternalURL'];
+            @$categoriesArray[$row['Placement']][$row['Position']]['url'] = $row['ExternalURL'];
 
         }
 
@@ -245,7 +245,7 @@ class App
 
         $sitemap = array();
         foreach ($results as $row) {
-            @$sitemap[$row['Placement']][$row['Position']][$row['ExternalURL']][] = array("id"=>$row['ID'],"adText"=>$row['ATEXT']);
+            @$sitemap[$row['Placement']][$row['Position']][$row['ExternalURL']][] = array("id" => $row['ID'], "adText" => $row['ATEXT']);
         }
 
         return $sitemap;
@@ -299,7 +299,7 @@ class App
                     'images' => $row['Images'],
                     'position' => $row['Position'],
                     'placement' => $row['Placement'],
-					'externalURL' => $row['ExternalURL']
+                    'externalURL' => $row['ExternalURL']
                 );
             }
 
@@ -490,36 +490,54 @@ class App
 
         return $data;
     }
-	
-	
-	
 
 
-	function report($app, $fp) 
-	{
-	
-
-		$sql = "SELECT * FROM `listing` WHERE `SiteCode` = :site ";
+    function report($app, $fp)
+    {
+        $sql = "SELECT * FROM `listing` WHERE `SiteCode` = :site ";
         $params = array(':site' => $app->getSite()->getSiteCode());
 
-      
         $results = $this->database->getAssoc($sql, $params);
 
-
-
-		foreach ($results as $row) 
-		{
-
-			fputcsv($fp, $row);
+        foreach ($results as $row) {
+            fputcsv($fp, $row);
         }
-        
-        
+    }
 
-	}
-		
+    // these functions will only work on the feed side
+    public function setTopLinks($siteCode, $jsonString)
+    {
+        try {
+            $stmt = $this->database->prepare("UPDATE siteInfo SET TopLinks = :jsonString where SiteCode = :siteCode");
+            $stmt->execute(array(':jsonString' => $jsonString, ':siteCode' => $siteCode));
+        } catch (\PDOException $e) {
+            $logText = "Message:(" . $e->getMessage() . ") attempting to insert topLinks into the siteInfo table";
+            $this->log->logError($logText);
+        }
+    }
 
+    public function setBottomLinks($siteCode, $jsonString)
+    {
+        try {
+            $stmt = $this->database->prepare("UPDATE siteInfo SET BottomLinks = :jsonString where SiteCode = :siteCode");
+            $stmt->execute(array(':jsonString' => $jsonString, ':siteCode' => $siteCode));
+        } catch (\PDOException $e) {
+            $logText = "Message:(" . $e->getMessage() . ") attempting to insert BottomLinks into the siteInfo table";
+            $this->log->logError($logText);
+        }
 
+    }
 
+    function getAllSite()
+    {
+        $sql = "SELECT * FROM `siteinfo`";
+        $data = $this->database->getAssoc($sql);
 
+        // probably serve up a 404
+        if (empty($data)) {
+            header("Location: ./err/error404.php");
+        }
 
-} 
+        return $data;
+    }
+}

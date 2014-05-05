@@ -65,14 +65,12 @@ include('../includes/GCI/Ads.php');
         $app = new \GCI\App();
         $nav = new \GCI\Navigation();
         $palette = $app->getSite()->getPalette();
-        $top = \GCI\site::$paletteArray[$palette]['top'];
-        $bottom = \GCI\site::$paletteArray[$palette]['bottom'];
-        $border = \GCI\site::$paletteArray[$palette]['border'];
         $siteName = $app->getSite()->getSiteName();
         $siteUrl = $app->getSite()->getSiteUrl();
         $siteCode = $app->getSite()->getSiteCode();
         $busName = $app->getSite()->getBusName();
-        echo $nav->getTopNavigationStatic($siteUrl, $top, $bottom, $border,$siteCode);
+        $siteTopData = $app->getSite()->getTopLinks();
+        echo $nav->getTopNavigation($siteUrl, $palette, $siteName, $siteTopData);
         ?>
     </div>
 </header>
@@ -86,12 +84,6 @@ include('../includes/GCI/Ads.php');
             ft = $("#fullTextBox").val().trim();
             place='';
             posit='';
-            /*if ($('#place').val()) {
-             place= $('#place').val();
-             }
-             if ($('#place').val()) {
-             posit= $('#posit').val();
-             }*/
             window.location.href = 'category.php?place='+encodeURIComponent(place)+'&posit='+encodeURIComponent(posit)+'&ft='+encodeURIComponent(ft);
         });
 

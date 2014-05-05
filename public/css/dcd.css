@@ -1,0 +1,17 @@
+.footlinks ul {
+    display: inline;
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+}
+.footlinks li:first-child {
+    border-left: medium none;
+    padding-left: 0.25em;
+}
+.footlinks li {
+    border-left: 1px solid #AAAAAA;
+    display: inline-block;
+    line-height: 1.25em;
+    margin: 0.125em 0;
+    padding: 0 0.5em;
+}

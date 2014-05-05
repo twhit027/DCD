@@ -45,41 +45,34 @@ class Navigation
         return $data;
     }
 
-    function getTopNavigationStatic($siteUrl, $top, $bottom, $border, $siteCode = '')
+    function getTopNavigation($siteUrl, $paletteNumber = '', $siteName = '', $siteData = '')
     {
-        $siteData = @file_get_contents("./images/$siteCode/top.json");
-        $siteImage = $siteUrl . '/graphics/ody/cobrand_logo.gif';
+        $top = $bottom = $border = '';
+        if (!empty($paletteNumber)&& $paletteNumber < 90) {
+            $top = \GCI\site::$paletteArray[$paletteNumber]['top'];
+            $bottom = \GCI\site::$paletteArray[$paletteNumber]['bottom'];
+            $border = \GCI\site::$paletteArray[$paletteNumber]['border'];
+        }
+
+        //$siteImage = $siteUrl . '/graphics/ody/cobrand_logo.gif';
         //$siteImage = $siteUrl . '/graphics/ody/mast_logo.gif"';
+        $siteImage = "http://www.gannett-cdn.com/sites/$siteName/images/site-nav-logo@2x.png";
 
         $siteLinks = array(
             'JOBS' => $siteUrl . '/jobs',
             'CARS' => $siteUrl . '/cars',
             'HOMES' => $siteUrl . '/homes',
-            'APARTMENTS' => $siteUrl . '/apartments',
             'DATING' => $siteUrl . '/dating',
             'BUY & SELL' => $siteUrl . '/newclass/front/'
         );
 
-        if ($siteData !== false) {
-            $siteDataArray = json_decode($siteData, true);
-
-            $siteUrl = $siteDataArray['siteUrl'];
-            $siteImage = $siteDataArray['siteImage'];
-            $siteLinks = $siteDataArray['siteLinks'];
-
-            $top = $bottom = $border = '';
-            if (isset($siteDataArray['saxo'])) {
-                $top = $siteDataArray['saxo']['top'];
-                $bottom = $siteDataArray['saxo']['bottom'];
-                $border = $siteDataArray['saxo']['border'];
-
-                //$imageLi = '<li><a href="'.$siteUrl.'/"><img style="height:40;" class="img-responsive" src="'.$siteImage.'"/></a></li>';
-            }
+        if (!empty($siteData)) {
+            $siteLinks = json_decode($siteData, true);
         }
 
         $data = '';
 
-        if (isset($top) && isset($bottom) && isset($border)) {
+        if (!empty($top) && !empty($bottom) && !empty($border)) {
             $data .= '<style>.navbar-inverse {
                 background: -webkit-linear-gradient(' . $top . ', ' . $bottom . '); /* For Safari */
                 background: -o-linear-gradient(' . $top . ', ' . $bottom . '); /* For Opera 11.1 to 12.0 */
@@ -91,7 +84,9 @@ class Navigation
 
         $data .= '<nav id="grad" role="navigation" class="collapse navbar-collapse bs-navbar-collapse top-navbar"><ul class="nav navbar-nav">';
 
-        $data .= '<li style="height:40px"><a href="'.$siteUrl.'/" style="margin:0;padding:0;"><img style="padding-top:10px;height:40px" src="'.$siteImage.'"/></a></li>';
+        $data .=  '<li style="height:40px"><a style="margin:5px;padding:0;" href="'.$siteUrl.'/"><img style="height:40px" class="img-responsive" src="'.$siteImage.'"/></a></li>';
+
+        //$data .= '<li style="height:40px"><a href="'.$siteUrl.'/" style="margin:0;padding:0;"><img style="padding-top:10px;height:40px" src="'.$siteImage.'"/></a></li>';
 
         foreach ($siteLinks as $linkName => $linkHref) {
             $data .= '<li><a href="'.$linkHref.'">'.$linkName.'</a></li>';
@@ -102,21 +97,42 @@ class Navigation
         return $data;
     }
 
-    function getBottomNavigationStatic($siteUrl, $siteName)
+    function getBottomNavigation($siteUrl, $paletteNumber = '', $siteName, $siteData = '')
     {
-        $data = '<hr /><div class="container" style="font-size: 12px;line-height: 16px;text-align: center"><p>';
-        $data .= '<a href="' . $siteUrl . '/news">News</a>&nbsp;|&nbsp;';
-        $data .= '<a href="' . $siteUrl . '/sports">Sports</a>&nbsp;|&nbsp;';
-        $data .= '<a href="' . $siteUrl . '/business">Business</a>&nbsp;|&nbsp;';
-        $data .= '<a href="' . $siteUrl . '/entertainment">Entertainment</a>&nbsp;|&nbsp;';
-        $data .= '<a href="' . $siteUrl . '/life">Life</a>&nbsp;|&nbsp;';
-        $data .= '<a href="' . $siteUrl . '/communities">Communities</a>&nbsp;|&nbsp;';
-        $data .= '<a href="' . $siteUrl . '/opinion">Opinion</a>&nbsp;|&nbsp;';
-        $data .= '<a href="http://www.legacy.com/obituaries/' . $siteName . '/">Obituaries</a>&nbsp;|&nbsp;';
-        $data .= '<a href="' . $siteUrl . '/help">Help</a></p>';
-        $data .= '<p>Copyright &copy; 2014 www.' . $siteName . '.com. All rights reserved. Users of this site agree to the ';
-        $data .= '<a href="' . $siteUrl . '/section/terms">Terms of Service</a>, ';
-        $data .= '<a href="' . $siteUrl . '/section/privacy">Privacy Notice</a>, and <a href="' . $siteUrl . '/section/privacy#adchoices">Ad Choices</a></p></div>';
+        $siteLinks = array(
+            'News' => $siteUrl . '/news',
+            'Sports' => $siteUrl . '/sports',
+            'Business' => $siteUrl . '/business',
+            'Entertainment' => $siteUrl . '/entertainment',
+            'Life' => $siteUrl . '/life',
+            'Communities' => $siteUrl . '/communities',
+            'Opinion' => $siteUrl . '/opinion',
+            'Obituaries' => 'http://www.legacy.com/obituaries/' .$siteName . '/',
+            'Help' => $siteUrl . '/help',
+        );
+
+        if (!empty($siteData)) {
+            $siteLinks = json_decode($siteData, true);
+        }
+
+        $data = '<hr /><div class="container" style="font-size:12px;line-height:16px;text-align: center">';
+        $data .= '<div id="footlinks" class="footlinks"><ul>';
+        foreach ($siteLinks as $linkName => $linkHref) {
+            $data .= '<li><a href="'.$linkHref.'">'.$linkName.'</a></li>';
+        }
+        $data .= '</ul></div>';
+        if ($paletteNumber < 90) {
+            $data .= '<p>Copyright &copy; '.date('Y').' www.' . $siteName . '.com. All rights reserved. Users of this site agree to the ';
+            $data .= '<a href="' . $siteUrl . '/section/terms">Terms of Service</a>, ';
+            $data .= '<a href="' . $siteUrl . '/section/privacy">Privacy Notice</a>, and <a href="' . $siteUrl . '/section/privacy#adchoices">Ad Choices</a></p>';
+        } else {
+            $data .= '<p>All rights reserved. Users of this site agree to the <a href="'.$siteUrl.'/legal/tos.html">Terms of Service</a>,';
+            $data .= ' <a href="'.$siteUrl.'/legal/privacynotice.html">Privacy Notice/Your California Privacy Rights</a>, and';
+            $data .= ' <a href="'.$siteUrl.'/legal/privacynotice.html#adchoices">Ad Choices</a></p>';
+        }
+
+        $data .= '</div>';
+
         return $data;
     }
 } 

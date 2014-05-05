@@ -2,8 +2,8 @@
 /**
  * Created by DCDGroup.
  * User: JHICKS
- * Date: 4/22/14
- * Time: 12:44 PM
+ * Date: 4/24/14
+ * Time: 1:32 PM
  */
 
 error_reporting(0);
@@ -43,7 +43,7 @@ $siteName = $app->getSite()->getSiteName();
 $siteImage = "http://www.gannett-cdn.com/sites/$siteName/images/site-nav-logo@2x.png";
 
 if (isset($_REQUEST['nocache']) && ($_REQUEST['nocache'] == '1')) {
-    $prestoUrl = rtrim($siteUrl,'/') . '/services/cobrand/header/';
+    $prestoUrl = rtrim($siteUrl,'/') . '/services/cobrand/footer/';
     $saxoUrl = rtrim($siteUrl, '/') . '/section/cobrandheaderlite/';
 
     //simplehtmldom
@@ -63,8 +63,7 @@ if (isset($_REQUEST['nocache']) && ($_REQUEST['nocache'] == '1')) {
         }
     } elseif (url_exists($saxoUrl)) {
         if ($html = @file_get_html($saxoUrl)) {
-            $saxo = true;
-            foreach ($html->find('div.ody-cobrandLinksLite li a') as $element) {
+            foreach ($html->find('div.ody-footLite li a') as $element) {
                 $siteLinks[trim($element->plaintext)] = $element->href;
             }
         }
@@ -74,7 +73,7 @@ if (isset($_REQUEST['nocache']) && ($_REQUEST['nocache'] == '1')) {
         $data = json_encode($siteLinks);
 
         if (isset($_REQUEST['write']) && ($_REQUEST['write'] == 'True')) {
-            $app->setTopLinks($siteCode, $data);
+            $app->setBottomLinks($siteCode, $data);
         }
     }
 }
