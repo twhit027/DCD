@@ -128,6 +128,7 @@ class ClassifiedsAdmin extends PDO
     private $db_user = DB_USER;
     private $db_pass = DB_PASS;
     private $db_name = DB_NAME;
+	private $rummage_count_correction;
 
     public function __construct()
     {
@@ -320,9 +321,10 @@ class ClassifiedsAdmin extends PDO
     function updateGeocodes()
     {
         $results = array();
-
+		$rummageCount = array();
+		
         try {
-            $stmt = $this->prepare("SELECT `ID`, `Street`, `City`, `State`, `Zip` FROM `listing` WHERE `Street` != '' AND (`Lat` IS NULL OR `Lat` = '')");
+            $stmt = $this->prepare("SELECT `ID`, `Street`, `City`, `State`, `Zip`, `Placement`, `Position` FROM `listing` WHERE `Street` != '' AND (`Lat` IS NULL OR `Lat` = '')");
             $stmt->execute();
             $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
             $count = $stmt->rowCount();
@@ -331,7 +333,7 @@ class ClassifiedsAdmin extends PDO
             fwrite(STDERR, $logText . "\n");
             $return = 12;
         }
-
+		
         foreach ($results as $row) {
             $address = $row['Street'];
             if (!empty($row['City'])) {
@@ -343,6 +345,9 @@ class ClassifiedsAdmin extends PDO
             if (!empty($row['Zip'])) {
                 $address .= " " . $row['Zip'];
             }
+			if(empty($rummageCount[$row['Placement']][$row['Position']])){
+				$rummageCount[$row['Placement']][$row['Position']] = 0;
+			}
 
             $latlon = $this->getLocation($address);
 
@@ -354,16 +359,48 @@ class ClassifiedsAdmin extends PDO
 			try {
 				$stmt = $this->prepare("UPDATE `listing` SET `Lat` = :lat, `Long` = :lon, `ExternalURL` = '1' WHERE `ID` = :id ");
 				$stmt->execute(array(":lat" => $latlon['lat'], ":lon" => $latlon['lon'], ":id" => $row['ID']));
+				$rummageCount[$row['Placement']][$row['Position']]++;
 			} catch (PDOException $e) {
 				$logText = "Message:(" . $e->getMessage() . ") Updating listing, adding Long and Lat for ".$row['ID'];
 				fwrite(STDERR, $logText . "\n");
+				$rummageCount[$row['Placement']][$row['Position']]--;
 				$return = 14;
 			}
 
             //Slow this down so we don't run into problems with Google's Geocoding limits
             sleep(1);
         }
+		
+		$this->rummage_count_correction = $rummageCount;
     }
+	
+	function makeCountCorrections(){
+		$corrections = $this->rummage_count_correction;
+		
+        try {
+            $stmt = $this->prepare("SELECT `ID`, `Placement`, `Position`, `Count` FROM `position`");
+            $stmt->execute();
+            $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            $logText = "Message:(" . $e->getMessage() . ") Selecting counts from position";
+            fwrite(STDERR, $logText . "\n");
+            $return = 16;
+        }
+		
+		foreach($results as $row){
+			if($row['Count'] != $corrections[$row['Placement']][$row['Position']]){
+				try {
+					$stmt = $this->prepare("UPDATE `position` SET `Count` = :count WHERE `ID` = :id ");
+					$stmt->execute(array(":count" => $corrections[$row['Placement']][$row['Position']],":id" => $row['ID']));
+				} catch (PDOException $e) {
+					$logText = "Message:(" . $e->getMessage() . ") Updating position, changing count for ".$row['ID'];
+					fwrite(STDERR, $logText . "\n");
+					$return = 18;
+				}
+			}
+		}
+		
+	}
 }
 
 $user = new ClassifiedsAdmin();
@@ -390,6 +427,7 @@ foreach ($fileArray as $file) {
 $user->deleteOldListings();
 $user->updateGeocodes();
 $user->buildNav();
+$user->makeCountCorrections();
 
 exit($return);
 ?>
