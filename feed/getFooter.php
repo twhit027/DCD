@@ -48,8 +48,8 @@ function url_exists($url){
 $app = new \GCI\App($siteId);
 
 $siteCode = $app->getSite()->getSiteCode();
-$siteLinks = $app->getSite()->getTopLinks();
-//$bottomLinks = $app->getSite()->getBottomLinks();
+$siteLinks = $app->getSite()->getBottomLinks();
+//$bottomLinks = $app->getSite()->getTopLinks();
 $siteUrl = $app->getSite()->getSiteUrl();
 $palette = $app->getSite()->getPalette();
 $siteName = $app->getSite()->getSiteName();
