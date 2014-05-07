@@ -17,12 +17,12 @@ $siteResults = $dbConn->getAssoc("SELECT * FROM `siteinfo` order by State");
 $siteData = '<table class="table table-striped">';
 foreach($siteResults as $site) {
     $siteData .= '<tr><td><a href="http://'.$site['Url'].'">'.$site['SiteName'] .'</a></td></tr>';
-
+}
 $siteData .= '</table>';
 
 $webmaster = "webmaster@gannett.com";
 $host     = getenv("REMOTE_HOST");
-$referrer = getenv("HTTP_REFERER");}
+$referrer = getenv("HTTP_REFERER");
 $path     = getenv("REQUEST_URI");
 
 // time in this format: 13/Nov/2000:10:50:38
