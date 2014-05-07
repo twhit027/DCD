@@ -238,8 +238,8 @@ class App
     {
         $siteGroupString = $this->createSiteGroupString($this->getSite()->getSiteGroup());
 
-        $sql = "SELECT LEFT(AdText,50) AS ATEXT, ID, Placement, Position, ExternalURL FROM `listing` WHERE SiteCode in( $siteGroupString )";
-        $params = array();
+        $sql = "SELECT LEFT(AdText,50) AS ATEXT, ID, Placement, Position, ExternalURL FROM `listing` WHERE StartDate <= :startDate and SiteCode in( $siteGroupString )";
+        $params[':startDate'] = date("Y-m-d");
 
         $results = $this->database->getAssoc($sql, $params);
 
