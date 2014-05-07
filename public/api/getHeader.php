@@ -34,7 +34,8 @@ function url_exists($url){
 $app = new \GCI\App();
 
 $siteCode = $app->getSite()->getSiteCode();
-$siteLinks = $app->getSite()->getBottomLinks();
+$siteLinks = $app->getSite()->getTopLinks();
+//$bottomLinks = $app->getSite()->getBottomLinks();
 $siteUrl = $app->getSite()->getSiteUrl();
 $palette = $app->getSite()->getPalette();
 $siteName = $app->getSite()->getSiteName();
