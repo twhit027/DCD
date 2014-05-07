@@ -35,6 +35,7 @@ $app = new \GCI\App();
 
 $siteCode = $app->getSite()->getSiteCode();
 $siteLinks = $app->getSite()->getBottomLinks();
+//$topLinks = $app->getSite()->getTopLinks();
 $siteUrl = $app->getSite()->getSiteUrl();
 $palette = $app->getSite()->getPalette();
 $siteName = $app->getSite()->getSiteName();
