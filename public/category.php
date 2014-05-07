@@ -95,16 +95,20 @@ else
             $imgCnt = 0;
             foreach($imageArray as $imgSrc) {
                 if ($imgCnt == 0) {
-                    $dataInfo .= '<a class="fancybox" href="images/'.$row['siteCode'].'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox '.$row['id'].'_group">Pic</a>';
+                    $dataInfo .= '<a class="fancybox" href="images/'.$row['siteCode'].'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox '.$row['id'].'_group" title="Picture"><span class="glyphicon glyphicon-picture"></span></a>';
                 } else {
-                    $dataInfo .= '<div style="display: none"><a class="fancybox" href="images/'.$row['siteCode'].'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox '.$row['id'].'_group" >Pic</a></div>';
+                    $dataInfo .= '<div style="display: none"><a class="fancybox" href="images/'.$row['siteCode'].'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox '.$row['id'].'_group" title="Picture"><span class="glyphicon glyphicon-picture"></span></a></div>';
                 }
                 $imgCnt++;
             }
         }
         if (!empty($map)) {
             if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
-            $dataInfo .= '<a href="#" style="color:#00881A;">Map</a>';
+            $dataInfo .= '<a href="#" style="color:#00881A;" title="Map"><span class="glyphicon glyphicon-map-marker"></span></a>';
+        }
+        if (!empty($morInfo)) {
+            if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
+            $dataInfo .= '<a href="#" style="color:#0052f4;" title="More Information"><span class="glyphicon glyphicon-info-sign"></span></a>';
         }
         $dataInfo .= '</div>';
         $data .= "<div class='jumbotron' style='padding-top: 30px; word-wrap: break-word;'>";
