@@ -111,7 +111,7 @@ else
         $data .= "$dataInfo";
 		$data .= "<p>" . $string . "</p>";
 		if($row['externalURL'] === "1"){
-			$data .= '<p><a href="map.php?place='.$row['placement'].'&posit='.$row['position'].'&ad='.$row['id'].'">View on map</a><p>';
+			$data .= '<p><a href="map.php?place='.urlencode($row['placement']).'&posit='.urlencode($row['position']).'&ad='.urlencode($row['id']).'">View on map</a><p>';
 		}
 		$data .= '<a href="http://twitter.com/home?status=' . substr($row['adText'], 0, 120) . '" target="_blank"><img src="img/twitter-24.png" /></a>&nbsp';
 		$data .= '<a href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/facebook-24.png" /></a>&nbsp';
