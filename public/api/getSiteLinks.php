@@ -32,38 +32,66 @@ function url_exists($url){
     }
 }
 
-$app = new \GCI\App();
+$siteId = '';
+$noCache = false;
+$write = false;
+$getAllSites = false;
 
-$sitesArray = $app->getAllSite();
+if (isset($_REQUEST['siteid'])) {
+    $siteId = $_REQUEST['siteid'];
+}
+if (isset($_REQUEST['nocache']) && ($_REQUEST['nocache'] == '1')) {
+    $noCache = true;
+}
+if (isset($_REQUEST['write']) && ($_REQUEST['write'] == '1')) {
+    $write = true;
+}
+if (isset($_REQUEST['getallsites']) && ($_REQUEST['getallsites'] == '1')) {
+    $getAllSites = true;
+}
+
+$app = new \GCI\App($siteId);
+
+if ($getAllSites) {
+    $sitesArray = $app->getAllSite();
+} else {
+    $sitesArray[1]['SiteCode'] = $app->getSite()->getSiteCode();
+    $sitesArray[1]['TopLinks'] = $app->getSite()->getTopLinks();
+    $sitesArray[1]['BottomLinks'] = $app->getSite()->getBottomLinks();
+    $sitesArray[1]['SiteUrl'] = $app->getSite()->getSiteUrl();
+    $sitesArray[1]['Palette'] = $app->getSite()->getPalette();
+    $sitesArray[1]['SiteName'] = $app->getSite()->getSiteName();
+}
 
 foreach($sitesArray as $site) {
     $siteCode = $site['SiteCode'];
-    $siteLinks = $site['TopLinks'];
+    $topLinks = $site['TopLinks'];
+    $bottomLinks = $site['BottomLinks'];
     $siteUrl = $site['SiteUrl'];
     $palette = $site['Palette'];
     $siteName = $site['SiteName'];
     $foundPalette = '';
     $saxo = false;
-    $noData = false;
 
     $siteImage = "http://www.gannett-cdn.com/sites/$siteName/images/site-nav-logo@2x.png";
 
-    if (isset($_REQUEST['nocache']) && ($_REQUEST['nocache'] == '1')) {
-        $prestoUrl = rtrim($siteUrl,'/') . '/services/cobrand/header/';
+    if ($noCache) {
+        $prestoHeaderUrl = rtrim($siteUrl,'/') . '/services/cobrand/header/';
+        //$prestoFooterUrl = rtrim($siteUrl,'/') . '/services/cobrand/footer/';
         $saxoUrl = rtrim($siteUrl, '/') . '/section/cobrandheaderlite/';
 
         //simplehtmldom
         require_once '../../vendor/simplehtmldom/simple_html_dom.php';
 
-        $siteLinks = array();
-        $data = '';
+        $topLinks = array();
+        $bottomLinks = array();
 
-        if (url_exists($prestoUrl)) {
-            if ($html = @file_get_html($prestoUrl)) {
+        if (url_exists($prestoHeaderUrl)) {
+            if ($html = @file_get_html($prestoHeaderUrl)) {
                 // Find all links
                 foreach ($html->find('a.site-nav-link') as $element) {
                     if (trim($element->plaintext) != '') {
-                        $siteLinks[trim($element->plaintext)] = $element->href;
+                        $topLinks[trim($element->plaintext)] = $element->href;
                     }
                 }
             }
@@ -78,33 +106,38 @@ foreach($sitesArray as $site) {
                 }
 
                 foreach ($html->find('div.ody-cobrandLinksLite li a') as $element) {
-                    $siteLinks[trim($element->plaintext)] = $element->href;
+                    $topLinks[trim($element->plaintext)] = $element->href;
+                }
+                foreach ($html->find('div.ody-footLite li a') as $element) {
+                    $bottomLinks[trim($element->plaintext)] = $element->href;
                 }
             }
         }
 
-        if (!empty($siteLinks)) {
-            $data = json_encode($siteLinks);
-
-            if (isset($_REQUEST['write']) && ($_REQUEST['write'] == 'True')) {
-                $app->setTopLinks($siteCode, $data);
+        if ($write) {
+            if (!empty($topLinks)) {
+                $app->setTopLinks($siteCode, json_encode($topLinks));
+            }
+            if (!empty($bottomLinks)) {
+                $app->setBottomLinks($siteCode, json_encode($bottomLinks));
             }
         }
     }
 
     $newData[$siteCode]['siteUrl'] = $siteUrl;
     $newData[$siteCode]['siteImage'] = $siteImage;
-    $newData[$siteCode]['sitelinks'] = $siteLinks;
-    if ($noData) {
-        $newData[$siteCode]['error'] = $siteLinks;
-    }
-    if (isset($_REQUEST['nocache']) && ($_REQUEST['nocache'] == '1')) {
+    $newData[$siteCode]['topLinks'] = $topLinks;
+    $newData[$siteCode]['bottomLinks'] = $bottomLinks;
+
+    if ($noCache) {
         if (!empty($foundPalette) && ($foundPalette != $palette)) {
-            $newData[$siteCode]['saxo']['error']['palette'] = $palette;
+            $newData[$siteCode]['saxo']['error']['setPalette'] = $palette;
             $newData[$siteCode]['saxo']['error']['foundPalette'] = $foundPalette;
         }
         if (!$saxo && ($palette < 90)) {
-            $newData[$siteCode]['saxo']['error']['text'] = 'not saxo';
+            $newData[$siteCode]['saxo']['error']['nonSaxoPalette'] = $palette;
+        } elseif ($saxo && ($palette > 89)) {
+            $newData[$siteCode]['saxo']['error']['nonGDPPalette'] = $palette;
         }
     }
     if ($palette < 90) {
