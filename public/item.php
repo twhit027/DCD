@@ -19,8 +19,8 @@ $position = urldecode($_REQUEST['posit']);
 $listings = $app->getSingleListing($id);
 
 $cleanAdText = strip_tags($listings['adText']);
-$siteCode = $listings['position'];
-$placement = $listings['placement'];
+$siteCode = urlencode($listings['position']);
+$placement = urlencode($listings['placement']);
 $position = $listings['position'];
 $imageArray = array();
 if (!empty($listings['images'])) {
