@@ -81,10 +81,12 @@ else
         $row['adText'] = strip_tags($row['adText']);
 		if (strlen($row['adText']) > 200) {
 			//$string = substr($row['adText'], 0, 200) . "... <a  href='item.php?id=" . $row['id'] . "&place=".$placement."&posit=" . $position . "'>Click for full text</a>";
-            $string = "<div id='dcd-short-".$count."'>".substr(strip_tags($row['adText']),0,200)."... </div><div class='dcd-content-text' style='display: none' id='dcd-content-".$count."'>".strip_tags($row['adText'])."</div><a href='item.php?id=" . $row['id'] . "&place=".$placement."&posit=" . $position . "' class='dcd-expand-text' data-id='".$count."'>Click for full text</a>";
+            $string = "<div id='dcd-short-".$count."'><p>".substr(strip_tags($row['adText']),0,200)."... </p></div>";
+            $string .= "<div class='dcd-content-text' style='display: none' id='dcd-content-".$count."'><p>".$row['adText']."</p></div>";
+            $string .= "<a href='item.php?id=" . $row['id'] . "&place=".$placement."&posit=" . $position . "' class='dcd-expand-text' data-id='".$count."'>Click for full text</a><br /><br />";
             $count++;
 		} else {
-			$string = $row['adText'];
+			$string = '<p>'.$row['adText'].'</p>';
 		}
 
         $dataInfo = '<div class=".small" style="padding-bottom:10px; color:#0052f4">'.$row['siteCode'];
@@ -113,7 +115,7 @@ else
         $dataInfo .= '</div>';
         $data .= "<div class='jumbotron' style='padding-top: 30px; word-wrap: break-word;'>";
         $data .= "$dataInfo";
-		$data .= "<p>" . $string . "</p>";
+		$data .= $string;
 		if($row['externalURL'] === "1"){
 			$data .= '<p><a href="map.php?place='.urlencode($row['placement']).'&posit='.urlencode($row['position']).'&ad='.urlencode($row['id']).'">View on map</a><p>';
 		}
