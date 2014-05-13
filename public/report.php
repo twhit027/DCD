@@ -8,15 +8,16 @@ include('../includes/GCI/App.php');
 include('../includes/GCI/Navigation.php');
 include('../includes/GCI/Ads.php');
 
+$startDate = '';
+
+if (isset($_REQUEST['sd']) && ($_REQUEST['sd'] == '1')) {
+    $startDate = 1;
+}
 
 if (isset($_POST['user']) && isset($_POST['pass'])) {
     if ($_POST['user'] == "reportusr" && $_POST['pass'] == "uscpclassifieds") {
         $app = new \GCI\App();
-        $app->logInfo('Landin Page(FORWARDED_FOR: ' . @$_SERVER['HTTP_X_FORWARDED_FOR'] . ', REMOTE_ADDR: ' . @$_SERVER['REMOTE_ADDR'] . ',HTTP_HOST: ' . @$_SERVER['HTTP_HOST'] . 'SERVER_NAME: ' . @$_SERVER['SERVER_NAME'] . ')');
-        $startDate = '';
-        if (isset($_REQUEST['sd']) && ($_REQUEST['sd'] == '1')) {
-            $startDate = 1;
-        }
+        $app->logInfo('Report Page(FORWARDED_FOR: ' . @$_SERVER['HTTP_X_FORWARDED_FOR'] . ', REMOTE_ADDR: ' . @$_SERVER['REMOTE_ADDR'] . ',HTTP_HOST: ' . @$_SERVER['HTTP_HOST'] . 'SERVER_NAME: ' . @$_SERVER['SERVER_NAME'] . ')');
 
         $results = $app->report($startDate);
 
@@ -37,6 +38,7 @@ if (isset($_POST['user']) && isset($_POST['pass'])) {
 <form method="POST" action="report.php">
     <label for="user-password">User: </label><input id="user" name="user" />
     <label for="user-password">Password: </label><input type="password" id="pass" name="pass" />
+    <input type="hidden" name="sd" value="<?php echo $startDate; ?>">
     <input type="submit" name="submit" value="Go">
 </form>
 
