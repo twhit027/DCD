@@ -495,13 +495,9 @@ class App
     function report($app, $fp)
     {
         $sql = "SELECT * FROM `listing` WHERE `SiteCode` = :site ";
-        $params = array(':site' => $app->getSite()->getSiteCode());
+        $params = array(':site' => $this->getSite()->getSiteCode());
 
-        $results = $this->database->getAssoc($sql, $params);
-
-        foreach ($results as $row) {
-            fputcsv($fp, $row);
-        }
+        return $this->database->getAssoc($sql, $params);
     }
 
     // these functions will only work on the feed side
