@@ -491,11 +491,11 @@ class App
         return $data;
     }
 
-
-    function report($app, $fp)
+    function report($startDate = '')
     {
-        $sql = "SELECT * FROM `listing` WHERE `SiteCode` = :site ";
-        $params = array(':site' => $this->getSite()->getSiteCode());
+        $siteGroupString = $this->createSiteGroupString($this->getSite()->getSiteGroup());
+        $sql = "SELECT * FROM `listing` WHERE `SiteCode` in ( $siteGroupString )";
+        $params = array();
 
         return $this->database->getAssoc($sql, $params);
     }
