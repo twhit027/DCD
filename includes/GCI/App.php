@@ -502,6 +502,8 @@ class App
             $params[':startDate'] = date("Y-m-d");
         }
 
+        echo "sql: $sql";
+
         return $this->database->getAssoc($sql, $params);
     }
 
