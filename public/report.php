@@ -9,50 +9,34 @@ include('../includes/GCI/Navigation.php');
 include('../includes/GCI/Ads.php');
 
 
-if(isset($_POST['user']) && isset($_POST['pass']))
-{
-	if( $_POST['user'] == "reportusr" && $_POST['pass'] == "uscpclassifieds")
-	{
-		$app = new \GCI\App();
-		
-		$app->logInfo('Landin Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].', REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].',HTTP_HOST: '.@$_SERVER['HTTP_HOST'].'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].')');
-		
-		$search = $app->getSearch();
-		$siteName = $app->getSite()->getSiteName();
-		$siteUrl = $app->getSite()->getSiteUrl();
-		$busName = $app->getSite()->getBusName();
+if (isset($_POST['user']) && isset($_POST['pass'])) {
+    if ($_POST['user'] == "reportusr" && $_POST['pass'] == "uscpclassifieds") {
+        $app = new \GCI\App();
+        $app->logInfo('Landin Page(FORWARDED_FOR: ' . @$_SERVER['HTTP_X_FORWARDED_FOR'] . ', REMOTE_ADDR: ' . @$_SERVER['REMOTE_ADDR'] . ',HTTP_HOST: ' . @$_SERVER['HTTP_HOST'] . 'SERVER_NAME: ' . @$_SERVER['SERVER_NAME'] . ')');
+        $startDate = '';
+        if (isset($_REQUEST['sd']) && ($_REQUEST['sd'] == '1')) {
+            $startDate = 1;
+        }
 
-        $results = $app->report();
+        $results = $app->report($startDate);
 
-        header( 'Content-Type: text/csv' );
-        header( 'Content-Disposition: attachment;filename=report.csv');
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment;filename=report.csv');
         $fp = fopen('php://output', 'w');
-        fputcsv($fp, $results);
+        foreach ($results as $row) {
+            fputcsv($fp, $row);
+        }
         fclose($fp);
-	}
-	else
-	{
-		
-		echo "<h1> Invalid Password, please try again</h1>";
-		echo '
-		<form method="POST" action="report.php">
-User <input type="text" name="user"></input><br/>
-Pass <input type="password" name="pass"></input><br/>
-<input type="submit" name="submit" value="Go"></input>
-</form>
-';
-		
-	}
-}
-else
-{
-		echo '
-		<form method="POST" action="report.php">
-		User <input type="text" name="user"></input><br/>
-		Pass <input type="password" name="pass"></input><br/>
-		<input type="submit" name="submit" value="Go"></input>
-		</form>
-		';
+        exit;
+    } else {
+        echo "<h1> Invalid Password, please try again</h1>";
+    }
 }
 ?>
+
+<form method="POST" action="report.php">
+    <label for="user-password">User: </label><input id="user" name="user" />
+    <label for="user-password">Password: </label><input type="password" id="pass" name="pass" />
+    <input type="submit" name="submit" value="Go">
+</form>
 
