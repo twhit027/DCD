@@ -13,12 +13,6 @@ if(isset($_POST['user']) && isset($_POST['pass']))
 {
 	if( $_POST['user'] == "reportusr" && $_POST['pass'] == "uscpclassifieds")
 	{
-		
-		
-		header( 'Content-Type: text/csv' );
-		header( 'Content-Disposition: attachment;filename=report.csv');
-		$fp = fopen('php://output', 'w');
-						
 		$app = new \GCI\App();
 		
 		$app->logInfo('Landin Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].', REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].',HTTP_HOST: '.@$_SERVER['HTTP_HOST'].'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].')');
@@ -28,7 +22,13 @@ if(isset($_POST['user']) && isset($_POST['pass']))
 		$siteUrl = $app->getSite()->getSiteUrl();
 		$busName = $app->getSite()->getBusName();
 
-		echo $app->report($app, $fp);
+        $results = $app->report();
+
+        header( 'Content-Type: text/csv' );
+        header( 'Content-Disposition: attachment;filename=report.csv');
+        $fp = fopen('php://output', 'w');
+        fputcsv($fp, $results);
+        fclose($fp);
 	}
 	else
 	{
