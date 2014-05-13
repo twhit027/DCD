@@ -497,6 +497,11 @@ class App
         $sql = "SELECT * FROM `listing` WHERE `SiteCode` in ( $siteGroupString )";
         $params = array();
 
+        if (!empty($startDate)) {
+            $sql .= " AND StartDate <= :startDate";
+            $params[':startDate'] = date("Y-m-d");
+        }
+
         return $this->database->getAssoc($sql, $params);
     }
 
