@@ -491,17 +491,18 @@ class App
         return $data;
     }
 
-
-    function report($app, $fp)
+    function report($startDate = '')
     {
-        $sql = "SELECT * FROM `listing` WHERE `SiteCode` = :site ";
-        $params = array(':site' => $app->getSite()->getSiteCode());
+        $siteGroupString = $this->createSiteGroupString($this->getSite()->getSiteGroup());
+        $sql = "SELECT * FROM `listing` WHERE `SiteCode` in ( $siteGroupString )";
+        $params = array();
 
-        $results = $this->database->getAssoc($sql, $params);
-
-        foreach ($results as $row) {
-            fputcsv($fp, $row);
+        if (!empty($startDate)) {
+            $sql .= " AND StartDate <= :startDate";
+            $params[':startDate'] = date("Y-m-d");
         }
+
+        return $this->database->getAssoc($sql, $params);
     }
 
     // these functions will only work on the feed side

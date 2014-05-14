@@ -245,6 +245,13 @@ function getSubDomain ($domain) {
             <td class="small"><?php echo $_SERVER['CONTEXT_DOCUMENT_ROOT'];?></td>
         </tr>
         <?php
+        $siteUrl= 'http://maps.googleapis.com/maps/api/js?sensor=false';
+        $siteStatus = 'Failed';
+        if (url_exists("http://maps.googleapis.com/maps/api/js?sensor=false")) {
+            $siteStatus = 'Passed';
+        }
+        echo '<tr class="headlin"><td colspan="3">Google API</td></tr>';
+        echo '<tr><td class="smallbold">'.$siteUrl.'</td><td style="width:10px"></td><td class="small">'.$siteStatus.'</td></tr>';
 
         if (!empty($_GET['dns'])) {
             $default_opts = array(
@@ -278,14 +285,6 @@ function getSubDomain ($domain) {
                 }
                 echo '<tr><td class="smallbold">'.$siteUrl.'</td><td style="width:10px"></td><td class="small">'.$siteStatus.'</td></tr>';
             }
-
-            $siteUrl= 'http://maps.googleapis.com/maps/api/js?sensor=false';
-            $siteStatus = 'Failed';
-            if (url_exists("http://maps.googleapis.com/maps/api/js?sensor=false")) {
-                $siteStatus = 'Passed';
-            }
-            echo '<tr class="headlin"><td colspan="3">Google API</td></tr>';
-            echo '<tr><td class="smallbold">'.$siteUrl.'</td><td style="width:10px"></td><td class="small">'.$siteStatus.'</td></tr>';
         }
         ?>
     </table>
