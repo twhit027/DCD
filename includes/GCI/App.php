@@ -299,7 +299,8 @@ class App
                     'images' => $row['Images'],
                     'position' => $row['Position'],
                     'placement' => $row['Placement'],
-                    'externalURL' => $row['ExternalURL']
+                    'externalURL' => $row['ExternalURL'],
+                    'moreInfo' => $row['MoreInfo']
                 );
             }
 
