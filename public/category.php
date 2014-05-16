@@ -89,7 +89,7 @@ else
 			$string = '<p>'.$row['adText'].'</p>';
 		}
 
-        $dataInfo = '<div class=".small" style="padding-bottom:10px; color:#0052f4">'.$row['siteCode'];
+        $dataInfo = '<div class=".small" style="padding-bottom:10px; color:#0052f4">'.$row['busName'];
         if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
         $dataInfo .= $row['position'];
         if (count($imageArray)>0) {
