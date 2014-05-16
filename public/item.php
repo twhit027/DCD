@@ -13,15 +13,20 @@ $app = new \GCI\App();
 $app->logInfo('Item Page(ID: '.urldecode($_REQUEST['id']).' FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].', REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].',HTTP_HOST: '.@$_SERVER['HTTP_HOST'].'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].')');
 
 $id = urldecode($_REQUEST['id']);
-$placement = urldecode($_REQUEST['place']);
-$position = urldecode($_REQUEST['posit']);
+
+if (isset($_REQUEST['place'])) {
+    $placement = $_REQUEST['place'];
+}
+if (isset($_REQUEST['posit'])) {
+    $position = $_REQUEST['posit'];
+}
 
 $listings = $app->getSingleListing($id);
 
 $cleanAdText = strip_tags($listings['adText']);
 $siteCode = urlencode($listings['position']);
 $placement = urlencode($listings['placement']);
-$position = $listings['position'];
+$position = urlencode($listings['position']);
 $imageArray = array();
 if (!empty($listings['images'])) {
     $imageArray = explode(',', $listings['images']);
