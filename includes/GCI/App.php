@@ -262,24 +262,24 @@ class App
 
             $siteGroupString = $this->createSiteGroupString($siteGroup);
 
-            $sql = "SELECT SQL_CALC_FOUND_ROWS *";
+            $sql = "SELECT SQL_CALC_FOUND_ROWS l.*, s.BusName";
             if (!empty($fullText)) {
                 $sql .= ", MATCH(adText) AGAINST('$fullText') AS score";
             }
 
-            $sql .= " FROM `listing` where StartDate <= :startDate and siteCode in ( $siteGroupString ) ";
+            $sql .= " FROM `listing` l, `siteinfo` s where l.SiteCode = s.SiteCode AND l.StartDate <= :startDate and l.siteCode in ( $siteGroupString ) ";
             $params[':startDate'] = date("Y-m-d");
 
             if (!empty($placement)) {
-                $sql .= ' and placement = :placement';
+                $sql .= ' and l.placement = :placement';
                 $params[':placement'] = $placement;
             }
             if (!empty($position)) {
-                $sql .= ' and position = :position ';
+                $sql .= ' and l.position = :position ';
                 $params[':position'] = $position;
             }
             if (empty($fullText)) {
-                $sql .= ' ORDER BY adText';
+                $sql .= ' ORDER BY l.adText';
             } else {
                 $sql .= " and MATCH(adText) AGAINST( :fulltext ) ORDER BY score DESC";
                 $params[':fulltext'] = $fullText;
@@ -300,7 +300,8 @@ class App
                     'position' => $row['Position'],
                     'placement' => $row['Placement'],
                     'externalURL' => $row['ExternalURL'],
-                    'moreInfo' => $row['MoreInfo']
+                    'moreInfo' => $row['MoreInfo'],
+                    'busName' => $row['BusName']
                 );
             }
 
