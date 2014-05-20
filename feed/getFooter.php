@@ -2,20 +2,34 @@
 /**
  * Created by DCDGroup.
  * User: JHICKS
- * Date: 4/22/14
- * Time: 12:44 PM
+ * Date: 5/7/14
+ * Time: 10:09 AM
  */
 
-error_reporting(0);
+//error_reporting(0);
 
-include('../../vendor/klogger/KLogger.php');
-include('../../vendor/Mobile_Detect/Mobile_Detect.php');
-include('../../conf/constants.php');
-include('../../includes/GCI/Database.php');
-include('../../includes/GCI/Site.php');
-include('../../includes/GCI/App.php');
-include('../../includes/GCI/Navigation.php');
-include('../../includes/GCI/Ads.php');
+include(__DIR__ . '/../vendor/klogger/KLogger.php');
+include(__DIR__ . '/../vendor/Mobile_Detect/Mobile_Detect.php');
+include(__DIR__ . '/../conf/constants.php');
+include(__DIR__ . '/../includes/GCI/Database.php');
+include(__DIR__ . '/../includes/GCI/Site.php');
+include(__DIR__ . '/../includes/GCI/App.php');
+include(__DIR__ . '/../includes/GCI/Navigation.php');
+include(__DIR__ . '/../includes/GCI/Ads.php');
+
+$options = getopt("s:nw");
+
+var_dump($options);
+
+$siteId = $options['s'];
+$noCache = isset($options['n']) ? true : false;
+$write = isset($options['w']) ? true : false;
+
+if (empty($siteId)) {
+    $logText = "Message:(" . $e->getMessage() . ") A site ID (-s) is required ";
+    fwrite(STDERR, $logText . "\n");
+    exit(1);
+}
 
 function url_exists($url){
     if ((strpos($url, "http")) === false) $url = "http://" . $url;
@@ -31,10 +45,11 @@ function url_exists($url){
     }
 }
 
-$app = new \GCI\App();
+$app = new \GCI\App($siteId);
 
 $siteCode = $app->getSite()->getSiteCode();
 $siteLinks = $app->getSite()->getBottomLinks();
+//$bottomLinks = $app->getSite()->getTopLinks();
 $siteUrl = $app->getSite()->getSiteUrl();
 $palette = $app->getSite()->getPalette();
 $siteName = $app->getSite()->getSiteName();
@@ -42,12 +57,12 @@ $siteName = $app->getSite()->getSiteName();
 //$siteImage = $siteUrl . '/graphics/ody/mast_logo.gif';
 $siteImage = "http://www.gannett-cdn.com/sites/$siteName/images/site-nav-logo@2x.png";
 
-if (isset($_REQUEST['nocache']) && ($_REQUEST['nocache'] == '1')) {
+if ($noCache) {
     $prestoUrl = rtrim($siteUrl,'/') . '/services/cobrand/header/';
     $saxoUrl = rtrim($siteUrl, '/') . '/section/cobrandheaderlite/';
 
     //simplehtmldom
-    require_once '../../vendor/simplehtmldom/simple_html_dom.php';
+    require_once __DIR__ . '/../vendor/simplehtmldom/simple_html_dom.php';
 
     $siteLinks = array();
     $data = '';
@@ -73,7 +88,7 @@ if (isset($_REQUEST['nocache']) && ($_REQUEST['nocache'] == '1')) {
     if (!empty($siteLinks)) {
         $data = json_encode($siteLinks);
 
-        if (isset($_REQUEST['write']) && ($_REQUEST['write'] == 'True')) {
+        if ($write) {
             $app->setTopLinks($siteCode, $data);
         }
     }
@@ -92,5 +107,7 @@ $json = json_encode($newData);
 
 $jsonp_callback = isset($_GET['callback']) ? $_GET['callback'] : null;
 
-header('Content-Type: application/json');
+//header('Content-Type: application/json');
 echo $jsonp_callback ? "$jsonp_callback($json)" : $json;
+
+exit(0);

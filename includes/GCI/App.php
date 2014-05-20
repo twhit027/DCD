@@ -238,8 +238,8 @@ class App
     {
         $siteGroupString = $this->createSiteGroupString($this->getSite()->getSiteGroup());
 
-        $sql = "SELECT LEFT(AdText,50) AS ATEXT, ID, Placement, Position, ExternalURL FROM `listing` WHERE SiteCode in( $siteGroupString )";
-        $params = array();
+        $sql = "SELECT LEFT(AdText,50) AS ATEXT, ID, Placement, Position, ExternalURL FROM `listing` WHERE StartDate <= :startDate and SiteCode in( $siteGroupString )";
+        $params[':startDate'] = date("Y-m-d");
 
         $results = $this->database->getAssoc($sql, $params);
 
@@ -262,24 +262,24 @@ class App
 
             $siteGroupString = $this->createSiteGroupString($siteGroup);
 
-            $sql = "SELECT SQL_CALC_FOUND_ROWS *";
+            $sql = "SELECT SQL_CALC_FOUND_ROWS l.*, s.BusName";
             if (!empty($fullText)) {
                 $sql .= ", MATCH(adText) AGAINST('$fullText') AS score";
             }
 
-            $sql .= " FROM `listing` where StartDate <= :startDate and siteCode in ( $siteGroupString ) ";
+            $sql .= " FROM `listing` l, `siteinfo` s where l.SiteCode = s.SiteCode AND l.StartDate <= :startDate and l.siteCode in ( $siteGroupString ) ";
             $params[':startDate'] = date("Y-m-d");
 
             if (!empty($placement)) {
-                $sql .= ' and placement = :placement';
+                $sql .= ' and l.placement = :placement';
                 $params[':placement'] = $placement;
             }
             if (!empty($position)) {
-                $sql .= ' and position = :position ';
+                $sql .= ' and l.position = :position ';
                 $params[':position'] = $position;
             }
             if (empty($fullText)) {
-                $sql .= ' ORDER BY adText';
+                $sql .= ' ORDER BY l.adText';
             } else {
                 $sql .= " and MATCH(adText) AGAINST( :fulltext ) ORDER BY score DESC";
                 $params[':fulltext'] = $fullText;
@@ -299,7 +299,9 @@ class App
                     'images' => $row['Images'],
                     'position' => $row['Position'],
                     'placement' => $row['Placement'],
-                    'externalURL' => $row['ExternalURL']
+                    'externalURL' => $row['ExternalURL'],
+                    'moreInfo' => $row['MoreInfo'],
+                    'busName' => $row['BusName']
                 );
             }
 
@@ -491,17 +493,18 @@ class App
         return $data;
     }
 
-
-    function report($app, $fp)
+    function report($startDate = '')
     {
-        $sql = "SELECT * FROM `listing` WHERE `SiteCode` = :site ";
-        $params = array(':site' => $app->getSite()->getSiteCode());
+        $siteGroupString = $this->createSiteGroupString($this->getSite()->getSiteGroup());
+        $sql = "SELECT * FROM `listing` WHERE `SiteCode` in ( $siteGroupString )";
+        $params = array();
 
-        $results = $this->database->getAssoc($sql, $params);
-
-        foreach ($results as $row) {
-            fputcsv($fp, $row);
+        if (!empty($startDate)) {
+            $sql .= " AND StartDate <= :startDate";
+            $params[':startDate'] = date("Y-m-d");
         }
+
+        return $this->database->getAssoc($sql, $params);
     }
 
     // these functions will only work on the feed side

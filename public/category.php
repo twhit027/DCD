@@ -81,13 +81,15 @@ else
         $row['adText'] = strip_tags($row['adText']);
 		if (strlen($row['adText']) > 200) {
 			//$string = substr($row['adText'], 0, 200) . "... <a  href='item.php?id=" . $row['id'] . "&place=".$placement."&posit=" . $position . "'>Click for full text</a>";
-            $string = "<div id='dcd-short-".$count."'>".substr(strip_tags($row['adText']),0,200)."... </div><div class='dcd-content-text' style='display: none' id='dcd-content-".$count."'>".strip_tags($row['adText'])."</div><a href='item.php?id=" . $row['id'] . "&place=".$placement."&posit=" . $position . "' class='dcd-expand-text' data-id='".$count."'>Click for full text</a>";
+            $string = "<div id='dcd-short-".$count."'><p>".substr(strip_tags($row['adText']),0,200)."... </p></div>";
+            $string .= "<div class='dcd-content-text' style='display: none' id='dcd-content-".$count."'><p>".$row['adText']."</p></div>";
+            $string .= "<a href='item.php?id=" . $row['id'] . "&place=".$placement."&posit=" . $position . "' class='dcd-expand-text' data-id='".$count."'>Click for full text</a><br /><br />";
             $count++;
 		} else {
-			$string = $row['adText'];
+			$string = '<p>'.$row['adText'].'</p>';
 		}
 
-        $dataInfo = '<div class=".small" style="padding-bottom:10px; color:#0052f4">'.$row['siteCode'];
+        $dataInfo = '<div class=".small" style="padding-bottom:10px; color:#0052f4">'.$row['busName'];
         if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
         $dataInfo .= $row['position'];
         if (count($imageArray)>0) {
@@ -95,23 +97,27 @@ else
             $imgCnt = 0;
             foreach($imageArray as $imgSrc) {
                 if ($imgCnt == 0) {
-                    $dataInfo .= '<a class="fancybox" href="images/'.$row['siteCode'].'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox '.$row['id'].'_group">Pic</a>';
+                    $dataInfo .= '<a class="fancybox" href="images/'.$row['siteCode'].'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox '.$row['id'].'_group" title="Picture"><span class="glyphicon glyphicon-picture"></span></a>';
                 } else {
-                    $dataInfo .= '<div style="display: none"><a class="fancybox" href="images/'.$row['siteCode'].'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox '.$row['id'].'_group" >Pic</a></div>';
+                    $dataInfo .= '<div style="display: none"><a class="fancybox" href="images/'.$row['siteCode'].'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox '.$row['id'].'_group" title="Picture"><span class="glyphicon glyphicon-picture"></span></a></div>';
                 }
                 $imgCnt++;
             }
         }
         if (!empty($map)) {
             if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
-            $dataInfo .= '<a href="#" style="color:#00881A;">Map</a>';
+            $dataInfo .= '<a href="#" style="color:#00881A;" title="Map"><span class="glyphicon glyphicon-map-marker"></span></a>';
+        }
+        if (!empty($row['moreInfo'])) {
+            if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
+            $dataInfo .= '<a href="'.$row['moreInfo'].'" style="color:#0052f4;" title="More Information"><span class="glyphicon glyphicon-info-sign"></span></a>';
         }
         $dataInfo .= '</div>';
         $data .= "<div class='jumbotron' style='padding-top: 30px; word-wrap: break-word;'>";
         $data .= "$dataInfo";
-		$data .= "<p>" . $string . "</p>";
+		$data .= $string;
 		if($row['externalURL'] === "1"){
-			$data .= '<p><a href="map.php?place='.$row['placement'].'&posit='.$row['position'].'&ad='.$row['id'].'">View on map</a><p>';
+			$data .= '<p><a href="map.php?place='.urlencode($row['placement']).'&posit='.urlencode($row['position']).'&ad='.urlencode($row['id']).'">View on map</a><p>';
 		}
 		$data .= '<a href="http://twitter.com/home?status=' . substr($row['adText'], 0, 120) . '" target="_blank"><img src="img/twitter-24.png" /></a>&nbsp';
 		$data .= '<a href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/facebook-24.png" /></a>&nbsp';

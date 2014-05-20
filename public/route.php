@@ -14,6 +14,8 @@ $app->logInfo('Directions Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'
 
 $place = $_POST['place'];
 $position = $_POST['posit'];
+$placeEnc = urlencode($_POST['place']);
+$positionEnc = urlencode($_POST['posit']);
 $route = $_POST['locations'];
 $listOfRummages = $app->getRummages($place,$position,$route);
 $mapPoints = json_encode($listOfRummages['map']);
@@ -58,7 +60,7 @@ EOS;
 $mainContent = <<<EOS
 	<ol class="breadcrumb">
 		<li><a href="./">Home</a></li>
-		<li><a href="map.php?place=$place&posit=$position">$place</a></li>
+		<li><a href="map.php?place=$placeEnc&posit=$positionEnc">$place</a></li>
 		<li class="active">$position Directions</li>
 	</ol>
 	
