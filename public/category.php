@@ -173,7 +173,7 @@ else
         }
         if (!empty($row['moreInfo'])) {
             if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
-            $dataInfo .= '<a href="'.$row['moreInfo'].'" style="color:#0052f4;" title="More Information"><span class="glyphicon glyphicon-info-sign"></span></a>';
+            $dataInfo .= '<a target="_blank" href="'.$row['moreInfo'].'" style="color:#0052f4;" title="More Information"><span class="glyphicon glyphicon-info-sign"></span></a>';
         }
         $dataInfo .= '</div>';
         $data .= "<div class='jumbotron' style='padding-top: 30px; word-wrap: break-word;'>";
