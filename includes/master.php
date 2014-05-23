@@ -38,6 +38,11 @@ if(isset($metadata))
     <style type="text/css">
     body {min-width: 10px !important;}
     .gallery{display: inline-block;margin-top: 20px;}
+    .header {
+        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAA3NCSVQICAjb4U/gAAAAJFBMVEX///9wcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHDRPAkXAAAADHRSTlMAESIziJmqu8zd7v+91kxoAAAACXBIWXMAAAsSAAALEgHS3X78AAAAFnRFWHRDcmVhdGlvbiBUaW1lADIxLzEyLzEymvNa/wAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNui8sowAAAArSURBVAiZY2DAB1iaoAy2XQZQVvRiKIMVLlQ9AU0EpoZjhwLUnEa81iABAFHzB8GYPzdNAAAAAElFTkSuQmCC");
+        background-repeat: no-repeat;
+    }
+    .content { border:2px solid #ccc; width:300px; height: 100px; overflow-y: scroll; }
     </style>
 
     <link href="3rdParty/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -135,7 +140,12 @@ else if($device =="phone")
                             </button>
                         </span>
 				    </div>
-
+                    <div class="filter">
+                        <div class="header" ><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="moreorless">More</span></span></div>
+                        <div class="content" style="display:none;">
+                            <?php echo $nav->getSideCheckBoxes($app->getCategories()); ?>
+                        </div>
+                    </div>
                     <h3 style="color:#3276B1;">Or Select A Category</h3>
                     <ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">
                         <?php echo $nav->getSideNavigation($app->getCategories()); ?>
@@ -178,6 +188,29 @@ else if($device == "tablet")
 <script src="3rdParty/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>
 <script>
     $( document ).ready(function() {
+        $(".header").click(function () {
+            $header = $(this);
+            //getting the next element
+            $content = $header.next();
+            //open up the content needed - toggle the slide- if visible, slide up, if not slide down.
+            $content.slideToggle(500, function () {
+                //execute this after slideToggle is done
+                //change text of header based on visibility of content div
+                $(".moreorless").text(function () {
+                    //change text based on condition
+                    return $content.is(":visible") ? "Less" : "More";
+                });
+                bckImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAA3NCSVQICAjb4U/gAAAAJFBMVEX///9wcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHDRPAkXAAAADHRSTlMAESIziJmqu8zd7v+91kxoAAAACXBIWXMAAAsSAAALEgHS3X78AAAAFnRFWHRDcmVhdGlvbiBUaW1lADIxLzEyLzEymvNa/wAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNui8sowAAAArSURBVAiZY2DAB1iaoAy2XQZQVvRiKIMVLlQ9AU0EpoZjhwLUnEa81iABAFHzB8GYPzdNAAAAAElFTkSuQmCC";
+
+                if ($content.is(":visible")) {
+                    bckImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAA3NCSVQICAjb4U/gAAAAJFBMVEX///9wcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHDRPAkXAAAADHRSTlMAESIziJmqu8zd7v+91kxoAAAACXBIWXMAAAsSAAALEgHS3X78AAAAFnRFWHRDcmVhdGlvbiBUaW1lADIxLzEyLzEymvNa/wAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNui8sowAAAAySURBVAiZY2AgCbA0MDCkgBgcWxlYd4AYjN0B0YvAclrbdxmAGcyrF0OVWxqQZjwDAwA8XgfBciyedgAAAABJRU5ErkJggg==";
+                }
+
+                $header.css("background-image", 'url('+bckImg+')');
+            });
+
+        });
+
         $("#ftSearchbtn1").click(function(e) {
             e.preventDefault();
             ft = $("#fullTextBox1").val().trim();
@@ -219,6 +252,13 @@ else if($device == "tablet")
             $("#advancedsearch").toggle();
         });
     });
+
+    function toggle(source, checkName) {
+        checkboxes = document.getElementsByName(checkName);
+        for(var i=0, n=checkboxes.length;i<n;i++) {
+            checkboxes[i].checked = source.checked;
+        }
+    }
 </script>
 <?php if(!empty($masterBottom)){ echo $masterBottom; } ?>
 <?php include("../includes/tracking.php"); ?>
