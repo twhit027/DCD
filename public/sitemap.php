@@ -29,6 +29,28 @@ class SiteMap{
 		}
 		return $data;
 	}
+	function createSitemapXML($dataArray){
+		$server = $_SERVER['SERVER_NAME'];
+		$data = "<?xml version='1.0' encoding='UTF-8'?>
+<sitemapindex xmlns='http://www.sitemaps.org/schemas/sitemap/0.9' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd'>\r\n";
+		foreach ($dataArray as $placement => $positions) {
+			foreach ($positions as $position => $vals) {
+				foreach($vals as $eURL => $ids){
+					if($eURL == '1'){
+						$data .="<sitemap><loc> http://".$server."/map.php?place=".urlencode($placement)."&amp;posit=".urlencode($position)."</loc></sitemap>\r\n";
+					}
+					else{
+						$data .="<sitemap><loc> http://".$server."/category.php?place=".urlencode($placement)."&amp;posit=".urlencode($position)."</loc></sitemap>\r\n";
+					}
+					foreach($ids as $id){
+						$data .="<sitemap><loc> http://".$server."/item.php?id=".urlencode($id["id"])."</loc></sitemap>\r\n";
+					}
+				}
+			}
+		}
+		$data .= "</sitemapindex>";
+		return $data;
+	}
 }
 
 $app = new \GCI\App();
@@ -42,7 +64,8 @@ $busName = $app->getSite()->getBusName();
 
 $sm = new SiteMap();
 $data = $app->getSitemap();
-$sitemap = $sm->createSitemap($data);
+if(!empty($_GET['links']) && $_GET['links'] == '1'){
+	$sitemap = $sm->createSitemap($data);
 $mainContent = <<<EOS
 <ol class="breadcrumb">
 	<li><a href="./">Home</a></li>
@@ -50,5 +73,11 @@ $mainContent = <<<EOS
 </ol>
 $sitemap
 EOS;
-
-include("../includes/master.php");
+	
+	include("../includes/master.php");
+}
+else{
+	$sitemap = $sm->createSitemapXML($data);
+	header('Content-type: text/xml');
+	print($sitemap);
+}

@@ -238,8 +238,8 @@ class App
     {
         $siteGroupString = $this->createSiteGroupString($this->getSite()->getSiteGroup());
 
-        $sql = "SELECT LEFT(AdText,50) AS ATEXT, ID, Placement, Position, ExternalURL FROM `listing` WHERE StartDate <= :startDate and SiteCode in( $siteGroupString )";
-        $params[':startDate'] = date("Y-m-d");
+        $sql = "SELECT LEFT(AdText,50) AS ATEXT, ID, Placement, Position, ExternalURL FROM `listing` WHERE StartDate <= :startDate and EndDate >= :endDate and SiteCode in( $siteGroupString )";
+        $params[':startDate'] = $params[':endDate'] = date("Y-m-d");
 
         $results = $this->database->getAssoc($sql, $params);
 
@@ -511,24 +511,28 @@ class App
     public function setTopLinks($siteCode, $jsonString)
     {
         try {
-            $stmt = $this->database->prepare("UPDATE siteInfo SET TopLinks = :jsonString where SiteCode = :siteCode");
+            $stmt = $this->database->prepare("UPDATE `siteinfo` SET TopLinks = :jsonString where SiteCode = :siteCode");
             $stmt->execute(array(':jsonString' => $jsonString, ':siteCode' => $siteCode));
+            echo "ErrorCode: " . $this->database->errorCode();
+            echo "ErrorInfo: " . $this->database->errorInfo();
         } catch (\PDOException $e) {
             $logText = "Message:(" . $e->getMessage() . ") attempting to insert topLinks into the siteInfo table";
             $this->log->logError($logText);
+            fwrite(STDERR, $logText . "\n");
         }
     }
 
     public function setBottomLinks($siteCode, $jsonString)
     {
         try {
-            $stmt = $this->database->prepare("UPDATE siteInfo SET BottomLinks = :jsonString where SiteCode = :siteCode");
+            $stmt = $this->database->prepare("UPDATE `siteinfo` SET BottomLinks = :jsonString where SiteCode = :siteCode");
             $stmt->execute(array(':jsonString' => $jsonString, ':siteCode' => $siteCode));
+            echo "ErrorCode: " . $this->database->errorCode();
+            echo "ErrorInfo: " . $this->database->errorInfo();
         } catch (\PDOException $e) {
             $logText = "Message:(" . $e->getMessage() . ") attempting to insert BottomLinks into the siteInfo table";
             $this->log->logError($logText);
         }
-
     }
 
     function getAllSite()
