@@ -43,24 +43,86 @@ else
 
 $pagination = "";
 if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
-    $numOfPages = ceil($listings['totalRows'] / LISTINGS_PER_PAGE);
+    $total_pages = $listings['totalRows'];
+    // How many adjacent pages should be shown on each side?
+    $adjacents = 3;
 
-    if ($page > 1)
-        $pagination .= '<ul class="pagination"><li><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . ($page - 1) . '&ft='.$fullText.'">&laquo;</a></li>';
+    /* Setup vars for query. */
+    $targetPage = 'category.php?place=' . $placement . '&posit=' . $position . '&ft=' . $fullText ; //your file name  (the name of this file)
+    $limit = LISTINGS_PER_PAGE; //how many items to show per page
+    //$page = urldecode($_REQUEST['page']);
+
+    if ($page)
+        $start = ($page - 1) * $limit; //first item to display on this page
     else
-        $pagination .= '<ul class="pagination"><li class="disabled"><a href="#">&laquo;</a></li>';
+        $start = 0; //if no page var is given, set start to 0
 
-    for ($pge = 1; $pge <= $numOfPages; $pge++) {
-        if ($pge == $page)
-            $pagination .= '<li class="active"><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . $pge . '&ft='.$fullText.'">' . $pge . ' <span class="sr-only">(currecnt)</span></a></li>';
+    /* Setup page vars for display. */
+    if ($page == 0) $page = 1; //if no page var is given, default to 1.
+    $prev = $page - 1; //previous page is page - 1
+    $next = $page + 1; //next page is page + 1
+    $lastpage = ceil($total_pages / $limit); //lastpage is = total pages / items per page, rounded up.
+    $lpm1 = $lastpage - 1; //last page minus 1
+
+    if ($lastpage > 1) {
+        //previous button
+        if ($page > 1)
+            $pagination .= '<ul class="pagination"><li><a href="'.$targetPage. '&page=' . ($page - 1) . '">&laquo;</a></li>';
         else
-            $pagination .= '<li><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . $pge . '&ft='.$fullText.'">' . $pge . '</a></li>';
-    }
+            $pagination .= '<ul class="pagination"><li class="disabled"><a href="#">&laquo;</a></li>';
 
-    if ($page < $numOfPages)
-        $pagination .= '<li><a href="category.php?place=' . $placement . '&posit=' . $position . '&page=' . ($page + 1) . '&ft='.$fullText.'">&raquo;</a></li></ul>';
-    else
-        $pagination .= '<li class="disabled"><a href="#">&raquo;</a></li></ul>';
+        //pages
+        if ($lastpage < 7 + ($adjacents * 2)) { //not enough pages to bother breaking it up
+            for ($counter = 1; $counter <= $lastpage; $counter++) {
+                if ($counter == $page)
+                    $pagination .= '<li class="active"><a href="'.$targetPage.'&page=' . $counter . '">' . $counter . ' <span class="sr-only">(currecnt)</span></a></li>';
+                else
+                    $pagination .= '<li><a href="' .$targetPage. '&page=' . $counter . '">' . $counter . '</a></li>';
+            }
+        } else { //enough pages to hide some
+            //close to beginning; only hide later pages
+            if ($page < 1 + ($adjacents * 2)) {
+                for ($counter = 1; $counter < 3 + ($adjacents * 2); $counter++) {
+                    if ($counter == $page)
+                        $pagination .= "<li class=\"active\"><a href=\"\">$counter</a></li>";
+                    else
+                        $pagination .= "<li><a href=\"$targetPage&page=$counter\">$counter</a></li>";
+                }
+                $pagination .= '<li class=\"disabled\"><a href=\"\">...</a></li>';
+                $pagination .= "<li><a href=\"$targetPage&page=$lpm1\">$lpm1</a></li>";
+                $pagination .= "<li><a href=\"$targetPage&page=$lastpage\">$lastpage</a></li>";
+            } elseif ($lastpage - ($adjacents * 2) > $page && $page > ($adjacents * 2)) { //in middle; hide some front and some back
+                $pagination .= "<li><a href=\"$targetPage&page=1\">1</a></li>";
+                $pagination .= "<li><a href=\"$targetPage&page=2\">2</a></li>";
+                $pagination .= '<li class=\"disabled\"><a href=\"\">...</a></li>';
+                for ($counter = $page - $adjacents; $counter <= $page + $adjacents; $counter++) {
+                    if ($counter == $page)
+                        $pagination .= "<li><span class=\"current\">$counter</span></li>";
+                    else
+                        $pagination .= "<li><a href=\"$targetPage&page=$counter\">$counter</a></li>";
+                }
+                $pagination .= '<li class=\"disabled\"><a href=\"\">...</a></li>';
+                $pagination .= "<li><a href=\"$targetPage&page=$lpm1\">$lpm1</a></li>";
+                $pagination .= "<li><a href=\"$targetPage&page=$lastpage\">$lastpage</a></li>";
+            } else { //close to end; only hide early pages
+                $pagination .= "<li><a href=\"$targetPage&page=1\">1</a></li>";
+                $pagination .= "<li><a href=\"$targetPage&page=2\">2</a></li>";
+                $pagination .= '<li class=\"disabled\"><a href=\"\">...</a></li>';
+                for ($counter = $lastpage - (2 + ($adjacents * 2)); $counter <= $lastpage; $counter++) {
+                    if ($counter == $page)
+                        $pagination .= "<li><span class=\"current\">$counter</span></li>";
+                    else
+                        $pagination .= "<li><a href=\"$targetPage&page=$counter\">$counter</a></li>";
+                }
+            }
+        }
+
+        //next button
+        if ($page < $counter - 1)
+            $pagination .= '<li><a href="'.$targetPage . '&page=' . ($page + 1) . '">&raquo;</a></li></ul>';
+        else
+            $pagination .= '<li class="disabled"><a href="#">&raquo;</a></li></ul>';
+    }
 }
 
 $data = '';
