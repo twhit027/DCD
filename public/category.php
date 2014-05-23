@@ -166,9 +166,10 @@ else
                 $imgCnt++;
             }
         }
-        if (!empty($map)) {
+        //if (!empty($map)) {
+        if($row['externalURL'] === "1"){
             if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
-            $dataInfo .= '<a href="#" style="color:#00881A;" title="Map"><span class="glyphicon glyphicon-map-marker"></span></a>';
+            $dataInfo .= '<a href="map.php?place='.urlencode($row['placement']).'&posit='.urlencode($row['position']).'&ad='.urlencode($row['id']).'" style="color:#00881A;" title="Map"><span class="glyphicon glyphicon-map-marker"></span></a>';
         }
         if (!empty($row['moreInfo'])) {
             if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
@@ -178,9 +179,6 @@ else
         $data .= "<div class='jumbotron' style='padding-top: 30px; word-wrap: break-word;'>";
         $data .= "$dataInfo";
 		$data .= $string;
-		if($row['externalURL'] === "1"){
-			$data .= '<p><a href="map.php?place='.urlencode($row['placement']).'&posit='.urlencode($row['position']).'&ad='.urlencode($row['id']).'">View on map</a><p>';
-		}
 		$data .= '<a href="http://twitter.com/home?status=' . substr($row['adText'], 0, 120) . '" target="_blank"><img src="img/twitter-24.png" /></a>&nbsp';
 		$data .= '<a href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/facebook-24.png" /></a>&nbsp';
 		$data .= '<a href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/google-plus-24.png" /></a>&nbsp';
