@@ -151,9 +151,9 @@ else
 			$string = '<p>'.$row['adText'].'</p>';
 		}
 
-        $dataInfo = '<div class=".small" style="padding-bottom:10px; color:#0052f4">'.$row['busName'];
+        $dataInfo = '<div class=".small" style="padding-bottom:10px; color:#0052f4"><a href="./">'.$row['busName'].'</a>';
         if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
-        $dataInfo .= $row['position'];
+        $dataInfo .= '<a href="./category.php?place='.urlencode($row['placement']).'&posit='.urlencode($row['position']).'">'.$row['position'].'</a>';
         if (count($imageArray)>0) {
             if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
             $imgCnt = 0;
