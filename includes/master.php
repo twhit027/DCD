@@ -140,7 +140,7 @@ else if($device =="phone")
                             </button>
                         </span>
 				    </div>
-                    <div class="filter">
+                    <div class="filter" style="color: white">
                         <div class="header" ><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="moreorless">More</span></span></div>
                         <div class="content" style="display:none;">
                             <?php echo $nav->getSideCheckBoxes($app->getCategories()); ?>
