@@ -96,6 +96,9 @@ if(isset($metadata))
                             </button>
                         </span>
             </div>
+            <div class="filter" style="color: white">
+                <input type="checkbox" id="allSites1" value="" /> Search Across All sites
+            </div>
             <h3 style="color:#3276B1;">Or Select A Category</h3>
         <ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">
         <?php echo $nav->getSideNavigation($app->getCategories()) ?>
@@ -141,10 +144,7 @@ else if($device =="phone")
                         </span>
 				    </div>
                     <div class="filter" style="color: white">
-                        <div class="header" ><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="moreorless">More</span></span></div>
-                        <div class="content" style="display:none;">
-                            <?php echo $nav->getSideCheckBoxes($app->getCategories()); ?>
-                        </div>
+                        <input type="checkbox" id="allSites2" value="" /> Search Across All sites
                     </div>
                     <h3 style="color:#3276B1;">Or Select A Category</h3>
                     <ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">
@@ -211,12 +211,51 @@ else if($device == "tablet")
 
         });
 
+        function doSearch(place, posit, ft, allSites) {
+            var path = '';
+
+            if (place != '') {
+                path += 'place='+encodeURIComponent(place);
+            }
+
+            if (posit != '') {
+                if (path != '') {
+                    path += '&';
+                }
+                path += 'posit='+encodeURIComponent(posit);
+            }
+
+            if (ft != '') {
+                if (path != '') {
+                    path += '&';
+                }
+                path += 'ft='+encodeURIComponent(ft);
+            }
+
+            alert(allSites);
+
+            if (allSites) {
+                if (path != '') {
+                    path += '&';
+                }
+                path += 'sites=all';
+            }
+
+            if (path != '') {
+                path = '?'+path;
+            }
+
+            window.location.href = 'category.php'+path;
+        }
+
         $("#ftSearchbtn1").click(function(e) {
             e.preventDefault();
             ft = $("#fullTextBox1").val().trim();
             place='';
             posit='';
-            window.location.href = 'category.php?place='+encodeURIComponent(place)+'&posit='+encodeURIComponent(posit)+'&ft='+encodeURIComponent(ft);
+            allSites = $("#allSites1").prop("checked") ? 1 : 0;
+
+            doSearch(place, posit, ft, allSites);
         });
 
         $('#fullTextBox1').keypress(function(e) {
@@ -225,7 +264,9 @@ else if($device == "tablet")
                 ft = $("#fullTextBox1").val().trim();
                 place='';
                 posit='';
-                window.location.href = 'category.php?place='+encodeURIComponent(place)+'&posit='+encodeURIComponent(posit)+'&ft='+encodeURIComponent(ft);
+                allSites = $("#allSites1").prop("checked") ? 1 : 0;
+
+                doSearch(place, posit, ft, allSites);
             }
         });
 
@@ -234,7 +275,9 @@ else if($device == "tablet")
             ft = $("#fullTextBox2").val().trim();
             place='';
             posit='';
-            window.location.href = 'category.php?place='+encodeURIComponent(place)+'&posit='+encodeURIComponent(posit)+'&ft='+encodeURIComponent(ft);
+            allSites = $("#allSites2").prop("checked") ? 1 : 0;
+
+            doSearch(place, posit, ft, allSites);
         });
 
         $('#fullTextBox2').keypress(function(e) {
@@ -243,7 +286,9 @@ else if($device == "tablet")
                 ft = $("#fullTextBox2").val().trim();
                 place='';
                 posit='';
-                window.location.href = 'category.php?place='+encodeURIComponent(place)+'&posit='+encodeURIComponent(posit)+'&ft='+encodeURIComponent(ft);
+                allSites = $("#allSites2").prop("checked") ? 1 : 0;
+
+                doSearch(place, posit, ft, allSites);
             }
         });
 
