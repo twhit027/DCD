@@ -187,6 +187,41 @@ else if($device == "tablet")
 <script src="3rdParty/bootstrap/js/bootstrap.min.js"></script>
 <script src="3rdParty/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>
 <script>
+    function doSearch(place, posit, ft, allSites) {
+        var path = '';
+
+        if (place != '') {
+            path += 'place='+encodeURIComponent(place);
+        }
+
+        if (posit != '') {
+            if (path != '') {
+                path += '&';
+            }
+            path += 'posit='+encodeURIComponent(posit);
+        }
+
+        if (ft != '') {
+            if (path != '') {
+                path += '&';
+            }
+            path += 'ft='+encodeURIComponent(ft);
+        }
+
+        if (allSites) {
+            if (path != '') {
+                path += '&';
+            }
+            path += 'sites=all';
+        }
+
+        if (path != '') {
+            path = '?'+path;
+        }
+
+        window.location.href = 'category.php'+path;
+    }
+
     $( document ).ready(function() {
         $(".header").click(function () {
             $header = $(this);
@@ -210,43 +245,6 @@ else if($device == "tablet")
             });
 
         });
-
-        function doSearch(place, posit, ft, allSites) {
-            var path = '';
-
-            if (place != '') {
-                path += 'place='+encodeURIComponent(place);
-            }
-
-            if (posit != '') {
-                if (path != '') {
-                    path += '&';
-                }
-                path += 'posit='+encodeURIComponent(posit);
-            }
-
-            if (ft != '') {
-                if (path != '') {
-                    path += '&';
-                }
-                path += 'ft='+encodeURIComponent(ft);
-            }
-
-            alert(allSites);
-
-            if (allSites) {
-                if (path != '') {
-                    path += '&';
-                }
-                path += 'sites=all';
-            }
-
-            if (path != '') {
-                path = '?'+path;
-            }
-
-            window.location.href = 'category.php'+path;
-        }
 
         $("#ftSearchbtn1").click(function(e) {
             e.preventDefault();
