@@ -14,7 +14,7 @@ $app->logInfo('Category Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].
 
 //$content = new Content();
 $page = 1;
-$fullText = $placement = $position = '';
+$fullText = $placement = $position = $siteGroup = '';
 
 if (isset($_REQUEST['page'])) {
     $page = urldecode($_REQUEST['page']);
@@ -28,18 +28,12 @@ if (isset($_REQUEST['place'])) {
 if (isset($_REQUEST['posit'])) {
     $position = urldecode($_REQUEST['posit']);
 }
+if(isset($_REQUEST['sites'])) {
+    $siteGroup = urldecode($_REQUEST['sites']);
+}
+
 $search = "";
-if(isset($_REQUEST['sites']))
-{
-	$sitegroup = urldecode($_REQUEST['sites']);
-	$listings = $app->getListings($placement, $position, $page, $sitegroup);
-	//$search = $app->getSearch($sitegroup);
-}
-else
-{
-	$listings = $app->getListings($placement, $position, $page, '', $fullText);	
-	//$search = $app->getSearch();
-}
+$listings = $app->getListings($placement, $position, $page, $siteGroup, $fullText);
 
 $pagination = "";
 if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
