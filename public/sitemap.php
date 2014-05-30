@@ -29,6 +29,7 @@ class SiteMap{
 		}
 		return $data;
 	}
+
 	function createSitemapXML($dataArray){
 		$server = $_SERVER['SERVER_NAME'];
 		$data = "<?xml version='1.0' encoding='UTF-8'?>";
@@ -61,9 +62,9 @@ $search = $app->getSearch();
 $siteName = $app->getSite()->getSiteName();
 $siteUrl = $app->getSite()->getSiteUrl();
 $busName = $app->getSite()->getBusName();
+$data = $app->getSitemap();
 
 $sm = new SiteMap();
-$data = $app->getSitemap();
 
 if(!empty($_GET['links']) && $_GET['links'] == '1'){
 	$sitemap = $sm->createSitemap($data);
@@ -79,5 +80,5 @@ EOS;
 } else {
 	$sitemap = $sm->createSitemapXML($data);
 	header('Content-type: text/xml');
-	print($sitemap);
+	print(trim($sitemap));
 }
