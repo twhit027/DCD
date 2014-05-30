@@ -31,24 +31,24 @@ class SiteMap{
 	}
 	function createSitemapXML($dataArray){
 		$server = $_SERVER['SERVER_NAME'];
-		$data = "<?xml version='1.0' encoding='UTF-8'?>
-<sitemapindex xmlns='http://www.sitemaps.org/schemas/sitemap/0.9' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd'>\r\n";
+		$data = "<?xml version='1.0' encoding='UTF-8'?>\n";
+        $data .= "<sitemapindex xmlns='http://www.sitemaps.org/schemas/sitemap/0.9' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd'>\n";
 		foreach ($dataArray as $placement => $positions) {
 			foreach ($positions as $position => $vals) {
 				foreach($vals as $eURL => $ids){
 					if($eURL == '1'){
-						$data .="<sitemap><loc> http://".$server."/map.php?place=".urlencode($placement)."&amp;posit=".urlencode($position)."</loc></sitemap>\r\n";
+						$data .="<sitemap><loc> http://".$server."/map.php?place=".urlencode($placement)."&amp;posit=".urlencode($position)."</loc></sitemap>\n";
 					}
 					else{
-						$data .="<sitemap><loc> http://".$server."/category.php?place=".urlencode($placement)."&amp;posit=".urlencode($position)."</loc></sitemap>\r\n";
+						$data .="<sitemap><loc> http://".$server."/category.php?place=".urlencode($placement)."&amp;posit=".urlencode($position)."</loc></sitemap>\n";
 					}
 					foreach($ids as $id){
-						$data .="<sitemap><loc> http://".$server."/item.php?id=".urlencode($id["id"])."</loc></sitemap>\r\n";
+						$data .="<sitemap><loc> http://".$server."/item.php?id=".urlencode($id["id"])."</loc></sitemap>\n";
 					}
 				}
 			}
 		}
-		$data .= "</sitemapindex>";
+		$data .= '</sitemapindex>';
 		return $data;
 	}
 }
@@ -75,8 +75,7 @@ $sitemap
 EOS;
 	
 	include("../includes/master.php");
-}
-else{
+} else {
 	$sitemap = $sm->createSitemapXML($data);
 	header('Content-type: text/xml');
 	print($sitemap);
