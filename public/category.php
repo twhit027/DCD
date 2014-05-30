@@ -145,6 +145,8 @@ else
 			$string = '<p>'.$row['adText'].'</p>';
 		}
 
+        //$server = $_SERVER['SERVER_NAME'];
+
         $dataInfo = '<div class=".small" style="padding-bottom:10px; color:#0052f4"><a href="./">'.$row['busName'].'</a>';
         if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
         $dataInfo .= '<a href="./category.php?place='.urlencode($row['placement']).'&posit='.urlencode($row['position']).'">'.$row['position'].'</a>';
