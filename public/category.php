@@ -14,7 +14,7 @@ $app->logInfo('Category Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].
 
 //$content = new Content();
 $page = 1;
-$fullText = $placement = $position = '';
+$fullText = $placement = $position = $siteGroup = '';
 
 if (isset($_REQUEST['page'])) {
     $page = urldecode($_REQUEST['page']);
@@ -28,18 +28,12 @@ if (isset($_REQUEST['place'])) {
 if (isset($_REQUEST['posit'])) {
     $position = urldecode($_REQUEST['posit']);
 }
+if(isset($_REQUEST['sites'])) {
+    $siteGroup = urldecode($_REQUEST['sites']);
+}
+
 $search = "";
-if(isset($_REQUEST['sites']))
-{
-	$sitegroup = urldecode($_REQUEST['sites']);
-	$listings = $app->getListings($placement, $position, $page, $sitegroup);
-	//$search = $app->getSearch($sitegroup);
-}
-else
-{
-	$listings = $app->getListings($placement, $position, $page, '', $fullText);	
-	//$search = $app->getSearch();
-}
+$listings = $app->getListings($placement, $position, $page, $siteGroup, $fullText);
 
 $pagination = "";
 if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
@@ -88,26 +82,26 @@ if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
                     else
                         $pagination .= "<li><a href=\"$targetPage&page=$counter\">$counter</a></li>";
                 }
-                $pagination .= '<li class=\"disabled\"><a href=\"\">...</a></li>';
+                $pagination .= '<li class="disabled"><a href="#">...</a></li>';
                 $pagination .= "<li><a href=\"$targetPage&page=$lpm1\">$lpm1</a></li>";
                 $pagination .= "<li><a href=\"$targetPage&page=$lastpage\">$lastpage</a></li>";
             } elseif ($lastpage - ($adjacents * 2) > $page && $page > ($adjacents * 2)) { //in middle; hide some front and some back
                 $pagination .= "<li><a href=\"$targetPage&page=1\">1</a></li>";
                 $pagination .= "<li><a href=\"$targetPage&page=2\">2</a></li>";
-                $pagination .= '<li class=\"disabled\"><a href=\"\">...</a></li>';
+                $pagination .= '<li class="disabled"><a href="#">...</a></li>';
                 for ($counter = $page - $adjacents; $counter <= $page + $adjacents; $counter++) {
                     if ($counter == $page)
                         $pagination .= "<li><span class=\"current\">$counter</span></li>";
                     else
                         $pagination .= "<li><a href=\"$targetPage&page=$counter\">$counter</a></li>";
                 }
-                $pagination .= '<li class=\"disabled\"><a href=\"\">...</a></li>';
+                $pagination .= '<li class="disabled"><a href="#">...</a></li>';
                 $pagination .= "<li><a href=\"$targetPage&page=$lpm1\">$lpm1</a></li>";
                 $pagination .= "<li><a href=\"$targetPage&page=$lastpage\">$lastpage</a></li>";
             } else { //close to end; only hide early pages
                 $pagination .= "<li><a href=\"$targetPage&page=1\">1</a></li>";
                 $pagination .= "<li><a href=\"$targetPage&page=2\">2</a></li>";
-                $pagination .= '<li class=\"disabled\"><a href=\"\">...</a></li>';
+                $pagination .= '<li class="disabled"><a href="#">...</a></li>';
                 for ($counter = $lastpage - (2 + ($adjacents * 2)); $counter <= $lastpage; $counter++) {
                     if ($counter == $page)
                         $pagination .= "<li><span class=\"current\">$counter</span></li>";
@@ -150,6 +144,8 @@ else
 		} else {
 			$string = '<p>'.$row['adText'].'</p>';
 		}
+
+        //$server = $_SERVER['SERVER_NAME'];
 
         $dataInfo = '<div class=".small" style="padding-bottom:10px; color:#0052f4"><a href="./">'.$row['busName'].'</a>';
         if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";

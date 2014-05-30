@@ -253,22 +253,33 @@ class App
 
     function getListings($placement = '', $position = '', $page = 1, $siteGroup = '', $fullText = '')
     {
+        $siteGroup = trim($siteGroup);
         if ($siteGroup == '') {
             $siteGroup = $this->site->getSiteGroup();
+        } elseif (strtolower($siteGroup) == 'all') {
+            $siteGroup = '';
         }
         if (empty($this->listings) && (isset($placement) && isset($position) && isset($siteGroup))) {
             $rowCnt = (defined(LISTINGS_PER_PAGE)) ? LISTINGS_PER_PAGE : 10;
             $offSet = (($page) - 1) * 10;
 
-            $siteGroupString = $this->createSiteGroupString($siteGroup);
+            $siteGroupString = '';
+
+            if (! empty($siteGroup)) {
+                $siteGroupString = $this->createSiteGroupString($siteGroup);
+            }
 
             $sql = "SELECT SQL_CALC_FOUND_ROWS l.*, s.BusName";
             if (!empty($fullText)) {
                 $sql .= ", MATCH(adText) AGAINST('$fullText') AS score";
             }
 
-            $sql .= " FROM `listing` l, `siteinfo` s where l.SiteCode = s.SiteCode AND l.StartDate <= :startDate and l.siteCode in ( $siteGroupString ) ";
+            $sql .= ' FROM `listing` l, `siteinfo` s where l.SiteCode = s.SiteCode AND l.StartDate <= :startDate';
             $params[':startDate'] = date("Y-m-d");
+
+            if (! empty($siteGroupString)) {
+                $sql .= " and l.siteCode in ( $siteGroupString )";
+            }
 
             if (!empty($placement)) {
                 $sql .= ' and l.placement = :placement';
