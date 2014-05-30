@@ -82,26 +82,26 @@ if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
                     else
                         $pagination .= "<li><a href=\"$targetPage&page=$counter\">$counter</a></li>";
                 }
-                $pagination .= '<li class=\"disabled\"><a href=\"\">...</a></li>';
+                $pagination .= '<li class="disabled"><a href="#">...</a></li>';
                 $pagination .= "<li><a href=\"$targetPage&page=$lpm1\">$lpm1</a></li>";
                 $pagination .= "<li><a href=\"$targetPage&page=$lastpage\">$lastpage</a></li>";
             } elseif ($lastpage - ($adjacents * 2) > $page && $page > ($adjacents * 2)) { //in middle; hide some front and some back
                 $pagination .= "<li><a href=\"$targetPage&page=1\">1</a></li>";
                 $pagination .= "<li><a href=\"$targetPage&page=2\">2</a></li>";
-                $pagination .= '<li class=\"disabled\"><a href=\"\">...</a></li>';
+                $pagination .= '<li class="disabled"><a href="#">...</a></li>';
                 for ($counter = $page - $adjacents; $counter <= $page + $adjacents; $counter++) {
                     if ($counter == $page)
                         $pagination .= "<li><span class=\"current\">$counter</span></li>";
                     else
                         $pagination .= "<li><a href=\"$targetPage&page=$counter\">$counter</a></li>";
                 }
-                $pagination .= '<li class=\"disabled\"><a href=\"\">...</a></li>';
+                $pagination .= '<li class="disabled"><a href="#">...</a></li>';
                 $pagination .= "<li><a href=\"$targetPage&page=$lpm1\">$lpm1</a></li>";
                 $pagination .= "<li><a href=\"$targetPage&page=$lastpage\">$lastpage</a></li>";
             } else { //close to end; only hide early pages
                 $pagination .= "<li><a href=\"$targetPage&page=1\">1</a></li>";
                 $pagination .= "<li><a href=\"$targetPage&page=2\">2</a></li>";
-                $pagination .= '<li class=\"disabled\"><a href=\"\">...</a></li>';
+                $pagination .= '<li class="disabled"><a href="#">...</a></li>';
                 for ($counter = $lastpage - (2 + ($adjacents * 2)); $counter <= $lastpage; $counter++) {
                     if ($counter == $page)
                         $pagination .= "<li><span class=\"current\">$counter</span></li>";
