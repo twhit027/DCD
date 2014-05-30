@@ -273,11 +273,11 @@ class App
                 $sql .= ", MATCH(adText) AGAINST('$fullText') AS score";
             }
 
-            $sql .= ' FROM `listing` l, `siteinfo` s where l.SiteCode = s.SiteCode AND l.StartDate <= :startDate and l.siteCode';
+            $sql .= ' FROM `listing` l, `siteinfo` s where l.SiteCode = s.SiteCode AND l.StartDate <= :startDate';
             $params[':startDate'] = date("Y-m-d");
 
             if (! empty($siteGroupString)) {
-                $sql .= " in ( $siteGroupString )";
+                $sql .= " and l.siteCode in ( $siteGroupString )";
             }
 
             if (!empty($placement)) {
@@ -299,6 +299,7 @@ class App
             $params[':offSet'] = $offSet;
             $params[':rowCnt'] = $rowCnt;
             $results = $this->database->getAssoc($sql, $params);
+            logInfo("sql: $sql");
             $dataArray['totalRows'] = $this->database->getCount("SELECT FOUND_ROWS()");
 
             foreach ($results as $row) {
