@@ -299,7 +299,7 @@ class App
             $params[':offSet'] = $offSet;
             $params[':rowCnt'] = $rowCnt;
             $results = $this->database->getAssoc($sql, $params);
-            logInfo("sql: $sql");
+            //$this->logInfo("sql: $sql");
             $dataArray['totalRows'] = $this->database->getCount("SELECT FOUND_ROWS()");
 
             foreach ($results as $row) {
