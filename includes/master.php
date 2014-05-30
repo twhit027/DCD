@@ -72,6 +72,7 @@ if(isset($metadata))
     <div class="container">
         <?php
             if (!isset($fullText)) {$fullText = '';}
+            if (!isset($siteGroup)) {$siteGroup = '';}
             $nav = new \GCI\Navigation();
             $palette = $app->getSite()->getPalette();
             $siteName = $app->getSite()->getSiteName();
@@ -97,7 +98,7 @@ if(isset($metadata))
                         </span>
             </div>
             <div class="filter" style="color: white">
-                <input type="checkbox" id="allSites1" value="" /> Search Across All sites
+                <input type="checkbox" id="allSites1" value="" <?php if(strtolower($siteGroup) == 'all') echo 'checked="checked"';?> /> Search Across All sites
             </div>
             <h3 style="color:#3276B1;">Or Select A Category</h3>
         <ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">
@@ -144,7 +145,7 @@ else if($device =="phone")
                         </span>
 				    </div>
                     <div class="filter" style="color: white">
-                        <input type="checkbox" id="allSites2" value="" /> Search Across All sites
+                        <input type="checkbox" id="allSites2" value="" <?php if(strtolower($siteGroup) == 'all') echo 'checked="checked"';?> /> Search Across All sites
                     </div>
                     <h3 style="color:#3276B1;">Or Select A Category</h3>
                     <ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">
