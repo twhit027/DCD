@@ -1,4 +1,5 @@
 <?php
+ob_start();
 include('../vendor/klogger/KLogger.php');
 include('../vendor/Mobile_Detect/Mobile_Detect.php');
 include('../conf/constants.php');
@@ -75,10 +76,13 @@ $mainContent = <<<EOS
 </ol>
 $sitemap
 EOS;
-	
+
+    ob_end_clean();
+
 	include("../includes/master.php");
 } else {
 	$sitemap = $sm->createSitemapXML($data);
+    ob_end_clean();
 	header('Content-type: text/xml');
 	print(trim($sitemap));
 }
