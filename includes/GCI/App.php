@@ -253,10 +253,11 @@ class App
 
     function getListings($placement = '', $position = '', $page = 1, $siteGroup = '', $fullText = '')
     {
+        $siteGroup = trim($siteGroup);
         if ($siteGroup == '') {
             $siteGroup = $this->site->getSiteGroup();
-        }else if (strtolower($siteGroup) == 'all') {
-            $siteGroup == '';
+        } elseif (strtolower($siteGroup) == 'all') {
+            $siteGroup = '';
         }
         if (empty($this->listings) && (isset($placement) && isset($position) && isset($siteGroup))) {
             $rowCnt = (defined(LISTINGS_PER_PAGE)) ? LISTINGS_PER_PAGE : 10;
@@ -299,7 +300,6 @@ class App
             $params[':offSet'] = $offSet;
             $params[':rowCnt'] = $rowCnt;
             $results = $this->database->getAssoc($sql, $params);
-            //$this->logInfo("sql: $sql");
             $dataArray['totalRows'] = $this->database->getCount("SELECT FOUND_ROWS()");
 
             foreach ($results as $row) {
