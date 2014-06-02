@@ -134,24 +134,25 @@ else
         if (!empty($row['images'])) {
             $imageArray = explode(',', $row['images']);
         }
-        $row['adText'] = strip_tags($row['adText']);
-		if (strlen($row['adText']) > 200) {
-			//$string = substr($row['adText'], 0, 200) . "... <a  href='item.php?id=" . $row['id'] . "&place=".$placement."&posit=" . $position . "'>Click for full text</a>";
-            $string = "<div id='dcd-short-".$count."'><p>".substr(strip_tags($row['adText']),0,200)."... </p></div>";
-            $string .= "<div class='dcd-content-text' style='display: none' id='dcd-content-".$count."'><p>".$row['adText']."</p></div>";
-            $string .= "<a href='item.php?id=" . $row['id'] . "&place=".$placement."&posit=" . $position . "' class='dcd-expand-text' data-id='".$count."'>Click for full text</a><br /><br />";
-            $count++;
-		} else {
-			$string = '<p>'.$row['adText'].'</p>';
-		}
 
-        $server = $_SERVER['SERVER_NAME'];
+        //$server = $_SERVER['SERVER_NAME'];
+        $server = $row['url'];
 
         if (isset($_SERVER['CONTEXT_PREFIX'])) {
             $server .= $_SERVER['CONTEXT_PREFIX'];
         }
 
         $url = rtrim($server,"/");
+
+        $row['adText'] = strip_tags($row['adText']);
+		if (strlen($row['adText']) > 200) {
+            $string = '<div id="dcd-short-'.$count.'"><p>'.substr(strip_tags($row['adText']),0,200).'... </p></div>';
+            $string .= '<div class="dcd-content-text" style="display: none" id="dcd-content-'.$count.'"><p>'.$row['adText'].'</p></div>';
+            $string .= '<a href="http://'.$server.'/item.php?id=' . $row['id'] . '&place='.$placement.'&posit=' . $position . '" class="dcd-expand-text" data-id="'.$count.'">Click for full text</a><br /><br />';
+            $count++;
+		} else {
+			$string = '<p>'.$row['adText'].'</p>';
+		}
 
         $dataInfo = '<div class=".small" style="padding-bottom:10px; color:#0052f4"><a href="http://'.$server.'/">'.$row['busName'].'</a>';
         if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
@@ -168,7 +169,7 @@ else
                 $imgCnt++;
             }
         }
-        //if (!empty($map)) {
+
         if($row['externalURL'] === "1"){
             if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
             $dataInfo .= '<a href="http://'.$server.'/map.php?place='.urlencode($row['placement']).'&posit='.urlencode($row['position']).'&ad='.urlencode($row['id']).'" style="color:#00881A;" title="Map"><span class="glyphicon glyphicon-map-marker"></span></a>';
