@@ -132,6 +132,8 @@ if (!isset($listings['results'])) {
             $imageArray = explode(',', $row['images']);
         }
 
+        $app->logInfo('getSiteUrl: '. $app->getSite()->getSiteUrl() .' rowUrl:'. $row['url']);
+
         if ($app->getSite()->getSiteUrl() == $row['url']) {
             $server = $_SERVER['SERVER_NAME'];
         } else {
