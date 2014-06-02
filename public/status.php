@@ -288,9 +288,6 @@ function getSubDomain ($domain) {
         }
         ?>
     </table>
-    <pre>
-    <?php print_r($_SERVER); ?>
-    </pre>
 </div>
 </body>
 </html>
