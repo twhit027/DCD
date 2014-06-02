@@ -10,7 +10,7 @@ include('../includes/GCI/Ads.php');
 
 $app = new \GCI\App();
 
-$app->logInfo('Category Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].', REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].',HTTP_HOST: '.@$_SERVER['HTTP_HOST'].'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].')');
+$app->logInfo('Category Page(FORWARDED_FOR: ' . @$_SERVER['HTTP_X_FORWARDED_FOR'] . ', REMOTE_ADDR: ' . @$_SERVER['REMOTE_ADDR'] . ',HTTP_HOST: ' . @$_SERVER['HTTP_HOST'] . 'SERVER_NAME: ' . @$_SERVER['SERVER_NAME'] . ')');
 
 //$content = new Content();
 $page = 1;
@@ -28,7 +28,7 @@ if (isset($_REQUEST['place'])) {
 if (isset($_REQUEST['posit'])) {
     $position = urldecode($_REQUEST['posit']);
 }
-if(isset($_REQUEST['sites'])) {
+if (isset($_REQUEST['sites'])) {
     $siteGroup = urldecode($_REQUEST['sites']);
 }
 
@@ -42,7 +42,7 @@ if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
     $adjacents = 3;
 
     /* Setup vars for query. */
-    $targetPage = 'category.php?place=' . $placement . '&posit=' . $position . '&ft=' . $fullText ; //your file name  (the name of this file)
+    $targetPage = 'category.php?place=' . $placement . '&posit=' . $position . '&ft=' . $fullText; //your file name  (the name of this file)
     $limit = LISTINGS_PER_PAGE; //how many items to show per page
     //$page = urldecode($_REQUEST['page']);
 
@@ -61,7 +61,7 @@ if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
     if ($lastpage > 1) {
         //previous button
         if ($page > 1)
-            $pagination .= '<ul class="pagination"><li><a href="'.$targetPage. '&page=' . ($page - 1) . '">&laquo;</a></li>';
+            $pagination .= '<ul class="pagination"><li><a href="' . $targetPage . '&page=' . ($page - 1) . '">&laquo;</a></li>';
         else
             $pagination .= '<ul class="pagination"><li class="disabled"><a href="#">&laquo;</a></li>';
 
@@ -69,9 +69,9 @@ if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
         if ($lastpage < 7 + ($adjacents * 2)) { //not enough pages to bother breaking it up
             for ($counter = 1; $counter <= $lastpage; $counter++) {
                 if ($counter == $page)
-                    $pagination .= '<li class="active"><a href="'.$targetPage.'&page=' . $counter . '">' . $counter . ' <span class="sr-only">(currecnt)</span></a></li>';
+                    $pagination .= '<li class="active"><a href="' . $targetPage . '&page=' . $counter . '">' . $counter . ' <span class="sr-only">(currecnt)</span></a></li>';
                 else
-                    $pagination .= '<li><a href="' .$targetPage. '&page=' . $counter . '">' . $counter . '</a></li>';
+                    $pagination .= '<li><a href="' . $targetPage . '&page=' . $counter . '">' . $counter . '</a></li>';
             }
         } else { //enough pages to hide some
             //close to beginning; only hide later pages
@@ -113,7 +113,7 @@ if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
 
         //next button
         if ($page < $counter - 1)
-            $pagination .= '<li><a href="'.$targetPage . '&page=' . ($page + 1) . '">&raquo;</a></li></ul>';
+            $pagination .= '<li><a href="' . $targetPage . '&page=' . ($page + 1) . '">&raquo;</a></li></ul>';
         else
             $pagination .= '<li class="disabled"><a href="#">&raquo;</a></li></ul>';
     }
@@ -121,66 +121,74 @@ if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
 
 $data = '';
 
-if(!isset($listings['results']))
-{
-	$data ='<h1 style="color:#FC0000;"> No results found, please pick a different category or expand your advanced search</h1>';
-}
-else
-{
-	$count = 1;
+if (!isset($listings['results'])) {
+    $data = '<h1 style="color:#FC0000;"> No results found, please pick a different category or expand your advanced search</h1>';
+} else {
+    $count = 1;
     foreach ($listings['results'] as $row) {
         $map = '';
         $imageArray = array();
         if (!empty($row['images'])) {
             $imageArray = explode(',', $row['images']);
         }
+
+        $app->logInfo('getSiteUrl: '. $app->getSite()->getSiteUrl() .' rowUrl:'. $row['url']);
+
+        if ($app->getSite()->getDomain() == $row['domain']) {
+            $server = $_SERVER['SERVER_NAME'];
+            if (isset($_SERVER['CONTEXT_PREFIX'])) {
+                $server .= $_SERVER['CONTEXT_PREFIX'];
+            }
+        } else {
+            $server = 'classifieds.'.$row['domain'];
+        }
+
+        $url = rtrim($server, "/");
+
         $row['adText'] = strip_tags($row['adText']);
-		if (strlen($row['adText']) > 200) {
-			//$string = substr($row['adText'], 0, 200) . "... <a  href='item.php?id=" . $row['id'] . "&place=".$placement."&posit=" . $position . "'>Click for full text</a>";
-            $string = "<div id='dcd-short-".$count."'><p>".substr(strip_tags($row['adText']),0,200)."... </p></div>";
-            $string .= "<div class='dcd-content-text' style='display: none' id='dcd-content-".$count."'><p>".$row['adText']."</p></div>";
-            $string .= "<a href='item.php?id=" . $row['id'] . "&place=".$placement."&posit=" . $position . "' class='dcd-expand-text' data-id='".$count."'>Click for full text</a><br /><br />";
+        if (strlen($row['adText']) > 200) {
+            $string = '<div id="dcd-short-' . $count . '"><p>' . substr(strip_tags($row['adText']), 0, 200) . '... </p></div>';
+            $string .= '<div class="dcd-content-text" style="display: none" id="dcd-content-' . $count . '"><p>' . $row['adText'] . '</p></div>';
+            $string .= '<a href="http://' . $server . '/item.php?id=' . $row['id'] . '&place=' . $placement . '&posit=' . $position . '" class="dcd-expand-text" data-id="' . $count . '">Click for full text</a><br /><br />';
             $count++;
-		} else {
-			$string = '<p>'.$row['adText'].'</p>';
-		}
+        } else {
+            $string = '<p>' . $row['adText'] . '</p>';
+        }
 
-        //$server = $_SERVER['SERVER_NAME'];
-
-        $dataInfo = '<div class=".small" style="padding-bottom:10px; color:#0052f4"><a href="./">'.$row['busName'].'</a>';
+        $dataInfo = '<div class=".small" style="padding-bottom:10px; color:#0052f4"><a href="http://' . $server . '/" target="_blank">' . $row['busName'] . '</a>';
         if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
-        $dataInfo .= '<a href="./category.php?place='.urlencode($row['placement']).'&posit='.urlencode($row['position']).'">'.$row['position'].'</a>';
-        if (count($imageArray)>0) {
+        $dataInfo .= '<a href="http://' . $server . '/category.php?place=' . urlencode($row['placement']) . '&posit=' . urlencode($row['position']) . '" target="_blank">' . $row['position'] . '</a>';
+        if (count($imageArray) > 0) {
             if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
             $imgCnt = 0;
-            foreach($imageArray as $imgSrc) {
+            foreach ($imageArray as $imgSrc) {
                 if ($imgCnt == 0) {
-                    $dataInfo .= '<a class="fancybox" href="images/'.$row['siteCode'].'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox '.$row['id'].'_group" title="Picture"><span class="glyphicon glyphicon-picture"></span></a>';
+                    $dataInfo .= '<a class="fancybox" href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" rel="ligthbox ' . $row['id'] . '_group" title="Picture"><span class="glyphicon glyphicon-picture"></span></a>';
                 } else {
-                    $dataInfo .= '<div style="display: none"><a class="fancybox" href="images/'.$row['siteCode'].'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox '.$row['id'].'_group" title="Picture"><span class="glyphicon glyphicon-picture"></span></a></div>';
+                    $dataInfo .= '<div style="display: none"><a class="fancybox" href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" rel="ligthbox ' . $row['id'] . '_group" title="Picture"><span class="glyphicon glyphicon-picture"></span></a></div>';
                 }
                 $imgCnt++;
             }
         }
-        //if (!empty($map)) {
-        if($row['externalURL'] === "1"){
+
+        if ($row['externalURL'] === "1") {
             if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
-            $dataInfo .= '<a href="map.php?place='.urlencode($row['placement']).'&posit='.urlencode($row['position']).'&ad='.urlencode($row['id']).'" style="color:#00881A;" title="Map"><span class="glyphicon glyphicon-map-marker"></span></a>';
+            $dataInfo .= '<a href="http://' . $server . '/map.php?place=' . urlencode($row['placement']) . '&posit=' . urlencode($row['position']) . '&ad=' . urlencode($row['id']) . '" style="color:#00881A;" title="Map" target="_blank"><span class="glyphicon glyphicon-map-marker"></span></a>';
         }
         if (!empty($row['moreInfo'])) {
             if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
-            $dataInfo .= '<a target="_blank" href="'.$row['moreInfo'].'" style="color:#0052f4;" title="More Information"><span class="glyphicon glyphicon-info-sign"></span></a>';
+            $dataInfo .= '<a href="' . $row['moreInfo'] . '" style="color:#0052f4;" title="More Information" target="_blank"><span class="glyphicon glyphicon-info-sign"></span></a>';
         }
         $dataInfo .= '</div>';
         $data .= "<div class='jumbotron' style='padding-top: 30px; word-wrap: break-word;'>";
         $data .= "$dataInfo";
-		$data .= $string;
-		$data .= '<a href="http://twitter.com/home?status=' . substr($row['adText'], 0, 120) . '" target="_blank"><img src="img/twitter-24.png" /></a>&nbsp';
-		$data .= '<a href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/facebook-24.png" /></a>&nbsp';
-		$data .= '<a href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/google-plus-24.png" /></a>&nbsp';
-        $data .= '<a href="mailto:emailaddress?subject='.substr($row['adText'], 0, 80).'&body='.substr($row['adText'], 0, 120).'%0D%0A%0D%0A http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] .'" target="_top"><img src="img/email-24.png" /></span></a>';
-		$data .= '</div>';
-	}
+        $data .= $string;
+        $data .= '<a href="http://twitter.com/home?status=' . substr($row['adText'], 0, 120) . '" target="_blank"><img src="img/twitter-24.png" /></a>&nbsp';
+        $data .= '<a href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/facebook-24.png" /></a>&nbsp';
+        $data .= '<a href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/google-plus-24.png" /></a>&nbsp';
+        $data .= '<a href="mailto:emailaddress?subject=' . substr($row['adText'], 0, 80) . '&body=' . substr($row['adText'], 0, 120) . '%0D%0A%0D%0A http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_top"><img src="img/email-24.png" /></span></a>';
+        $data .= '</div>';
+    }
 }
 
 $masterBottom = '<link rel="stylesheet" href="//frontend.reklamor.com/fancybox/jquery.fancybox.css" media="screen">
