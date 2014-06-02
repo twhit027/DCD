@@ -59,6 +59,7 @@ class Site {
         $this->siteName = $data['SiteName'];
         $this->domain = $data['Domain'];
         $this->siteUrl = $data['SiteUrl'];
+        //$this->appUrl = $data['AppUrl'];
         $this->busName = $data['BusName'];
         $this->palette = $data['Palette'];
         $this->siteGroup = $data['SiteGroup'];
