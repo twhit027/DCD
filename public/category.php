@@ -136,12 +136,11 @@ if (!isset($listings['results'])) {
 
         if ($app->getSite()->getDomain() == $row['domain']) {
             $server = $_SERVER['SERVER_NAME'];
+            if (isset($_SERVER['CONTEXT_PREFIX'])) {
+                $server .= $_SERVER['CONTEXT_PREFIX'];
+            }
         } else {
             $server = 'classifieds.'.$row['domain'];
-        }
-
-        if (isset($_SERVER['CONTEXT_PREFIX'])) {
-            $server .= $_SERVER['CONTEXT_PREFIX'];
         }
 
         $url = rtrim($server, "/");
