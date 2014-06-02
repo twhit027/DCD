@@ -156,9 +156,9 @@ if (!isset($listings['results'])) {
             $string = '<p>' . $row['adText'] . '</p>';
         }
 
-        $dataInfo = '<div class=".small" style="padding-bottom:10px; color:#0052f4"><a href="http://' . $server . '/">' . $row['busName'] . '</a>';
+        $dataInfo = '<div class=".small" style="padding-bottom:10px; color:#0052f4"><a href="http://' . $server . '/" target="_blank">' . $row['busName'] . '</a>';
         if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
-        $dataInfo .= '<a href="http://' . $server . '/category.php?place=' . urlencode($row['placement']) . '&posit=' . urlencode($row['position']) . '">' . $row['position'] . '</a>';
+        $dataInfo .= '<a href="http://' . $server . '/category.php?place=' . urlencode($row['placement']) . '&posit=' . urlencode($row['position']) . '" target="_blank">' . $row['position'] . '</a>';
         if (count($imageArray) > 0) {
             if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
             $imgCnt = 0;
@@ -174,11 +174,11 @@ if (!isset($listings['results'])) {
 
         if ($row['externalURL'] === "1") {
             if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
-            $dataInfo .= '<a href="http://' . $server . '/map.php?place=' . urlencode($row['placement']) . '&posit=' . urlencode($row['position']) . '&ad=' . urlencode($row['id']) . '" style="color:#00881A;" title="Map"><span class="glyphicon glyphicon-map-marker"></span></a>';
+            $dataInfo .= '<a href="http://' . $server . '/map.php?place=' . urlencode($row['placement']) . '&posit=' . urlencode($row['position']) . '&ad=' . urlencode($row['id']) . '" style="color:#00881A;" title="Map" target="_blank"><span class="glyphicon glyphicon-map-marker"></span></a>';
         }
         if (!empty($row['moreInfo'])) {
             if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
-            $dataInfo .= '<a target="_blank" href="' . $row['moreInfo'] . '" style="color:#0052f4;" title="More Information"><span class="glyphicon glyphicon-info-sign"></span></a>';
+            $dataInfo .= '<a href="' . $row['moreInfo'] . '" style="color:#0052f4;" title="More Information" target="_blank"><span class="glyphicon glyphicon-info-sign"></span></a>';
         }
         $dataInfo .= '</div>';
         $data .= "<div class='jumbotron' style='padding-top: 30px; word-wrap: break-word;'>";
