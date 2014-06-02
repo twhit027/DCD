@@ -79,6 +79,10 @@ class Site {
         return $this->siteName;
     }
 
+    public function getDomain() {
+        return $this->domain;
+    }
+
     public function getSiteUrl() {
         return $this->siteUrl;
     }
