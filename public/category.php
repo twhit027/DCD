@@ -145,19 +145,25 @@ else
 			$string = '<p>'.$row['adText'].'</p>';
 		}
 
-        //$server = $_SERVER['SERVER_NAME'];
+        $server = $_SERVER['SERVER_NAME'];
 
-        $dataInfo = '<div class=".small" style="padding-bottom:10px; color:#0052f4"><a href="./">'.$row['busName'].'</a>';
+        if (isset($_SERVER['CONTEXT_PREFIX'])) {
+            $server .= $_SERVER['CONTEXT_PREFIX'];
+        }
+
+        $url = rtrim($server,"/");
+
+        $dataInfo = '<div class=".small" style="padding-bottom:10px; color:#0052f4"><a href="http://'.$server.'/">'.$row['busName'].'</a>';
         if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
-        $dataInfo .= '<a href="./category.php?place='.urlencode($row['placement']).'&posit='.urlencode($row['position']).'">'.$row['position'].'</a>';
+        $dataInfo .= '<a href="http://'.$server.'/category.php?place='.urlencode($row['placement']).'&posit='.urlencode($row['position']).'">'.$row['position'].'</a>';
         if (count($imageArray)>0) {
             if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
             $imgCnt = 0;
             foreach($imageArray as $imgSrc) {
                 if ($imgCnt == 0) {
-                    $dataInfo .= '<a class="fancybox" href="images/'.$row['siteCode'].'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox '.$row['id'].'_group" title="Picture"><span class="glyphicon glyphicon-picture"></span></a>';
+                    $dataInfo .= '<a class="fancybox" href="http://'.$server.'/images/'.$row['siteCode'].'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox '.$row['id'].'_group" title="Picture"><span class="glyphicon glyphicon-picture"></span></a>';
                 } else {
-                    $dataInfo .= '<div style="display: none"><a class="fancybox" href="images/'.$row['siteCode'].'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox '.$row['id'].'_group" title="Picture"><span class="glyphicon glyphicon-picture"></span></a></div>';
+                    $dataInfo .= '<div style="display: none"><a class="fancybox" href="http://'.$server.'/images/'.$row['siteCode'].'/'.$imgSrc.'" style="color:#FFA500;" rel="ligthbox '.$row['id'].'_group" title="Picture"><span class="glyphicon glyphicon-picture"></span></a></div>';
                 }
                 $imgCnt++;
             }
@@ -165,7 +171,7 @@ else
         //if (!empty($map)) {
         if($row['externalURL'] === "1"){
             if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
-            $dataInfo .= '<a href="map.php?place='.urlencode($row['placement']).'&posit='.urlencode($row['position']).'&ad='.urlencode($row['id']).'" style="color:#00881A;" title="Map"><span class="glyphicon glyphicon-map-marker"></span></a>';
+            $dataInfo .= '<a href="http://'.$server.'/map.php?place='.urlencode($row['placement']).'&posit='.urlencode($row['position']).'&ad='.urlencode($row['id']).'" style="color:#00881A;" title="Map"><span class="glyphicon glyphicon-map-marker"></span></a>';
         }
         if (!empty($row['moreInfo'])) {
             if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
