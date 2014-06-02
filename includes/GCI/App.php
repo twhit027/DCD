@@ -269,30 +269,32 @@ class App
                 $siteGroupString = $this->createSiteGroupString($siteGroup);
             }
 
-            $sql = "SELECT SQL_CALC_FOUND_ROWS l.*, s.BusName";
+            $sql = "SELECT SQL_CALC_FOUND_ROWS l.*, s.BusName, s.Url";
             if (!empty($fullText)) {
-                $sql .= ", MATCH(adText) AGAINST('$fullText') AS score";
+                $sql .= ", MATCH(AdText) AGAINST('$fullText') AS score";
             }
 
             $sql .= ' FROM `listing` l, `siteinfo` s where l.SiteCode = s.SiteCode AND l.StartDate <= :startDate';
             $params[':startDate'] = date("Y-m-d");
 
-            if (! empty($siteGroupString)) {
-                $sql .= " and l.siteCode in ( $siteGroupString )";
+            if (empty($siteGroupString)) {
+                $sql .= " and l.Position not in ( 'Apartments' )";
+            } else {
+                $sql .= " and l.SiteCode in ( $siteGroupString )";
             }
 
             if (!empty($placement)) {
-                $sql .= ' and l.placement = :placement';
+                $sql .= ' and l.Placement = :placement';
                 $params[':placement'] = $placement;
             }
             if (!empty($position)) {
-                $sql .= ' and l.position = :position ';
+                $sql .= ' and l.Position = :position ';
                 $params[':position'] = $position;
             }
             if (empty($fullText)) {
-                $sql .= ' ORDER BY l.adText';
+                $sql .= ' ORDER BY l.AdText';
             } else {
-                $sql .= " and MATCH(adText) AGAINST( :fulltext ) ORDER BY score DESC";
+                $sql .= " and MATCH(AdText) AGAINST( :fulltext ) ORDER BY score DESC";
                 $params[':fulltext'] = $fullText;
             }
 
@@ -312,7 +314,8 @@ class App
                     'placement' => $row['Placement'],
                     'externalURL' => $row['ExternalURL'],
                     'moreInfo' => $row['MoreInfo'],
-                    'busName' => $row['BusName']
+                    'busName' => $row['BusName'],
+                    'url' => $row['Url']
                 );
             }
 
