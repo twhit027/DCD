@@ -269,7 +269,7 @@ class App
                 $siteGroupString = $this->createSiteGroupString($siteGroup);
             }
 
-            $sql = "SELECT SQL_CALC_FOUND_ROWS l.*, s.BusName, s.Url";
+            $sql = "SELECT SQL_CALC_FOUND_ROWS l.*, s.BusName, s.Domain";
             if (!empty($fullText)) {
                 $sql .= ", MATCH(AdText) AGAINST('$fullText') AS score";
             }
@@ -315,7 +315,7 @@ class App
                     'externalURL' => $row['ExternalURL'],
                     'moreInfo' => $row['MoreInfo'],
                     'busName' => $row['BusName'],
-                    'url' => $row['Url']
+                    'domain' => $row['Domain']
                 );
             }
 

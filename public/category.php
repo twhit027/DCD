@@ -134,10 +134,10 @@ if (!isset($listings['results'])) {
 
         $app->logInfo('getSiteUrl: '. $app->getSite()->getSiteUrl() .' rowUrl:'. $row['url']);
 
-        if ($app->getSite()->getSiteUrl() == $row['url']) {
+        if ($app->getSite()->getDomain() == $row['domain']) {
             $server = $_SERVER['SERVER_NAME'];
         } else {
-            $server = $row['url'];
+            $server = 'classifieds.'.$row['domain'];
         }
 
         if (isset($_SERVER['CONTEXT_PREFIX'])) {
