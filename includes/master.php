@@ -89,6 +89,7 @@ if(isset($metadata))
         <nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse side-navbar ">
         <div class="visible-xs">
         <h3 style="color:#3276B1;">Search Our Classifieds</h3>
+            <div class="alert alert-danger" style="display: none;" id="searchAlert1"></div>
             <div class="input-group">
                 <input id="fullTextBox1" type="text" name="search" class="form-control" value="<?php echo $fullText; ?>">
                         <span class="input-group-btn">
@@ -136,6 +137,7 @@ else if($device =="phone")
 			
                 <div role="navigation" id="sidebar" style="background-color:#000; padding-left:15px; padding-right:15px; padding-top:5px">
                     <h3 style="color:#3276B1;">Search Our Classifieds</h3>
+                    <div class="alert alert-danger" style="display: none;" id="searchAlert2"></div>
                     <div class="input-group">
                         <input id="fullTextBox2" type="text" name="search" class="form-control" value="<?php echo $fullText; ?>">
                         <span class="input-group-btn">
@@ -254,7 +256,13 @@ else if($device == "tablet")
             posit='';
             allSites = $("#allSites1").prop("checked") ? 1 : 0;
 
-            doSearch(place, posit, ft, allSites);
+            if (ft == '') {
+                $("#searchAlert1").html("Please provide a search term");
+                $("#searchAlert1").toggle(true);
+                $("#fullTextBox1").focus();
+            } else {
+                doSearch(place, posit, ft, allSites);
+            }
         });
 
         $('#fullTextBox1').keypress(function(e) {
@@ -265,7 +273,13 @@ else if($device == "tablet")
                 posit='';
                 allSites = $("#allSites1").prop("checked") ? 1 : 0;
 
-                doSearch(place, posit, ft, allSites);
+                if (ft == '') {
+                    $("#searchAlert1").html("Please provide a search term");
+                    $("#searchAlert1").toggle(true);
+                    $("#fullTextBox1").focus();
+                } else {
+                    doSearch(place, posit, ft, allSites);
+                }
             }
         });
 
@@ -276,7 +290,13 @@ else if($device == "tablet")
             posit='';
             allSites = $("#allSites2").prop("checked") ? 1 : 0;
 
-            doSearch(place, posit, ft, allSites);
+            if (ft == '') {
+                $("#searchAlert2").html("Please provide a search term");
+                $("#searchAlert2").toggle(true);
+                $("#fullTextBox2").focus();
+            } else {
+                doSearch(place, posit, ft, allSites);
+            }
         });
 
         $('#fullTextBox2').keypress(function(e) {
@@ -287,7 +307,13 @@ else if($device == "tablet")
                 posit='';
                 allSites = $("#allSites2").prop("checked") ? 1 : 0;
 
-                doSearch(place, posit, ft, allSites);
+                if (ft == '') {
+                    $("#searchAlert2").html("Please provide a search term");
+                    $("#searchAlert2").toggle(true);
+                    $("#fullTextBox2").focus();
+                } else {
+                    doSearch(place, posit, ft, allSites);
+                }
             }
         });
 
