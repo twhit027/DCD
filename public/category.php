@@ -42,7 +42,7 @@ if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
     $adjacents = 3;
 
     /* Setup vars for query. */
-    $targetPage = 'category.php?place=' . $placement . '&posit=' . $position . '&ft=' . $fullText; //your file name  (the name of this file)
+    $targetPage = 'category.php?place=' . $placement . '&posit=' . $position . '&ft=' . $fullText . '&sites=' .$siteGroup; //your file name  (the name of this file)
     $limit = LISTINGS_PER_PAGE; //how many items to show per page
     //$page = urldecode($_REQUEST['page']);
 
@@ -131,8 +131,6 @@ if (!isset($listings['results'])) {
         if (!empty($row['images'])) {
             $imageArray = explode(',', $row['images']);
         }
-
-        $app->logInfo('getSiteUrl: '. $app->getSite()->getSiteUrl() .' rowUrl:'. $row['url']);
 
         if ($app->getSite()->getDomain() == $row['domain']) {
             $server = $_SERVER['SERVER_NAME'];
