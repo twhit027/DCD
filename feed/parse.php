@@ -118,6 +118,9 @@ function char($parser, $data)
     if ($state['name'] == "EXTERNAL_URL") {
         $userData[$userCount]["EXTERNAL"] .= $data;
     }
+    if ($state['name'] == "MORE_INFORMATION") {
+        $userData[$userCount]["MORE_INFORMATION"] .= $data;
+    }
 }
 
 class ClassifiedsAdmin extends PDO
@@ -166,6 +169,9 @@ class ClassifiedsAdmin extends PDO
             if (empty($userData[$i]["EXTERNAL"])) {
                 $userData[$i]["EXTERNAL"] = '';
             }
+            if (empty($userData[$i]["MORE_INFORMATION"])) {
+                $userData[$i]["MORE_INFORMATION"] = '';
+            }
             $imagesCSV ='';
             if (!empty($userData[$i]["AD-TEXT"])) {
                 //get all img tags
@@ -190,8 +196,8 @@ class ClassifiedsAdmin extends PDO
             }
 
             try {
-                $stmt = $this->prepare("INSERT INTO `listing` (`ID`, `StartDate`, `EndDate`, `Placement`,`Position`, `AdText`, `Images`, `SiteCode`, `Street`, `City`, `State`, `Zip`, `ExternalURL`) VALUES(:ID, :StartDate, :EndDate, :Placement, :Position, :AdText, :Images, :Site, :Street, :City, :State, :Zip, :ExternalURL)");
-                $stmt->execute(array(':ID' => $userData[$i]["AD"], ':StartDate' => $userData[$i]["START-DATE"], ':EndDate' => $userData[$i]["END-DATE"], ':Placement' => $userData[$i]["PLACEMENT"], ':Position' => $userData[$i]["POSITION"], ':AdText' => $userData[$i]["AD-TEXT"], ':Images'=> $imagesCSV,':Site' => $site, ':Street' => $userData[$i]["STREET"], ':City' => $userData[$i]["CITY"], ':State' => $userData[$i]["STATE"], ':Zip' => $userData[$i]["ZIP"], ':ExternalURL' => $userData[$i]["EXTERNAL"]));
+                $stmt = $this->prepare("INSERT INTO `listing` (`ID`, `StartDate`, `EndDate`, `Placement`,`Position`, `AdText`, `Images`, `SiteCode`, `Street`, `City`, `State`, `Zip`, `ExternalURL`, `MoreInfo`) VALUES(:ID, :StartDate, :EndDate, :Placement, :Position, :AdText, :Images, :Site, :Street, :City, :State, :Zip, :ExternalURL, :MoreInfo)");
+                $stmt->execute(array(':ID' => $userData[$i]["AD"], ':StartDate' => $userData[$i]["START-DATE"], ':EndDate' => $userData[$i]["END-DATE"], ':Placement' => $userData[$i]["PLACEMENT"], ':Position' => $userData[$i]["POSITION"], ':AdText' => $userData[$i]["AD-TEXT"], ':Images'=> $imagesCSV,':Site' => $site, ':Street' => $userData[$i]["STREET"], ':City' => $userData[$i]["CITY"], ':State' => $userData[$i]["STATE"], ':Zip' => $userData[$i]["ZIP"], ':ExternalURL' => $userData[$i]["EXTERNAL"], ':MoreInfo' => $userData[$i]["MORE_INFORMATION"]));
                 $inserted++;
             } catch (PDOException $e) {
                 $logText = "Message:(" . $e->getMessage() . ") attempting to insert listing (" . $userData[$i]["AD"] . ") into the database";
