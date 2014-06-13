@@ -47,6 +47,8 @@ class Site {
 	private $gpaper;
     private $topLinks;
     private $bottomLinks;
+    private $lat;
+    private $lng;
 	
     public function __construct($data = '') {
         if (isset($data)) {
@@ -70,6 +72,8 @@ class Site {
 		$this->gpaper = $data['Gpaper'];
         $this->topLinks = $data['TopLinks'];
         $this->bottomLinks = $data['BottomLinks'];
+        $this->lat = $data['Lat'];
+        $this->lng = $data['Lng'];
     }
 
     public function getSiteCode() {
@@ -118,5 +122,13 @@ class Site {
 
     public function getTopLinks() {
         return $this->topLinks;
+    }
+
+    public function getLat() {
+        return $this->lat;
+    }
+
+    public function getLng() {
+        return $this->lng;
     }
 } 
