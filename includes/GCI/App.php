@@ -251,7 +251,7 @@ class App
         return $sitemap;
     }
 
-    function getListings($placement = '', $position = '', $page = 1, $siteGroup = '', $fullText = '')
+    function getListings($placement = '', $position = '', $page = 1, $siteGroup = '', $fullText = '', $radius = '')
     {
         $siteGroup = trim($siteGroup);
         if ($siteGroup == '') {
@@ -259,6 +259,22 @@ class App
         } elseif (strtolower($siteGroup) == 'all') {
             $siteGroup = '';
         }
+
+        if (!empty($radius)) {
+            $siteGroup = '';
+            $orgLat = $this->site->getLat();
+            $orgLng = $this->site->getLng();
+            $preSql = 'SELECT SiteCode, ( 3959 * acos( cos( radians('.$orgLat.') ) * cos( radians( lat ) ) * cos( radians( lng ) - radians('.$orgLng.') ) + sin( radians('.$orgLat.') ) * sin( radians( lat ) ) ) ) AS distance FROM `siteInfo` HAVING distance < 250 ORDER BY distance';
+            $preResults = $this->database->getAssoc($preSql);
+            foreach ($preResults as $row) {
+                if (! empty($siteGroup)) {
+                    $siteGroup .= ',';
+                }
+                $siteGroup .= $row['SiteCode'];
+            }
+            $radius = '';
+        }
+
         if (empty($this->listings) && (isset($placement) && isset($position) && isset($siteGroup))) {
             $rowCnt = (defined(LISTINGS_PER_PAGE)) ? LISTINGS_PER_PAGE : 10;
             $offSet = (($page) - 1) * 10;
@@ -270,9 +286,17 @@ class App
             }
 
             $sql = "SELECT SQL_CALC_FOUND_ROWS l.*, s.BusName, s.Domain";
+            if (!empty($radius)) {
+                $orgLat = $this->site->getLat();
+                $orgLng = $this->site->getLng();
+                //SELECT SiteCode, SiteName, City, State, ( 3959 * acos( cos( radians(39.1031182) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(-84.5120196) ) + sin( radians(39.1031182) ) * sin( radians( lat ) ) ) ) AS distance FROM siteInfo HAVING distance < 250 ORDER BY distance LIMIT 0, 200;
+                $sql .= ', ( 3959 * acos( cos( radians('.$orgLat.') ) * cos( radians( s.lat ) ) * cos( radians( s.lng ) - radians('.$orgLng.') ) + sin( radians('.$orgLat.') ) * sin( radians( s.lat ) ) ) ) AS distance';
+            }
+
             if (!empty($fullText)) {
                 $sql .= ", MATCH(AdText) AGAINST('$fullText') AS score";
             }
+
 
             $sql .= ' FROM `listing` l, `siteinfo` s where l.SiteCode = s.SiteCode AND l.StartDate <= :startDate';
             $params[':startDate'] = date("Y-m-d");
@@ -291,6 +315,11 @@ class App
                 $sql .= ' and l.Position = :position ';
                 $params[':position'] = $position;
             }
+
+            if (!empty($radius)) {
+                $sql .= " HAVING distance < $radius";
+            }
+
             if (empty($fullText)) {
                 $sql .= ' ORDER BY l.AdText';
             } else {

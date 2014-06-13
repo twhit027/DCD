@@ -14,7 +14,7 @@ $app->logInfo('Category Page(FORWARDED_FOR: ' . @$_SERVER['HTTP_X_FORWARDED_FOR'
 
 //$content = new Content();
 $page = 1;
-$fullText = $placement = $position = $siteGroup = '';
+$fullText = $placement = $position = $siteGroup = $radius = '';
 
 if (isset($_REQUEST['page'])) {
     $page = urldecode($_REQUEST['page']);
@@ -31,9 +31,12 @@ if (isset($_REQUEST['posit'])) {
 if (isset($_REQUEST['sites'])) {
     $siteGroup = urldecode($_REQUEST['sites']);
 }
+if (isset($_REQUEST['rad'])) {
+    $radius = urldecode($_REQUEST['rad']);
+}
 
 $search = "";
-$listings = $app->getListings($placement, $position, $page, $siteGroup, $fullText);
+$listings = $app->getListings($placement, $position, $page, $siteGroup, $fullText, $radius);
 
 $pagination = "";
 if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
@@ -42,7 +45,7 @@ if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
     $adjacents = 3;
 
     /* Setup vars for query. */
-    $targetPage = 'category.php?place=' . $placement . '&posit=' . $position . '&ft=' . $fullText . '&sites=' .$siteGroup; //your file name  (the name of this file)
+    $targetPage = 'category.php?place=' . $placement . '&posit=' . $position . '&ft=' . $fullText . '&sites=' .$siteGroup. '&rad=' . $radius; //your file name  (the name of this file)
     $limit = LISTINGS_PER_PAGE; //how many items to show per page
     //$page = urldecode($_REQUEST['page']);
 
@@ -214,6 +217,13 @@ $(document).ready(function(){
 });
 
 </script>';
+
+$filter = <<<EOS
+<div class="panel panel-default">
+    <div class="filterHeading panel-heading">Filter</div>
+    <div class="filterContent panel-body" style="display: none;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit orem ipsum dolor sit amet, consectetuer adipiscing elit</div>
+</div>
+EOS;
 
 $mainContent = <<<EOS
             <input type="hidden" id="place" name="place" value="$placement">
