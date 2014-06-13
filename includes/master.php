@@ -73,6 +73,7 @@ if(isset($metadata))
         <?php
             if (!isset($fullText)) {$fullText = '';}
             if (!isset($siteGroup)) {$siteGroup = '';}
+            if (!isset($radius)) {$radius = '';}
             $nav = new \GCI\Navigation();
             $palette = $app->getSite()->getPalette();
             $siteName = $app->getSite()->getSiteName();
@@ -254,20 +255,20 @@ else if($device == "tablet")
                 path += '&';
             }
             path += 'ft='+encodeURIComponent(ft);
-        }
 
-        if (allSites) {
-            if (path != '') {
-                path += '&';
+            if (allSites) {
+                if (path != '') {
+                    path += '&';
+                }
+                path += 'sites=all';
             }
-            path += 'sites=all';
-        }
 
-        if (rad != '' && rad.toLowerCase() != 'all') {
-            if (path != '') {
-                path += '&';
+            if (rad != '' && rad.toLowerCase() != 'all') {
+                if (path != '') {
+                    path += '&';
+                }
+                path += 'rad='+encodeURIComponent(rad);
             }
-            path += 'rad='+encodeURIComponent(rad);
         }
 
         if (path != '') {
