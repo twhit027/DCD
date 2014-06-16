@@ -100,7 +100,7 @@ if(isset($metadata))
                         </span>
             </div>
             <div class="filter" style="color: white;">
-                <input type="checkbox" id="allSites1" value="" <?php if(strtolower($siteGroup) == 'all') echo 'checked="checked"';?> /> Search Across All sites
+                <input type="checkbox" id="allSites1" value="" <?php if(strtolower($siteGroup) == 'all') echo 'checked="checked"';?> /> Search Across All Sites
                 <div id="radius1" style="<?php if(strtolower($siteGroup) != 'all') echo 'display: none;';?>">
                     Limit Search Radius:
                     <select id="radSelect1" style="color:black">
@@ -163,7 +163,7 @@ else if($device =="phone")
                         </span>
 				    </div>
                     <div class="filter" style="color: white">
-                        <input type="checkbox" id="allSites2" value="" <?php if(strtolower($siteGroup) == 'all') echo 'checked="checked"';?> /> Search Across All sites
+                        <input type="checkbox" id="allSites2" value="" <?php if(strtolower($siteGroup) == 'all') echo 'checked="checked"';?> /> Search Across All Sites
                         <div id="radius2" style="<?php if(strtolower($siteGroup) != 'all') echo 'display: none;';?>">
                             Limit Search Radius:
                             <select id="radSelect2" style="color:black">
