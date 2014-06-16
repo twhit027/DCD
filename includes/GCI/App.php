@@ -264,13 +264,15 @@ class App
             $siteGroup = '';
             $orgLat = $this->site->getLat();
             $orgLng = $this->site->getLng();
-            $preSql = 'SELECT SiteCode, ( 3959 * acos( cos( radians('.$orgLat.') ) * cos( radians( Lat ) ) * cos( radians( Lng ) - radians('.$orgLng.') ) + sin( radians('.$orgLat.') ) * sin( radians( lat ) ) ) ) AS distance FROM `siteInfo` HAVING distance < 250 ORDER BY distance';
+            $preSql = 'SELECT SiteCode, ( 3959 * acos( cos( radians('.$orgLat.') ) * cos( radians( Lat ) ) * cos( radians( Lng ) - radians('.$orgLng.') ) + sin( radians('.$orgLat.') ) * sin( radians( lat ) ) ) ) AS distance FROM `siteinfo` HAVING distance < '.$radius.' ORDER BY distance';
             $preResults = $this->database->getAssoc($preSql);
-            foreach ($preResults as $row) {
-                if (! empty($siteGroup)) {
-                    $siteGroup .= ',';
+            if ($preResults !== false) {
+                foreach ($preResults as $row) {
+                    if (! empty($siteGroup)) {
+                        $siteGroup .= ',';
+                    }
+                    $siteGroup .= $row['SiteCode'];
                 }
-                $siteGroup .= $row['SiteCode'];
             }
             $radius = '';
         }
