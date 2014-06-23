@@ -238,8 +238,8 @@ class App
     {
         $siteGroupString = $this->createSiteGroupString($this->getSite()->getSiteGroup());
 
-        $sql = "SELECT LEFT(AdText,50) AS ATEXT, ID, Placement, Position, ExternalURL FROM `listing` WHERE StartDate <= :startDate and SiteCode in( $siteGroupString )";
-        $params[':startDate'] = date("Y-m-d");
+        $sql = "SELECT LEFT(AdText,50) AS ATEXT, ID, Placement, Position, ExternalURL FROM `listing` WHERE StartDate <= :startDate and EndDate >= :endDate and SiteCode in( $siteGroupString )";
+        $params[':startDate'] = $params[':endDate'] = date("Y-m-d");
 
         $results = $this->database->getAssoc($sql, $params);
 
@@ -251,37 +251,81 @@ class App
         return $sitemap;
     }
 
-    function getListings($placement = '', $position = '', $page = 1, $siteGroup = '', $fullText = '')
+    function getListings($placement = '', $position = '', $page = 1, $siteGroup = '', $fullText = '', $radius = '')
     {
+        $siteGroup = trim($siteGroup);
         if ($siteGroup == '') {
             $siteGroup = $this->site->getSiteGroup();
+        } elseif (strtolower($siteGroup) == 'all') {
+            $siteGroup = '';
         }
+
+        if (!empty($radius)) {
+            $siteGroup = '';
+            $orgLat = $this->site->getLat();
+            $orgLng = $this->site->getLng();
+            $preSql = 'SELECT SiteCode, ( 3959 * acos( cos( radians('.$orgLat.') ) * cos( radians( Lat ) ) * cos( radians( Lng ) - radians('.$orgLng.') ) + sin( radians('.$orgLat.') ) * sin( radians( lat ) ) ) ) AS distance FROM `siteinfo` HAVING distance < '.$radius.' ORDER BY distance';
+            $preResults = $this->database->getAssoc($preSql);
+            if ($preResults !== false) {
+                foreach ($preResults as $row) {
+                    if (! empty($siteGroup)) {
+                        $siteGroup .= ',';
+                    }
+                    $siteGroup .= $row['SiteCode'];
+                }
+            }
+            $radius = '';
+        }
+
         if (empty($this->listings) && (isset($placement) && isset($position) && isset($siteGroup))) {
             $rowCnt = (defined(LISTINGS_PER_PAGE)) ? LISTINGS_PER_PAGE : 10;
             $offSet = (($page) - 1) * 10;
 
-            $siteGroupString = $this->createSiteGroupString($siteGroup);
+            $siteGroupString = '';
 
-            $sql = "SELECT SQL_CALC_FOUND_ROWS l.*, s.BusName";
-            if (!empty($fullText)) {
-                $sql .= ", MATCH(adText) AGAINST('$fullText') AS score";
+            if (! empty($siteGroup)) {
+                $siteGroupString = $this->createSiteGroupString($siteGroup);
             }
 
-            $sql .= " FROM `listing` l, `siteinfo` s where l.SiteCode = s.SiteCode AND l.StartDate <= :startDate and l.siteCode in ( $siteGroupString ) ";
+            $sql = "SELECT SQL_CALC_FOUND_ROWS l.*, s.BusName, s.Domain";
+            if (!empty($radius)) {
+                $orgLat = $this->site->getLat();
+                $orgLng = $this->site->getLng();
+                //SELECT SiteCode, SiteName, City, State, ( 3959 * acos( cos( radians(39.1031182) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(-84.5120196) ) + sin( radians(39.1031182) ) * sin( radians( lat ) ) ) ) AS distance FROM siteInfo HAVING distance < 250 ORDER BY distance LIMIT 0, 200;
+                $sql .= ', ( 3959 * acos( cos( radians('.$orgLat.') ) * cos( radians( s.lat ) ) * cos( radians( s.lng ) - radians('.$orgLng.') ) + sin( radians('.$orgLat.') ) * sin( radians( s.lat ) ) ) ) AS distance';
+            }
+
+            if (!empty($fullText)) {
+                $sql .= ", MATCH(AdText) AGAINST('$fullText') AS score";
+            }
+
+
+            $sql .= ' FROM `listing` l, `siteinfo` s where l.SiteCode = s.SiteCode AND l.StartDate <= :startDate';
             $params[':startDate'] = date("Y-m-d");
 
+            if (empty($siteGroupString)) {
+                $sql .= " and l.Position not in ( 'Apartments' )";
+            } else {
+                $sql .= " and l.SiteCode in ( $siteGroupString )";
+            }
+
             if (!empty($placement)) {
-                $sql .= ' and l.placement = :placement';
+                $sql .= ' and l.Placement = :placement';
                 $params[':placement'] = $placement;
             }
             if (!empty($position)) {
-                $sql .= ' and l.position = :position ';
+                $sql .= ' and l.Position = :position ';
                 $params[':position'] = $position;
             }
+
+            if (!empty($radius)) {
+                $sql .= " HAVING distance < $radius";
+            }
+
             if (empty($fullText)) {
-                $sql .= ' ORDER BY l.adText';
+                $sql .= ' ORDER BY l.AdText';
             } else {
-                $sql .= " and MATCH(adText) AGAINST( :fulltext ) ORDER BY score DESC";
+                $sql .= " and MATCH(AdText) AGAINST( :fulltext ) ORDER BY score DESC";
                 $params[':fulltext'] = $fullText;
             }
 
@@ -301,7 +345,8 @@ class App
                     'placement' => $row['Placement'],
                     'externalURL' => $row['ExternalURL'],
                     'moreInfo' => $row['MoreInfo'],
-                    'busName' => $row['BusName']
+                    'busName' => $row['BusName'],
+                    'domain' => $row['Domain']
                 );
             }
 
@@ -511,24 +556,28 @@ class App
     public function setTopLinks($siteCode, $jsonString)
     {
         try {
-            $stmt = $this->database->prepare("UPDATE siteInfo SET TopLinks = :jsonString where SiteCode = :siteCode");
+            $stmt = $this->database->prepare("UPDATE `siteinfo` SET TopLinks = :jsonString where SiteCode = :siteCode");
             $stmt->execute(array(':jsonString' => $jsonString, ':siteCode' => $siteCode));
+            echo "ErrorCode: " . $this->database->errorCode();
+            echo "ErrorInfo: " . $this->database->errorInfo();
         } catch (\PDOException $e) {
             $logText = "Message:(" . $e->getMessage() . ") attempting to insert topLinks into the siteInfo table";
             $this->log->logError($logText);
+            fwrite(STDERR, $logText . "\n");
         }
     }
 
     public function setBottomLinks($siteCode, $jsonString)
     {
         try {
-            $stmt = $this->database->prepare("UPDATE siteInfo SET BottomLinks = :jsonString where SiteCode = :siteCode");
+            $stmt = $this->database->prepare("UPDATE `siteinfo` SET BottomLinks = :jsonString where SiteCode = :siteCode");
             $stmt->execute(array(':jsonString' => $jsonString, ':siteCode' => $siteCode));
+            echo "ErrorCode: " . $this->database->errorCode();
+            echo "ErrorInfo: " . $this->database->errorInfo();
         } catch (\PDOException $e) {
             $logText = "Message:(" . $e->getMessage() . ") attempting to insert BottomLinks into the siteInfo table";
             $this->log->logError($logText);
         }
-
     }
 
     function getAllSite()

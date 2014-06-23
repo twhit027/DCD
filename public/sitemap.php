@@ -1,4 +1,5 @@
 <?php
+ob_start();
 include('../vendor/klogger/KLogger.php');
 include('../vendor/Mobile_Detect/Mobile_Detect.php');
 include('../conf/constants.php');
@@ -29,6 +30,29 @@ class SiteMap{
 		}
 		return $data;
 	}
+
+	function createSitemapXML($dataArray){
+		$server = $_SERVER['SERVER_NAME'];
+		$data = "<?xml version='1.0' encoding='UTF-8'?>";
+        $data .= "<sitemapindex xmlns='http://www.sitemaps.org/schemas/sitemap/0.9' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd'>";
+		foreach ($dataArray as $placement => $positions) {
+			foreach ($positions as $position => $vals) {
+				foreach($vals as $eURL => $ids){
+					if($eURL == '1'){
+						$data .="<sitemap><loc> http://".$server."/map.php?place=".urlencode($placement)."&amp;posit=".urlencode($position)."</loc></sitemap>";
+					}
+					else{
+						$data .="<sitemap><loc> http://".$server."/category.php?place=".urlencode($placement)."&amp;posit=".urlencode($position)."</loc></sitemap>";
+					}
+					foreach($ids as $id){
+						$data .="<sitemap><loc> http://".$server."/item.php?id=".urlencode($id["id"])."</loc></sitemap>";
+					}
+				}
+			}
+		}
+		$data .= '</sitemapindex>';
+		return $data;
+	}
 }
 
 $app = new \GCI\App();
@@ -39,10 +63,12 @@ $search = $app->getSearch();
 $siteName = $app->getSite()->getSiteName();
 $siteUrl = $app->getSite()->getSiteUrl();
 $busName = $app->getSite()->getBusName();
+$data = $app->getSitemap();
 
 $sm = new SiteMap();
-$data = $app->getSitemap();
-$sitemap = $sm->createSitemap($data);
+
+if(!empty($_GET['links']) && $_GET['links'] == '1'){
+	$sitemap = $sm->createSitemap($data);
 $mainContent = <<<EOS
 <ol class="breadcrumb">
 	<li><a href="./">Home</a></li>
@@ -51,4 +77,12 @@ $mainContent = <<<EOS
 $sitemap
 EOS;
 
-include("../includes/master.php");
+    ob_end_clean();
+
+	include("../includes/master.php");
+} else {
+	$sitemap = $sm->createSitemapXML($data);
+    ob_end_clean();
+	header('Content-type: text/xml');
+	print(trim($sitemap));
+}

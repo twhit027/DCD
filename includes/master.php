@@ -38,6 +38,11 @@ if(isset($metadata))
     <style type="text/css">
     body {min-width: 10px !important;}
     .gallery{display: inline-block;margin-top: 20px;}
+    .header {
+        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAA3NCSVQICAjb4U/gAAAAJFBMVEX///9wcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHDRPAkXAAAADHRSTlMAESIziJmqu8zd7v+91kxoAAAACXBIWXMAAAsSAAALEgHS3X78AAAAFnRFWHRDcmVhdGlvbiBUaW1lADIxLzEyLzEymvNa/wAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNui8sowAAAArSURBVAiZY2DAB1iaoAy2XQZQVvRiKIMVLlQ9AU0EpoZjhwLUnEa81iABAFHzB8GYPzdNAAAAAElFTkSuQmCC");
+        background-repeat: no-repeat;
+    }
+    .content { border:2px solid #ccc; width:300px; height: 100px; overflow-y: scroll; }
     </style>
 
     <link href="3rdParty/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -67,6 +72,8 @@ if(isset($metadata))
     <div class="container">
         <?php
             if (!isset($fullText)) {$fullText = '';}
+            if (!isset($siteGroup)) {$siteGroup = '';}
+            if (!isset($radius)) {$radius = '';}
             $nav = new \GCI\Navigation();
             $palette = $app->getSite()->getPalette();
             $siteName = $app->getSite()->getSiteName();
@@ -83,6 +90,7 @@ if(isset($metadata))
         <nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse side-navbar ">
         <div class="visible-xs">
         <h3 style="color:#3276B1;">Search Our Classifieds</h3>
+            <div class="alert alert-danger" style="display: none;" id="searchAlert1"></div>
             <div class="input-group">
                 <input id="fullTextBox1" type="text" name="search" class="form-control" value="<?php echo $fullText; ?>">
                         <span class="input-group-btn">
@@ -90,6 +98,24 @@ if(isset($metadata))
                                 <img src="img/white-magnifying-glass-20.png">
                             </button>
                         </span>
+            </div>
+            <div class="filter" style="color: white;">
+                <input type="checkbox" id="allSites1" value="" <?php if(strtolower($siteGroup) == 'all') echo 'checked="checked"';?> /> Search Across All Sites
+                <div id="radius1" style="<?php if(strtolower($siteGroup) != 'all') echo 'display: none;';?>">
+                    Limit Search Radius:
+                    <select id="radSelect1" style="color:black">
+                        <option value="all">all</option>
+                        <option value="50" <?php if($radius == "50") echo "selected"; ?>>50 Miles</option>
+                        <option value="100" <?php if($radius == "100") echo "selected"; ?>>100 Miles</option>
+                        <option value="200" <?php if($radius == "200") echo "selected"; ?>>200 Miles</option>
+                        <option value="250" <?php if($radius == "250") echo "selected"; ?>>250 Miles</option>
+                        <option value="300" <?php if($radius == "300") echo "selected"; ?>>300 Miles</option>
+                        <option value="400" <?php if($radius == "400") echo "selected"; ?>>400 Miles</option>
+                        <option value="500" <?php if($radius == "500") echo "selected"; ?>>500 Miles</option>
+                        <option value="750" <?php if($radius == "750") echo "selected"; ?>>750 Miles</option>
+                        <option value="1000" <?php if($radius == "1000") echo "selected"; ?>>1000 Miles</option>
+                    </select>
+                </div>
             </div>
             <h3 style="color:#3276B1;">Or Select A Category</h3>
         <ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">
@@ -127,6 +153,7 @@ else if($device =="phone")
 			
                 <div role="navigation" id="sidebar" style="background-color:#000; padding-left:15px; padding-right:15px; padding-top:5px">
                     <h3 style="color:#3276B1;">Search Our Classifieds</h3>
+                    <div class="alert alert-danger" style="display: none;" id="searchAlert2"></div>
                     <div class="input-group">
                         <input id="fullTextBox2" type="text" name="search" class="form-control" value="<?php echo $fullText; ?>">
                         <span class="input-group-btn">
@@ -135,7 +162,24 @@ else if($device =="phone")
                             </button>
                         </span>
 				    </div>
-
+                    <div class="filter" style="color: white">
+                        <input type="checkbox" id="allSites2" value="" <?php if(strtolower($siteGroup) == 'all') echo 'checked="checked"';?> /> Search Across All Sites
+                        <div id="radius2" style="<?php if(strtolower($siteGroup) != 'all') echo 'display: none;';?>">
+                            Limit Search Radius:
+                            <select id="radSelect2" style="color:black">
+                                <option value="all">all</option>
+                                <option value="50" <?php if($radius == "50") echo "selected"; ?>>50 Miles</option>
+                                <option value="100" <?php if($radius == "100") echo "selected"; ?>>100 Miles</option>
+                                <option value="200" <?php if($radius == "200") echo "selected"; ?>>200 Miles</option>
+                                <option value="250" <?php if($radius == "250") echo "selected"; ?>>250 Miles</option>
+                                <option value="300" <?php if($radius == "300") echo "selected"; ?>>300 Miles</option>
+                                <option value="400" <?php if($radius == "400") echo "selected"; ?>>400 Miles</option>
+                                <option value="500" <?php if($radius == "500") echo "selected"; ?>>500 Miles</option>
+                                <option value="750" <?php if($radius == "750") echo "selected"; ?>>750 Miles</option>
+                                <option value="1000" <?php if($radius == "1000") echo "selected"; ?>>1000 Miles</option>
+                            </select>
+                        </div>
+                    </div>
                     <h3 style="color:#3276B1;">Or Select A Category</h3>
                     <ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">
                         <?php echo $nav->getSideNavigation($app->getCategories()); ?>
@@ -177,13 +221,109 @@ else if($device == "tablet")
 <script src="3rdParty/bootstrap/js/bootstrap.min.js"></script>
 <script src="3rdParty/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>
 <script>
+    function getDistance(lat1, lat2, lon1, lon2) {
+        //var R = 6371; // km
+        var R = 3959; //mile
+        var ltrd1 = lat1.toRadians();
+        var ltrd2 = lat2.toRadians();
+        var difLat = (lat2-lat1).toRadians();
+        var difLong = (lon2-lon1).toRadians();
+
+        var a = Math.sin(difLat/2) * Math.sin(difLat/2) + Math.cos(ltrd1) * Math.cos(ltrd2) * Math.sin(difLong/2) * Math.sin(difLong/2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+        var d = R * c;
+        return d;
+    }
+
+    function doSearch(place, posit, ft, allSites, rad) {
+        var path = '';
+
+        if (place != '') {
+            path += 'place='+encodeURIComponent(place);
+        }
+
+        if (posit != '') {
+            if (path != '') {
+                path += '&';
+            }
+            path += 'posit='+encodeURIComponent(posit);
+        }
+
+        if (ft != '') {
+            if (path != '') {
+                path += '&';
+            }
+            path += 'ft='+encodeURIComponent(ft);
+
+            if (allSites) {
+                if (path != '') {
+                    path += '&';
+                }
+                path += 'sites=all';
+            }
+
+            if (rad != '' && rad.toLowerCase() != 'all') {
+                if (path != '') {
+                    path += '&';
+                }
+                path += 'rad='+encodeURIComponent(rad);
+            }
+        }
+
+        if (path != '') {
+            path = '?'+path;
+        }
+
+        window.location.href = 'category.php'+path;
+    }
+
     $( document ).ready(function() {
+        $(".header").click(function () {
+            $header = $(this);
+            //getting the next element
+            $content = $header.next();
+            //open up the content needed - toggle the slide- if visible, slide up, if not slide down.
+            $content.slideToggle(500, function () {
+                //execute this after slideToggle is done
+                //change text of header based on visibility of content div
+                $(".moreorless").text(function () {
+                    //change text based on condition
+                    return $content.is(":visible") ? "Less" : "More";
+                });
+                bckImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAA3NCSVQICAjb4U/gAAAAJFBMVEX///9wcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHDRPAkXAAAADHRSTlMAESIziJmqu8zd7v+91kxoAAAACXBIWXMAAAsSAAALEgHS3X78AAAAFnRFWHRDcmVhdGlvbiBUaW1lADIxLzEyLzEymvNa/wAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNui8sowAAAArSURBVAiZY2DAB1iaoAy2XQZQVvRiKIMVLlQ9AU0EpoZjhwLUnEa81iABAFHzB8GYPzdNAAAAAElFTkSuQmCC";
+
+                if ($content.is(":visible")) {
+                    bckImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAA3NCSVQICAjb4U/gAAAAJFBMVEX///9wcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHDRPAkXAAAADHRSTlMAESIziJmqu8zd7v+91kxoAAAACXBIWXMAAAsSAAALEgHS3X78AAAAFnRFWHRDcmVhdGlvbiBUaW1lADIxLzEyLzEymvNa/wAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNui8sowAAAAySURBVAiZY2AgCbA0MDCkgBgcWxlYd4AYjN0B0YvAclrbdxmAGcyrF0OVWxqQZjwDAwA8XgfBciyedgAAAABJRU5ErkJggg==";
+                }
+
+                $header.css("background-image", 'url('+bckImg+')');
+            });
+
+        });
+
+        $(".filterContent").hide();
+        //toggle the componenet with class msg_body
+        $(".filterHeading").click(function()
+        {
+            $(this).next(".filterContent").slideToggle(500);
+        });
+
         $("#ftSearchbtn1").click(function(e) {
             e.preventDefault();
             ft = $("#fullTextBox1").val().trim();
             place='';
             posit='';
-            window.location.href = 'category.php?place='+encodeURIComponent(place)+'&posit='+encodeURIComponent(posit)+'&ft='+encodeURIComponent(ft);
+            allSites = $("#allSites1").prop("checked") ? 1 : 0;
+            rad = $('#radSelect1').val();
+
+            if (ft == '') {
+                $("#searchAlert1").html("Please provide a search term");
+                $("#searchAlert1").toggle(true);
+                $("#fullTextBox1").focus();
+            } else {
+                doSearch(place, posit, ft, allSites, rad);
+            }
         });
 
         $('#fullTextBox1').keypress(function(e) {
@@ -192,7 +332,16 @@ else if($device == "tablet")
                 ft = $("#fullTextBox1").val().trim();
                 place='';
                 posit='';
-                window.location.href = 'category.php?place='+encodeURIComponent(place)+'&posit='+encodeURIComponent(posit)+'&ft='+encodeURIComponent(ft);
+                allSites = $("#allSites1").prop("checked") ? 1 : 0;
+                rad = $('#radSelect1').val();
+
+                if (ft == '') {
+                    $("#searchAlert1").html("Please provide a search term");
+                    $("#searchAlert1").toggle(true);
+                    $("#fullTextBox1").focus();
+                } else {
+                    doSearch(place, posit, ft, allSites, rad);
+                }
             }
         });
 
@@ -201,7 +350,16 @@ else if($device == "tablet")
             ft = $("#fullTextBox2").val().trim();
             place='';
             posit='';
-            window.location.href = 'category.php?place='+encodeURIComponent(place)+'&posit='+encodeURIComponent(posit)+'&ft='+encodeURIComponent(ft);
+            allSites = $("#allSites2").prop("checked") ? 1 : 0;
+            rad = $('#radSelect2').val();
+
+            if (ft == '') {
+                $("#searchAlert2").html("Please provide a search term");
+                $("#searchAlert2").toggle(true);
+                $("#fullTextBox2").focus();
+            } else {
+                doSearch(place, posit, ft, allSites, rad);
+            }
         });
 
         $('#fullTextBox2').keypress(function(e) {
@@ -210,8 +368,25 @@ else if($device == "tablet")
                 ft = $("#fullTextBox2").val().trim();
                 place='';
                 posit='';
-                window.location.href = 'category.php?place='+encodeURIComponent(place)+'&posit='+encodeURIComponent(posit)+'&ft='+encodeURIComponent(ft);
+                allSites = $("#allSites2").prop("checked") ? 1 : 0;
+                rad = $('#radSelect2').val();
+
+                if (ft == '') {
+                    $("#searchAlert2").html("Please provide a search term");
+                    $("#searchAlert2").toggle(true);
+                    $("#fullTextBox2").focus();
+                } else {
+                    doSearch(place, posit, ft, allSites, rad);
+                }
             }
+        });
+
+        $("#allSites1").click(function(e) {
+            $('#radius1').toggle(this.checked);
+        });
+
+        $("#allSites2").click(function(e) {
+            $('#radius2').toggle(this.checked);
         });
 
         $("#ftSearchAdv").click(function(e) {
@@ -219,6 +394,13 @@ else if($device == "tablet")
             $("#advancedsearch").toggle();
         });
     });
+
+    function toggle(source, checkName) {
+        checkboxes = document.getElementsByName(checkName);
+        for(var i=0, n=checkboxes.length;i<n;i++) {
+            checkboxes[i].checked = source.checked;
+        }
+    }
 </script>
 <?php if(!empty($masterBottom)){ echo $masterBottom; } ?>
 <?php include("../includes/tracking.php"); ?>
