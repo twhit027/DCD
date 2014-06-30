@@ -97,6 +97,21 @@ class Navigation
         return $data;
     }
 
+    function getSideCheckBoxes($categories)
+    {
+        $data = '';
+        $placementId = 0;
+        foreach ($categories as $placement => $positions) {
+            $placementId++;
+            $data .= '<input type="checkbox" onClick=\'toggle(this, "foo'.$placementId.'")\' value="'.$placement.'" />' .$placement. '<br />';
+            foreach ($positions as $position => $vals) {
+                $data .= '&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="foo'.$placementId.'" value="'.$position.'" />' .$position. '<br />';
+            }
+        }
+
+        return $data;
+    }
+
     function getBottomNavigation($siteUrl, $paletteNumber = '', $siteName, $siteData = '')
     {
         $siteLinks = array(

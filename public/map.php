@@ -114,7 +114,7 @@ $data = <<<EOS
 			</div>
 		</div>
 	</div>
-	<p>Click or Tap on any entry to find on the map.</p>
+	<p><strong>Click or Tap on any entry to find on the map.</strong></p>
 	<table class="table table-striped">
 		$rummageList
 	</table>

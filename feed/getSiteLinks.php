@@ -6,7 +6,7 @@
  * Time: 10:09 AM
  */
 
-error_reporting(0);
+//error_reporting(0);
 set_time_limit(0);
 
 include(__DIR__ . '/../vendor/klogger/KLogger.php');
@@ -30,6 +30,32 @@ function url_exists($url){
     } else {
         return false;
     }
+}
+
+function setTopLinks($siteCode, $jsonString)
+{
+    $db = new \GCI\Database();
+    try {
+        $stmt = $db->prepare("UPDATE `siteinfo` SET TopLinks = :jsonString where SiteCode = :siteCode");
+        $stmt->execute(array(':jsonString' => $jsonString, ':siteCode' => $siteCode));
+        //$logText = "Message:(" . print_r($db->errorInfo(), true)  . ") Code: (".$db->errorCode().") attempting to insert topLinks into the siteInfo table";
+    } catch (\PDOException $e) {
+        $logText = "Message:(" . $e->getMessage() . ") attempting to insert topLinks into the siteInfo table";
+    }
+    fwrite(STDERR, $logText . "\n");
+}
+
+function setBottomLinks($siteCode, $jsonString)
+{
+    $db = new \GCI\Database();
+    try {
+        $stmt = $db->prepare("UPDATE `siteinfo` SET BottomLinks = :jsonString where SiteCode = :siteCode");
+        $stmt->execute(array(':jsonString' => $jsonString, ':siteCode' => $siteCode));
+        //$logText = "Message:(" . print_r($db->errorInfo(), true) . ") Code: (".$db->errorCode().") attempting to insert topLinks into the siteInfo table";
+    } catch (\PDOException $e) {
+        $logText = "Message:(" . $e->getMessage() . ") attempting to insert BottomLinks into the siteInfo table";
+    }
+    fwrite(STDERR, $logText . "\n");
 }
 
 $options = getopt("s:nw");
@@ -121,10 +147,10 @@ foreach($sitesArray as $site) {
 
         if ($write) {
             if (!empty($topLinks)) {
-                $app->setTopLinks($siteCode, json_encode($topLinks));
+                setTopLinks($siteCode, json_encode($topLinks));
             }
             if (!empty($bottomLinks)) {
-                $app->setBottomLinks($siteCode, json_encode($bottomLinks));
+                setBottomLinks($siteCode, json_encode($bottomLinks));
             }
         }
     }
