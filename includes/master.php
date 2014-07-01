@@ -261,13 +261,13 @@ else if($device == "tablet")
                     path += '&';
                 }
                 path += 'sites=all';
-            }
 
-            if (rad != '' && rad.toLowerCase() != 'all') {
-                if (path != '') {
-                    path += '&';
+                if (rad != '' && rad.toLowerCase() != 'all') {
+                    if (path != '') {
+                        path += '&';
+                    }
+                    path += 'rad='+encodeURIComponent(rad);
                 }
-                path += 'rad='+encodeURIComponent(rad);
             }
         }
 
