@@ -28,10 +28,10 @@ class Ads
 		})();
 		
 		googletag.cmd.push(function() {
-		googletag.defineSlot('/7103/".$dfpid."/728x90_1/classifieds/main', [728, 90], 'div-gpt-ad-1395329372590-0').addService(googletag.pubads());
+		
 		googletag.defineSlot('/7103/".$dfpid."/728x90_2/classifieds/main', [728, 90], 'div-gpt-ad-1395329372590-1').addService(googletag.pubads());
 		googletag.defineSlot('/7103/".$dfpid."/flex_1/classifieds/main', [[300, 250], [300, 600], [300, 800]], 'div-gpt-ad-1395329372590-2').addService(googletag.pubads());
-		googletag.defineSlot('/7103/".$dfpid."/launchpad_SF/classifieds/main', [[728, 90], [940, 30], [960, 66], [970, 66], [980, 66]], 'div-gpt-ad-1395329372590-3').addService(googletag.pubads());
+		googletag.defineSlot('/7103/".$dfpid."/launchpad_SF/classifieds/main', [[728, 90], [940, 30], [960, 66], [970, 66], [980, 66]], 'div-gpt-ad-1404831578985-0').addService(googletag.pubads());
 		googletag.defineSlot('/7103/".$dfpmobile."/html5_tablet/interstitial_landscape/classifieds/main', [1024, 675], 'div-gpt-ad-1395329372590-4').addService(googletag.pubads());
 		googletag.defineSlot('/7103/".$dfpmobile."/html5_tablet/interstitial_portrait/classifieds/main', [768, 930], 'div-gpt-ad-1395329372590-5').addService(googletag.pubads());
 		googletag.defineSlot('/7103/".$dfpmobile."/wap/banner_bottom/classifieds/main', [[6, 1], [320, 50]], 'div-gpt-ad-1395329372590-6').addService(googletag.pubads());
@@ -45,11 +45,13 @@ class Ads
     }
     function getLaunchpad()
     {
-        $data ="<!-- ia-desmoines-C1150/launchpad_SF/classifieds/main -->
-		<div id='div-gpt-ad-1395329372590-3' style='text-align:center;padding-bottom:10px;'>
+        $data ="<!-- ia-iowacity-C1033/launchpad_SF/classifieds/main -->
+		<div style='text-align:center;padding-bottom:20px;'>
+		<div id='div-gpt-ad-1404831578985-0'>
 		<script type='text/javascript'>
-		googletag.cmd.push(function() { googletag.display('div-gpt-ad-1395329372590-3'); });
+		googletag.cmd.push(function() { googletag.display('div-gpt-ad-1404831578985-0'); });
 		</script>
+		</div>
 		</div>
 		";
 
@@ -68,19 +70,7 @@ class Ads
 
         return $data;
     }
-    function getLeaderTop()
-    {
-        $data ="<!-- ia-desmoines-C1150/728x90_1/classifieds/main -->
-		<div style='text-align:center; padding-top:50px;padding-bottom:10px;'>
-		<div id='div-gpt-ad-1395329372590-0' style='text-align:center;'>
-		<script type='text/javascript'>
-		googletag.cmd.push(function() { googletag.display('div-gpt-ad-1395329372590-0'); });
-		</script>
-		</div></div>
-		";
 
-        return $data;
-    }
     function getFlex()
     {
         $data ="<!-- ia-desmoines-C1150/flex_1/classifieds/main -->
