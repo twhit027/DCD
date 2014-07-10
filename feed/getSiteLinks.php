@@ -10,6 +10,11 @@
 set_time_limit(0);
 
 include(__DIR__ . '/../conf/constants.php');
+include(__DIR__ . '/../includes/GCI/Database.php');
+include(__DIR__ . '/../includes/GCI/Site.php');
+include(__DIR__ . '/../includes/GCI/App.php');
+include(__DIR__ . '/../includes/GCI/Navigation.php');
+include(__DIR__ . '/../includes/GCI/Ads.php');
 
 function url_exists($url){
     if ((strpos($url, "http")) === false) $url = "http://" . $url;
