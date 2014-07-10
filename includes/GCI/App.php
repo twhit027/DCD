@@ -23,7 +23,7 @@ class App
 
     function __construct($siteCode = '', $logDir = LOGGING_DIR, $logLevel = LOGGING_LEVEL)
     {
-        $this->database = new Database();
+        $this->database = new Database($logDir,$logLevel);
 
         $this->detectDevice();
 
