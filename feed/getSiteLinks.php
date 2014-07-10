@@ -9,6 +9,8 @@
 //error_reporting(0);
 set_time_limit(0);
 
+include(__DIR__ . '/../vendor/klogger/KLogger.php');
+include(__DIR__ . '/../vendor/Mobile_Detect/Mobile_Detect.php');
 include(__DIR__ . '/../conf/constants.php');
 include(__DIR__ . '/../includes/GCI/Database.php');
 include(__DIR__ . '/../includes/GCI/Site.php');
@@ -33,6 +35,7 @@ function url_exists($url){
 function setTopLinks($siteCode, $jsonString)
 {
     $db = new \GCI\Database();
+    $db->setLog(STDERR);
     try {
         $stmt = $db->prepare("UPDATE `siteinfo` SET TopLinks = :jsonString where SiteCode = :siteCode");
         $stmt->execute(array(':jsonString' => $jsonString, ':siteCode' => $siteCode));
@@ -46,6 +49,7 @@ function setTopLinks($siteCode, $jsonString)
 function setBottomLinks($siteCode, $jsonString)
 {
     $db = new \GCI\Database();
+    $db->setLog(STDERR);
     try {
         $stmt = $db->prepare("UPDATE `siteinfo` SET BottomLinks = :jsonString where SiteCode = :siteCode");
         $stmt->execute(array(':jsonString' => $jsonString, ':siteCode' => $siteCode));
