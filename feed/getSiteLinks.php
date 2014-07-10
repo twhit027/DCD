@@ -9,7 +9,14 @@
 //error_reporting(0);
 set_time_limit(0);
 
+include(__DIR__ . '/../vendor/klogger/KLogger.php');
+include(__DIR__ . '/../vendor/Mobile_Detect/Mobile_Detect.php');
+include(__DIR__ . '/../conf/constants.php');
+include(__DIR__ . '/../includes/GCI/Database.php');
+include(__DIR__ . '/../includes/GCI/Site.php');
 include(__DIR__ . '/../includes/GCI/App.php');
+include(__DIR__ . '/../includes/GCI/Navigation.php');
+include(__DIR__ . '/../includes/GCI/Ads.php');
 
 function url_exists($url){
     if ((strpos($url, "http")) === false) $url = "http://" . $url;
@@ -27,7 +34,7 @@ function url_exists($url){
 
 function setTopLinks($siteCode, $jsonString)
 {
-    $db = new PDO('mysql:dbname=' . DB_NAME . ';host=' . DB_HOST . ';port=' . DB_PORT . ';charset=utf8', DB_USER, DB_PASS);
+    $db = new \GCI\Database('.',8);
     try {
         $stmt = $db->prepare("UPDATE `siteinfo` SET TopLinks = :jsonString where SiteCode = :siteCode");
         $stmt->execute(array(':jsonString' => $jsonString, ':siteCode' => $siteCode));
@@ -40,7 +47,7 @@ function setTopLinks($siteCode, $jsonString)
 
 function setBottomLinks($siteCode, $jsonString)
 {
-    $db = new PDO('mysql:dbname=' . DB_NAME . ';host=' . DB_HOST . ';port=' . DB_PORT . ';charset=utf8', DB_USER, DB_PASS);
+    $db = new \GCI\Database('.',8);
     try {
         $stmt = $db->prepare("UPDATE `siteinfo` SET BottomLinks = :jsonString where SiteCode = :siteCode");
         $stmt->execute(array(':jsonString' => $jsonString, ':siteCode' => $siteCode));

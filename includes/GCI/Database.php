@@ -14,7 +14,7 @@ class Database extends \PDO
     private $con = false;
     private $log;
 
-    public function __construct($logDir = '')
+    public function __construct($logDir = LOGGING_DIR, $logLevel = LOGGING_LEVEL)
     {
         try {
             $this->connection_string = 'mysql:dbname=' . DB_NAME . ';host=' . DB_HOST . ';port=' . DB_PORT . ';charset=utf8';
@@ -22,10 +22,7 @@ class Database extends \PDO
             $this->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
             $this->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             $this->con = true;
-            if (empty($logDir)) {
-                $logDir = LOGGING_DIR;
-            }
-            $this->setLog($logDir);
+            $this->setLog($logDir, $logLevel);
         } catch (\PDOException $e) {
             $logText = "Message:(" . $e->getMessage() . ") attempting to connect to database";
             $this->log->logError($logText);
