@@ -82,7 +82,7 @@ if (strtolower($siteId) == 'all') {
     $getAllSites = true;
 }
 
-$app = new \GCI\App($siteId);
+$app = new \GCI\App($siteId,'.',8);
 
 if ($getAllSites) {
     $sitesArray = $app->getAllSite();
