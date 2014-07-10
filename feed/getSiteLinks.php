@@ -9,8 +9,6 @@
 //error_reporting(0);
 set_time_limit(0);
 
-include(__DIR__ . '/../vendor/klogger/KLogger.php');
-include(__DIR__ . '/../vendor/Mobile_Detect/Mobile_Detect.php');
 include(__DIR__ . '/../conf/constants.php');
 include(__DIR__ . '/../includes/GCI/Database.php');
 include(__DIR__ . '/../includes/GCI/Site.php');
