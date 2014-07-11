@@ -34,7 +34,7 @@ function url_exists($url){
 
 function setTopLinks($siteCode, $jsonString)
 {
-    $db = new \GCI\Database();
+    $db = new \GCI\Database('.',8);
     try {
         $stmt = $db->prepare("UPDATE `siteinfo` SET TopLinks = :jsonString where SiteCode = :siteCode");
         $stmt->execute(array(':jsonString' => $jsonString, ':siteCode' => $siteCode));
@@ -47,7 +47,7 @@ function setTopLinks($siteCode, $jsonString)
 
 function setBottomLinks($siteCode, $jsonString)
 {
-    $db = new \GCI\Database();
+    $db = new \GCI\Database('.',8);
     try {
         $stmt = $db->prepare("UPDATE `siteinfo` SET BottomLinks = :jsonString where SiteCode = :siteCode");
         $stmt->execute(array(':jsonString' => $jsonString, ':siteCode' => $siteCode));
@@ -82,7 +82,7 @@ if (strtolower($siteId) == 'all') {
     $getAllSites = true;
 }
 
-$app = new \GCI\App($siteId);
+$app = new \GCI\App($siteId,'.',8);
 
 if ($getAllSites) {
     $sitesArray = $app->getAllSite();
