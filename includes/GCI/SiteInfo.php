@@ -8,7 +8,6 @@
 
 namespace GCI;
 
-
 class SiteInfo Extends Crud {
     public static $paletteArray = array(
         1 => array('top' => '#292929', 'bottom' => '#080808', 'border' => '#2C2C2C'),
