@@ -66,11 +66,12 @@ include('../includes/GCI/Ads.php');
         $nav = new \GCI\Navigation();
         $palette = $app->getSite()->getPalette();
         $siteName = $app->getSite()->getSiteName();
+        $imgSiteName = $app->getSite()->getImgSiteName();
         $siteUrl = $app->getSite()->getSiteUrl();
         $siteCode = $app->getSite()->getSiteCode();
         $busName = $app->getSite()->getBusName();
         $siteTopData = $app->getSite()->getTopLinks();
-        echo $nav->getTopNavigation($siteUrl, $palette, $siteName, $siteTopData);
+        echo $nav->getTopNavigation($siteUrl, $palette, $siteName, $siteTopData, $imgSiteName);
         ?>
     </div>
 </header>

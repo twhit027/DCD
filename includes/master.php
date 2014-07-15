@@ -77,7 +77,7 @@ if(isset($metadata))
             $nav = new \GCI\Navigation();
             $palette = $app->getSite()->getPalette();
             $siteName = $app->getSite()->getSiteName();
-            $siteName = $app->getSite()->getImgSiteName();
+            $imgSiteName = $app->getSite()->getImgSiteName();
             $siteUrl = $app->getSite()->getSiteUrl();
             $siteCode = $app->getSite()->getSiteCode();
             $busName = $app->getSite()->getBusName();
@@ -86,7 +86,7 @@ if(isset($metadata))
             if ($palette > 89 && empty($siteBottomData)) {
                 $siteBottomData = $siteTopData;
             }
-            echo $nav->getTopNavigation($siteUrl, $palette, $siteName, $siteTopData);
+            echo $nav->getTopNavigation($siteUrl, $palette, $siteName, $siteTopData, $imgSiteName);
         ?>
         <nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse side-navbar ">
         <div class="visible-xs">
