@@ -22,8 +22,7 @@ $mainContent = <<<EOS
 <h2>Introducing our new online system</h2>
 
 <p>Now it’s easier than ever to place an ad and find what you’re looking for—24 hours a day, seven days a week.</p>
-<p>In just a few clicks, you can place your ads online, in print or both.</p>
-<p>And with improved ad displays, your ad is sure to get noticed!</p>
+<p>In just a few clicks, you can place your ads online, in print or both. And with improved ad displays, your ad is sure to get noticed!</p>
 <p>From vehicles to pets to garage sales to services, we provide the most effective ways to sell to potential local
 buyers through our leading mobile, online and print solutions.</p>
 <p><a class="button" href="http://$siteName.gannettclassifieds.com"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">Place an Ad</button></a></p>
