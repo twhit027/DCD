@@ -45,7 +45,7 @@ class Navigation
         return $data;
     }
 
-    function getTopNavigation($siteUrl, $paletteNumber = '', $siteName = '', $siteData = '')
+    function getTopNavigation($siteUrl, $paletteNumber = '', $siteName = '', $siteData = '', $imgSiteName = '')
     {
         $top = $bottom = $border = '';
         if (!empty($paletteNumber)&& $paletteNumber < 90) {
@@ -56,7 +56,11 @@ class Navigation
 
         //$siteImage = $siteUrl . '/graphics/ody/cobrand_logo.gif';
         //$siteImage = $siteUrl . '/graphics/ody/mast_logo.gif"';
-        $siteImage = "http://www.gannett-cdn.com/sites/$siteName/images/site-nav-logo@2x.png";
+        if (empty($imgSiteName)) {
+            $siteImage = "http://www.gannett-cdn.com/sites/$siteName/images/site-nav-logo@2x.png";
+        } else {
+            $siteImage = "http://www.gannett-cdn.com/sites/$imgSiteName/images/site-nav-logo@2x.png";
+        }
 
         $siteLinks = array(
             'JOBS' => $siteUrl . '/jobs',

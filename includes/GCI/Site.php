@@ -49,6 +49,7 @@ class Site {
     private $bottomLinks;
     private $lat;
     private $lng;
+    private $imgSiteName;
 	
     public function __construct($data = '') {
         if (isset($data)) {
@@ -74,6 +75,7 @@ class Site {
         $this->bottomLinks = $data['BottomLinks'];
         $this->lat = $data['Lat'];
         $this->lng = $data['Lng'];
+        $this->imgSiteName = $data['ImgSiteName'];
     }
 
     public function getSiteCode() {
@@ -130,5 +132,9 @@ class Site {
 
     public function getLng() {
         return $this->lng;
+    }
+
+    public function getImgSiteName() {
+        return $this->imgSiteName;
     }
 } 

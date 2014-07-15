@@ -77,6 +77,7 @@ if(isset($metadata))
             $nav = new \GCI\Navigation();
             $palette = $app->getSite()->getPalette();
             $siteName = $app->getSite()->getSiteName();
+            $siteName = $app->getSite()->getImgSiteName();
             $siteUrl = $app->getSite()->getSiteUrl();
             $siteCode = $app->getSite()->getSiteCode();
             $busName = $app->getSite()->getBusName();
