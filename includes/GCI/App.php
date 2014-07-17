@@ -21,9 +21,9 @@ class App
     private $deviceType;
     private $log;
 
-    function __construct($siteCode = '')
+    function __construct($siteCode = '', $logDir = LOGGING_DIR, $logLevel = LOGGING_LEVEL)
     {
-        $this->database = new Database();
+        $this->database = new Database($logDir,$logLevel);
 
         $this->detectDevice();
 
@@ -33,11 +33,7 @@ class App
             $this->setSiteFromSiteCode($siteCode);
         }
         $this->setCategories();
-
-        if (empty($logDir)) {
-            $logDir = LOGGING_DIR;
-        }
-        $this->setLog($logDir);
+        $this->setLog($logDir,$logLevel);
     }
 
     public function setLog($logDir = LOGGING_DIR, $logLevel = LOGGING_LEVEL)

@@ -296,7 +296,7 @@ class ClassifiedsAdmin extends PDO
 
         try {
             $startDate = date("Y-m-d");
-            $sql = "INSERT into `position` (Placement, Position, SiteCode, ExternalURL, Count ) SELECT Placement, Position, SiteCode, ExternalURL, count( * ) FROM listing WHERE StartDate <= '$startDate' GROUP BY Placement, Position, SiteCode";
+            $sql = "INSERT into `position` (Placement, Position, SiteCode, ExternalURL, Count ) SELECT Placement, Position, SiteCode, MAX(ExternalURL), count( * ) FROM listing WHERE StartDate <= '$startDate' GROUP BY Placement, Position, SiteCode";
             $stmt = $this->prepare($sql);
             $stmt->execute();
         } catch (PDOException $e) {
