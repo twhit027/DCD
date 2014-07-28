@@ -202,8 +202,8 @@ if (!isset($listings['results'])) {
     }
 }
 
-$masterBottom = '<link type="text/css" rel="stylesheet" href="3rdParty/fancybox/jquery.fancybox.css" media="screen">
-<script type="text/javascript" src="3rdParty/fancybox/jquery.fancybox.pack.js"></script>
+$masterBottom = '<link type="text/css" rel="stylesheet" href="3rdParty/fancybox/source/jquery.fancybox.css" media="screen">
+<script type="text/javascript" src="3rdParty/fancybox/source/jquery.fancybox.pack.js"></script>
 <script>
 $(document).ready(function(){
     //FANCYBOX
