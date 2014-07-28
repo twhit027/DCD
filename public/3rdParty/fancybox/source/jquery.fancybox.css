@@ -113,7 +113,7 @@
 	height: 100%;
 	cursor: pointer;
 	text-decoration: none;
-	background: transparent url(../../../../../3rdParty/fancybox/source/source/blank.gif); /* helps IE */
+	background: transparent url(../../../../../3rdParty/fancybox/source/blank.gif); /* helps IE */
 	-webkit-tap-highlight-color: rgba(0,0,0,0);
 	z-index: 8040;
 }
