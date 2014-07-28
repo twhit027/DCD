@@ -24,7 +24,7 @@ if (isset($_REQUEST['posit'])) {
 $listings = $app->getSingleListing($id);
 
 $cleanAdText = strip_tags($listings['adText']);
-$siteCode = urlencode($listings['position']);
+$siteCode = urlencode($listings['siteCode']);
 $placement = urlencode($listings['placement']);
 $position = urlencode($listings['position']);
 $imageArray = array();
