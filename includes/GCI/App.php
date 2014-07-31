@@ -21,9 +21,9 @@ class App
     private $deviceType;
     private $log;
 
-    function __construct($siteCode = '')
+    function __construct($siteCode = '', $logDir = LOGGING_DIR, $logLevel = LOGGING_LEVEL)
     {
-        $this->database = new Database();
+        $this->database = new Database($logDir,$logLevel);
 
         $this->detectDevice();
 
@@ -33,11 +33,7 @@ class App
             $this->setSiteFromSiteCode($siteCode);
         }
         $this->setCategories();
-
-        if (empty($logDir)) {
-            $logDir = LOGGING_DIR;
-        }
-        $this->setLog($logDir);
+        $this->setLog($logDir,$logLevel);
     }
 
     public function setLog($logDir = LOGGING_DIR, $logLevel = LOGGING_LEVEL)
@@ -218,6 +214,7 @@ class App
     function setCategories()
     {
         $siteGroupString = $this->createSiteGroupString($this->getSite()->getSiteGroup());
+        $siteCode = $this->getSite()->getSiteCode();
 
         $sql = "SELECT * FROM `position` WHERE SiteCode in( $siteGroupString )";
         $params = array();
@@ -226,9 +223,15 @@ class App
 
         $categoriesArray = array();
         foreach ($results as $row) {
-            @$categoriesArray[$row['Placement']][$row['Position']]['count'] += $row['Count'];
-            @$categoriesArray[$row['Placement']][$row['Position']]['url'] = $row['ExternalURL'];
-
+            if ((!empty($row['ExternalURL'])) && ($row['ExternalURL'] != 1)) {
+                if ($row['SiteCode'] == $siteCode) {
+                    @$categoriesArray[$row['Placement']][$row['Position']]['count'] += $row['Count'];
+                    @$categoriesArray[$row['Placement']][$row['Position']]['url'] = $row['ExternalURL'];
+                }
+            } else {
+                @$categoriesArray[$row['Placement']][$row['Position']]['count'] += $row['Count'];
+                @$categoriesArray[$row['Placement']][$row['Position']]['url'] = $row['ExternalURL'];
+            }
         }
 
         $this->categories = $categoriesArray;

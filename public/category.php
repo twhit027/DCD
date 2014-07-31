@@ -45,7 +45,7 @@ if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
     $adjacents = 3;
 
     /* Setup vars for query. */
-    $targetPage = 'category.php?place=' . $placement . '&posit=' . $position . '&ft=' . $fullText . '&sites=' .$siteGroup. '&rad=' . $radius; //your file name  (the name of this file)
+    $targetPage = 'category.php?place=' . urlencode($placement) . '&posit=' . urlencode($position) . '&ft=' . urlencode($fullText) . '&sites=' . urlencode($siteGroup). '&rad=' . $radius; //your file name  (the name of this file)
     $limit = LISTINGS_PER_PAGE; //how many items to show per page
     //$page = urldecode($_REQUEST['page']);
 
@@ -170,6 +170,16 @@ if (!isset($listings['results'])) {
                 }
                 $imgCnt++;
             }
+            $imgCnt = 0;
+            $newImageInfo = '';
+            foreach ($imageArray as $imgSrc) {
+                if ($imgCnt == 0) {
+                    $newImageInfo .= '<a href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" data-gallery="ligthbox ' . $row['id'] . '_group" title="Picture"><span class="glyphicon glyphicon-picture"></span></a>';
+                } else {
+                    $newImageInfo .= '<div style="display: none"><a href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" data-gallery="ligthbox ' . $row['id'] . '_group" title="Picture"><span class="glyphicon glyphicon-picture"></span></a></div>';
+                }
+                $imgCnt++;
+            }
         }
 
         if ($row['externalURL'] === "1") {
@@ -192,8 +202,8 @@ if (!isset($listings['results'])) {
     }
 }
 
-$masterBottom = '<link rel="stylesheet" href="//frontend.reklamor.com/fancybox/jquery.fancybox.css" media="screen">
-<script src="//frontend.reklamor.com/fancybox/jquery.fancybox.js"></script>
+$masterBottom = '<link type="text/css" rel="stylesheet" href="3rdParty/fancybox/source/jquery.fancybox.css" media="screen">
+<script type="text/javascript" src="3rdParty/fancybox/source/jquery.fancybox.pack.js"></script>
 <script>
 $(document).ready(function(){
     //FANCYBOX
