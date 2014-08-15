@@ -299,7 +299,8 @@ class App
             }
 
             if (!empty($fullText)) {
-                $sql .= ", MATCH(AdText) AGAINST('$fullText') AS score";
+                $sql .= ", MATCH(AdText) AGAINST( :fulltext1 ) AS score";
+                $params[':fulltext1'] = $fullText;
             }
 
 
