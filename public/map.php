@@ -25,7 +25,7 @@ $rummageList = '';
 if(!empty($showcase) && !empty($rummages[$showcase])){
 	$rummageList .= "
 	<tr id='dcd-showcase'>
-		<td><input type='button' value='Add' onclick=\"visit(this,'".$showcase."');\" class='add btn btn-default' /></td>
+		<td><input type='button' value='Add' onclick=\"visit(this,'".$showcase."');\" class='add btn btn-default' id='".$showcase."' /></td>
 		<td class='dcd-adText' dcd-id='". $showcase."'>".$rummages[$showcase]["adText"]."<br />";
 	$rummageList .= '<a href="http://twitter.com/home?status=' . str_replace("&","%26",substr($rummages[$showcase]["adText"], 0, 120)) . '" target="_blank"><img src="img/twitter-16.png" /></a>&nbsp';
 	$rummageList .= '<a href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $showcase . '" target="_blank"><img src="img/facebook-16.png" /></a>&nbsp';
@@ -40,7 +40,7 @@ if(!empty($showcase) && !empty($rummages[$showcase])){
 foreach($rummages as $k=>$v){
 	$rummageList .= "
 	<tr>
-		<td><input type='button' value='Add' onclick=\"visit(this,'".$k."');\" class='add btn btn-default' /></td>
+		<td><input type='button' value='Add' onclick=\"visit(this,'".$k."');\" class='add btn btn-default' id='".$k."' /></td>
 		<td class='dcd-adText' dcd-id='". $k."'>".$v["adText"]."<br />";
 	$rummageList .= '<a href="http://twitter.com/home?status=' . str_replace("&","%26",substr($v["adText"], 0, 120)) . '" target="_blank"><img src="img/twitter-16.png" /></a>&nbsp';
 	$rummageList .= '<a href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $k . '" target="_blank"><img src="img/facebook-16.png" /></a>&nbsp';
@@ -66,6 +66,15 @@ $googleApiScript = <<<EOS
 EOS;
 
 $data = <<<EOS
+<div id="map-options">
+	<ul id="map-resize">
+		<li><strong>Map Size:</strong></li>
+		<li><a href="#" data-size="small">Small</a></li>
+		<li><a href="#" data-size="medium">Medium</a></li>
+		<li><a href="#" data-size="large">Large</a></li>
+	</ul>
+	<div class="clear"></div>
+</div>
 <div id="map">
 	<div id="dcd-map-container"></div>
 </div>
