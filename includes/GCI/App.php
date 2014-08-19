@@ -99,7 +99,7 @@ class App
 
         $siteGroupString = $this->createSiteGroupString($siteGroup);
 
-        $sql = "SELECT * FROM `listing` WHERE Placement = :place AND Position = :position AND StartDate <= :startDate AND SiteCode IN ( " . $siteGroupString . " ) ORDER BY AdText";
+        $sql = "SELECT * FROM `listing` WHERE Placement = :place AND Position = :position AND StartDate <= :startDate AND SiteCode IN ( " . $siteGroupString . " )";
         $params = array(':place' => $place, ':position' => $position, ':startDate' => date("Y-m-d"));
 
         if (!empty($route)) {
@@ -115,6 +115,9 @@ class App
             $sql .= " AND ID IN ( " . $route . " )";
             $params = array_merge($params, $rts['params']);
         }
+		
+		//Move iteration 16 fix to come after the route part of the sql string
+		$sql .= " ORDER BY AdText";
 
         $results = $this->database->getAssoc($sql, $params);
 
