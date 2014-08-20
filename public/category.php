@@ -174,9 +174,9 @@ if (!isset($listings['results'])) {
             $newImageInfo = '';
             foreach ($imageArray as $imgSrc) {
                 if ($imgCnt == 0) {
-                    $newImageInfo .= '<a href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" data-gallery="ligthbox ' . $row['id'] . '_group" title="Picture"><span class="glyphicon glyphicon-picture"></span></a>';
+                    $newImageInfo .= '<a href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" data-gallery="ligthbox ' . $row['id'] . '_group" title="Picture"><span class="glyphicon glyphicon-picture"></span>Pic</a>';
                 } else {
-                    $newImageInfo .= '<div style="display: none"><a href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" data-gallery="ligthbox ' . $row['id'] . '_group" title="Picture"><span class="glyphicon glyphicon-picture"></span></a></div>';
+                    $newImageInfo .= '<div style="display: none"><a href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" data-gallery="ligthbox ' . $row['id'] . '_group" title="Picture"><span class="glyphicon glyphicon-picture"></span>Pic</a></div>';
                 }
                 $imgCnt++;
             }
@@ -184,11 +184,11 @@ if (!isset($listings['results'])) {
 
         if ($row['externalURL'] === "1") {
             if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
-            $dataInfo .= '<a href="http://' . $server . '/map.php?place=' . urlencode($row['placement']) . '&posit=' . urlencode($row['position']) . '&ad=' . urlencode($row['id']) . '" style="color:#00881A;" title="Map" target="_blank"><span class="glyphicon glyphicon-map-marker"></span></a>';
+            $dataInfo .= '<a href="http://' . $server . '/map.php?place=' . urlencode($row['placement']) . '&posit=' . urlencode($row['position']) . '&ad=' . urlencode($row['id']) . '" style="color:#00881A;" title="Map" target="_blank"><span class="glyphicon glyphicon-map-marker"></span>Map</a>';
         }
         if (!empty($row['moreInfo'])) {
             if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
-            $dataInfo .= '<a href="' . $row['moreInfo'] . '" style="color:#0052f4;" title="More Information" target="_blank"><span class="glyphicon glyphicon-info-sign"></span></a>';
+            $dataInfo .= '<a href="' . $row['moreInfo'] . '" style="color:#0052f4;" title="More Information" target="_blank"><span class="glyphicon glyphicon-info-sign"></span>MoreInfo</a>';
         }
         $dataInfo .= '</div>';
         $data .= "<div class='jumbotron' style='padding-top: 30px; word-wrap: break-word;'>";
