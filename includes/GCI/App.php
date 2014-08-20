@@ -549,6 +549,7 @@ class App
     {
         $siteGroupString = $this->createSiteGroupString($this->getSite()->getSiteGroup());
         $sql = "SELECT * FROM `listing` WHERE `SiteCode` in ( $siteGroupString )";
+
         $params = array();
 
         if (!empty($startDate)) {
