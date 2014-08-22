@@ -68,7 +68,7 @@ if(isset($metadata))
     </div>
 </div>
 <![endif]-->
-<header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
+<header role="banner" class="navbar navbar-inverse bs-docs-nav">
     <div class="container">
         <?php
             if (!isset($fullText)) {$fullText = '';}
@@ -129,7 +129,7 @@ if(isset($metadata))
         ?>
     </div>
 </header>
-<div style="padding-top:60px;">
+<div>
 <?php
 $device =  $app->getDeviceType();
 if($device =="computer")
