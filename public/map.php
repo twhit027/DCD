@@ -20,6 +20,7 @@ if(isset($_GET['ad']) && !empty($_GET['ad'])) {
 	$listOfRummages['map'][$showcase]['showcase'] = true;
 }
 $mapPoints = json_encode($listOfRummages['map']);
+$mapArray = $listOfRummages['map'];
 $rummages = $listOfRummages['list'];
 $rummageList = '';
 if(!empty($showcase) && !empty($rummages[$showcase])){
@@ -38,7 +39,7 @@ if(!empty($showcase) && !empty($rummages[$showcase])){
 }
 foreach($rummages as $k=>$v){
 	$rummageList .= "<tr><td><input type='button' value='Add' onclick=\"visit(this,'".$k."');\" class='add btn btn-default' id='".$k."'";
-    if (! isset($listOfRummages['map'][$k])) {
+    if (! isset($mapArray[$k])) {
         $rummageList .= "disabled='disabled'";
     }
     $rummageList .=" /></td><td class='dcd-adText' dcd-id='". $k."'>".$v["adText"]."<br />";
