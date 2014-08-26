@@ -164,7 +164,7 @@ if (!isset($listings['results'])) {
             $imgCnt = 0;
             foreach ($imageArray as $imgSrc) {
                 if ($imgCnt == 0) {
-                    $dataInfo .= '<a class="fancybox" href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" rel="ligthbox ' . $row['id'] . '_group" title="Picture"><span class="glyphicon glyphicon-picture"></span></a>';
+                    $dataInfo .= '<a class="fancybox" href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" rel="ligthbox ' . $row['id'] . '_group" title="Picture"><span class="glyphicon glyphicon-picture"></span>Pic</a>';
                 } else {
                     $dataInfo .= '<div style="display: none"><a class="fancybox" href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" rel="ligthbox ' . $row['id'] . '_group" title="Picture"><span class="glyphicon glyphicon-picture"></span></a></div>';
                 }
@@ -176,7 +176,7 @@ if (!isset($listings['results'])) {
                 if ($imgCnt == 0) {
                     $newImageInfo .= '<a href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" data-gallery="ligthbox ' . $row['id'] . '_group" title="Picture"><span class="glyphicon glyphicon-picture"></span>Pic</a>';
                 } else {
-                    $newImageInfo .= '<div style="display: none"><a href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" data-gallery="ligthbox ' . $row['id'] . '_group" title="Picture"><span class="glyphicon glyphicon-picture"></span>Pic</a></div>';
+                    $newImageInfo .= '<div style="display: none"><a href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" data-gallery="ligthbox ' . $row['id'] . '_group" title="Picture"><span class="glyphicon glyphicon-picture"></span></a></div>';
                 }
                 $imgCnt++;
             }
