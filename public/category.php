@@ -188,7 +188,7 @@ if (!isset($listings['results'])) {
         }
         if (!empty($row['moreInfo'])) {
             if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
-            $dataInfo .= '<a href="' . $row['moreInfo'] . '" style="color:#0052f4;" title="More Information" target="_blank"><span class="glyphicon glyphicon-info-sign"></span>MoreInfo</a>';
+            $dataInfo .= '<a href="' . $row['moreInfo'] . '" style="color:#0052f4;" title="More Information" target="_blank"><span class="glyphicon glyphicon-info-sign"></span>More Info</a>';
         }
         $dataInfo .= '</div>';
         $data .= "<div class='jumbotron' style='padding-top: 30px; word-wrap: break-word;'>";
