@@ -99,7 +99,7 @@ class App
 
         $siteGroupString = $this->createSiteGroupString($siteGroup);
 
-        $sql = "SELECT * FROM `listing` WHERE Placement = :place AND Position = :position AND StartDate <= :startDate AND SiteCode IN ( " . $siteGroupString . " ) ORDER BY AdText";
+        $sql = "SELECT * FROM `listing` WHERE Placement = :place AND Position = :position AND StartDate <= :startDate AND SiteCode IN ( " . $siteGroupString . " )";
         $params = array(':place' => $place, ':position' => $position, ':startDate' => date("Y-m-d"));
 
         if (!empty($route)) {
@@ -115,6 +115,9 @@ class App
             $sql .= " AND ID IN ( " . $route . " )";
             $params = array_merge($params, $rts['params']);
         }
+		
+		//Move iteration 16 fix to come after the route part of the sql string
+		$sql .= " ORDER BY AdText";
 
         $results = $this->database->getAssoc($sql, $params);
 
@@ -122,8 +125,8 @@ class App
         //$dataArray['totalRows'] = $this->database->getCount("SELECT FOUND_ROWS()");
 
         foreach ($results as $row) {
+            $dataArray['list'][$row['ID']] = array('adText' => $row['AdText']);
             if (!empty($row['Street']) && !empty($row['Lat']) && !empty($row['Long'])) {
-                $dataArray['list'][$row['ID']] = array('adText' => $row['AdText']);
                 $dataArray['map'][$row['ID']] = array(
                     "street" => $row['Street'],
                     "city" => $row['City'],
@@ -299,7 +302,8 @@ class App
             }
 
             if (!empty($fullText)) {
-                $sql .= ", MATCH(AdText) AGAINST('$fullText') AS score";
+                $sql .= ", MATCH(AdText) AGAINST( :fulltext1 ) AS score";
+                $params[':fulltext1'] = $fullText;
             }
 
 
@@ -545,6 +549,7 @@ class App
     {
         $siteGroupString = $this->createSiteGroupString($this->getSite()->getSiteGroup());
         $sql = "SELECT * FROM `listing` WHERE `SiteCode` in ( $siteGroupString )";
+
         $params = array();
 
         if (!empty($startDate)) {
