@@ -40,6 +40,8 @@ function initializeMap() {
 	
 	for(x in DCDMAPGLOBAL.points)
 		createMarker(DCDMAPGLOBAL.points[x],x);
+	
+	$("body").on('click', '.custom-infowindow a', function(e) { e.preventDefault(); visitMap($(this),$(this).data("id"));  });
 }
 function createMarker(point,id){
 	
@@ -53,7 +55,7 @@ function createMarker(point,id){
 			icon: 'img/map.png'
 		}),
 		infoWindow :  new google.maps.InfoWindow({
-			content: point.street + ", " + point.city + ", " + point.state + " " + point.zip
+			content: "<p class='custom-infowindow'>" + point.street + ", " + point.city + ", " + point.state + " " + point.zip + "<br><a href='#' data-id='" + id + "'>Add to route</a></p>"
 		})
 	};
 	
@@ -74,6 +76,12 @@ var locations = {
 	selected : 0,
 	list : new Array()
 };
+function visitMap(_this, _id){
+	if(visit($('#'+_id).get(0),_id) == true)
+		_this.html("Remove from route");
+	else
+		_this.html("Add to route");
+}
 function visit(obj, id){
 	//Credit to: Brian Cray
 	//Found on: http://briancray.com/2009/09/30/remove-value-javascript-array/
@@ -96,6 +104,7 @@ function visit(obj, id){
 		};
 	}
 	
+	var bool = false;
 	if(obj.classList.contains("add") && locations.selected < 8){
 		obj.classList.remove("add");
 		obj.classList.add("remove");
@@ -103,6 +112,7 @@ function visit(obj, id){
 		locations.list.push(id);
 		obj.value = "Remove";
 		//document.getElementById('num-of-locations').innerHTML = locations.selected;
+		bool = true;
 	}
 	else if(obj.classList.contains("remove")){
 		obj.classList.remove("remove");
@@ -121,6 +131,7 @@ function visit(obj, id){
 	else{
 		updateButton('moreThanOneRoute',false);
 	}
+	return bool;
 }
 function mapRoute(){
 	document.getElementById('locations').value = locations.list;
@@ -179,4 +190,21 @@ $(document).ready(function(){
 	$("#dcd-route").attr("disabled","disabled");
 	$(".form-control").change(function() { toggleState($(this)); });
 	$(".dcd-adText").click(function() { showMarker($(this)); });
+	$("#map-resize a").click(function(e) { e.preventDefault(); mapsize($(this).data("size")); });
 });
+
+function mapsize(_size){
+	switch(_size){
+		case 'small':
+			$('#dcd-map-container').css("height","175px");
+			break;
+		case 'medium':
+			$('#dcd-map-container').css("height","350px");
+			break;
+		case 'large':
+			$('#dcd-map-container').css("height","700px");
+			break;
+		default:
+	}
+	google.maps.event.trigger(DCDMAPGLOBAL.map, "resize");
+}
