@@ -131,7 +131,7 @@ if (!isset($listings['results'])) {
     $siteDropDown = '';
     if (count($listings['sites']) > 1) {
         $siteDropDown .= '<div class="pull-right"><select id="sitesdd" style="color:black; margin-bottom: 10px">';
-        $siteDropDown .=  '<option value="#" selected>Select Paper</option>';
+        $siteDropDown .=  '<option value="#" selected>Select Paper to Filter on</option>';
         foreach ($listings['sites'] as $row) {
             $siteDropDown .=  '<option value="'.$row['siteCode'].'">'.$row['busName'].'</option>';
         }
