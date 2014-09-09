@@ -12,9 +12,22 @@ $app = new \GCI\App();
 
 $app->logInfo('Map Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].', REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].',HTTP_HOST: '.@$_SERVER['HTTP_HOST'].'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].')');
 
-$place = $_GET['place'];
-$position = $_GET['posit'];
-$listOfRummages = $app->getRummages($place,$position,'','',$_GET['city'],$_GET['paper']);
+$place = $position = $city = $paper = '';
+
+if (isset($_REQUEST['place'])) {
+    $place = urldecode($_REQUEST['place']);
+}
+if (isset($_REQUEST['posit'])) {
+    $position = urldecode($_REQUEST['posit']);
+}
+if (isset($_REQUEST['city'])) {
+    $city = urldecode($_REQUEST['city']);
+}
+if (isset($_REQUEST['paper'])) {
+    $paper = urldecode($_REQUEST['paper']);
+}
+
+$listOfRummages = $app->getRummages($place,$position,'','',$city,$paper);
 if(isset($_GET['ad']) && !empty($_GET['ad'])) {
     $showcase = $_GET['ad'];
 	$listOfRummages['map'][$showcase]['showcase'] = true;
