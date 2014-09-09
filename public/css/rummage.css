@@ -4,6 +4,7 @@
 .table > thead > tr#dcd-showcase > td, .table > tbody > tr#dcd-showcase > td, .table > tfoot > tr#dcd-showcase > td{ border-top:3px solid #bac1dd; border-bottom:3px solid #bac1dd; background-color:#f0f2fa; }
 
 #map-options{ width:100%; }
+#map-options form{ float:left; margin-bottom:5px; }
 #map-options #map-resize{ float:right; }
 #map-options #map-resize li{ list-style:none; float:left; padding-right:5px; }
 
