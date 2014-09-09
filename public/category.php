@@ -128,6 +128,17 @@ if (!isset($listings['results'])) {
     $data = '<h1 style="color:#FC0000;"> No results found, please pick a different category or expand your advanced search</h1>';
 } else {
     $count = 1;
+    $siteDropDown = '';
+    if (count($listings['sites']) > 1) {
+        $siteDropDown .= '<div class="pull-right"><select id="sitesdd" style="color:black; margin-bottom: 10px">';
+        $siteDropDown .=  '<option value="#" selected>Select Paper</option>';
+        foreach ($listings['sites'] as $row) {
+            $siteDropDown .=  '<option value="'.$row['siteCode'].'">'.$row['busName'].'</option>';
+        }
+
+        $siteDropDown .= "</select></div><br />";
+    }
+
     foreach ($listings['results'] as $row) {
         $map = '';
         $imageArray = array();
@@ -224,8 +235,8 @@ $(document).ready(function(){
 
 		return false;
 	});
+    $("#sitesdd").on("change", function() { window.location.href = window.location.href + "&sites=" + encodeURIComponent(this.value); return false;} );
 });
-
 </script>';
 
 $filter = <<<EOS
@@ -243,13 +254,12 @@ $mainContent = <<<EOS
             <ol class="breadcrumb">
                 <li><a href="./">Home</a></li>
                 <li class="active">Category</li>
-				
             </ol>
 			<div class="jumbotron" id="advancedsearch" style="display:none;">
 				$search
 	        </div>
             <h1>$position</h1>
-
+            $siteDropDown
             $pagination
             <br />$data
             $pagination

@@ -303,7 +303,9 @@ class App
                 $siteGroupString = $this->createSiteGroupString($siteGroup);
             }
 
-            $sql = "SELECT SQL_CALC_FOUND_ROWS l.*, s.BusName, s.Domain";
+            $preSQL1 = "SELECT SQL_CALC_FOUND_ROWS l.*, s.BusName, s.Domain";
+            $preSQL2 = "SELECT DISTINCT l.SiteCode, s.BusName";
+            $sql = '';
             if (!empty($radius)) {
                 $orgLat = $this->site->getLat();
                 $orgLng = $this->site->getLng();
@@ -346,10 +348,22 @@ class App
                 $params[':fulltext'] = $fullText;
             }
 
+            $sql2 = $preSQL2 . $sql;
+            $results2 = $this->database->getAssoc($sql2, $params);
+
+            foreach ($results2 as $row2) {
+                $dataArray['sites'][] = array(
+                    'siteCode' => $row2['SiteCode'],
+                    'busName' => $row2['BusName']
+                );
+            }
+
             $sql .= " LIMIT :offSet, :rowCnt";
             $params[':offSet'] = $offSet;
             $params[':rowCnt'] = $rowCnt;
-            $results = $this->database->getAssoc($sql, $params);
+            $sql1 = $preSQL1 . $sql;
+            $results = $this->database->getAssoc($sql1, $params);
+
             $dataArray['totalRows'] = $this->database->getCount("SELECT FOUND_ROWS()");
 
             foreach ($results as $row) {
