@@ -128,6 +128,19 @@ if (!isset($listings['results'])) {
     $data = '<h1 style="color:#FC0000;"> No results found, please pick a different category or expand your advanced search</h1>';
 } else {
     $count = 1;
+     $siteDropDown = '';
+    if (count($listings['sites']) > 1) {
+        $siteDropDown .= '<div class="dropdown pull-right">';
+        $siteDropDown .= '<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">';
+        $siteDropDown .= '<strong>Filter:</strong> Paper <span class="caret"></span></button>';
+        $siteDropDown .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">';
+        foreach ($listings['sites'] as $row) {
+            $siteDropDown .=  '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="addSitesAndReloadPage(\''.$row['siteCode'].'\')" href="javascript:void(0)">'.$row['busName'].'</a></li>';
+        }
+
+        $siteDropDown .= '</ul></div><br />';
+    }
+
     foreach ($listings['results'] as $row) {
         $map = '';
         $imageArray = array();
@@ -224,8 +237,13 @@ $(document).ready(function(){
 
 		return false;
 	});
+    //$("#sitesdd").on("change", function() { window.location.href = window.location.href + "&sites=" + encodeURIComponent(this.value); return false;} );
 });
 
+function addSitesAndReloadPage(sites) {
+    window.location.href = window.location.href + "&sites=" + encodeURIComponent(sites);
+    return false;
+}
 </script>';
 
 $filter = <<<EOS
@@ -243,13 +261,12 @@ $mainContent = <<<EOS
             <ol class="breadcrumb">
                 <li><a href="./">Home</a></li>
                 <li class="active">Category</li>
-				
             </ol>
 			<div class="jumbotron" id="advancedsearch" style="display:none;">
 				$search
 	        </div>
             <h1>$position</h1>
-
+            $siteDropDown
             $pagination
             <br />$data
             $pagination

@@ -91,7 +91,7 @@ class App
         return $data;
     }
 
-    public function getRummages($place = '', $position = '', $route = '', $siteGroup = '')
+    public function getRummages($place = '', $position = '', $route = '', $siteGroup = '', $city = '', $siteCode = '')
     {
         if ($siteGroup == '') {
             $siteGroup = $this->site->getSiteGroup();
@@ -99,9 +99,19 @@ class App
 
         $siteGroupString = $this->createSiteGroupString($siteGroup);
 
-        $sql = "SELECT * FROM `listing` WHERE Placement = :place AND Position = :position AND StartDate <= :startDate AND SiteCode IN ( " . $siteGroupString . " )";
+        $sql = "SELECT t1.*, t2.BusName FROM `listing` AS t1, `siteinfo` AS t2 WHERE Placement = :place AND Position = :position AND StartDate <= :startDate AND t1.SiteCode IN ( " . $siteGroupString . " ) AND t2.SiteCode = t1.SiteCode";
         $params = array(':place' => $place, ':position' => $position, ':startDate' => date("Y-m-d"));
-
+		
+        if (!empty($city)) {
+            $sql .= " AND t1.City = :city";
+            $params = array_merge($params, array(':city' => $city));
+        }
+		
+        if (!empty($siteCode)) {
+            $sql .= " AND t1.SiteCode = :siteCode";
+            $params = array_merge($params, array(':siteCode' => $siteCode));
+        }
+		
         if (!empty($route)) {
             $routeIDS = explode(",", $route);
             $rts = array();
@@ -125,7 +135,7 @@ class App
         //$dataArray['totalRows'] = $this->database->getCount("SELECT FOUND_ROWS()");
 
         foreach ($results as $row) {
-            $dataArray['list'][$row['ID']] = array('adText' => $row['AdText']);
+            $dataArray['list'][$row['ID']] = array('adText' => $row['AdText'], 'busName' => $row['BusName'], 'siteCode' => $row['SiteCode'], 'siteName' => $row['BusName'], 'city' => $row['City']);
             if (!empty($row['Street']) && !empty($row['Lat']) && !empty($row['Long'])) {
                 $dataArray['map'][$row['ID']] = array(
                     "street" => $row['Street'],
@@ -293,7 +303,9 @@ class App
                 $siteGroupString = $this->createSiteGroupString($siteGroup);
             }
 
-            $sql = "SELECT SQL_CALC_FOUND_ROWS l.*, s.BusName, s.Domain";
+            $preSQL1 = "SELECT SQL_CALC_FOUND_ROWS l.*, s.BusName, s.Domain";
+            $preSQL2 = "SELECT DISTINCT l.SiteCode, s.BusName";
+            $sql = '';
             if (!empty($radius)) {
                 $orgLat = $this->site->getLat();
                 $orgLng = $this->site->getLng();
@@ -336,10 +348,22 @@ class App
                 $params[':fulltext'] = $fullText;
             }
 
+            $sql2 = $preSQL2 . $sql;
+            $results2 = $this->database->getAssoc($sql2, $params);
+
+            foreach ($results2 as $row2) {
+                $dataArray['sites'][] = array(
+                    'siteCode' => $row2['SiteCode'],
+                    'busName' => $row2['BusName']
+                );
+            }
+
             $sql .= " LIMIT :offSet, :rowCnt";
             $params[':offSet'] = $offSet;
             $params[':rowCnt'] = $rowCnt;
-            $results = $this->database->getAssoc($sql, $params);
+            $sql1 = $preSQL1 . $sql;
+            $results = $this->database->getAssoc($sql1, $params);
+
             $dataArray['totalRows'] = $this->database->getCount("SELECT FOUND_ROWS()");
 
             foreach ($results as $row) {

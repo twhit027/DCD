@@ -12,9 +12,22 @@ $app = new \GCI\App();
 
 $app->logInfo('Map Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].', REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].',HTTP_HOST: '.@$_SERVER['HTTP_HOST'].'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].')');
 
-$place = $_GET['place'];
-$position = $_GET['posit'];
-$listOfRummages = $app->getRummages($place,$position);
+$place = $position = $city = $paper = '';
+
+if (isset($_REQUEST['place'])) {
+    $place = urldecode($_REQUEST['place']);
+}
+if (isset($_REQUEST['posit'])) {
+    $position = urldecode($_REQUEST['posit']);
+}
+if (isset($_REQUEST['city'])) {
+    $city = urldecode($_REQUEST['city']);
+}
+if (isset($_REQUEST['paper'])) {
+    $paper = urldecode($_REQUEST['paper']);
+}
+
+$listOfRummages = $app->getRummages($place,$position,'','',$city,$paper);
 if(isset($_GET['ad']) && !empty($_GET['ad'])) {
     $showcase = $_GET['ad'];
 	$listOfRummages['map'][$showcase]['showcase'] = true;
@@ -23,6 +36,7 @@ $mapPoints = json_encode($listOfRummages['map']);
 $mapArray = $listOfRummages['map'];
 $rummages = $listOfRummages['list'];
 $rummageList = '';
+$filter = array();
 if(!empty($showcase) && !empty($rummages[$showcase])){
 	$rummageList .= "
 	<tr id='dcd-showcase'>
@@ -35,6 +49,8 @@ if(!empty($showcase) && !empty($rummages[$showcase])){
 	$rummageList .= "</td>
 	</tr>
 	";
+	$filter['city'][$rummages[$showcase]['city']] = true;
+	$filter['sites'][$rummages[$showcase]['siteCode']] = true;
 	unset($rummages[$showcase]);
 }
 foreach($rummages as $k=>$v){
@@ -50,6 +66,42 @@ foreach($rummages as $k=>$v){
 	$rummageList .= "</td>
 	</tr>
 	";
+	$filter['city'][$v['city']] = true;
+	$filter['sites'][$v['siteCode']] = $v['siteName'];
+}
+
+$cOptions = "";
+if(count($filter['city']) > 1){
+	$cOptions = '<select name="city" class="form-control">';
+	$cOptions .= '<option value="">All</option>';
+	foreach($filter['city'] as $k=>$v){
+		$cOptions .= '<option value="'.$k.'">'.$k.'</option>';
+	}
+	$cOptions .= '</select>';
+}
+$sOptions = "";
+if(count($filter['sites']) > 1){
+	$sOptions = '<select name="paper" class="form-control">';
+	$sOptions .= '<option value="">All</option>';
+	foreach($filter['sites'] as $k=>$v){
+		$sOptions .= '<option value="'.$k.'">'.$v.'</option>';
+	}
+	$sOptions .= '</select>';
+}
+$filterForm = "";
+if(!empty($cOptions) || !empty($sOptions)){
+	$filterForm = '<form method="get" action="'.$_SERVER['SCRIPT_NAME'].'" class="form-inline" role="form">';
+	$filterForm .= '<input type="hidden" name="place" value="'.$_GET['place'].'">';
+	$filterForm .= '<input type="hidden" name="posit" value="'.$_GET['posit'].'">';
+	if(!empty($cOptions))
+		$filterForm .= $cOptions;
+	elseif(!empty($_GET['city']))
+		$filterForm .= '<input type="hidden" name="city" value="'.$_GET['city'].'">';
+	if(!empty($sOptions))
+		$filterForm .= $sOptions;
+	elseif(!empty($_GET['paper']))
+		$filterForm .= '<input type="hidden" name="paper" value="'.$_GET['paper'].'">';
+	$filterForm .= '<input type="submit" value="Filter" class="btn btn-default"></form>';
 }
 
 $masterBottom = '<script src="js/rummage.js"></script>';
@@ -68,6 +120,7 @@ EOS;
 
 $data = <<<EOS
 <div id="map-options">
+	$filterForm
 	<ul id="map-resize">
 		<li><strong>Map Size:</strong></li>
 		<li><a href="#" data-size="small">Small</a></li>
