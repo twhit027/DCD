@@ -17,22 +17,22 @@ $page = 1;
 $fullText = $placement = $position = $siteGroup = $radius = '';
 
 if (isset($_REQUEST['page'])) {
-    $page = urldecode(trim($_REQUEST['page']));
+    $page = trim(urldecode($_REQUEST['page']));
 }
 if (isset($_REQUEST['ft'])) {
-    $fullText = urldecode(trim($_REQUEST['ft']));
+    $fullText = trim(urldecode($_REQUEST['ft']));
 }
 if (isset($_REQUEST['place'])) {
-    $placement = urldecode(trim($_REQUEST['place']));
+    $placement = trim(urldecode($_REQUEST['place']));
 }
 if (isset($_REQUEST['posit'])) {
-    $position = urldecode(trim($_REQUEST['posit']));
+    $position = trim(urldecode($_REQUEST['posit']));
 }
 if (isset($_REQUEST['sites'])) {
-    $siteGroup = urldecode(trim($_REQUEST['sites']));
+    $siteGroup = trim(urldecode($_REQUEST['sites']));
 }
 if (isset($_REQUEST['rad'])) {
-    $radius = urldecode(trim($_REQUEST['rad']));
+    $radius = trim(urldecode($_REQUEST['rad']));
 }
 
 $search = "";
@@ -266,6 +266,7 @@ $(document).ready(function(){
 
 function setGetParameter(paramName, paramValue) {
     var url = window.location.href;
+    url = url.replace(/&?page=([^&]$|[^&]*)/i, "");
     if (url.indexOf(paramName + "=") >= 0)
     {
         var prefix = url.substring(0, url.indexOf(paramName));
@@ -291,7 +292,10 @@ function addSitesAndReloadPage(paramValue) {
 }
 
 function removeSitesAndReloadPage() {
-    window.location.href = window.location.href.replace(/&?sites=([^&]$|[^&]*)/i, "");
+    var url = window.location.href;
+    url = url.replace(/&?page=([^&]$|[^&]*)/i, "");
+    url = url.replace(/&?sites=([^&]$|[^&]*)/i, "");
+    window.location.href = url;
     return false;
 }
 </script>';
