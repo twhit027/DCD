@@ -46,20 +46,28 @@ if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
 
     /* Setup vars for query. */
     $targetPage = 'category.php';//your file name  (the name of this file)
+
+    $urlStringArray = array();
     if ($placement != '') {
-        $targetPage .= '?place=' . urlencode($placement);
+        $urlStringArray[] = 'place=' . urlencode($placement);
     }
     if ($position != '') {
-        $targetPage .= '&posit=' . urlencode($position);
+        $urlStringArray[] = 'posit=' . urlencode($position);
     }
     if ($fullText != '') {
-        $targetPage .= '&ft=' . urlencode($fullText);
+        $urlStringArray[] = 'ft=' . urlencode($fullText);
     }
     if ($siteGroup != '') {
-        $targetPage .= '&sites=' . urlencode($siteGroup);
+        $urlStringArray[] = 'sites=' . urlencode($siteGroup);
     }
     if ($radius != '') {
-        $targetPage .= '&rad=' . $radius;
+        $urlStringArray[] = 'rad=' . urlencode($radius);
+    }
+
+    $urlString = implode( '&', $urlStringArray);
+
+    if (! empty($urlString)) {
+        $targetPage .= '?' . $urlString;
     }
 
     $limit = LISTINGS_PER_PAGE; //how many items to show per page
