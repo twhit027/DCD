@@ -348,7 +348,7 @@ class App
                 $params[':fulltext'] = $fullText;
             }
 
-            if ((!empty($siteGroup)) && (count(explode(',', $siteGroup)) > 1)) {
+            if ((empty($fullText))&&(!empty($siteGroup)) && (count(explode(',', $siteGroup)) > 1)) {
                 $sql2 = $preSQL2 . $sql;
                 $results2 = $this->database->getAssoc($sql2, $params);
                 foreach ($results2 as $row2) {
