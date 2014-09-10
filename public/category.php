@@ -129,16 +129,22 @@ if (!isset($listings['results'])) {
 } else {
     $count = 1;
      $siteDropDown = '';
-    if (count($listings['sites']) > 1) {
-        $siteDropDown .= '<div class="dropdown pull-right">';
-        $siteDropDown .= '<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">';
-        $siteDropDown .= '<strong>Filter:</strong> Paper <span class="caret"></span></button>';
-        $siteDropDown .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">';
-        foreach ($listings['sites'] as $row) {
-            $siteDropDown .=  '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="addSitesAndReloadPage(\''.$row['siteCode'].'\')" href="javascript:void(0)">'.$row['busName'].'</a></li>';
-        }
+    if (empty($siteGroup)) {
+        if ((!empty($listings['sites'])) && (count($listings['sites']) > 1)) {
+            $siteDropDown .= '<div class="dropdown pull-right">';
+            $siteDropDown .= '<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">';
+            $siteDropDown .= '<strong>Filter:</strong> Paper <span class="caret"></span></button>';
+            $siteDropDown .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">';
+            foreach ($listings['sites'] as $row) {
+                $siteDropDown .=  '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter("sites", \''.$row['siteCode'].'\')" href="javascript:void(0)">'.$row['busName'].'</a></li>';
+            }
 
-        $siteDropDown .= '</ul></div><br />';
+            $siteDropDown .= '</ul></div><br />';
+        }
+    } else {
+        $siteDropDown .= '<div class="pull-left">';
+        $siteDropDown .= '<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" onClick="removeSitesAndReloadPage()" href="javascript:void(0)">';
+        $siteDropDown .= '<strong>Filter:</strong> Paper <span class="glyphicon glyphicon-remove-circle" style="color:red"></span></button></div><br />';
     }
 
     foreach ($listings['results'] as $row) {
@@ -240,8 +246,34 @@ $(document).ready(function(){
     //$("#sitesdd").on("change", function() { window.location.href = window.location.href + "&sites=" + encodeURIComponent(this.value); return false;} );
 });
 
-function addSitesAndReloadPage(sites) {
-    window.location.href = window.location.href + "&sites=" + encodeURIComponent(sites);
+function setGetParameter(paramName, paramValue) {
+    var url = window.location.href;
+    if (url.indexOf(paramName + "=") >= 0)
+    {
+        var prefix = url.substring(0, url.indexOf(paramName));
+        var suffix = url.substring(url.indexOf(paramName));
+        suffix = suffix.substring(suffix.indexOf("=") + 1);
+        suffix = (suffix.indexOf("&") >= 0) ? suffix.substring(suffix.indexOf("&")) : "";
+        url = prefix + paramName + "=" + paramValue + suffix;
+    }
+    else
+    {
+        if (url.indexOf("?") < 0) {
+            url += "?" + paramName + "=" + encodeURIComponent(paramValue);
+        } else {
+            url += "&" + paramName + "=" + encodeURIComponent(paramValue);
+        }
+    }
+    window.location.href = url;
+    return false;
+}
+
+function addSitesAndReloadPage(paramValue) {
+    setGetParameter("sites", paramValue);
+}
+
+function removeSitesAndReloadPage() {
+    window.location.href = window.location.href.replace(/&?sites=([^&]$|[^&]*)/i, "");
     return false;
 }
 </script>';

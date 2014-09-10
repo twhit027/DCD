@@ -348,14 +348,15 @@ class App
                 $params[':fulltext'] = $fullText;
             }
 
-            $sql2 = $preSQL2 . $sql;
-            $results2 = $this->database->getAssoc($sql2, $params);
-
-            foreach ($results2 as $row2) {
-                $dataArray['sites'][] = array(
-                    'siteCode' => $row2['SiteCode'],
-                    'busName' => $row2['BusName']
-                );
+            if ((! empty($siteGroup)) && (count(explode(',', $siteGroup)) > 1)) {
+                $sql2 = $preSQL2 . $sql;
+                $results2 = $this->database->getAssoc($sql2, $params);
+                foreach ($results2 as $row2) {
+                    $dataArray['sites'][] = array(
+                        'siteCode' => $row2['SiteCode'],
+                        'busName' => $row2['BusName']
+                    );
+                }
             }
 
             $sql .= " LIMIT :offSet, :rowCnt";
