@@ -167,7 +167,7 @@ if (!isset($listings['results'])) {
 
             $siteDropDown .= '</ul></div><br />';
         }
-    } else {
+    } elseif ($siteGroup != 'all') {
         $siteDropDown .= '<div class="pull-right">';
         $siteDropDown .= '<button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" onClick="removeSitesAndReloadPage()" href="javascript:void(0)">';
         $siteDropDown .= '<span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span><strong> Filter:</strong> Paper </button></div><br />';
