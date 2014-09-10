@@ -310,14 +310,13 @@ class App
                 $orgLat = $this->site->getLat();
                 $orgLng = $this->site->getLng();
                 //SELECT SiteCode, SiteName, City, State, ( 3959 * acos( cos( radians(39.1031182) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(-84.5120196) ) + sin( radians(39.1031182) ) * sin( radians( lat ) ) ) ) AS distance FROM siteInfo HAVING distance < 250 ORDER BY distance LIMIT 0, 200;
-                $sql .= ', ( 3959 * acos( cos( radians(' . $orgLat . ') ) * cos( radians( s.lat ) ) * cos( radians( s.lng ) - radians(' . $orgLng . ') ) + sin( radians(' . $orgLat . ') ) * sin( radians( s.lat ) ) ) ) AS distance';
+                $preSQL1 .= ', ( 3959 * acos( cos( radians(' . $orgLat . ') ) * cos( radians( s.lat ) ) * cos( radians( s.lng ) - radians(' . $orgLng . ') ) + sin( radians(' . $orgLat . ') ) * sin( radians( s.lat ) ) ) ) AS distance';
             }
 
             if (!empty($fullText)) {
-                $sql .= ", MATCH(AdText) AGAINST( :fulltext1 ) AS score";
+                $preSQL1 .= ", MATCH(AdText) AGAINST( :fulltext1 ) AS score";
                 $params[':fulltext1'] = $fullText;
             }
-
 
             $sql .= ' FROM `listing` l, `siteinfo` s where l.SiteCode = s.SiteCode AND l.StartDate <= :startDate';
             $params[':startDate'] = date("Y-m-d");
@@ -341,16 +340,16 @@ class App
                 $sql .= " HAVING distance < $radius";
             }
 
-            if (empty($fullText)) {
-                $sql .= ' ORDER BY l.AdText';
-            } else {
-                $sql .= " and MATCH(AdText) AGAINST( :fulltext ) ORDER BY score DESC";
+            if (!empty($fullText)) {
+                $sql .= " and MATCH(AdText) AGAINST( :fulltext )";
                 $params[':fulltext'] = $fullText;
             }
 
-            if ((empty($fullText))&&(!empty($siteGroup)) && (count(explode(',', $siteGroup)) > 1)) {
+            if ((!empty($siteGroup)) && (count(explode(',', $siteGroup)) > 1)) {
                 $sql2 = $preSQL2 . $sql;
-                $results2 = $this->database->getAssoc($sql2, $params);
+                $params2 = $params;
+                unset($params2[':fulltext1']);
+                $results2 = $this->database->getAssoc($sql2, $params2);
                 foreach ($results2 as $row2) {
                     $dataArray['sites'][] = array(
                         'siteCode' => $row2['SiteCode'],
@@ -359,6 +358,11 @@ class App
                 }
             }
 
+            if (empty($fullText)) {
+                $sql .= ' ORDER BY l.AdText';
+            } else {
+                $sql .= ' ORDER BY score DESC';
+            }
             $sql .= " LIMIT :offSet, :rowCnt";
             $params[':offSet'] = $offSet;
             $params[':rowCnt'] = $rowCnt;
