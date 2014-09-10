@@ -72,37 +72,48 @@ foreach($rummages as $k=>$v){
 
 $cOptions = "";
 if(count($filter['city']) > 1){
-	$cOptions = '<select name="city" class="form-control">';
-	$cOptions .= '<option value="">All</option>';
+	$cOptions .= '<div class="dropdown pull-left">';
+	$cOptions .= '<button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuCity" data-toggle="dropdown">';
+	$cOptions .= '<strong>Filter:</strong> City <span class="caret"></span></button>';
+	$cOptions .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuCity">';
 	foreach($filter['city'] as $k=>$v){
-		$cOptions .= '<option value="'.$k.'">'.$k.'</option>';
+		$cOptions .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'city\', \'' . $k . '\')" href="javascript:void(0)">' . $k . '</a></li>';
 	}
-	$cOptions .= '</select>';
+	$cOptions .= '</ul></div>';
 }
 $sOptions = "";
 if(count($filter['sites']) > 1){
-	$sOptions = '<select name="paper" class="form-control">';
-	$sOptions .= '<option value="">All</option>';
+	$sOptions .= '<div class="dropdown pull-left">';
+	$sOptions .= '<button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown">';
+	$sOptions .= '<strong>Filter:</strong> Paper <span class="caret"></span></button>';
+	$sOptions .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuPaper">';
 	foreach($filter['sites'] as $k=>$v){
-		$sOptions .= '<option value="'.$k.'">'.$v.'</option>';
+		$sOptions .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'paper\', \'' . $k . '\')" href="javascript:void(0)">' . $v . '</a></li>';
 	}
-	$sOptions .= '</select>';
+	$sOptions .= '</ul></div>';
 }
 $filterForm = "";
 if(!empty($cOptions) || !empty($sOptions)){
-	$filterForm = '<form method="get" action="'.$_SERVER['SCRIPT_NAME'].'" class="form-inline" role="form">';
-	$filterForm .= '<input type="hidden" name="place" value="'.$_GET['place'].'">';
-	$filterForm .= '<input type="hidden" name="posit" value="'.$_GET['posit'].'">';
-	if(!empty($cOptions))
+	if(!empty($cOptions)){
 		$filterForm .= $cOptions;
-	elseif(!empty($_GET['city']))
-		$filterForm .= '<input type="hidden" name="city" value="'.$_GET['city'].'">';
-	if(!empty($sOptions))
+	}
+	if(!empty($sOptions)){
 		$filterForm .= $sOptions;
-	elseif(!empty($_GET['paper']))
-		$filterForm .= '<input type="hidden" name="paper" value="'.$_GET['paper'].'">';
-	$filterForm .= '<input type="submit" value="Filter" class="btn btn-default"></form>';
+	}
 }
+if(!empty($_GET['city']) || !empty($_GET['paper'])){
+	if(!empty($_GET['city'])){
+        $filterForm .= '<div class="pull-left">';
+        $filterForm .= '<button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuCity" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'city\')" href="javascript:void(0)">';
+        $filterForm .= '<span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span><strong> Filter:</strong> City </button></div>';
+	}
+	if(!empty($_GET['paper'])){
+        $filterForm .= '<div class="pull-left">';
+        $filterForm .= '<button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'paper\')" href="javascript:void(0)">';
+        $filterForm .= '<span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span><strong> Filter:</strong> Paper </button></div>';
+	}
+}
+$filterForm .= "<br>";
 
 $masterBottom = '<script src="js/rummage.js"></script>';
 
