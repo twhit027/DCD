@@ -45,14 +45,15 @@ if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
     $adjacents = 3;
 
     /* Setup vars for query. */
-    $targetPage = 'category.php?place=' . urlencode($placement) . '&posit=' . urlencode($position) . '&ft=' . urlencode($fullText) . '&sites=' . urlencode($siteGroup). '&rad=' . $radius; //your file name  (the name of this file)
+    $targetPage = 'category.php?place=' . urlencode($placement) . '&posit=' . urlencode($position) . '&ft=' . urlencode($fullText) . '&sites=' . urlencode($siteGroup) . '&rad=' . $radius; //your file name  (the name of this file)
     $limit = LISTINGS_PER_PAGE; //how many items to show per page
     //$page = urldecode($_REQUEST['page']);
 
-    if ($page)
+    if ($page) {
         $start = ($page - 1) * $limit; //first item to display on this page
-    else
+    } else {
         $start = 0; //if no page var is given, set start to 0
+    }
 
     /* Setup page vars for display. */
     if ($page == 0) $page = 1; //if no page var is given, default to 1.
@@ -106,10 +107,11 @@ if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
                 $pagination .= "<li><a href=\"$targetPage&page=2\">2</a></li>";
                 $pagination .= '<li class="disabled"><a href="#">...</a></li>';
                 for ($counter = $lastpage - (2 + ($adjacents * 2)); $counter <= $lastpage; $counter++) {
-                    if ($counter == $page)
+                    if ($counter == $page) {
                         $pagination .= "<li><span class=\"current\">$counter</span></li>";
-                    else
+                    } else {
                         $pagination .= "<li><a href=\"$targetPage&page=$counter\">$counter</a></li>";
+                    }
                 }
             }
         }
@@ -125,10 +127,10 @@ if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
 $data = '';
 
 if (!isset($listings['results'])) {
-    $data = '<h1 style="color:#FC0000;"> No results found, please pick a different category or expand your advanced search</h1>';
+    $data = '<h1 style="color:#d43f3a;"> No results found, please pick a different category or expand your advanced search</h1>';
 } else {
     $count = 1;
-     $siteDropDown = '';
+    $siteDropDown = '';
     if (empty($siteGroup)) {
         if ((!empty($listings['sites'])) && (count($listings['sites']) > 1)) {
             $siteDropDown .= '<div class="dropdown pull-right">';
@@ -136,7 +138,7 @@ if (!isset($listings['results'])) {
             $siteDropDown .= '<strong>Filter:</strong> Paper <span class="caret"></span></button>';
             $siteDropDown .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">';
             foreach ($listings['sites'] as $row) {
-                $siteDropDown .=  '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'sites\', \''.$row['siteCode'].'\')" href="javascript:void(0)">'.$row['busName'].'</a></li>';
+                $siteDropDown .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'sites\', \'' . $row['siteCode'] . '\')" href="javascript:void(0)">' . $row['busName'] . '</a></li>';
             }
 
             $siteDropDown .= '</ul></div><br />';
@@ -144,7 +146,7 @@ if (!isset($listings['results'])) {
     } else {
         $siteDropDown .= '<div class="pull-right">';
         $siteDropDown .= '<button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" onClick="removeSitesAndReloadPage()" href="javascript:void(0)">';
-        $siteDropDown .= '<span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a"></span><strong> Filter:</strong> Paper </button></div><br />';
+        $siteDropDown .= '<span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span><strong> Filter:</strong> Paper </button></div><br />';
     }
 
     foreach ($listings['results'] as $row) {
@@ -160,7 +162,7 @@ if (!isset($listings['results'])) {
                 $server .= $_SERVER['CONTEXT_PREFIX'];
             }
         } else {
-            $server = 'classifieds.'.$row['domain'];
+            $server = 'classifieds.' . $row['domain'];
         }
 
         $url = rtrim($server, "/");
