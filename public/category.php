@@ -17,22 +17,22 @@ $page = 1;
 $fullText = $placement = $position = $siteGroup = $radius = '';
 
 if (isset($_REQUEST['page'])) {
-    $page = urldecode($_REQUEST['page']);
+    $page = urldecode(trim($_REQUEST['page']));
 }
 if (isset($_REQUEST['ft'])) {
-    $fullText = urldecode($_REQUEST['ft']);
+    $fullText = urldecode(trim($_REQUEST['ft']));
 }
 if (isset($_REQUEST['place'])) {
-    $placement = urldecode($_REQUEST['place']);
+    $placement = urldecode(trim($_REQUEST['place']));
 }
 if (isset($_REQUEST['posit'])) {
-    $position = urldecode($_REQUEST['posit']);
+    $position = urldecode(trim($_REQUEST['posit']));
 }
 if (isset($_REQUEST['sites'])) {
-    $siteGroup = urldecode($_REQUEST['sites']);
+    $siteGroup = urldecode(trim($_REQUEST['sites']));
 }
 if (isset($_REQUEST['rad'])) {
-    $radius = urldecode($_REQUEST['rad']);
+    $radius = urldecode(trim($_REQUEST['rad']));
 }
 
 $search = "";
@@ -45,7 +45,23 @@ if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
     $adjacents = 3;
 
     /* Setup vars for query. */
-    $targetPage = 'category.php?place=' . urlencode($placement) . '&posit=' . urlencode($position) . '&ft=' . urlencode($fullText) . '&sites=' . urlencode($siteGroup) . '&rad=' . $radius; //your file name  (the name of this file)
+    $targetPage = 'category.php';//your file name  (the name of this file)
+    if ($placement != '') {
+        $targetPage .= '?place=' . urlencode($placement);
+    }
+    if ($position != '') {
+        $targetPage .= '&posit=' . urlencode($position);
+    }
+    if ($fullText != '') {
+        $targetPage .= '&ft=' . urlencode($fullText);
+    }
+    if ($siteGroup != '') {
+        $targetPage .= '&sites=' . urlencode($siteGroup);
+    }
+    if ($radius != '') {
+        $targetPage .= '&rad=' . $radius;
+    }
+
     $limit = LISTINGS_PER_PAGE; //how many items to show per page
     //$page = urldecode($_REQUEST['page']);
 
