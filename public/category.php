@@ -132,7 +132,7 @@ if (!isset($listings['results'])) {
     if (empty($siteGroup)) {
         if ((!empty($listings['sites'])) && (count($listings['sites']) > 1)) {
             $siteDropDown .= '<div class="dropdown pull-right">';
-            $siteDropDown .= '<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">';
+            $siteDropDown .= '<button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">';
             $siteDropDown .= '<strong>Filter:</strong> Paper <span class="caret"></span></button>';
             $siteDropDown .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">';
             foreach ($listings['sites'] as $row) {
@@ -142,9 +142,9 @@ if (!isset($listings['results'])) {
             $siteDropDown .= '</ul></div><br />';
         }
     } else {
-        $siteDropDown .= '<div class="pull-left">';
-        $siteDropDown .= '<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" onClick="removeSitesAndReloadPage()" href="javascript:void(0)">';
-        $siteDropDown .= '<strong>Filter:</strong> Paper <span class="glyphicon glyphicon-remove-circle" style="color:red"></span></button></div><br />';
+        $siteDropDown .= '<div class="pull-right">';
+        $siteDropDown .= '<button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" onClick="removeSitesAndReloadPage()" href="javascript:void(0)">';
+        $siteDropDown .= '<span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a"></span><strong> Filter:</strong> Paper </button></div><br />';
     }
 
     foreach ($listings['results'] as $row) {
