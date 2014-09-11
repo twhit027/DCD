@@ -208,3 +208,24 @@ function mapsize(_size){
 	}
 	google.maps.event.trigger(DCDMAPGLOBAL.map, "resize");
 }
+
+function setGetParameter(paramName, paramValue) {
+    var url = window.location.href;
+	if (url.indexOf("?") < 0) {
+		url += "?" + paramName + "=" + encodeURIComponent(paramValue);
+	} else {
+		url += "&" + paramName + "=" + encodeURIComponent(paramValue);
+	}
+    window.location.href = url;
+    return false;
+}
+
+function removeSitesAndReloadPage(paramName) {
+	var url = window.location.href;
+	if(paramName == 'city')
+		url = url.replace(/&?city=([^&]$|[^&]*)/i, "");
+	if(paramName == 'paper')
+		url = url.replace(/&?paper=([^&]$|[^&]*)/i, "");
+	window.location.href = url;
+	return false;
+}
