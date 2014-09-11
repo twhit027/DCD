@@ -165,12 +165,12 @@ if (!isset($listings['results'])) {
                 $siteDropDown .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'sites\', \'' . $row['siteCode'] . '\')" href="javascript:void(0)">' . $row['busName'] . '</a></li>';
             }
 
-            $siteDropDown .= '</ul></div><br />';
+            $siteDropDown .= '</ul></div>';
         }
     } elseif ($siteGroup != 'all') {
         $siteDropDown .= '<div class="pull-right">';
         $siteDropDown .= '<button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" onClick="removeSitesAndReloadPage()" href="javascript:void(0)">';
-        $siteDropDown .= '<span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span><strong> Filter:</strong> Paper </button></div><br />';
+        $siteDropDown .= '<span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span><strong> Filter:</strong> Paper </button></div>';
     }
 
     foreach ($listings['results'] as $row) {
@@ -327,8 +327,11 @@ $mainContent = <<<EOS
 			<div class="jumbotron" id="advancedsearch" style="display:none;">
 				$search
 	        </div>
-            <h1>$position</h1>
-            $siteDropDown
+            <div class="row">
+                <div class="col-sm-10"><h1>$position</h1></div>
+                <div class="col-sm-2"><br />$siteDropDown</div>
+            </div>
+
             $pagination
             <br />$data
             $pagination
