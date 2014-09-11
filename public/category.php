@@ -17,22 +17,22 @@ $page = 1;
 $fullText = $placement = $position = $siteGroup = $radius = '';
 
 if (isset($_REQUEST['page'])) {
-    $page = urldecode($_REQUEST['page']);
+    $page = trim(urldecode($_REQUEST['page']));
 }
 if (isset($_REQUEST['ft'])) {
-    $fullText = urldecode($_REQUEST['ft']);
+    $fullText = trim(urldecode($_REQUEST['ft']));
 }
 if (isset($_REQUEST['place'])) {
-    $placement = urldecode($_REQUEST['place']);
+    $placement = trim(urldecode($_REQUEST['place']));
 }
 if (isset($_REQUEST['posit'])) {
-    $position = urldecode($_REQUEST['posit']);
+    $position = trim(urldecode($_REQUEST['posit']));
 }
 if (isset($_REQUEST['sites'])) {
-    $siteGroup = urldecode($_REQUEST['sites']);
+    $siteGroup = trim(urldecode($_REQUEST['sites']));
 }
 if (isset($_REQUEST['rad'])) {
-    $radius = urldecode($_REQUEST['rad']);
+    $radius = trim(urldecode($_REQUEST['rad']));
 }
 
 $search = "";
@@ -45,14 +45,39 @@ if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
     $adjacents = 3;
 
     /* Setup vars for query. */
-    $targetPage = 'category.php?place=' . urlencode($placement) . '&posit=' . urlencode($position) . '&ft=' . urlencode($fullText) . '&sites=' . urlencode($siteGroup). '&rad=' . $radius; //your file name  (the name of this file)
+    $targetPage = 'category.php';//your file name  (the name of this file)
+
+    $urlStringArray = array();
+    if ($placement != '') {
+        $urlStringArray[] = 'place=' . urlencode($placement);
+    }
+    if ($position != '') {
+        $urlStringArray[] = 'posit=' . urlencode($position);
+    }
+    if ($fullText != '') {
+        $urlStringArray[] = 'ft=' . urlencode($fullText);
+    }
+    if ($siteGroup != '') {
+        $urlStringArray[] = 'sites=' . urlencode($siteGroup);
+    }
+    if ($radius != '') {
+        $urlStringArray[] = 'rad=' . urlencode($radius);
+    }
+
+    $urlString = implode( '&', $urlStringArray);
+
+    if (! empty($urlString)) {
+        $targetPage .= '?' . $urlString;
+    }
+
     $limit = LISTINGS_PER_PAGE; //how many items to show per page
     //$page = urldecode($_REQUEST['page']);
 
-    if ($page)
+    if ($page) {
         $start = ($page - 1) * $limit; //first item to display on this page
-    else
+    } else {
         $start = 0; //if no page var is given, set start to 0
+    }
 
     /* Setup page vars for display. */
     if ($page == 0) $page = 1; //if no page var is given, default to 1.
@@ -106,10 +131,11 @@ if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
                 $pagination .= "<li><a href=\"$targetPage&page=2\">2</a></li>";
                 $pagination .= '<li class="disabled"><a href="#">...</a></li>';
                 for ($counter = $lastpage - (2 + ($adjacents * 2)); $counter <= $lastpage; $counter++) {
-                    if ($counter == $page)
+                    if ($counter == $page) {
                         $pagination .= "<li><span class=\"current\">$counter</span></li>";
-                    else
+                    } else {
                         $pagination .= "<li><a href=\"$targetPage&page=$counter\">$counter</a></li>";
+                    }
                 }
             }
         }
@@ -125,20 +151,26 @@ if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
 $data = '';
 
 if (!isset($listings['results'])) {
-    $data = '<h1 style="color:#FC0000;"> No results found, please pick a different category or expand your advanced search</h1>';
+    $data = '<h1 style="color:#d43f3a;"> No results found, please pick a different category or expand your advanced search</h1>';
 } else {
     $count = 1;
-     $siteDropDown = '';
-    if (count($listings['sites']) > 1) {
-        $siteDropDown .= '<div class="dropdown pull-right">';
-        $siteDropDown .= '<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">';
-        $siteDropDown .= '<strong>Filter:</strong> Paper <span class="caret"></span></button>';
-        $siteDropDown .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">';
-        foreach ($listings['sites'] as $row) {
-            $siteDropDown .=  '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="addSitesAndReloadPage(\''.$row['siteCode'].'\')" href="javascript:void(0)">'.$row['busName'].'</a></li>';
-        }
+    $siteDropDown = '';
+    if (empty($siteGroup)) {
+        if ((!empty($listings['sites'])) && (count($listings['sites']) > 1)) {
+            $siteDropDown .= '<div class="dropdown pull-right">';
+            $siteDropDown .= '<button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">';
+            $siteDropDown .= '<strong>Filter:</strong> Paper <span class="caret"></span></button>';
+            $siteDropDown .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">';
+            foreach ($listings['sites'] as $row) {
+                $siteDropDown .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'sites\', \'' . $row['siteCode'] . '\')" href="javascript:void(0)">' . $row['busName'] . '</a></li>';
+            }
 
-        $siteDropDown .= '</ul></div><br />';
+            $siteDropDown .= '</ul></div>';
+        }
+    } elseif ($siteGroup != 'all') {
+        $siteDropDown .= '<div class="pull-right">';
+        $siteDropDown .= '<button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" onClick="removeSitesAndReloadPage()" href="javascript:void(0)">';
+        $siteDropDown .= '<span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span><strong> Filter:</strong> Paper </button></div>';
     }
 
     foreach ($listings['results'] as $row) {
@@ -154,7 +186,7 @@ if (!isset($listings['results'])) {
                 $server .= $_SERVER['CONTEXT_PREFIX'];
             }
         } else {
-            $server = 'classifieds.'.$row['domain'];
+            $server = 'classifieds.' . $row['domain'];
         }
 
         $url = rtrim($server, "/");
@@ -240,8 +272,38 @@ $(document).ready(function(){
     //$("#sitesdd").on("change", function() { window.location.href = window.location.href + "&sites=" + encodeURIComponent(this.value); return false;} );
 });
 
-function addSitesAndReloadPage(sites) {
-    window.location.href = window.location.href + "&sites=" + encodeURIComponent(sites);
+function setGetParameter(paramName, paramValue) {
+    var url = window.location.href;
+    url = url.replace(/&?page=([^&]$|[^&]*)/i, "");
+    if (url.indexOf(paramName + "=") >= 0)
+    {
+        var prefix = url.substring(0, url.indexOf(paramName));
+        var suffix = url.substring(url.indexOf(paramName));
+        suffix = suffix.substring(suffix.indexOf("=") + 1);
+        suffix = (suffix.indexOf("&") >= 0) ? suffix.substring(suffix.indexOf("&")) : "";
+        url = prefix + paramName + "=" + paramValue + suffix;
+    }
+    else
+    {
+        if (url.indexOf("?") < 0) {
+            url += "?" + paramName + "=" + encodeURIComponent(paramValue);
+        } else {
+            url += "&" + paramName + "=" + encodeURIComponent(paramValue);
+        }
+    }
+    window.location.href = url;
+    return false;
+}
+
+function addSitesAndReloadPage(paramValue) {
+    setGetParameter("sites", paramValue);
+}
+
+function removeSitesAndReloadPage() {
+    var url = window.location.href;
+    url = url.replace(/&?page=([^&]$|[^&]*)/i, "");
+    url = url.replace(/&?sites=([^&]$|[^&]*)/i, "");
+    window.location.href = url;
     return false;
 }
 </script>';
@@ -265,8 +327,11 @@ $mainContent = <<<EOS
 			<div class="jumbotron" id="advancedsearch" style="display:none;">
 				$search
 	        </div>
-            <h1>$position</h1>
-            $siteDropDown
+            <div class="row">
+                <div class="col-sm-10"><h1>$position</h1></div>
+                <div class="col-sm-2"><br />$siteDropDown</div>
+            </div>
+
             $pagination
             <br />$data
             $pagination
