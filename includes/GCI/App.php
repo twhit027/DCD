@@ -135,7 +135,7 @@ class App
         //$dataArray['totalRows'] = $this->database->getCount("SELECT FOUND_ROWS()");
 
         foreach ($results as $row) {
-            $dataArray['list'][$row['ID']] = array('adText' => $row['AdText'], 'busName' => $row['BusName'], 'siteCode' => $row['SiteCode'], 'siteName' => $row['BusName'], 'city' => $row['City']);
+            $dataArray['list'][$row['ID']] = array('adText' => $row['AdText'], 'siteCode' => $row['SiteCode'], 'siteName' => $row['BusName'], 'city' => trim($row['City']));
             if (!empty($row['Street']) && !empty($row['Lat']) && !empty($row['Long'])) {
                 $dataArray['map'][$row['ID']] = array(
                     "street" => $row['Street'],

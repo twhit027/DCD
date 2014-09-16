@@ -66,8 +66,8 @@ foreach($rummages as $k=>$v){
 	$rummageList .= "</td>
 	</tr>
 	";
-	$filter['city'][$v['city']] = true;
-	$filter['sites'][$v['siteCode']] = $v['siteName'];
+	$filter['city'][strtoupper($v['city'])] = true;
+	$filter['sites'][$v['siteCode']] = strtoupper($v['siteName']);
 }
 
 $cOptions = "";
