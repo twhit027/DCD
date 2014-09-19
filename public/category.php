@@ -119,7 +119,7 @@ if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
                 $pagination .= '<li class="disabled"><a href="#">...</a></li>';
                 for ($counter = $page - $adjacents; $counter <= $page + $adjacents; $counter++) {
                     if ($counter == $page)
-                        $pagination .= "<li><span class=\"active\">$counter</span></li>";
+                        $pagination .= "<li class=\"active\"><a href=\"\">$counter</a></li>";
                     else
                         $pagination .= "<li><a href=\"$targetPage&page=$counter\">$counter</a></li>";
                 }
@@ -132,7 +132,7 @@ if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
                 $pagination .= '<li class="disabled"><a href="#">...</a></li>';
                 for ($counter = $lastpage - (2 + ($adjacents * 2)); $counter <= $lastpage; $counter++) {
                     if ($counter == $page) {
-                        $pagination .= "<li><span class=\"active\">$counter</span></li>";
+                        $pagination .= "<li class=\"active\"><a href=\"\">$counter</a></li>";
                     } else {
                         $pagination .= "<li><a href=\"$targetPage&page=$counter\">$counter</a></li>";
                     }
