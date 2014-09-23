@@ -41,7 +41,8 @@ function initializeMap() {
 	for(x in DCDMAPGLOBAL.points)
 		createMarker(DCDMAPGLOBAL.points[x],x);
 	
-	$("body").on('click', '.custom-infowindow a', function(e) { e.preventDefault(); visitMap($(this),$(this).data("id"));  });
+	$("body").on('click', '.custom-infowindow a.route', function(e) { e.preventDefault(); visitMap($(this),$(this).data("id"));  });
+	$("body").on('click', '.custom-infowindow a.mailer', function(e) { e.preventDefault(); $("#"+$(this).data("id")+"-gs-mail")[0].click();  });
 }
 function createMarker(point,id){
 	
@@ -55,7 +56,7 @@ function createMarker(point,id){
 			icon: 'img/map.png'
 		}),
 		infoWindow :  new google.maps.InfoWindow({
-			content: "<p class='custom-infowindow'>" + point.street + ", " + point.city + ", " + point.state + " " + point.zip + "<br><a href='#' data-id='" + id + "'>Add to route</a></p>"
+			content: "<p class='custom-infowindow'>" + point.street + ", " + point.city + ", " + point.state + " " + point.zip + "<br><a href='#' data-id='" + id + "' class='route'>Add to route</a><br><a href='#' data-id='" + id + "' class='mailer'>Email to friend</a></p>"
 		})
 	};
 	
