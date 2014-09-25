@@ -126,12 +126,9 @@ function visit(obj, id){
 	else{
 		alert("Sorry! We can only map 8 items at a time");
 	}
-	if(locations.selected > 0){
-		updateButton('moreThanOneRoute',true);
-	}
-	else{
-		updateButton('moreThanOneRoute',false);
-	}
+	
+	updateButton();
+	
 	return bool;
 }
 function mapRoute(){
@@ -143,19 +140,12 @@ var allowDirections = {
 	city : false,
 	zip : false
 }
-function updateButton (value, toggle){
-	if(value == "moreThanOneRoute"){
-		allowDirections.moreThanOneRoute = toggle;
-	}
-	else if(value == "address"){
-		allowDirections.address = toggle;
-	}
-	else if(value == "city"){
-		allowDirections.city = toggle;
-	}
-	else if(value == "zip"){
-		allowDirections.zip = toggle;
-	}
+function updateButton (){
+	
+	allowDirections.moreThanOneRoute = locations.selected;
+	allowDirections.address = $('#Address').val();
+	allowDirections.city = $('#City').val();
+	allowDirections.zip = $('#Zip').val();
 	
 	if(allowDirections.moreThanOneRoute && allowDirections.address && allowDirections.city && allowDirections.zip){
 		$("#dcd-route").removeAttr("disabled");
@@ -165,14 +155,6 @@ function updateButton (value, toggle){
 	}*/
 	else{
 		$("#dcd-route").attr("disabled","disabled");
-	}
-}
-function toggleState (_this){
-	if(!_this.val()){
-		updateButton(_this.attr('name'),false);
-	}
-	else{
-		updateButton(_this.attr('name'),true);
 	}
 }
 function showMarker (_this){
@@ -189,7 +171,7 @@ function closeMarkers (){
 $(document).ready(function(){
 	initializeMap();
 	$("#dcd-route").attr("disabled","disabled");
-	$(".form-control").change(function() { toggleState($(this)); });
+	$(".form-control").change(function() { updateButton(); });
 	$(".dcd-adText").click(function() { showMarker($(this)); });
 	$("#map-resize a").click(function(e) { e.preventDefault(); mapsize($(this).data("size")); });
 });
