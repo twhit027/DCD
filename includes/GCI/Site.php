@@ -37,6 +37,7 @@ class Site {
     private $siteName;
     private $domain;
     private $siteUrl;
+    private $Url;
     private $busName;
     private $palette;
     private $siteGroup;
@@ -62,7 +63,7 @@ class Site {
         $this->siteName = $data['SiteName'];
         $this->domain = $data['Domain'];
         $this->siteUrl = $data['SiteUrl'];
-        //$this->appUrl = $data['AppUrl'];
+        $this->Url = $data['Url'];
         $this->busName = $data['BusName'];
         $this->palette = $data['Palette'];
         $this->siteGroup = $data['SiteGroup'];
@@ -92,6 +93,10 @@ class Site {
 
     public function getSiteUrl() {
         return $this->siteUrl;
+    }
+
+    public function getUrl() {
+        return $this->Url;
     }
 
     public function getBusName() {

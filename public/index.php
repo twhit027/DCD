@@ -16,6 +16,7 @@ $search = $app->getSearch();
 $siteName = $app->getSite()->getSiteName();
 $siteUrl = $app->getSite()->getSiteUrl();
 $busName = $app->getSite()->getBusName();
+$url = $app->getSite()->getUrl();
 
 $mainContent = <<<EOS
 <h1>$busName Classifieds</h1>
