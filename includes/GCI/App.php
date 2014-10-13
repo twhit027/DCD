@@ -23,7 +23,7 @@ class App
 
     function __construct($siteCode = '', $logDir = LOGGING_DIR, $logLevel = LOGGING_LEVEL)
     {
-        $this->database = new Database($logDir,$logLevel);
+        $this->database = new Database($logDir, $logLevel);
 
         $this->detectDevice();
 
@@ -33,7 +33,7 @@ class App
             $this->setSiteFromSiteCode($siteCode);
         }
         $this->setCategories();
-        $this->setLog($logDir,$logLevel);
+        $this->setLog($logDir, $logLevel);
     }
 
     public function setLog($logDir = LOGGING_DIR, $logLevel = LOGGING_LEVEL)
@@ -91,7 +91,7 @@ class App
         return $data;
     }
 
-    public function getRummages($place = '', $position = '', $route = '', $siteGroup = '')
+    public function getRummages($place = '', $position = '', $route = '', $siteGroup = '', $city = '', $siteCode = '')
     {
         if ($siteGroup == '') {
             $siteGroup = $this->site->getSiteGroup();
@@ -99,8 +99,18 @@ class App
 
         $siteGroupString = $this->createSiteGroupString($siteGroup);
 
-        $sql = "SELECT * FROM `listing` WHERE Placement = :place AND Position = :position AND StartDate <= :startDate AND SiteCode IN ( " . $siteGroupString . " )";
+        $sql = "SELECT t1.*, t2.BusName FROM `listing` AS t1, `siteinfo` AS t2 WHERE Placement = :place AND Position = :position AND StartDate <= :startDate AND t1.SiteCode IN ( " . $siteGroupString . " ) AND t2.SiteCode = t1.SiteCode";
         $params = array(':place' => $place, ':position' => $position, ':startDate' => date("Y-m-d"));
+
+        if (!empty($city)) {
+            $sql .= " AND t1.City = :city";
+            $params = array_merge($params, array(':city' => $city));
+        }
+
+        if (!empty($siteCode)) {
+            $sql .= " AND t1.SiteCode = :siteCode";
+            $params = array_merge($params, array(':siteCode' => $siteCode));
+        }
 
         if (!empty($route)) {
             $routeIDS = explode(",", $route);
@@ -115,9 +125,9 @@ class App
             $sql .= " AND ID IN ( " . $route . " )";
             $params = array_merge($params, $rts['params']);
         }
-		
-		//Move iteration 16 fix to come after the route part of the sql string
-		$sql .= " ORDER BY AdText";
+
+        //Move iteration 16 fix to come after the route part of the sql string
+        $sql .= " ORDER BY AdText";
 
         $results = $this->database->getAssoc($sql, $params);
 
@@ -125,7 +135,7 @@ class App
         //$dataArray['totalRows'] = $this->database->getCount("SELECT FOUND_ROWS()");
 
         foreach ($results as $row) {
-            $dataArray['list'][$row['ID']] = array('adText' => $row['AdText']);
+            $dataArray['list'][$row['ID']] = array('adText' => $row['AdText'], 'siteCode' => $row['SiteCode'], 'siteName' => $row['BusName'], 'city' => trim($row['City']));
             if (!empty($row['Street']) && !empty($row['Lat']) && !empty($row['Long'])) {
                 $dataArray['map'][$row['ID']] = array(
                     "street" => $row['Street'],
@@ -270,11 +280,11 @@ class App
             $siteGroup = '';
             $orgLat = $this->site->getLat();
             $orgLng = $this->site->getLng();
-            $preSql = 'SELECT SiteCode, ( 3959 * acos( cos( radians('.$orgLat.') ) * cos( radians( Lat ) ) * cos( radians( Lng ) - radians('.$orgLng.') ) + sin( radians('.$orgLat.') ) * sin( radians( lat ) ) ) ) AS distance FROM `siteinfo` HAVING distance < '.$radius.' ORDER BY distance';
+            $preSql = 'SELECT SiteCode, ( 3959 * acos( cos( radians(' . $orgLat . ') ) * cos( radians( Lat ) ) * cos( radians( Lng ) - radians(' . $orgLng . ') ) + sin( radians(' . $orgLat . ') ) * sin( radians( lat ) ) ) ) AS distance FROM `siteinfo` HAVING distance < ' . $radius . ' ORDER BY distance';
             $preResults = $this->database->getAssoc($preSql);
             if ($preResults !== false) {
                 foreach ($preResults as $row) {
-                    if (! empty($siteGroup)) {
+                    if (!empty($siteGroup)) {
                         $siteGroup .= ',';
                     }
                     $siteGroup .= $row['SiteCode'];
@@ -289,23 +299,24 @@ class App
 
             $siteGroupString = '';
 
-            if (! empty($siteGroup)) {
+            if (!empty($siteGroup)) {
                 $siteGroupString = $this->createSiteGroupString($siteGroup);
             }
 
-            $sql = "SELECT SQL_CALC_FOUND_ROWS l.*, s.BusName, s.Domain";
+            $preSQL1 = "SELECT SQL_CALC_FOUND_ROWS l.*, s.BusName, s.Domain";
+            $preSQL2 = "SELECT DISTINCT l.SiteCode, s.BusName";
+            $sql = '';
             if (!empty($radius)) {
                 $orgLat = $this->site->getLat();
                 $orgLng = $this->site->getLng();
                 //SELECT SiteCode, SiteName, City, State, ( 3959 * acos( cos( radians(39.1031182) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(-84.5120196) ) + sin( radians(39.1031182) ) * sin( radians( lat ) ) ) ) AS distance FROM siteInfo HAVING distance < 250 ORDER BY distance LIMIT 0, 200;
-                $sql .= ', ( 3959 * acos( cos( radians('.$orgLat.') ) * cos( radians( s.lat ) ) * cos( radians( s.lng ) - radians('.$orgLng.') ) + sin( radians('.$orgLat.') ) * sin( radians( s.lat ) ) ) ) AS distance';
+                $preSQL1 .= ', ( 3959 * acos( cos( radians(' . $orgLat . ') ) * cos( radians( s.lat ) ) * cos( radians( s.lng ) - radians(' . $orgLng . ') ) + sin( radians(' . $orgLat . ') ) * sin( radians( s.lat ) ) ) ) AS distance';
             }
 
             if (!empty($fullText)) {
-                $sql .= ", MATCH(AdText) AGAINST( :fulltext1 ) AS score";
+                $preSQL1 .= ", MATCH(AdText) AGAINST( :fulltext1 ) AS score";
                 $params[':fulltext1'] = $fullText;
             }
-
 
             $sql .= ' FROM `listing` l, `siteinfo` s where l.SiteCode = s.SiteCode AND l.StartDate <= :startDate';
             $params[':startDate'] = date("Y-m-d");
@@ -329,17 +340,35 @@ class App
                 $sql .= " HAVING distance < $radius";
             }
 
-            if (empty($fullText)) {
-                $sql .= ' ORDER BY l.AdText';
-            } else {
-                $sql .= " and MATCH(AdText) AGAINST( :fulltext ) ORDER BY score DESC";
+            if (!empty($fullText)) {
+                $sql .= " and MATCH(AdText) AGAINST( :fulltext )";
                 $params[':fulltext'] = $fullText;
             }
 
+            if ((!empty($siteGroup)) && (count(explode(',', $siteGroup)) > 1)) {
+                $sql2 = $preSQL2 . $sql;
+                $params2 = $params;
+                unset($params2[':fulltext1']);
+                $results2 = $this->database->getAssoc($sql2, $params2);
+                foreach ($results2 as $row2) {
+                    $dataArray['sites'][] = array(
+                        'siteCode' => $row2['SiteCode'],
+                        'busName' => $row2['BusName']
+                    );
+                }
+            }
+
+            if (empty($fullText)) {
+                $sql .= ' ORDER BY l.AdText';
+            } else {
+                $sql .= ' ORDER BY score DESC';
+            }
             $sql .= " LIMIT :offSet, :rowCnt";
             $params[':offSet'] = $offSet;
             $params[':rowCnt'] = $rowCnt;
-            $results = $this->database->getAssoc($sql, $params);
+            $sql1 = $preSQL1 . $sql;
+            $results = $this->database->getAssoc($sql1, $params);
+
             $dataArray['totalRows'] = $this->database->getCount("SELECT FOUND_ROWS()");
 
             foreach ($results as $row) {
