@@ -74,7 +74,7 @@ $cOptions = "";
 if(count($filter['city']) > 1){
 	$cOptions .= '<div class="dropdown pull-left">';
 	$cOptions .= '<button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuCity" data-toggle="dropdown">';
-	$cOptions .= '<strong>Filter:</strong> City <span class="caret"></span></button>';
+	$cOptions .= '<strong>Filter Options - Select:</strong> City <span class="caret"></span></button>';
 	$cOptions .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuCity">';
 	foreach($filter['city'] as $k=>$v){
 		$cOptions .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'city\', \'' . $k . '\')" href="javascript:void(0)">' . $k . '</a></li>';
@@ -85,7 +85,7 @@ $sOptions = "";
 if(count($filter['sites']) > 1){
 	$sOptions .= '<div class="dropdown pull-left">';
 	$sOptions .= '<button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown">';
-	$sOptions .= '<strong>Filter:</strong> Paper <span class="caret"></span></button>';
+	$sOptions .= '<strong>Filter Options - Select:</strong> Newspaper <span class="caret"></span></button>';
 	$sOptions .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuPaper">';
 	foreach($filter['sites'] as $k=>$v){
 		$sOptions .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'paper\', \'' . $k . '\')" href="javascript:void(0)">' . $v . '</a></li>';
@@ -105,12 +105,12 @@ if(!empty($_GET['city']) || !empty($_GET['paper'])){
 	if(!empty($_GET['city'])){
         $filterForm .= '<div class="pull-left">';
         $filterForm .= '<button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuCity" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'city\')" href="javascript:void(0)">';
-        $filterForm .= '<span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span><strong> Filter:</strong> City </button></div>';
+        $filterForm .= '<span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span><strong> Filter Options - Select:</strong> City </button></div>';
 	}
 	if(!empty($_GET['paper'])){
         $filterForm .= '<div class="pull-left">';
         $filterForm .= '<button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'paper\')" href="javascript:void(0)">';
-        $filterForm .= '<span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span><strong> Filter:</strong> Paper </button></div>';
+        $filterForm .= '<span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span><strong> Filter Options - Select:</strong> Newspaper </button></div>';
 	}
 }
 $filterForm .= "<br>";

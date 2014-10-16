@@ -159,7 +159,7 @@ if (!isset($listings['results'])) {
         if ((!empty($listings['sites'])) && (count($listings['sites']) > 1)) {
             $siteDropDown .= '<div class="dropdown pull-right">';
             $siteDropDown .= '<button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">';
-            $siteDropDown .= '<strong>Filter:</strong> Paper <span class="caret"></span></button>';
+            $siteDropDown .= '<strong>Filter Options - Select:</strong> Newspaper <span class="caret"></span></button>';
             $siteDropDown .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">';
             foreach ($listings['sites'] as $row) {
                 $siteDropDown .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'sites\', \'' . $row['siteCode'] . '\')" href="javascript:void(0)">' . $row['busName'] . '</a></li>';
