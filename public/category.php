@@ -328,8 +328,8 @@ $mainContent = <<<EOS
 				$search
 	        </div>
             <div class="row">
-                <div class="col-sm-10"><h1>$position</h1></div>
-                <div class="col-sm-2"><br />$siteDropDown</div>
+                <div class="col-lg-8"><h1>$position</h1></div>
+                <div class="col-lg-4"><br />$siteDropDown</div>
             </div>
 
             $pagination
