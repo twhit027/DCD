@@ -48,8 +48,8 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
     .content { border:2px solid #ccc; width:300px; height: 100px; overflow-y: scroll; }
     </style>
 
-    <link href="3rdParty/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="3rdParty/jasny-bootstrap/css/jasny-bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -190,12 +190,7 @@ else if($device =="phone")
                     </ul>
                 </div>
                 <div style="padding:10px">
-                    <?php 
-							if($device =="computer")
-							{
-								echo $ads->getFlex();
-							}
-					?>
+                    <?php if($device =="computer") {echo $ads->getFlex();} ?>
                 </div>
             </div>
         </div>
@@ -221,9 +216,9 @@ else if($device == "tablet")
 <footer class="footer">
 <?php echo $nav->getBottomNavigation($siteUrl, $palette, $siteName, $siteBottomData); ?>
 </footer>
-<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-<script src="3rdParty/bootstrap/js/bootstrap.min.js"></script>
-<script src="3rdParty/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="3rdParty/jquery/jquery.min.js"><\/script>')</script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script>
     function getDistance(lat1, lat2, lon1, lon2) {
         //var R = 6371; // km
