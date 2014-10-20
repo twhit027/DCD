@@ -157,7 +157,7 @@ if (!isset($listings['results'])) {
     $siteDropDown = '';
     if (empty($siteGroup)) {
         if ((!empty($listings['sites'])) && (count($listings['sites']) > 1)) {
-            $siteDropDown .= '<div class="dropdown pull-right">';
+            $siteDropDown .= '<div class="dropdown col-lg-8">';
             $siteDropDown .= '<button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">';
             $siteDropDown .= '<strong>Filter Options - Select:</strong> Newspaper <span class="caret"></span></button>';
             $siteDropDown .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">';
@@ -168,7 +168,7 @@ if (!isset($listings['results'])) {
             $siteDropDown .= '</ul></div>';
         }
     } elseif ($siteGroup != 'all') {
-        $siteDropDown .= '<div class="pull-right">';
+        $siteDropDown .= '<div class="col-lg-8">';
         $siteDropDown .= '<button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" onClick="removeSitesAndReloadPage()" href="javascript:void(0)">';
         $siteDropDown .= '<span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span><strong>Filter Options - Select:</strong> Newspaper </button></div>';
     }
@@ -329,8 +329,9 @@ $mainContent = <<<EOS
 	        </div>
             <div class="row">
                 <div class="col-lg-8"><h1>$position</h1></div>
-                <div class="col-lg-4"><br />$siteDropDown</div>
+                $siteDropDown
             </div>
+
 
             $pagination
             <br />$data
