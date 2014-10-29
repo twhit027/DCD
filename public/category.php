@@ -207,22 +207,11 @@ if (!isset($listings['results'])) {
         if (count($imageArray) > 0) {
             if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
             $imgCnt = 0;
+            $images = '';
             foreach ($imageArray as $imgSrc) {
-                if ($imgCnt == 0) {
-                    $dataInfo .= '<a class="fancybox" href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" rel="ligthbox ' . $row['id'] . '_group" title="Picture"><span class="glyphicon glyphicon-picture"></span>Pic</a>';
-                } else {
-                    $dataInfo .= '<div style="display: none"><a class="fancybox" href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" rel="ligthbox ' . $row['id'] . '_group" title="Picture"><span class="glyphicon glyphicon-picture"></span></a></div>';
-                }
-                $imgCnt++;
-            }
-            $imgCnt = 0;
-            $newImageInfo = '';
-            foreach ($imageArray as $imgSrc) {
-                if ($imgCnt == 0) {
-                    $newImageInfo .= '<a href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" data-gallery="ligthbox ' . $row['id'] . '_group" title="Picture"><span class="glyphicon glyphicon-picture"></span>Pic</a>';
-                } else {
-                    $newImageInfo .= '<div style="display: none"><a href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" data-gallery="ligthbox ' . $row['id'] . '_group" title="Picture"><span class="glyphicon glyphicon-picture"></span></a></div>';
-                }
+                $images .= '<a class="fancybox" href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" rel="ligthbox ' . $row['id'] . '_group" title="Picture">';
+                $images .= '<img src="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . ' height="42" width="42" />';
+                $images .= '</a>';
                 $imgCnt++;
             }
         }
@@ -239,6 +228,7 @@ if (!isset($listings['results'])) {
         $data .= "<div class='jumbotron' style='padding-top: 30px; word-wrap: break-word;'>";
         $data .= "$dataInfo";
         $data .= $string;
+        $data .= $images;
         $data .= '<a href="http://twitter.com/home?status=' . substr($row['adText'], 0, 120) . '" target="_blank"><img src="img/twitter-24.png" /></a>&nbsp';
         $data .= '<a href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/facebook-24.png" /></a>&nbsp';
         $data .= '<a href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/google-plus-24.png" /></a>&nbsp';
