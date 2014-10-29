@@ -228,7 +228,7 @@ if (!isset($listings['results'])) {
         $data .= "<div class='jumbotron' style='padding-top: 30px; word-wrap: break-word;'>";
         $data .= "$dataInfo";
         $data .= $string;
-        $data .= '<div class"row"><div class="pull-left">'.$images.'</div><div  class="pull-right">';
+        $data .= '<div class="row"><div class="pull-left">'.$images.'</div><div  class="pull-right">';
         $data .= '<a href="http://twitter.com/home?status=' . substr($row['adText'], 0, 120) . '" target="_blank"><img src="img/twitter-24.png" /></a>&nbsp';
         $data .= '<a href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/facebook-24.png" /></a>&nbsp';
         $data .= '<a href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/google-plus-24.png" /></a>&nbsp';
