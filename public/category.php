@@ -176,6 +176,7 @@ if (!isset($listings['results'])) {
     foreach ($listings['results'] as $row) {
         $map = '';
         $imageArray = array();
+        $images = '';
         if (!empty($row['images'])) {
             $imageArray = explode(',', $row['images']);
         }
@@ -205,14 +206,10 @@ if (!isset($listings['results'])) {
         if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
         $dataInfo .= '<a href="http://' . $server . '/category.php?place=' . urlencode($row['placement']) . '&posit=' . urlencode($row['position']) . '" target="_blank">' . $row['position'] . '</a>';
         if (count($imageArray) > 0) {
-            if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
-            $imgCnt = 0;
-            $images = '';
             foreach ($imageArray as $imgSrc) {
                 $images .= '<a class="fancybox" href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" rel="ligthbox ' . $row['id'] . '_group" title="Picture">';
                 $images .= '<img src="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" height="42" width="42" />';
                 $images .= '</a>';
-                $imgCnt++;
             }
         }
 
