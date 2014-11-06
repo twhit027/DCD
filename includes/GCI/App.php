@@ -219,6 +219,7 @@ class App
             if (!empty($siteGroupString)) {
                 $siteGroupString .= ', ';
             }
+            $siteCode = trim($siteCode);
             $siteGroupString .= "'$siteCode'";
         }
         return $siteGroupString;
