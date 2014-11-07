@@ -154,9 +154,7 @@ class App
 
     function setSiteFromSiteCode($siteCode)
     {
-        $sql = "SELECT * FROM `siteinfo` where SiteCode = :siteCode";
-        $params = array(':siteCode' => $siteCode);
-        $data = $this->database->getAssoc($sql, $params);
+        $data = getSiteFromSiteCode($siteCode);
 
         // probably serve up a 404
         if (empty($data)) {
@@ -164,6 +162,13 @@ class App
         }
 
         $this->setSite(new Site($data[0]));
+    }
+
+    function getSiteFromSiteCode($siteCode)
+    {
+        $sql = "SELECT * FROM `siteinfo` where SiteCode = :siteCode";
+        $params = array(':siteCode' => $siteCode);
+        return $this->database->getAssoc($sql, $params);
     }
 
     function setSiteFromDomain($domain = '')

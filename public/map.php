@@ -70,50 +70,47 @@ foreach($rummages as $k=>$v){
 	$filter['sites'][$v['siteCode']] = strtoupper($v['siteName']);
 }
 
-$cOptions = "";
-if(count($filter['city']) > 1){
-	$cOptions .= '<div class="dropdown pull-left">';
-	$cOptions .= '<button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuCity" data-toggle="dropdown">';
-	$cOptions .= '<strong>Filter Options - Select:</strong> City <span class="caret"></span></button>';
-	$cOptions .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuCity">';
-	foreach($filter['city'] as $k=>$v){
-		$cOptions .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'city\', \'' . $k . '\')" href="javascript:void(0)">' . $k . '</a></li>';
-	}
-	$cOptions .= '</ul></div>';
-}
-$sOptions = "";
-if(count($filter['sites']) > 1){
-	$sOptions .= '<div class="dropdown pull-left">';
-	$sOptions .= '<button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown">';
-	$sOptions .= '<strong>Filter Options - Select:</strong> Newspaper <span class="caret"></span></button>';
-	$sOptions .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuPaper">';
-	foreach($filter['sites'] as $k=>$v){
-		$sOptions .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'paper\', \'' . $k . '\')" href="javascript:void(0)">' . $v . '</a></li>';
-	}
-	$sOptions .= '</ul></div>';
-}
 $filterForm = "";
-if(!empty($cOptions) || !empty($sOptions)){
-	if(!empty($cOptions)){
-		$filterForm .= $cOptions;
-	}
-	if(!empty($sOptions)){
-		$filterForm .= $sOptions;
-	}
+if(empty($_GET['city'])) {
+    if(count($filter['city']) > 1){
+        $filterForm .= '<div class="btn-group"><button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuCity" data-toggle="dropdown">';
+        $filterForm .= ' City <span class="caret"></span></button>';
+        $filterForm .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuCity">';
+        foreach($filter['city'] as $k=>$v){
+            $filterForm .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'city\', \'' . $k . '\')" href="javascript:void(0)">' . $k . '</a></li>';
+        }
+        $filterForm .= '</ul></div>';
+    }
+}else{
+    $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuCity" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'city\')" href="javascript:void(0)">';
+    $filterForm .= 'City - <strong>'.$_GET['city'].'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
 }
-if(!empty($_GET['city']) || !empty($_GET['paper'])){
-	if(!empty($_GET['city'])){
-        $filterForm .= '<div class="pull-left">';
-        $filterForm .= '<button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuCity" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'city\')" href="javascript:void(0)">';
-        $filterForm .= '<span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span><strong> Filter Options - Select:</strong> City </button></div>';
-	}
-	if(!empty($_GET['paper'])){
-        $filterForm .= '<div class="pull-left">';
-        $filterForm .= '<button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'paper\')" href="javascript:void(0)">';
-        $filterForm .= '<span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span><strong> Filter Options - Select:</strong> Newspaper </button></div>';
-	}
+
+if (! empty($filterForm)) {
+    $filterForm .= '&nbsp;';
 }
-$filterForm .= "<br>";
+
+if(empty($_GET['paper'])) {
+    if(count($filter['sites']) > 1){
+        $filterForm .= '<div class="btn-group"><button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown">';
+        $filterForm .= ' Newspaper <span class="caret"></span></button>';
+        $filterForm .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuPaper">';
+        foreach($filter['sites'] as $k=>$v){
+            $filterForm .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'paper\', \'' . $k . '\')" href="javascript:void(0)">' . $v . '</a></li>';
+        }
+        $filterForm .= '</ul></div>';
+    }
+} else {
+    $selectedSiteArray = $app->getSiteFromSiteCode($_GET['paper']);
+    $selectedBusName = $selectedSiteArray[0]['BusName'];
+    $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'paper\')" href="javascript:void(0)">';
+    $filterForm .= ' Newspaper - <strong>'.$selectedBusName.'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
+}
+
+$filterLine = '';
+if (!empty($filterForm)) {
+    $filterLine = '<div><label>Filter by:&nbsp;</label>'.$filterForm.'</div>';
+}
 
 $masterBottom = '<script src="js/rummage.js"></script>';
 
@@ -130,8 +127,7 @@ $googleApiScript = <<<EOS
 EOS;
 
 $data = <<<EOS
-<div id="map-options">
-	$filterForm
+	<div id="map-options">
 	<ul id="map-resize">
 		<li><strong>Map Size:</strong></li>
 		<li><a href="#" data-size="small">Small</a></li>
@@ -200,9 +196,7 @@ $mainContent = <<<EOS
 		<li><a href="./">Home</a></li>
 		<li class="active">$place</li>
 	</ol>
-	
-	<br />
-	
+	$filterLine
 	$data
 EOS;
 
