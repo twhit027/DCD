@@ -84,42 +84,44 @@ function char($parser, $data)
 
     if ($state['name'] == "DCD") {
         $site = $state['SITECODE'];
-    }
-    if ($state['name'] == "AD") {
+    }elseif ($state['name'] == "AD") {
         $userData[$userCount]["AD"] = $state['ID'];
-    }
-    if ($state['name'] == "START-DATE") {
+    }elseif ($state['name'] == "START-DATE") {
         $userData[$userCount]["START-DATE"] .= $data;
-    }
-    if ($state['name'] == "END-DATE") {
+    }elseif ($state['name'] == "END-DATE") {
         $userData[$userCount]["END-DATE"] .= $data;
-    }
-    if ($state['name'] == "PLACEMENT") {
+    }elseif ($state['name'] == "PLACEMENT") {
         $userData[$userCount]["PLACEMENT"] .= $data;
-    }
-    if ($state['name'] == "POSITION") {
+    }elseif ($state['name'] == "POSITION") {
         $userData[$userCount]["POSITION"] .= $data;
-    }
-    if ($state['name'] == "AD-TEXT") {
+    }elseif ($state['name'] == "AD-TEXT") {
         $userData[$userCount]["AD-TEXT"] .= $data;
-    }
-    if ($state['name'] == "GS_ADDRESS") {
+    }elseif ($state['name'] == "GS_ADDRESS") {
         $userData[$userCount]["STREET"] .= $data;
-    }
-    if ($state['name'] == "GS_CITY") {
+    }elseif ($state['name'] == "GS_CITY") {
         $userData[$userCount]["CITY"] .= $data;
-    }
-    if ($state['name'] == "GS_STATE") {
+    }elseif ($state['name'] == "GS_STATE") {
         $userData[$userCount]["STATE"] .= $data;
-    }
-    if ($state['name'] == "GS_ZIPCODE") {
+    }elseif ($state['name'] == "GS_ZIPCODE") {
         $userData[$userCount]["ZIP"] .= $data;
-    }
-    if ($state['name'] == "EXTERNAL_URL") {
+    }elseif ($state['name'] == "EXTERNAL_URL") {
         $userData[$userCount]["EXTERNAL"] .= $data;
-    }
-    if ($state['name'] == "MORE_INFORMATION") {
+    }elseif ($state['name'] == "MORE_INFORMATION") {
         $userData[$userCount]["MORE_INFORMATION"] .= $data;
+    }elseif ($state['name'] == "mondaydate") {
+        $userData[$userCount][Days][1] .= $data;
+    }elseif ($state['name'] == "tuesdaydate") {
+        $userData[$userCount][Days][2] .= $data;
+    }elseif ($state['name'] == "wednesdaydate") {
+        $userData[$userCount][Days][3] .= $data;
+    }elseif ($state['name'] == "thursdaydate") {
+        $userData[$userCount][Days][4] .= $data;
+    }elseif ($state['name'] == "fridaydate") {
+        $userData[$userCount][Days][5] .= $data;
+    }elseif ($state['name'] == "saturdaydate") {
+        $userData[$userCount][Days][6] .= $data;
+    }elseif ($state['name'] == "sundaydate") {
+        $userData[$userCount][Days][7] .= $data;
     }
 }
 
@@ -172,6 +174,7 @@ class ClassifiedsAdmin extends PDO
             if (empty($userData[$i]["MORE_INFORMATION"])) {
                 $userData[$i]["MORE_INFORMATION"] = '';
             }
+
             $imagesCSV ='';
             if (!empty($userData[$i]["AD-TEXT"])) {
                 //get all img tags
@@ -186,6 +189,8 @@ class ClassifiedsAdmin extends PDO
                 $userData[$i]["AD-TEXT"] = trim(strip_tags($userData[$i]["AD-TEXT"]));
             }
 
+            //$userData[$i]["AD"] = $site.$userData[$i]["AD"];
+
             try {
                 $stmt = $this->prepare("DELETE FROM `listing` WHERE ID = :ID");
                 $stmt->execute(array(':ID' => $userData[$i]["AD"]));
@@ -196,6 +201,15 @@ class ClassifiedsAdmin extends PDO
             }
 
             try {
+                $stmt = $this->prepare("DELETE FROM `dates` WHERE ListingId = :ListingId");
+                $stmt->execute(array(':ListingId' => $userData[$i]["AD"]));
+            } catch (PDOException $e) {
+                $logText = "Message:(" . $e->getMessage() . ") attempting to delete listing dates (" . $userData[$i]["AD"] . ") from the database";
+                fwrite(STDERR, $logText . "\n");
+                $return = 3;
+            }
+
+            try {
                 $stmt = $this->prepare("INSERT INTO `listing` (`ID`, `StartDate`, `EndDate`, `Placement`,`Position`, `AdText`, `Images`, `SiteCode`, `Street`, `City`, `State`, `Zip`, `ExternalURL`, `MoreInfo`) VALUES(:ID, :StartDate, :EndDate, :Placement, :Position, :AdText, :Images, :Site, :Street, :City, :State, :Zip, :ExternalURL, :MoreInfo)");
                 $stmt->execute(array(':ID' => $userData[$i]["AD"], ':StartDate' => $userData[$i]["START-DATE"], ':EndDate' => $userData[$i]["END-DATE"], ':Placement' => $userData[$i]["PLACEMENT"], ':Position' => $userData[$i]["POSITION"], ':AdText' => $userData[$i]["AD-TEXT"], ':Images'=> $imagesCSV,':Site' => $site, ':Street' => $userData[$i]["STREET"], ':City' => $userData[$i]["CITY"], ':State' => $userData[$i]["STATE"], ':Zip' => $userData[$i]["ZIP"], ':ExternalURL' => $userData[$i]["EXTERNAL"], ':MoreInfo' => $userData[$i]["MORE_INFORMATION"]));
                 $inserted++;
@@ -203,6 +217,21 @@ class ClassifiedsAdmin extends PDO
                 $logText = "Message:(" . $e->getMessage() . ") attempting to insert listing (" . $userData[$i]["AD"] . ") into the database";
                 fwrite(STDERR, $logText . "\n");
                 $return = 4;
+            }
+
+            if (isset($userData[$i]["Days"])) {
+                foreach($userData[$i]["Days"] as $dayOfWeek => $timeOfDay) {
+                    $date = $startTime = $endTime = '';
+                    list($startTime, $endTime) = explode('-', $timeOfDay);
+                    try {
+                        $stmt = $this->prepare("INSERT INTO `dates` (`ListingId`, `DayOfWeek`, `Date`, `StartTime`, `EndTime`) VALUES(:ListingId, :DayOfWeek, :Date, :StartTime, :EndTime)");
+                        $stmt->execute(array(':ListingId' => $userData[$i]["AD"], ':DayOfWeek' => $dayOfWeek, ':Date' => $date, ':StartTime' => $startTime, ':EndTime' => $endTime));
+                    } catch (PDOException $e) {
+                        $logText = "Message:(" . $e->getMessage() . ") attempting to insert listing (" . $userData[$i]["AD"] . ") into the database";
+                        fwrite(STDERR, $logText . "\n");
+                        $return = 5;
+                    }
+                }
             }
         }
 
