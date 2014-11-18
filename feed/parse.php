@@ -109,19 +109,19 @@ function char($parser, $data)
     }elseif ($state['name'] == "MORE_INFORMATION") {
         $userData[$userCount]["MORE_INFORMATION"] .= $data;
     }elseif ($state['name'] == "mondaydate") {
-        $userData[$userCount][Days][1] .= $data;
+        $userData[$userCount]['Days'][1] .= $data;
     }elseif ($state['name'] == "tuesdaydate") {
-        $userData[$userCount][Days][2] .= $data;
+        $userData[$userCount]['Days'][2] .= $data;
     }elseif ($state['name'] == "wednesdaydate") {
-        $userData[$userCount][Days][3] .= $data;
+        $userData[$userCount]['Days'][3] .= $data;
     }elseif ($state['name'] == "thursdaydate") {
-        $userData[$userCount][Days][4] .= $data;
+        $userData[$userCount]['Days'][4] .= $data;
     }elseif ($state['name'] == "fridaydate") {
-        $userData[$userCount][Days][5] .= $data;
+        $userData[$userCount]['Days'][5] .= $data;
     }elseif ($state['name'] == "saturdaydate") {
-        $userData[$userCount][Days][6] .= $data;
+        $userData[$userCount]['Days'][6] .= $data;
     }elseif ($state['name'] == "sundaydate") {
-        $userData[$userCount][Days][7] .= $data;
+        $userData[$userCount]['Days'][7] .= $data;
     }
 }
 
