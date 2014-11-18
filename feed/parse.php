@@ -224,7 +224,7 @@ class ClassifiedsAdmin extends PDO
                     $date = $startTime = $endTime = '';
                     list($startTime, $endTime) = explode('-', $timeOfDay);
                     try {
-                        $stmt = $this->prepare("INSERT INTO `dates` (`ListingId`, `DayOfWeek`, `Date`, `StartTime`, `EndTime`) VALUES(:ListingId, :DayOfWeek, :Date, :StartTime, :EndTime)");
+                        $stmt = $this->prepare("INSERT INTO `days` (`ListingId`, `DayOfWeek`, `Date`, `StartTime`, `EndTime`) VALUES(:ListingId, :DayOfWeek, :Date, :StartTime, :EndTime)");
                         $stmt->execute(array(':ListingId' => $userData[$i]["AD"], ':DayOfWeek' => $dayOfWeek, ':Date' => $date, ':StartTime' => $startTime, ':EndTime' => $endTime));
                     } catch (PDOException $e) {
                         $logText = "Message:(" . $e->getMessage() . ") attempting to insert listing (" . $userData[$i]["AD"] . ") into the database";
