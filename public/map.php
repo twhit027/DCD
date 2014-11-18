@@ -68,6 +68,9 @@ foreach($rummages as $k=>$v){
 	";
 	$filter['city'][strtoupper($v['city'])] = true;
 	$filter['sites'][$v['siteCode']] = strtoupper($v['siteName']);
+    if (! in_array($v['dayOfWeek'], $filter['days'])) {
+        $filter['days'][] = $v['dayOfWeek'];
+    }
 }
 
 $filterForm = "";
@@ -105,6 +108,21 @@ if(empty($_GET['paper'])) {
     $selectedBusName = $selectedSiteArray[0]['BusName'];
     $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'paper\')" href="javascript:void(0)">';
     $filterForm .= ' Newspaper - <strong>'.$selectedBusName.'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
+}
+
+if(empty($_GET['Day'])) {
+    if(count($filter['days']) > 1){
+        $filterForm .= '<div class="btn-group"><button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown">';
+        $filterForm .= ' Days <span class="caret"></span></button>';
+        $filterForm .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuPaper">';
+        foreach($filter['days'] as $k=>$v){
+            $filterForm .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'paper\', \'' . $k . '\')" href="javascript:void(0)">' . $v . '</a></li>';
+        }
+        $filterForm .= '</ul></div>';
+    }
+} else {
+    $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'paper\')" href="javascript:void(0)">';
+    $filterForm .= ' Days - <strong>'.$_GET['Day'].'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
 }
 
 $filterLine = '';
