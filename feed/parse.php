@@ -201,7 +201,7 @@ class ClassifiedsAdmin extends PDO
             }
 
             try {
-                $stmt = $this->prepare("DELETE FROM `dates` WHERE ListingId = :ListingId");
+                $stmt = $this->prepare("DELETE FROM `day` WHERE ListingId = :ListingId");
                 $stmt->execute(array(':ListingId' => $userData[$i]["AD"]));
             } catch (PDOException $e) {
                 $logText = "Message:(" . $e->getMessage() . ") attempting to delete listing dates (" . $userData[$i]["AD"] . ") from the database";
