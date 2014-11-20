@@ -132,6 +132,9 @@ class App
 
         $results = $this->database->getAssoc($sql, $params);
 
+        echo 'sql: $sql';
+        echo 'params: '; print_r($params);
+
         $dataArray = array();
         //$dataArray['totalRows'] = $this->database->getCount("SELECT FOUND_ROWS()");
 
