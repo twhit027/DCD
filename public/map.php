@@ -68,7 +68,7 @@ foreach($rummages as $k=>$v){
 	";
 	$filter['city'][strtoupper($v['city'])] = true;
 	$filter['sites'][$v['siteCode']] = strtoupper($v['siteName']);
-    if (! in_array($v['dayOfWeek'], $filter['days'])) {
+    if (! in_array($v['dayOfWeek'], array($filter['days']))) {
         $filter['days'][] = $v['dayOfWeek'];
     }
 }
