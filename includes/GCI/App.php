@@ -132,7 +132,7 @@ class App
 
         $results = $this->database->getAssoc($sql, $params);
 
-        echo 'sql: $sql';
+        echo "sql: $sql <br />";
         echo 'params: '; print_r($params);
 
         $dataArray = array();
