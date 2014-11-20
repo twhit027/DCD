@@ -99,7 +99,8 @@ class App
 
         $siteGroupString = $this->createSiteGroupString($siteGroup);
 
-        $sql = "SELECT t1.*, t2.BusName FROM `listing` AS t1, `siteinfo` AS t2 WHERE Placement = :place AND Position = :position AND StartDate <= :startDate AND t1.SiteCode IN ( " . $siteGroupString . " ) AND t2.SiteCode = t1.SiteCode";
+        //$sql = "SELECT t1.*, t2.BusName FROM `listing` AS t1, `siteinfo` AS t2, `day` AS t3 WHERE Placement = :place AND Position = :position AND StartDate <= :startDate AND t1.SiteCode IN ( " . $siteGroupString . " ) AND t2.SiteCode = t1.SiteCode AND t1.ID = t3.ListingId";
+        $sql = "SELECT t1.*, t2.BusName, t3.DayOfWeek FROM `listing` AS t1 JOIN siteinfo AS t2 on t1.SiteCode = t2.SiteCode LEFT JOIN day AS t3 on t1.ID = t2.ListingId WHERE t1.Placement = :place AND t1.Position = :position AND t1.StartDate <= :startDate AND t1.SiteCode IN ( " . $siteGroupString . " )";
         $params = array(':place' => $place, ':position' => $position, ':startDate' => date("Y-m-d"));
 
         if (!empty($city)) {
