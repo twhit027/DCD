@@ -27,6 +27,8 @@ if (isset($_REQUEST['paper'])) {
     $paper = urldecode($_REQUEST['paper']);
 }
 
+$dayArray = Array(1 => 'Mon', 2 => 'Tue', 3 => 'Wed', 4 => 'Thu', 5 => 'Fri', 6 => 'Sat', 7 => 'Sun');
+
 $listOfRummages = $app->getRummages($place,$position,'','',$city,$paper);
 if(isset($_GET['ad']) && !empty($_GET['ad'])) {
     $showcase = $_GET['ad'];
@@ -69,7 +71,7 @@ foreach($rummages as $k=>$v){
 	$filter['city'][strtoupper($v['city'])] = true;
 	$filter['sites'][$v['siteCode']] = strtoupper($v['siteName']);
     if (! empty($v['dayOfWeek'])) {
-        $filter['days'][] = $v['dayOfWeek'];
+        $filter['days'][$v['dayOfWeek']] = $dayArray[$v['dayOfWeek']];
     }
 }
 
@@ -122,7 +124,7 @@ if(empty($_GET['Day'])) {
         $filterForm .= ' Days <span class="caret"></span></button>';
         $filterForm .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuPaper">';
         foreach($filter['days'] as $k=>$v){
-            $filterForm .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'paper\', \'' . $k . '\')" href="javascript:void(0)">' . $v . '</a></li>';
+            $filterForm .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'day\', \'' . $k . '\')" href="javascript:void(0)">' . $v . '</a></li>';
         }
         $filterForm .= '</ul></div>';
     }
