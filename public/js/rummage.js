@@ -209,7 +209,7 @@ function removeSitesAndReloadPage(paramName) {
 		url = url.replace(/&?city=([^&]$|[^&]*)/i, "");
     } else if(paramName == 'paper') {
 		url = url.replace(/&?paper=([^&]$|[^&]*)/i, "");
-    } else if(paramName == 'paper') {
+    } else if(paramName == 'day') {
         url = url.replace(/&?day=([^&]$|[^&]*)/i, "");
     }
 	window.location.href = url;
