@@ -132,8 +132,9 @@ if(empty($_GET['day'])) {
         $filterForm .= '</ul></div>';
     }
 } else {
+    $dayString = isset($dayArray[$_GET['day']])?$dayArray[$_GET['day']]:'';
     $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'day\')" href="javascript:void(0)">';
-    $filterForm .= ' Days - <strong>'.$_GET['day'].'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
+    $filterForm .= ' Days - <strong>'.$dayString.'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
 }
 
 $filterLine = '';
