@@ -12,7 +12,7 @@ $app = new \GCI\App();
 
 $app->logInfo('Map Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].', REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].',HTTP_HOST: '.@$_SERVER['HTTP_HOST'].'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].')');
 
-$place = $position = $city = $paper = '';
+$place = $position = $city = $paper = $day = '';
 
 if (isset($_REQUEST['place'])) {
     $place = urldecode($_REQUEST['place']);
@@ -76,13 +76,13 @@ foreach($rummages as $k=>$v){
     $daysOpen = '';
     if (! empty($v['days'])) {
         foreach($v['days'] as $dayVal) {
-            if (! empty($daysOpen)) {$daysOpen .= '&nbsp;|&nbsp;';}
-            $daysOpen .= '<a href="#" data-toggle="tooltip" title="'.$dayVal['startTime'].'-'.$dayVal['endTime'].'">'.$dayAbrvArray[$dayVal['dayOfWeek']].'</a>';
+            $daysOpen .= '&nbsp;<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="'.$dayVal['startTime'].'-'.$dayVal['endTime'].'">'.$dayAbrvArray[$dayVal['dayOfWeek']].'</button>';
+            //$daysOpen .= '<a href="#" data-toggle="tooltip" title="'.$dayVal['startTime'].'-'.$dayVal['endTime'].'">'.$dayAbrvArray[$dayVal['dayOfWeek']].'</a>';
             $filter['days'][$dayVal['dayOfWeek']] = $dayArray[$dayVal['dayOfWeek']];
         }
     }
     if (! empty($daysOpen)) {
-        $rummageList .= "&nbsp;&nbsp; Days Open (Mouse over for hours): $daysOpen";
+        $rummageList .= '<strong><small>Days: </small></strong><div class="btn-group btn-group-xs" role="group" aria-label="days">'.$daysOpen.'</div>';
     }
     $rummageList .= "</td></tr></table></td></tr>";
 }
