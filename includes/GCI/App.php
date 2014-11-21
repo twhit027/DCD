@@ -141,11 +141,13 @@ class App
         //$dataArray['totalRows'] = $this->database->getCount("SELECT FOUND_ROWS()");
 
         foreach ($results as $row) {
-            if (isset($dataArray['list'][$row['ID']])) {
+            if (isset($dataArray['list'][$row['ID']]) && !empty($row['DayOfWeek'])) {
                 $dataArray['list'][$row['ID']]['days'][] = array('dayOfWeek' => trim($row['DayOfWeek']), 'startTime' => trim($row['StartTime']), 'endTime' =>  trim($row['EndTime']));
             } else {
                 $dataArray['list'][$row['ID']] = array('adText' => $row['AdText'], 'siteCode' => $row['SiteCode'], 'siteName' => $row['BusName'], 'city' => trim($row['City']));
-                $dataArray['list'][$row['ID']]['days'][] = array('dayOfWeek' => trim($row['DayOfWeek']), 'startTime' => trim($row['StartTime']), 'endTime' =>  trim($row['EndTime']));
+                if (!empty($row['DayOfWeek'])) {
+                    $dataArray['list'][$row['ID']]['days'][] = array('dayOfWeek' => trim($row['DayOfWeek']), 'startTime' => trim($row['StartTime']), 'endTime' =>  trim($row['EndTime']));
+                }
                 if (!empty($row['Street']) && !empty($row['Lat']) && !empty($row['Long'])) {
                     $dataArray['map'][$row['ID']] = array(
                         "street" => $row['Street'],
