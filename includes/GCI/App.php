@@ -91,7 +91,7 @@ class App
         return $data;
     }
 
-    public function getRummages($place = '', $position = '', $route = '', $siteGroup = '', $city = '', $siteCode = '')
+    public function getRummages($place = '', $position = '', $route = '', $siteGroup = '', $city = '', $siteCode = '', $day ='')
     {
         if ($siteGroup == '') {
             $siteGroup = $this->site->getSiteGroup();
@@ -111,6 +111,11 @@ class App
         if (!empty($siteCode)) {
             $sql .= " AND t1.SiteCode = :siteCode";
             $params = array_merge($params, array(':siteCode' => $siteCode));
+        }
+
+        if (!empty($day)) {
+            $sql .= " AND t3.DayOfWeek = :day";
+            $params = array_merge($params, array(':day' => $day));
         }
 
         if (!empty($route)) {

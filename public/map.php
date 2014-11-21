@@ -26,10 +26,13 @@ if (isset($_REQUEST['city'])) {
 if (isset($_REQUEST['paper'])) {
     $paper = urldecode($_REQUEST['paper']);
 }
+if (isset($_REQUEST['day'])) {
+    $day = urldecode($_REQUEST['day']);
+}
 
 $dayArray = Array(1 => 'Mon', 2 => 'Tue', 3 => 'Wed', 4 => 'Thu', 5 => 'Fri', 6 => 'Sat', 7 => 'Sun');
 
-$listOfRummages = $app->getRummages($place,$position,'','',$city,$paper);
+$listOfRummages = $app->getRummages($place,$position,'','',$city,$paper,$day);
 if(isset($_GET['ad']) && !empty($_GET['ad'])) {
     $showcase = $_GET['ad'];
 	$listOfRummages['map'][$showcase]['showcase'] = true;
