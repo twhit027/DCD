@@ -73,15 +73,16 @@ foreach($rummages as $k=>$v){
 
 	$filter['city'][strtoupper($v['city'])] = true;
 	$filter['sites'][$v['siteCode']] = strtoupper($v['siteName']);
-    if (isset($v['days'])) {
+    if (! empty($v['days'])) {
         $daysOpen = '';
         foreach($v['days'] as $dayVal) {
-            $daysOpen .= '&nbsp;|<a href="#" data-toggle="tooltip" title="'.$dayVal['startTime'].'-'.$dayVal['endTime'].'">'.$dayAbrvArray[$dayVal['dayOfWeek']].'</a>';
+            if (! empty($daysOpen)) {$daysOpen .= '&nbsp;|&nbsp;';}
+            $daysOpen .= '<a href="#" data-toggle="tooltip" title="'.$dayVal['startTime'].'-'.$dayVal['endTime'].'">'.$dayAbrvArray[$dayVal['dayOfWeek']].'</a>';
             $filter['days'][$dayVal['dayOfWeek']] = $dayArray[$dayVal['dayOfWeek']];
         }
     }
     if (! empty($daysOpen)) {
-        $rummageList .= "&nbsp;$daysOpen";
+        $rummageList .= "&nbsp;&nbsp; Days Open (Mouse over for hours): $daysOpen";
     }
     $rummageList .= "</td></tr>";
 }
