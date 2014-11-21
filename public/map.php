@@ -12,7 +12,7 @@ $app = new \GCI\App();
 
 $app->logInfo('Map Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].', REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].',HTTP_HOST: '.@$_SERVER['HTTP_HOST'].'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].')');
 
-$place = $position = $city = $paper = '';
+$place = $position = $city = $paper = $day = '';
 
 if (isset($_REQUEST['place'])) {
     $place = urldecode($_REQUEST['place']);
@@ -65,26 +65,26 @@ foreach($rummages as $k=>$v){
     if (! isset($mapArray[$k])) {
         $rummageList .= "disabled='disabled'";
     }
-    $rummageList .=" /></td><td class='dcd-adText' dcd-id='". $k."'>".$v["adText"]."<br />";
-	$rummageList .= '<a href="http://twitter.com/home?status=' . str_replace("&","%26",substr($v["adText"], 0, 120)) . '" target="_blank"><img src="img/twitter-16.png" /></a>&nbsp';
+    $rummageList .=" /></td><td><table><tr><td class='dcd-adText' dcd-id='". $k."' colspan='2'>".$v["adText"]."</td></tr>";
+	$rummageList .= '<tr><td><a href="http://twitter.com/home?status=' . str_replace("&","%26",substr($v["adText"], 0, 120)) . '" target="_blank"><img src="img/twitter-16.png" /></a>&nbsp';
 	$rummageList .= '<a href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $k . '" target="_blank"><img src="img/facebook-16.png" /></a>&nbsp';
 	$rummageList .= '<a href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $k . '" target="_blank"><img src="img/google-plus-16.png" /></a>&nbsp';
 	$rummageList .= '<a href="mailto:?subject='. str_replace("&","%26",substr($v["adText"], 0, 80)) .'&body='. str_replace("&","%26",substr($v["adText"], 0, 120)) .'%0D%0A%0D%0A http://' . $_SERVER['SERVER_NAME'] . '/map.php?place='.urlencode($place).'%26posit='.urlencode($position).'%26ad=' . $k .'" target="_top" id="'.$k.'-gs-mail"><img src="img/social-email-16.png" /></span></a>';
-
+    $rummageList .= '</td><td align="right">';
 	$filter['city'][strtoupper($v['city'])] = true;
 	$filter['sites'][$v['siteCode']] = strtoupper($v['siteName']);
+    $daysOpen = '';
     if (! empty($v['days'])) {
-        $daysOpen = '';
         foreach($v['days'] as $dayVal) {
-            if (! empty($daysOpen)) {$daysOpen .= '&nbsp;|&nbsp;';}
-            $daysOpen .= '<a href="#" data-toggle="tooltip" title="'.$dayVal['startTime'].'-'.$dayVal['endTime'].'">'.$dayAbrvArray[$dayVal['dayOfWeek']].'</a>';
+            $daysOpen .= '&nbsp;<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="'.$dayVal['startTime'].'-'.$dayVal['endTime'].'">'.$dayAbrvArray[$dayVal['dayOfWeek']].'</button>';
+            //$daysOpen .= '<a href="#" data-toggle="tooltip" title="'.$dayVal['startTime'].'-'.$dayVal['endTime'].'">'.$dayAbrvArray[$dayVal['dayOfWeek']].'</a>';
             $filter['days'][$dayVal['dayOfWeek']] = $dayArray[$dayVal['dayOfWeek']];
         }
     }
     if (! empty($daysOpen)) {
-        $rummageList .= "&nbsp;&nbsp; Days Open (Mouse over for hours): $daysOpen";
+        $rummageList .= '<strong><small>Days: </small></strong><div class="btn-group btn-group-xs" role="group" aria-label="days">'.$daysOpen.'</div>';
     }
-    $rummageList .= "</td></tr>";
+    $rummageList .= "</td></tr></table></td></tr>";
 }
 
 $filter['days'] = array_unique($filter['days']);
