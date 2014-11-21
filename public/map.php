@@ -121,7 +121,7 @@ if (! empty($filterForm)) {
     $filterForm .= '&nbsp;';
 }
 
-if(empty($_GET['Day'])) {
+if(empty($_GET['day'])) {
     if(count($filter['days']) > 1){
         $filterForm .= '<div class="btn-group"><button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown">';
         $filterForm .= ' Days <span class="caret"></span></button>';
