@@ -28,6 +28,12 @@ if (isset($argv[1])) {
     $fileArray[1] = $_GET['location'];
 }
 
+function formatTime ($string) {
+    $string .= ':00:00';
+    $timeArray = explode(':',$string);
+    return sprintf("%02d:%02d:%02d", $timeArray[0], $timeArray[1], $timeArray[2]);
+}
+
 function parseXMLFile($file)
 {
     $parser = xml_parser_create();
@@ -223,6 +229,8 @@ class ClassifiedsAdmin extends PDO
                 foreach($userData[$i]["Days"] as $dayOfWeek => $timeOfDay) {
                     $date = $startTime = $endTime = '';
                     list($startTime, $endTime) = explode('-', $timeOfDay);
+                    $startTime = formatTime($startTime);
+                    $endTime = formatTime($endTime);
                     try {
                         $stmt = $this->prepare("INSERT INTO `day` (`ListingId`, `DayOfWeek`, `Date`, `StartTime`, `EndTime`) VALUES(:ListingId, :DayOfWeek, :Date, :StartTime, :EndTime)");
                         $stmt->execute(array(':ListingId' => $userData[$i]["AD"], ':DayOfWeek' => $dayOfWeek, ':Date' => $date, ':StartTime' => $startTime, ':EndTime' => $endTime));
