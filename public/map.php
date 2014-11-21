@@ -31,6 +31,7 @@ if (isset($_REQUEST['day'])) {
 }
 
 $dayArray = Array(1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday', 5 => 'Friday', 6 => 'Saturday', 7 => 'Sunday');
+$dayAbrvArray = Array(1 => 'Mon', 2 => 'Tue', 3 => 'Wed', 4 => 'Thu', 5 => 'Fri', 6 => 'Sat', 7 => 'Sun');
 
 $listOfRummages = $app->getRummages($place,$position,'','',$city,$paper,$day);
 if(isset($_GET['ad']) && !empty($_GET['ad'])) {
@@ -69,14 +70,20 @@ foreach($rummages as $k=>$v){
 	$rummageList .= '<a href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $k . '" target="_blank"><img src="img/facebook-16.png" /></a>&nbsp';
 	$rummageList .= '<a href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $k . '" target="_blank"><img src="img/google-plus-16.png" /></a>&nbsp';
 	$rummageList .= '<a href="mailto:?subject='. str_replace("&","%26",substr($v["adText"], 0, 80)) .'&body='. str_replace("&","%26",substr($v["adText"], 0, 120)) .'%0D%0A%0D%0A http://' . $_SERVER['SERVER_NAME'] . '/map.php?place='.urlencode($place).'%26posit='.urlencode($position).'%26ad=' . $k .'" target="_top" id="'.$k.'-gs-mail"><img src="img/social-email-16.png" /></span></a>';
-	$rummageList .= "</td>
-	</tr>
-	";
+
 	$filter['city'][strtoupper($v['city'])] = true;
 	$filter['sites'][$v['siteCode']] = strtoupper($v['siteName']);
-    if (! empty($v['dayOfWeek'])) {
-        $filter['days'][$v['dayOfWeek']] = $dayArray[$v['dayOfWeek']];
+    if (isset($v['days'])) {
+        $daysOpen = '';
+        foreach($v['days'] as $dayVal) {
+            $daysOpen .= '&nbsp;|<a href="#" data-toggle="tooltip" title="'.$dayVal['startTime'].'-'.$dayVal['endTime'].'">'.$dayAbrvArray[$dayVal['dayOfWeek']].'</a>';
+            $filter['days'][$dayVal['dayOfWeek']] = $dayArray[$dayVal['dayOfWeek']];
+        }
     }
+    if (! empty($daysOpen)) {
+        $rummageList .= "&nbsp;$daysOpen";
+    }
+    $rummageList .= "</td></tr>";
 }
 
 $filter['days'] = array_unique($filter['days']);

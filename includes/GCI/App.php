@@ -100,7 +100,7 @@ class App
         $siteGroupString = $this->createSiteGroupString($siteGroup);
 
         //$sql = "SELECT t1.*, t2.BusName FROM `listing` AS t1, `siteinfo` AS t2, `day` AS t3 WHERE Placement = :place AND Position = :position AND StartDate <= :startDate AND t1.SiteCode IN ( " . $siteGroupString . " ) AND t2.SiteCode = t1.SiteCode AND t1.ID = t3.ListingId";
-        $sql = "SELECT t1.*, t2.BusName, t3.DayOfWeek FROM `listing` AS t1 JOIN `siteinfo` AS t2 on t1.SiteCode = t2.SiteCode LEFT JOIN `day` AS t3 on t1.ID = t3.ListingId WHERE t1.Placement = :place AND t1.Position = :position AND t1.StartDate <= :startDate AND t1.SiteCode IN ( " . $siteGroupString . " )";
+        $sql = "SELECT t1.*, t2.BusName, t3.DayOfWeek, t3.StartTime, t3.EndTime FROM `listing` AS t1 JOIN `siteinfo` AS t2 on t1.SiteCode = t2.SiteCode LEFT JOIN `day` AS t3 on t1.ID = t3.ListingId WHERE t1.Placement = :place AND t1.Position = :position AND t1.StartDate <= :startDate AND t1.SiteCode IN ( " . $siteGroupString . " )";
         $params = array(':place' => $place, ':position' => $position, ':startDate' => date("Y-m-d"));
 
         if (!empty($city)) {
@@ -141,16 +141,21 @@ class App
         //$dataArray['totalRows'] = $this->database->getCount("SELECT FOUND_ROWS()");
 
         foreach ($results as $row) {
-            $dataArray['list'][$row['ID']] = array('adText' => $row['AdText'], 'siteCode' => $row['SiteCode'], 'siteName' => $row['BusName'], 'city' => trim($row['City']), 'dayOfWeek' => trim($row['DayOfWeek']));
-            if (!empty($row['Street']) && !empty($row['Lat']) && !empty($row['Long'])) {
-                $dataArray['map'][$row['ID']] = array(
-                    "street" => $row['Street'],
-                    "city" => $row['City'],
-                    "state" => $row['State'],
-                    "zip" => $row['Zip'],
-                    "lat" => $row['Lat'],
-                    "lon" => $row['Long']
-                );
+            if (isset($dataArray['list'][$row['ID']])) {
+                $dataArray['list'][$row['ID']]['days'][] = array('dayOfWeek' => trim($row['DayOfWeek']), 'startTime' => trim($row['StartTime']), 'endTime' =>  trim($row['EndTime']));
+            } else {
+                $dataArray['list'][$row['ID']] = array('adText' => $row['AdText'], 'siteCode' => $row['SiteCode'], 'siteName' => $row['BusName'], 'city' => trim($row['City']));
+                $dataArray['list'][$row['ID']]['days'][] = array('dayOfWeek' => trim($row['DayOfWeek']), 'startTime' => trim($row['StartTime']), 'endTime' =>  trim($row['EndTime']));
+                if (!empty($row['Street']) && !empty($row['Lat']) && !empty($row['Long'])) {
+                    $dataArray['map'][$row['ID']] = array(
+                        "street" => $row['Street'],
+                        "city" => $row['City'],
+                        "state" => $row['State'],
+                        "zip" => $row['Zip'],
+                        "lat" => $row['Lat'],
+                        "lon" => $row['Long']
+                    );
+                }
             }
         }
 
