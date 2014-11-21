@@ -41,7 +41,8 @@ $mapPoints = json_encode($listOfRummages['map']);
 $mapArray = $listOfRummages['map'];
 $rummages = $listOfRummages['list'];
 $rummageList = '';
-$filter = array();
+//$filter = array();
+$filter['days'] = array();
 if(!empty($showcase) && !empty($rummages[$showcase])){
 	$rummageList .= "
 	<tr id='dcd-showcase'>
