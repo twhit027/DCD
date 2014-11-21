@@ -68,10 +68,12 @@ foreach($rummages as $k=>$v){
 	";
 	$filter['city'][strtoupper($v['city'])] = true;
 	$filter['sites'][$v['siteCode']] = strtoupper($v['siteName']);
-    if (! in_array($v['dayOfWeek'], array($filter['days']))) {
+    if (! empty($v['dayOfWeek'])) {
         $filter['days'][] = $v['dayOfWeek'];
     }
 }
+
+$filter['days'] = array_unique($filter['days']);
 
 $filterForm = "";
 if(empty($_GET['city'])) {
@@ -108,6 +110,10 @@ if(empty($_GET['paper'])) {
     $selectedBusName = $selectedSiteArray[0]['BusName'];
     $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'paper\')" href="javascript:void(0)">';
     $filterForm .= ' Newspaper - <strong>'.$selectedBusName.'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
+}
+
+if (! empty($filterForm)) {
+    $filterForm .= '&nbsp;';
 }
 
 if(empty($_GET['Day'])) {
