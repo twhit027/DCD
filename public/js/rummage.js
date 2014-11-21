@@ -205,10 +205,13 @@ function setGetParameter(paramName, paramValue) {
 
 function removeSitesAndReloadPage(paramName) {
 	var url = window.location.href;
-	if(paramName == 'city')
+	if(paramName == 'city') {
 		url = url.replace(/&?city=([^&]$|[^&]*)/i, "");
-	if(paramName == 'paper')
+    } else if(paramName == 'paper') {
 		url = url.replace(/&?paper=([^&]$|[^&]*)/i, "");
+    } else if(paramName == 'paper') {
+        url = url.replace(/&?day=([^&]$|[^&]*)/i, "");
+    }
 	window.location.href = url;
 	return false;
 }
