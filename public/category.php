@@ -157,25 +157,28 @@ if (!isset($listings['results'])) {
     $siteDropDown = '';
     if (empty($siteGroup)) {
         if ((!empty($listings['sites'])) && (count($listings['sites']) > 1)) {
-            $siteDropDown .= '<div class="dropdown pull-right">';
-            $siteDropDown .= '<button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">';
-            $siteDropDown .= '<strong>Filter:</strong> Paper <span class="caret"></span></button>';
+            $siteDropDown .= '<div class="col-lg-12"><label>Filter by:&nbsp;</label>';
+            $siteDropDown .= '<div class="btn-group"><button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">';
+            $siteDropDown .= 'Newspaper&nbsp;<span class="caret"></span></button>';
             $siteDropDown .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">';
             foreach ($listings['sites'] as $row) {
                 $siteDropDown .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'sites\', \'' . $row['siteCode'] . '\')" href="javascript:void(0)">' . $row['busName'] . '</a></li>';
             }
 
-            $siteDropDown .= '</ul></div>';
+            $siteDropDown .= '</ul></div></div>';
         }
     } elseif ($siteGroup != 'all') {
-        $siteDropDown .= '<div class="pull-right">';
-        $siteDropDown .= '<button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" onClick="removeSitesAndReloadPage()" href="javascript:void(0)">';
-        $siteDropDown .= '<span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span><strong> Filter:</strong> Paper </button></div>';
+        $selectedSiteArray = $app->getSiteFromSiteCode($siteGroup);
+        $selectedBusName = $selectedSiteArray[0]['BusName'];
+        $siteDropDown .= '<div class="col-lg-12"><label>Filter by:&nbsp;</label>';
+        $siteDropDown .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" onClick="removeSitesAndReloadPage()" href="javascript:void(0)">';
+        $siteDropDown .= 'Newspaper&nbsp;-&nbsp;<strong>'.$selectedBusName.'</strong>&nbsp;<span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div></div>';
     }
 
     foreach ($listings['results'] as $row) {
         $map = '';
         $imageArray = array();
+        $images = '';
         if (!empty($row['images'])) {
             $imageArray = explode(',', $row['images']);
         }
@@ -205,25 +208,10 @@ if (!isset($listings['results'])) {
         if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
         $dataInfo .= '<a href="http://' . $server . '/category.php?place=' . urlencode($row['placement']) . '&posit=' . urlencode($row['position']) . '" target="_blank">' . $row['position'] . '</a>';
         if (count($imageArray) > 0) {
-            if (!empty($dataInfo)) $dataInfo .= "&nbsp;|&nbsp;";
-            $imgCnt = 0;
             foreach ($imageArray as $imgSrc) {
-                if ($imgCnt == 0) {
-                    $dataInfo .= '<a class="fancybox" href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" rel="ligthbox ' . $row['id'] . '_group" title="Picture"><span class="glyphicon glyphicon-picture"></span>Pic</a>';
-                } else {
-                    $dataInfo .= '<div style="display: none"><a class="fancybox" href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" rel="ligthbox ' . $row['id'] . '_group" title="Picture"><span class="glyphicon glyphicon-picture"></span></a></div>';
-                }
-                $imgCnt++;
-            }
-            $imgCnt = 0;
-            $newImageInfo = '';
-            foreach ($imageArray as $imgSrc) {
-                if ($imgCnt == 0) {
-                    $newImageInfo .= '<a href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" data-gallery="ligthbox ' . $row['id'] . '_group" title="Picture"><span class="glyphicon glyphicon-picture"></span>Pic</a>';
-                } else {
-                    $newImageInfo .= '<div style="display: none"><a href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" data-gallery="ligthbox ' . $row['id'] . '_group" title="Picture"><span class="glyphicon glyphicon-picture"></span></a></div>';
-                }
-                $imgCnt++;
+                $images .= '<a class="fancybox" href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" rel="ligthbox ' . $row['id'] . '_group" title="Picture">';
+                $images .= '<img src="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" width="42" />';
+                $images .= '</a>';
             }
         }
 
@@ -239,11 +227,12 @@ if (!isset($listings['results'])) {
         $data .= "<div class='jumbotron' style='padding-top: 30px; word-wrap: break-word;'>";
         $data .= "$dataInfo";
         $data .= $string;
+        $data .= '<div class="row"><div class="pull-left">'.$images.'</div><div  class="pull-right">';
         $data .= '<a href="http://twitter.com/home?status=' . substr($row['adText'], 0, 120) . '" target="_blank"><img src="img/twitter-24.png" /></a>&nbsp';
         $data .= '<a href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/facebook-24.png" /></a>&nbsp';
         $data .= '<a href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_blank"><img src="img/google-plus-24.png" /></a>&nbsp';
         $data .= '<a href="mailto:emailaddress?subject=' . substr($row['adText'], 0, 80) . '&body=' . substr($row['adText'], 0, 120) . '%0D%0A%0D%0A http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $row['id'] . '" target="_top"><img src="img/email-24.png" /></span></a>';
-        $data .= '</div>';
+        $data .= '</div></div></div>';
     }
 }
 
@@ -324,14 +313,10 @@ $mainContent = <<<EOS
                 <li><a href="./">Home</a></li>
                 <li class="active">Category</li>
             </ol>
-			<div class="jumbotron" id="advancedsearch" style="display:none;">
-				$search
-	        </div>
             <div class="row">
-                <div class="col-sm-10"><h1>$position</h1></div>
-                <div class="col-sm-2"><br />$siteDropDown</div>
+                <div class="col-lg-12"><h1>$position</h1></div>
+                $siteDropDown
             </div>
-
             $pagination
             <br />$data
             $pagination

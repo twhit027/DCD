@@ -12,7 +12,7 @@ $app = new \GCI\App();
 
 $app->logInfo('Map Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].', REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].',HTTP_HOST: '.@$_SERVER['HTTP_HOST'].'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].')');
 
-$place = $position = $city = $paper = '';
+$place = $position = $city = $paper = $day = '';
 
 if (isset($_REQUEST['place'])) {
     $place = urldecode($_REQUEST['place']);
@@ -26,8 +26,14 @@ if (isset($_REQUEST['city'])) {
 if (isset($_REQUEST['paper'])) {
     $paper = urldecode($_REQUEST['paper']);
 }
+if (isset($_REQUEST['day'])) {
+    $day = urldecode($_REQUEST['day']);
+}
 
-$listOfRummages = $app->getRummages($place,$position,'','',$city,$paper);
+$dayArray = Array(1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday', 5 => 'Friday', 6 => 'Saturday', 7 => 'Sunday');
+$dayAbrvArray = Array(1 => 'Mon', 2 => 'Tue', 3 => 'Wed', 4 => 'Thu', 5 => 'Fri', 6 => 'Sat', 7 => 'Sun');
+
+$listOfRummages = $app->getRummages($place,$position,'','',$city,$paper,$day);
 if(isset($_GET['ad']) && !empty($_GET['ad'])) {
     $showcase = $_GET['ad'];
 	$listOfRummages['map'][$showcase]['showcase'] = true;
@@ -36,7 +42,8 @@ $mapPoints = json_encode($listOfRummages['map']);
 $mapArray = $listOfRummages['map'];
 $rummages = $listOfRummages['list'];
 $rummageList = '';
-$filter = array();
+//$filter = array();
+$filter['days'] = array();
 if(!empty($showcase) && !empty($rummages[$showcase])){
 	$rummageList .= "
 	<tr id='dcd-showcase'>
@@ -58,62 +65,91 @@ foreach($rummages as $k=>$v){
     if (! isset($mapArray[$k])) {
         $rummageList .= "disabled='disabled'";
     }
-    $rummageList .=" /></td><td class='dcd-adText' dcd-id='". $k."'>".$v["adText"]."<br />";
-	$rummageList .= '<a href="http://twitter.com/home?status=' . str_replace("&","%26",substr($v["adText"], 0, 120)) . '" target="_blank"><img src="img/twitter-16.png" /></a>&nbsp';
+    $rummageList .=" /></td><td><table><tr><td class='dcd-adText' dcd-id='". $k."' colspan='2'>".$v["adText"]."</td></tr>";
+	$rummageList .= '<tr><td><a href="http://twitter.com/home?status=' . str_replace("&","%26",substr($v["adText"], 0, 120)) . '" target="_blank"><img src="img/twitter-16.png" /></a>&nbsp';
 	$rummageList .= '<a href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $k . '" target="_blank"><img src="img/facebook-16.png" /></a>&nbsp';
 	$rummageList .= '<a href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $k . '" target="_blank"><img src="img/google-plus-16.png" /></a>&nbsp';
 	$rummageList .= '<a href="mailto:?subject='. str_replace("&","%26",substr($v["adText"], 0, 80)) .'&body='. str_replace("&","%26",substr($v["adText"], 0, 120)) .'%0D%0A%0D%0A http://' . $_SERVER['SERVER_NAME'] . '/map.php?place='.urlencode($place).'%26posit='.urlencode($position).'%26ad=' . $k .'" target="_top" id="'.$k.'-gs-mail"><img src="img/social-email-16.png" /></span></a>';
-	$rummageList .= "</td>
-	</tr>
-	";
+    $rummageList .= '</td><td align="right">';
 	$filter['city'][strtoupper($v['city'])] = true;
 	$filter['sites'][$v['siteCode']] = strtoupper($v['siteName']);
+    $daysOpen = '';
+    if (! empty($v['days'])) {
+        foreach($v['days'] as $dayVal) {
+            $daysOpen .= '&nbsp;<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="'.$dayVal['startTime'].'-'.$dayVal['endTime'].'">'.$dayAbrvArray[$dayVal['dayOfWeek']].'</button>';
+            //$daysOpen .= '<a href="#" data-toggle="tooltip" title="'.$dayVal['startTime'].'-'.$dayVal['endTime'].'">'.$dayAbrvArray[$dayVal['dayOfWeek']].'</a>';
+            $filter['days'][$dayVal['dayOfWeek']] = $dayArray[$dayVal['dayOfWeek']];
+        }
+    }
+    if (! empty($daysOpen)) {
+        $rummageList .= '<strong><small>Days: </small></strong><div class="btn-group btn-group-xs" role="group" aria-label="days">'.$daysOpen.'</div>';
+    }
+    $rummageList .= "</td></tr></table></td></tr>";
 }
 
-$cOptions = "";
-if(count($filter['city']) > 1){
-	$cOptions .= '<div class="dropdown pull-left">';
-	$cOptions .= '<button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuCity" data-toggle="dropdown">';
-	$cOptions .= '<strong>Filter:</strong> City <span class="caret"></span></button>';
-	$cOptions .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuCity">';
-	foreach($filter['city'] as $k=>$v){
-		$cOptions .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'city\', \'' . $k . '\')" href="javascript:void(0)">' . $k . '</a></li>';
-	}
-	$cOptions .= '</ul></div>';
-}
-$sOptions = "";
-if(count($filter['sites']) > 1){
-	$sOptions .= '<div class="dropdown pull-left">';
-	$sOptions .= '<button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown">';
-	$sOptions .= '<strong>Filter:</strong> Paper <span class="caret"></span></button>';
-	$sOptions .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuPaper">';
-	foreach($filter['sites'] as $k=>$v){
-		$sOptions .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'paper\', \'' . $k . '\')" href="javascript:void(0)">' . $v . '</a></li>';
-	}
-	$sOptions .= '</ul></div>';
-}
+$filter['days'] = array_unique($filter['days']);
+
 $filterForm = "";
-if(!empty($cOptions) || !empty($sOptions)){
-	if(!empty($cOptions)){
-		$filterForm .= $cOptions;
-	}
-	if(!empty($sOptions)){
-		$filterForm .= $sOptions;
-	}
+if(empty($_GET['city'])) {
+    if(count($filter['city']) > 1){
+        $filterForm .= '<div class="btn-group"><button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuCity" data-toggle="dropdown">';
+        $filterForm .= ' City <span class="caret"></span></button>';
+        $filterForm .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuCity">';
+        foreach($filter['city'] as $k=>$v){
+            $filterForm .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'city\', \'' . $k . '\')" href="javascript:void(0)">' . $k . '</a></li>';
+        }
+        $filterForm .= '</ul></div>';
+    }
+}else{
+    $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuCity" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'city\')" href="javascript:void(0)">';
+    $filterForm .= 'City - <strong>'.$_GET['city'].'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
 }
-if(!empty($_GET['city']) || !empty($_GET['paper'])){
-	if(!empty($_GET['city'])){
-        $filterForm .= '<div class="pull-left">';
-        $filterForm .= '<button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuCity" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'city\')" href="javascript:void(0)">';
-        $filterForm .= '<span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span><strong> Filter:</strong> City </button></div>';
-	}
-	if(!empty($_GET['paper'])){
-        $filterForm .= '<div class="pull-left">';
-        $filterForm .= '<button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'paper\')" href="javascript:void(0)">';
-        $filterForm .= '<span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span><strong> Filter:</strong> Paper </button></div>';
-	}
+
+if (! empty($filterForm)) {
+    $filterForm .= '&nbsp;';
 }
-$filterForm .= "<br>";
+
+if(empty($_GET['paper'])) {
+    if(count($filter['sites']) > 1){
+        $filterForm .= '<div class="btn-group"><button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown">';
+        $filterForm .= ' Newspaper <span class="caret"></span></button>';
+        $filterForm .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuPaper">';
+        foreach($filter['sites'] as $k=>$v){
+            $filterForm .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'paper\', \'' . $k . '\')" href="javascript:void(0)">' . $v . '</a></li>';
+        }
+        $filterForm .= '</ul></div>';
+    }
+} else {
+    $selectedSiteArray = $app->getSiteFromSiteCode($_GET['paper']);
+    $selectedBusName = $selectedSiteArray[0]['BusName'];
+    $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'paper\')" href="javascript:void(0)">';
+    $filterForm .= ' Newspaper - <strong>'.$selectedBusName.'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
+}
+
+if (! empty($filterForm)) {
+    $filterForm .= '&nbsp;';
+}
+
+if(empty($_GET['day'])) {
+    if(count($filter['days']) > 1){
+        $filterForm .= '<div class="btn-group"><button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown">';
+        $filterForm .= ' Days <span class="caret"></span></button>';
+        $filterForm .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuPaper">';
+        foreach($filter['days'] as $k=>$v){
+            $filterForm .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'day\', \'' . $k . '\')" href="javascript:void(0)">' . $v . '</a></li>';
+        }
+        $filterForm .= '</ul></div>';
+    }
+} else {
+    $dayString = isset($dayArray[$_GET['day']])?$dayArray[$_GET['day']]:'';
+    $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'day\')" href="javascript:void(0)">';
+    $filterForm .= ' Days - <strong>'.$dayString.'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
+}
+
+$filterLine = '';
+if (!empty($filterForm)) {
+    $filterLine = '<div><label>Filter by:&nbsp;</label>'.$filterForm.'</div>';
+}
 
 $masterBottom = '<script src="js/rummage.js"></script>';
 
@@ -130,8 +166,7 @@ $googleApiScript = <<<EOS
 EOS;
 
 $data = <<<EOS
-<div id="map-options">
-	$filterForm
+	<div id="map-options">
 	<ul id="map-resize">
 		<li><strong>Map Size:</strong></li>
 		<li><a href="#" data-size="small">Small</a></li>
@@ -200,9 +235,7 @@ $mainContent = <<<EOS
 		<li><a href="./">Home</a></li>
 		<li class="active">$place</li>
 	</ol>
-	
-	<br />
-	
+	$filterLine
 	$data
 EOS;
 

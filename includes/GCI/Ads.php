@@ -46,8 +46,8 @@ class Ads
     function getLaunchpad()
     {
         $data ="<!-- ia-iowacity-C1033/launchpad_SF/classifieds/main -->
-		<div style='text-align:center;padding-bottom:20px;'>
-		<div id='div-gpt-ad-1404831578985-0'>
+		<div align='center'  style='text-align:center;padding-bottom:20px;'>
+		<div id='div-gpt-ad-1404831578985-0' style='width:730px;margin: 0 auto;'>
 		<script type='text/javascript'>
 		googletag.cmd.push(function() { googletag.display('div-gpt-ad-1404831578985-0'); });
 		</script>
@@ -60,8 +60,8 @@ class Ads
     function getLeaderBottom()
     {
         $data ="<!-- ia-desmoines-C1150/728x90_2/classifieds/main -->
-		<div style='text-align:center;'>
-		<div id='div-gpt-ad-1395329372590-1'>
+		<div align='center'  style='text-align:center;'>
+		<div id='div-gpt-ad-1395329372590-1' style='width:730px;margin: 0 auto;'>
 		<script type='text/javascript'>
 		googletag.cmd.push(function() { googletag.display('div-gpt-ad-1395329372590-1'); });
 		</script>
