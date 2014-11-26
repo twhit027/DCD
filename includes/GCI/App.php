@@ -167,7 +167,7 @@ class App
 
     function setSiteFromSiteCode($siteCode)
     {
-        $data = getSiteFromSiteCode($siteCode);
+        $data = $this->getSiteFromSiteCode($siteCode);
 
         // probably serve up a 404
         if (empty($data)) {
