@@ -229,8 +229,6 @@ class ClassifiedsAdmin extends PDO
                 foreach($userData[$i]["Days"] as $dayOfWeek => $timeOfDay) {
                     $date = $startTime = $endTime = '';
                     list($startTime, $endTime) = explode('-', $timeOfDay);
-                    //$startTime = formatTime($startTime);
-                    //$endTime = formatTime($endTime);
                     try {
                         $stmt = $this->prepare("INSERT INTO `day` (`ListingId`, `DayOfWeek`, `Date`, `StartTime`, `EndTime`) VALUES(:ListingId, :DayOfWeek, :Date, :StartTime, :EndTime)");
                         $stmt->execute(array(':ListingId' => $userData[$i]["AD"], ':DayOfWeek' => $dayOfWeek, ':Date' => $date, ':StartTime' => $startTime, ':EndTime' => $endTime));
