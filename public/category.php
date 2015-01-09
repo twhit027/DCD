@@ -210,7 +210,7 @@ if (!isset($listings['results'])) {
         if (count($imageArray) > 0) {
             foreach ($imageArray as $imgSrc) {
                 $images .= '<a class="fancybox" href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" rel="ligthbox ' . $row['id'] . '_group" title="Picture">';
-                $images .= '<img src="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" width="42" />';
+                $images .= '<img src="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" width="64" />';
                 $images .= '</a>';
             }
         }
