@@ -224,27 +224,6 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                     <h3 style="color:#3276B1;">Or Select A Category</h3>
                     <ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">
                         <?php echo $nav->getSideNavigation($app->getCategories()); ?>
-                        <li>
-                            <div class="accordion-heading" style="padding-bottom:5px;">
-                                <a class="btn btn-default" data-target="#accordion-heading-21365" role="button" style="width:100%;" data-toggle="collapse">
-                                    <span class="nav-header-primary"><img src="img/partners/cars.png" alt="Cars.com"></span>
-                                </a>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="accordion-heading" style="padding-bottom:5px;">
-                                <a class="btn btn-default" data-target="#accordion-heading-21365" role="button" style="width:100%;" data-toggle="collapse">
-                                    <span class="nav-header-primary"><img src="img/partners/career.png" alt="career.com"></span>
-                                </a>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="accordion-heading" style="padding-bottom:5px;">
-                                <a class="btn btn-default" data-target="#accordion-heading-21365" role="button" style="width:100%;" data-toggle="collapse">
-                                    <span class="nav-header-primary"><img src="img/partners/home.png" alt="home.com"></span>
-                                </a>
-                            </div>
-                        </li>
                     </ul>
                 </div>
                 <div style="padding:10px">
