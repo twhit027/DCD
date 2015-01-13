@@ -91,7 +91,7 @@ class App
         return $data;
     }
 
-    public function getRummages($place = '', $position = '', $route = '', $siteGroup = '', $city = '', $siteCode = '')
+    public function getRummages($place = '', $position = '', $route = '', $siteGroup = '', $city = '', $siteCode = '', $day ='')
     {
         if ($siteGroup == '') {
             $siteGroup = $this->site->getSiteGroup();
@@ -99,7 +99,8 @@ class App
 
         $siteGroupString = $this->createSiteGroupString($siteGroup);
 
-        $sql = "SELECT t1.*, t2.BusName FROM `listing` AS t1, `siteinfo` AS t2 WHERE Placement = :place AND Position = :position AND StartDate <= :startDate AND t1.SiteCode IN ( " . $siteGroupString . " ) AND t2.SiteCode = t1.SiteCode";
+        //$sql = "SELECT t1.*, t2.BusName FROM `listing` AS t1, `siteinfo` AS t2, `day` AS t3 WHERE Placement = :place AND Position = :position AND StartDate <= :startDate AND t1.SiteCode IN ( " . $siteGroupString . " ) AND t2.SiteCode = t1.SiteCode AND t1.ID = t3.ListingId";
+        $sql = "SELECT t1.*, t2.BusName, t3.DayOfWeek, t3.StartTime, t3.EndTime FROM `listing` AS t1 JOIN `siteinfo` AS t2 on t1.SiteCode = t2.SiteCode LEFT JOIN `day` AS t3 on t1.ID = t3.ListingId WHERE t1.Placement = :place AND t1.Position = :position AND t1.StartDate <= :startDate AND t1.SiteCode IN ( " . $siteGroupString . " )";
         $params = array(':place' => $place, ':position' => $position, ':startDate' => date("Y-m-d"));
 
         if (!empty($city)) {
@@ -112,6 +113,11 @@ class App
             $params = array_merge($params, array(':siteCode' => $siteCode));
         }
 
+        if (!empty($day)) {
+            $sql .= " AND t3.DayOfWeek = :day";
+            $params = array_merge($params, array(':day' => $day));
+        }
+
         if (!empty($route)) {
             $routeIDS = explode(",", $route);
             $rts = array();
@@ -122,12 +128,12 @@ class App
                 $c++;
             }
             $route = implode(",", $rts['string']);
-            $sql .= " AND ID IN ( " . $route . " )";
+            $sql .= " AND t1.ID IN ( " . $route . " )";
             $params = array_merge($params, $rts['params']);
         }
 
         //Move iteration 16 fix to come after the route part of the sql string
-        $sql .= " ORDER BY AdText";
+        $sql .= " ORDER BY t1.AdText";
 
         $results = $this->database->getAssoc($sql, $params);
 
@@ -135,16 +141,23 @@ class App
         //$dataArray['totalRows'] = $this->database->getCount("SELECT FOUND_ROWS()");
 
         foreach ($results as $row) {
-            $dataArray['list'][$row['ID']] = array('adText' => $row['AdText'], 'siteCode' => $row['SiteCode'], 'siteName' => $row['BusName'], 'city' => trim($row['City']));
-            if (!empty($row['Street']) && !empty($row['Lat']) && !empty($row['Long'])) {
-                $dataArray['map'][$row['ID']] = array(
-                    "street" => $row['Street'],
-                    "city" => $row['City'],
-                    "state" => $row['State'],
-                    "zip" => $row['Zip'],
-                    "lat" => $row['Lat'],
-                    "lon" => $row['Long']
-                );
+            if (isset($dataArray['list'][$row['ID']]) && !empty($row['DayOfWeek'])) {
+                $dataArray['list'][$row['ID']]['days'][] = array('dayOfWeek' => trim($row['DayOfWeek']), 'startTime' => trim($row['StartTime']), 'endTime' =>  trim($row['EndTime']));
+            } else {
+                $dataArray['list'][$row['ID']] = array('adText' => $row['AdText'], 'siteCode' => $row['SiteCode'], 'siteName' => $row['BusName'], 'city' => trim($row['City']));
+                if (!empty($row['DayOfWeek'])) {
+                    $dataArray['list'][$row['ID']]['days'][] = array('dayOfWeek' => trim($row['DayOfWeek']), 'startTime' => trim($row['StartTime']), 'endTime' =>  trim($row['EndTime']));
+                }
+                if (!empty($row['Street']) && !empty($row['Lat']) && !empty($row['Long'])) {
+                    $dataArray['map'][$row['ID']] = array(
+                        "street" => $row['Street'],
+                        "city" => $row['City'],
+                        "state" => $row['State'],
+                        "zip" => $row['Zip'],
+                        "lat" => $row['Lat'],
+                        "lon" => $row['Long']
+                    );
+                }
             }
         }
 
@@ -154,9 +167,7 @@ class App
 
     function setSiteFromSiteCode($siteCode)
     {
-        $sql = "SELECT * FROM `siteinfo` where SiteCode = :siteCode";
-        $params = array(':siteCode' => $siteCode);
-        $data = $this->database->getAssoc($sql, $params);
+        $data = $this->getSiteFromSiteCode($siteCode);
 
         // probably serve up a 404
         if (empty($data)) {
@@ -164,6 +175,13 @@ class App
         }
 
         $this->setSite(new Site($data[0]));
+    }
+
+    function getSiteFromSiteCode($siteCode)
+    {
+        $sql = "SELECT * FROM `siteinfo` where SiteCode = :siteCode";
+        $params = array(':siteCode' => $siteCode);
+        return $this->database->getAssoc($sql, $params);
     }
 
     function setSiteFromDomain($domain = '')
@@ -219,6 +237,7 @@ class App
             if (!empty($siteGroupString)) {
                 $siteGroupString .= ', ';
             }
+            $siteCode = trim($siteCode);
             $siteGroupString .= "'$siteCode'";
         }
         return $siteGroupString;
