@@ -73,6 +73,7 @@ foreach($rummages as $k=>$v){
     $rummageList .= '</td><td align="right">';
 	$filter['city'][strtoupper($v['city'])] = true;
 	$filter['sites'][$v['siteCode']] = strtoupper($v['siteName']);
+    $filter['rents'][] = $rent;
     $daysOpen = '';
     if (! empty($v['days'])) {
         foreach($v['days'] as $dayVal) {
@@ -144,6 +145,45 @@ if(empty($_GET['day'])) {
     $dayString = isset($dayArray[$_GET['day']])?$dayArray[$_GET['day']]:'';
     $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'day\')" href="javascript:void(0)">';
     $filterForm .= ' Days - <strong>'.$dayString.'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
+}
+
+if(empty($_GET['bdrooms'])) {
+    if(count($filter['bdrooms']) > 1){
+        $filterForm .= '<div class="btn-group"><button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown">';
+        $filterForm .= ' Min. Bed Rooms <span class="caret"></span></button>';
+        $filterForm .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuPaper">';
+        foreach($filter['bdrooms'] as $k=>$v){
+            $filterForm .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'bdrooms\', \'' . $k . '\')" href="javascript:void(0)">' . $v . '</a></li>';
+        }
+        $filterForm .= '</ul></div>';
+    }
+} else {
+    $bdrooms = isset($dayArray[$_GET['bdrooms']])?$dayArray[$_GET['bdrooms']]:'';
+    $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'bdrooms\')" href="javascript:void(0)">';
+    $filterForm .= ' Min. Bed Rooms - <strong>'.$bdrooms.'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
+}
+
+if (empty($_GET['minrent'])) {
+    if (count($filter['rents']) > 1) {
+        $minRent = min($filter['rents']);
+        $filterForm .= '<div class="input-group"><span class="input-group-addon">$</span><input id="minRent" type="text" class="form-control" aria-label="Amount (to the nearest dollar)" value="' . $minRent . '"><span class="input-group-addon">.00</span></div>';
+    }
+} else {
+    $minrent = isset($dayArray[$_GET['maxrent']])?$dayArray[$_GET['maxrent']]:'';
+    $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'minrent\')" href="javascript:void(0)">';
+    $filterForm .= ' Min. Rent - <strong>'.$minrent.'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
+}
+
+if (empty($_GET['maxrent'])) {
+    if (count($filter['rents']) > 1) {
+        $maxRent = max($filter['rents']);
+
+        $filterForm .= '<div class="input-group"><span class="input-group-addon">$</span><input id="maxRent" type="text" class="form-control" aria-label="Amount (to the nearest dollar)" Value="' . $maxRent . '"><span class="input-group-addon">.00</span></div>';
+    }
+} else {
+    $maxrent = isset($dayArray[$_GET['maxrent']])?$dayArray[$_GET['maxrent']]:'';
+    $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'maxrent\')" href="javascript:void(0)">';
+    $filterForm .= ' Max Rent - <strong>'.$maxrent.'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
 }
 
 $filterLine = '';

@@ -28,7 +28,8 @@ if (isset($argv[1])) {
     $fileArray[1] = $_GET['location'];
 }
 
-function formatTime ($string) {
+function formatTime ($string)
+{
     $string .= ':00:00';
     $timeArray = explode(':',$string);
     return sprintf("%02d:%02d:%02d", $timeArray[0], $timeArray[1], $timeArray[2]);
@@ -59,9 +60,7 @@ function start($parser, $element_name, $element_attrs)
     $state['name'] = $element_name;
     if (count($element_attrs) >= 1) {
         foreach ($element_attrs as $x => $y) {
-
             $state[$x] = $y;
-
         }
     }
 }
@@ -88,45 +87,47 @@ function char($parser, $data)
         return;
     }
 
-    if ($state['name'] == "DCD") {
+    $upperStateName = strtoupper($state['name']);
+
+    if ($upperStateName == "DCD") {
         $site = $state['SITECODE'];
-    }elseif ($state['name'] == "AD") {
+    }elseif ($upperStateName == "AD") {
         $userData[$userCount]["AD"] = $state['ID'];
-    }elseif ($state['name'] == "START-DATE") {
+    }elseif ($upperStateName == "START-DATE") {
         $userData[$userCount]["START-DATE"] .= $data;
-    }elseif ($state['name'] == "END-DATE") {
+    }elseif ($upperStateName == "END-DATE") {
         $userData[$userCount]["END-DATE"] .= $data;
-    }elseif ($state['name'] == "PLACEMENT") {
+    }elseif ($upperStateName == "PLACEMENT") {
         $userData[$userCount]["PLACEMENT"] .= $data;
-    }elseif ($state['name'] == "POSITION") {
+    }elseif ($upperStateName == "POSITION") {
         $userData[$userCount]["POSITION"] .= $data;
-    }elseif ($state['name'] == "AD-TEXT") {
+    }elseif ($upperStateName == "AD-TEXT") {
         $userData[$userCount]["AD-TEXT"] .= $data;
-    }elseif ($state['name'] == "GS_ADDRESS") {
+    }elseif ($upperStateName == "GS_ADDRESS") {
         $userData[$userCount]["STREET"] .= $data;
-    }elseif ($state['name'] == "GS_CITY") {
+    }elseif ($upperStateName == "GS_CITY") {
         $userData[$userCount]["CITY"] .= $data;
-    }elseif ($state['name'] == "GS_STATE") {
+    }elseif ($upperStateName == "GS_STATE") {
         $userData[$userCount]["STATE"] .= $data;
-    }elseif ($state['name'] == "GS_ZIPCODE") {
+    }elseif ($upperStateName == "GS_ZIPCODE") {
         $userData[$userCount]["ZIP"] .= $data;
-    }elseif ($state['name'] == "EXTERNAL_URL") {
+    }elseif ($upperStateName == "EXTERNAL_URL") {
         $userData[$userCount]["EXTERNAL"] .= $data;
-    }elseif ($state['name'] == "MORE_INFORMATION") {
+    }elseif ($upperStateName == "MORE_INFORMATION") {
         $userData[$userCount]["MORE_INFORMATION"] .= $data;
-    }elseif ($state['name'] == "mondaydate") {
+    }elseif ($upperStateName == "MONDAYDATE") {
         $userData[$userCount]['Days'][1] .= $data;
-    }elseif ($state['name'] == "tuesdaydate") {
+    }elseif ($upperStateName == "TUESDAYDATE") {
         $userData[$userCount]['Days'][2] .= $data;
-    }elseif ($state['name'] == "wednesdaydate") {
+    }elseif ($upperStateName == "WEDNESDAYDATE") {
         $userData[$userCount]['Days'][3] .= $data;
-    }elseif ($state['name'] == "thursdaydate") {
+    }elseif ($upperStateName == "THURSDAYDATE") {
         $userData[$userCount]['Days'][4] .= $data;
-    }elseif ($state['name'] == "fridaydate") {
+    }elseif ($upperStateName == "FRIDAYDATE") {
         $userData[$userCount]['Days'][5] .= $data;
-    }elseif ($state['name'] == "saturdaydate") {
+    }elseif ($upperStateName == "SATURDAYDATE") {
         $userData[$userCount]['Days'][6] .= $data;
-    }elseif ($state['name'] == "sundaydate") {
+    }elseif ($upperStateName == "SUNDAYDATE") {
         $userData[$userCount]['Days'][7] .= $data;
     }
 }
