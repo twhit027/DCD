@@ -144,7 +144,7 @@ class App
             if (isset($dataArray['list'][$row['ID']]) && !empty($row['DayOfWeek'])) {
                 $dataArray['list'][$row['ID']]['days'][] = array('dayOfWeek' => trim($row['DayOfWeek']), 'startTime' => trim($row['StartTime']), 'endTime' =>  trim($row['EndTime']));
             } else {
-                $dataArray['list'][$row['ID']] = array('adText' => $row['AdText'], 'siteCode' => $row['SiteCode'], 'siteName' => $row['BusName'], 'city' => trim($row['City']));
+                $dataArray['list'][$row['ID']] = array('adText' => $row['AdText'], 'siteCode' => $row['SiteCode'], 'siteName' => $row['BusName'], 'city' => trim($row['City']), 'rent' => $row['Rent'], 'bdrooms' => $row['BedRooms']);
                 if (!empty($row['DayOfWeek'])) {
                     $dataArray['list'][$row['ID']]['days'][] = array('dayOfWeek' => trim($row['DayOfWeek']), 'startTime' => trim($row['StartTime']), 'endTime' =>  trim($row['EndTime']));
                 }
@@ -441,9 +441,29 @@ class App
         }
 
         // Remove port number from host
-        $host = preg_replace('/:\d+$/', '', $host);
+        $host = strtolower(preg_replace('/:\d+$/', '', $host));
         return trim($host);
     }
+    
+    public static function getHost2()
+    {
+        if (!empty($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+            $elements = explode(',', $_SERVER['HTTP_X_FORWARDED_HOST']);
+            $host = trim(end($elements));
+        } elseif (!empty($_SERVER['HTTP_HOST'])) {
+            $host = $_SERVER['HTTP_HOST'];
+        } elseif (!empty($_SERVER['SERVER_NAME'])) {
+            $host = $_SERVER['SERVER_NAME'];
+        } elseif (!empty($_SERVER['SERVER_ADDR'])) {
+            $host = $_SERVER['SERVER_ADDR'];
+        } else {
+            $host = '';
+        }
+
+        // Remove port number from host
+        $host = strtolower(preg_replace('/:\d+$/', '', $host));
+        return trim($host);
+    }    
 
     function logInfo($logText)
     {

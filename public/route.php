@@ -28,10 +28,12 @@ $address = array(
 $avoidHighways = '';
 $avoidTolls = '';
 $address = json_encode($address);
-if(!empty($_POST['avoidHighways']))
+if(!empty($_POST['avoidHighways'])) {
     $avoidHighways = "DCDMAPGLOBAL.avoidHighways = true;\r\n";
-if(!empty($_POST['avoidTolls']))
+}
+if(!empty($_POST['avoidTolls'])) {
     $avoidTolls = "DCDMAPGLOBAL.avoidTolls = true;\r\n";
+}
 
 $masterBottom = '<script src="js/route.js"></script>';
 

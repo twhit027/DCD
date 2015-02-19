@@ -73,7 +73,8 @@ foreach($rummages as $k=>$v){
     $rummageList .= '</td><td align="right">';
 	$filter['city'][strtoupper($v['city'])] = true;
 	$filter['sites'][$v['siteCode']] = strtoupper($v['siteName']);
-    $filter['rents'][] = $rent;
+    $filter['rents'][$v['rent']] = true;
+    $filter['bdrooms'][$v['bdrooms']] = true;
     $daysOpen = '';
     if (! empty($v['days'])) {
         foreach($v['days'] as $dayVal) {
