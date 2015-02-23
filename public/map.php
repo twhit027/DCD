@@ -42,6 +42,7 @@ $mapPoints = json_encode($listOfRummages['map']);
 $mapArray = $listOfRummages['map'];
 $rummages = $listOfRummages['list'];
 $rummageList = '';
+$rummageList1 = '';
 //$filter = array();
 $filter['days'] = array();
 if(!empty($showcase) && !empty($rummages[$showcase])){
@@ -60,21 +61,31 @@ if(!empty($showcase) && !empty($rummages[$showcase])){
 	$filter['sites'][$rummages[$showcase]['siteCode']] = true;
 	unset($rummages[$showcase]);
 }
+$picInt = 1;
 foreach($rummages as $k=>$v){
-	$rummageList .= "<tr><td><input type='button' value='Add' onclick=\"visit(this,'".$k."');\" class='add btn btn-default' id='".$k."'";
+	$rummageList .= "<tr><td><input title='Add to Route' type='button' value='+' onclick=\"visit(this,'".$k."');\" class='add btn btn-default' id='".$k."'";
     if (! isset($mapArray[$k])) {
         $rummageList .= "disabled='disabled'";
     }
-    $rummageList .=" /></td><td><table><tr><td class='dcd-adText' dcd-id='". $k."' colspan='2'>".$v["adText"]."</td></tr>";
-	$rummageList .= '<tr><td><a href="http://twitter.com/home?status=' . str_replace("&","%26",substr($v["adText"], 0, 120)) . '" target="_blank"><img src="img/twitter-16.png" /></a>&nbsp';
-	$rummageList .= '<a href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $k . '" target="_blank"><img src="img/facebook-16.png" /></a>&nbsp';
-	$rummageList .= '<a href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $k . '" target="_blank"><img src="img/google-plus-16.png" /></a>&nbsp';
-	$rummageList .= '<a href="mailto:?subject='. str_replace("&","%26",substr($v["adText"], 0, 80)) .'&body='. str_replace("&","%26",substr($v["adText"], 0, 120)) .'%0D%0A%0D%0A http://' . $_SERVER['SERVER_NAME'] . '/map.php?place='.urlencode($place).'%26posit='.urlencode($position).'%26ad=' . $k .'" target="_top" id="'.$k.'-gs-mail"><img src="img/social-email-16.png" /></span></a>';
-    $rummageList .= '</td><td align="right">';
+
+    //print_r($v);
+
+    $rummageList .= " />";
+    $rummageList .= '<br /><br /><a style="padding:1px" href="http://twitter.com/home?status=' . str_replace("&","%26",substr($v["adText"], 0, 120)) . '" target="_blank"><img src="img/twitter-16.png" /></a><br />';
+    $rummageList .= '<a style="padding:1px" href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $k . '" target="_blank"><img src="img/facebook-16.png" /></a><br />';
+    $rummageList .= '<a style="padding:1px" href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $k . '" target="_blank"><img src="img/google-plus-16.png" /></a><br />';
+    $rummageList .= '<a style="padding:1px" href="mailto:?subject='. str_replace("&","%26",substr($v["adText"], 0, 80)) .'&body='. str_replace("&","%26",substr($v["adText"], 0, 120)) .'%0D%0A%0D%0A http://' . $_SERVER['SERVER_NAME'] . '/map.php?place='.urlencode($place).'%26posit='.urlencode($position).'%26ad=' . $k .'" target="_top" id="'.$k.'-gs-mail"><img src="img/social-email-16.png" /></span></a></td>';
+    $rummageList .= '<td><img src="/DCD/images/INI/apt'.$picInt++.'-120x120.jpg" alt="http://classifieds-lc.indystar.com/DCD/images/INI/apt1-120x120.jpg" height="120" width="120"></td><td><table>';
+    $rummageList .= "<tr><td style='font-weight: bold;color:blue; font-size: 150%' dcd-id='". $k."' colspan='2'>".$v["street"]."</td></tr>";
+    $rummageList .= "<tr><td style='font-weight: bold;font-size: 120%' dcd-id='". $k."' colspan='2'>email".$v["email"]."</td></tr>";
+    $rummageList .= "<tr><td class='dcd-adText' dcd-id='". $k."' colspan='2'>".$v["adText"]."</td></tr>";
+    $rummageList .= "<tr><td align='right' style='font:bold' dcd-id='". $k."' colspan='2'><a href='#'>Click for full text</a></td></tr>";
+    $rummageList .= '<td align="right">';
 	$filter['city'][strtoupper($v['city'])] = true;
 	$filter['sites'][$v['siteCode']] = strtoupper($v['siteName']);
-    $filter['rents'][$v['rent']] = true;
-    $filter['bdrooms'][$v['bdrooms']] = true;
+    $filter['rents'][$v['rent']] = $v['rent'];
+    $filter['bdrooms'][$v['bdrooms']] = $v['bdrooms'];
+    $filter['bthrooms'][$v['bthrooms']] = $v['bthrooms'];
     $daysOpen = '';
     if (! empty($v['days'])) {
         foreach($v['days'] as $dayVal) {
@@ -86,7 +97,25 @@ foreach($rummages as $k=>$v){
     if (! empty($daysOpen)) {
         $rummageList .= '<strong><small>Days: </small></strong><div class="btn-group btn-group-xs" role="group" aria-label="days">'.$daysOpen.'</div>';
     }
-    $rummageList .= "</td></tr></table></td></tr>";
+    $rummageList .= "</td></tr>";
+    $rummageList .= "</table></td></tr>";
+
+
+    $rummageList1 .= '<div class="row">';
+    $rummageList1 .= '<div class="col-md-3">';
+    $rummageList1 .= '<a href="#">';
+    $rummageList1 .= '<img class="img-responsive" src="http://placehold.it/150x150" alt="" height="150" width="150">';
+    $rummageList1 .= '</a>';
+    $rummageList1 .= '</div>';
+    $rummageList1 .= '<div class="col-md-9">';
+    $rummageList1 .= '<h3>'.$v["street"].'</h3>';
+    $rummageList1 .= '<h4>email'.$v["email"].'</h4>';
+    $rummageList1 .= '<p>'.$v["adText"].'</p>';
+    $rummageList1 .= '<a class="btn btn-primary" href="#">View Listing <span class="glyphicon glyphicon-chevron-right"></span></a>';
+    $rummageList1 .= '</div>';
+    $rummageList1 .= '</div>';
+    $rummageList1 .= '<hr>';
+
 }
 
 $filter['days'] = array_unique($filter['days']);
@@ -97,6 +126,7 @@ if(empty($_GET['city'])) {
         $filterForm .= '<div class="btn-group"><button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuCity" data-toggle="dropdown">';
         $filterForm .= ' City <span class="caret"></span></button>';
         $filterForm .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuCity">';
+        ksort($filter['city']);
         foreach($filter['city'] as $k=>$v){
             $filterForm .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'city\', \'' . $k . '\')" href="javascript:void(0)">' . $k . '</a></li>';
         }
@@ -116,7 +146,7 @@ if(empty($_GET['paper'])) {
         $filterForm .= '<div class="btn-group"><button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown">';
         $filterForm .= ' Newspaper <span class="caret"></span></button>';
         $filterForm .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuPaper">';
-        foreach($filter['sites'] as $k=>$v){
+        foreach ($filter['sites'] as $k=>$v) {
             $filterForm .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'paper\', \'' . $k . '\')" href="javascript:void(0)">' . $v . '</a></li>';
         }
         $filterForm .= '</ul></div>';
@@ -151,8 +181,9 @@ if(empty($_GET['day'])) {
 if(empty($_GET['bdrooms'])) {
     if(count($filter['bdrooms']) > 1){
         $filterForm .= '<div class="btn-group"><button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown">';
-        $filterForm .= ' Min. Bed Rooms <span class="caret"></span></button>';
+        $filterForm .= ' Bed Rooms <span class="caret"></span></button>';
         $filterForm .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuPaper">';
+        ksort($filter['bdrooms']);
         foreach($filter['bdrooms'] as $k=>$v){
             $filterForm .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'bdrooms\', \'' . $k . '\')" href="javascript:void(0)">' . $v . '</a></li>';
         }
@@ -164,33 +195,137 @@ if(empty($_GET['bdrooms'])) {
     $filterForm .= ' Min. Bed Rooms - <strong>'.$bdrooms.'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
 }
 
+if(empty($_GET['bthrooms'])) {
+    if(count($filter['bthrooms']) > 1){
+        $filterForm .= '&nbsp;&nbsp;<div class="btn-group"><button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown">';
+        $filterForm .= ' Bath Rooms <span class="caret"></span></button>';
+        $filterForm .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuPaper">';
+        ksort($filter['bthrooms']);
+        foreach($filter['bthrooms'] as $k=>$v){
+            $filterForm .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'bthrooms\', \'' . $k . '\')" href="javascript:void(0)">' . $v . '</a></li>';
+        }
+        $filterForm .= '</ul></div>';
+    }
+} else {
+    $bthrooms = isset($dayArray[$_GET['bthrooms']])?$dayArray[$_GET['bthrooms']]:'';
+    $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'bthrooms\')" href="javascript:void(0)">';
+    $filterForm .= ' Bath Rooms - <strong>'.$bthrooms.'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
+}
+
+if(count($filter['rents']) > 2) {
+    $minRent = min($filter['rents']);
+    $maxRent = max($filter['rents']);
+    $halfRent = ceil($maxRent / 2) . '.00';
+
+    $newRent = array(
+        $minRent => $minRent,
+        $halfRent => $halfRent,
+        $maxRent => $maxRent
+    );
+
+    if(count($filter['rents']) > 3) {
+        $quarterRent = ceil($maxRent / 4) . '.00';
+        $threeQuarterRent = ($halfRent + $quarterRent) . '.00';
+        $newRent[$quarterRent] = $quarterRent;
+        $newRent[$threeQuarterRent] = $threeQuarterRent;
+        ksort($newRent);
+    }
+}
+
 if (empty($_GET['minrent'])) {
-    if (count($filter['rents']) > 1) {
-        $minRent = min($filter['rents']);
-        $filterForm .= '<div class="input-group"><span class="input-group-addon">$</span><input id="minRent" type="text" class="form-control" aria-label="Amount (to the nearest dollar)" value="' . $minRent . '"><span class="input-group-addon">.00</span></div>';
+    if(count($filter['rents']) > 2){
+        $filterForm .= '<div class="btn-group"><button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuMinRent" data-toggle="dropdown">';
+        $filterForm .= ' Min. Rent <span class="caret"></span></button>';
+        $filterForm .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuPaper">';
+        foreach($newRent as $k=>$v){
+            $filterForm .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'minrent\', \'' . $k . '\')" href="javascript:void(0)">' . $v . '</a></li>';
+        }
+        $filterForm .= '</ul></div>';
     }
 } else {
     $minrent = isset($dayArray[$_GET['maxrent']])?$dayArray[$_GET['maxrent']]:'';
-    $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'minrent\')" href="javascript:void(0)">';
+    $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuMinRent" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'minrent\')" href="javascript:void(0)">';
     $filterForm .= ' Min. Rent - <strong>'.$minrent.'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
 }
 
 if (empty($_GET['maxrent'])) {
-    if (count($filter['rents']) > 1) {
-        $maxRent = max($filter['rents']);
-
-        $filterForm .= '<div class="input-group"><span class="input-group-addon">$</span><input id="maxRent" type="text" class="form-control" aria-label="Amount (to the nearest dollar)" Value="' . $maxRent . '"><span class="input-group-addon">.00</span></div>';
+    if(count($filter['rents']) > 2){
+        $filterForm .= '<div class="btn-group"><button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuMaxRent" data-toggle="dropdown">';
+        $filterForm .= ' Max. Rent <span class="caret"></span></button>';
+        $filterForm .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuPaper">';
+        foreach($newRent as $k=>$v){
+            $filterForm .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'maxrent\', \'' . $k . '\')" href="javascript:void(0)">' . $v . '</a></li>';
+        }
+        $filterForm .= '</ul></div>';
     }
 } else {
     $maxrent = isset($dayArray[$_GET['maxrent']])?$dayArray[$_GET['maxrent']]:'';
-    $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'maxrent\')" href="javascript:void(0)">';
-    $filterForm .= ' Max Rent - <strong>'.$maxrent.'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
+    $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuMaxRent" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'maxrent\')" href="javascript:void(0)">';
+    $filterForm .= ' Max. Rent - <strong>'.$maxrent.'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
 }
 
 $filterLine = '';
 if (!empty($filterForm)) {
     $filterLine = '<div><label>Filter by:&nbsp;</label>'.$filterForm.'</div>';
 }
+
+$routPanelForm = <<<EOS
+<div>
+    <div class="panel panel-default">
+	    <div class="panel-heading">
+					<h3 class="panel-title">Map Route</h3>
+					<span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+        </div>
+        <div class="panel-body">
+            <form action="route.php" method="post" onsubmit="mapRoute();" class="form-horizontal" role="form">
+                <input type="hidden" name="place" value="$place" />
+                <input type="hidden" name="posit" value="$position" />
+                <input type="hidden" id="locations" name="locations" value="" />
+                <h5><strong>Please enter a starting address and select up to 8 places to visit, then click on 'Map Route'.</strong></h5>
+                <div id="map-it">
+                    <div class="form-group">
+                        <label for="Address" class="col-sm-2 control-label">Address</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="address" class="form-control" id="Address" placeholder="Address">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="City" class="col-sm-2 control-label">City</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="city" class="form-control" id="City" placeholder="City">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Zip" class="col-sm-2 control-label">Zip</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="zip" class="form-control" id="Zip" placeholder="Zip">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <div class="checkbox-inline">
+                                <label>
+                                    <input type="checkbox" value="true" name="avoidHighways"> Avoid Highways
+                                </label>
+                            </div>
+                            <div class="checkbox-inline">
+                                <label>
+                                    <input type="checkbox" value="true" name="avoidTolls"> Avoid Tolls
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" id="dcd-route" class="btn btn-default">Map Route</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+EOS;
 
 $masterBottom = '<script src="js/rummage.js"></script>';
 
@@ -220,55 +355,11 @@ $data = <<<EOS
 	<div id="dcd-map-container"></div>
 </div>
 <br>
-<form action="route.php" method="post" onsubmit="mapRoute();" class="form-horizontal" role="form">
-	<input type="hidden" name="place" value="$place" />
-	<input type="hidden" name="posit" value="$position" />
-	<input type="hidden" id="locations" name="locations" value="" />
-	<h4>Please enter a starting address and select up to 8 places to visit, then click on 'Map Route'.</h4>
-	<div id="map-it">
-		<div class="form-group">
-			<label for="Address" class="col-sm-2 control-label">Address</label>
-			<div class="col-sm-10">
-				<input type="text" name="address" class="form-control" id="Address" placeholder="Address">
-			</div>
-		</div>
-		<div class="form-group">
-			<label for="City" class="col-sm-2 control-label">City</label>
-			<div class="col-sm-10">
-				<input type="text" name="city" class="form-control" id="City" placeholder="City">
-			</div>
-		</div>
-		<div class="form-group">
-			<label for="Zip" class="col-sm-2 control-label">Zip</label>
-			<div class="col-sm-10">
-				<input type="text" name="zip" class="form-control" id="Zip" placeholder="Zip">
-			</div>
-		</div>
-		<div class="form-group">
-			<div class="col-sm-offset-2 col-sm-10">
-				<div class="checkbox-inline">
-					<label>
-						<input type="checkbox" value="true" name="avoidHighways"> Avoid Highways
-					</label>
-				</div>
-				<div class="checkbox-inline">
-					<label>
-						<input type="checkbox" value="true" name="avoidTolls"> Avoid Tolls
-					</label>
-				</div>
-			</div>
-		</div>
-		<div class="form-group">
-			<div class="col-sm-offset-2 col-sm-10">
-				<button type="submit" id="dcd-route" class="btn btn-default">Map Route</button>
-			</div>
-		</div>
-	</div>
+$routPanelForm
 	<p><strong>Click or Tap on any entry to find on the map.</strong></p>
 	<table class="table table-striped">
-		$rummageList
+		$rummageList1
 	</table>
-</form>
 EOS;
 
 $mainContent = <<<EOS

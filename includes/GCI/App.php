@@ -144,7 +144,7 @@ class App
             if (isset($dataArray['list'][$row['ID']]) && !empty($row['DayOfWeek'])) {
                 $dataArray['list'][$row['ID']]['days'][] = array('dayOfWeek' => trim($row['DayOfWeek']), 'startTime' => trim($row['StartTime']), 'endTime' =>  trim($row['EndTime']));
             } else {
-                $dataArray['list'][$row['ID']] = array('adText' => $row['AdText'], 'siteCode' => $row['SiteCode'], 'siteName' => $row['BusName'], 'city' => trim($row['City']), 'rent' => $row['Rent'], 'bdrooms' => $row['BedRooms']);
+                $dataArray['list'][$row['ID']] = array('adText' => $row['AdText'], 'siteCode' => $row['SiteCode'], 'siteName' => $row['BusName'], 'city' => trim($row['City']), 'rent' => $row['Rent'], 'bdrooms' => $row['BedRooms'], 'bthrooms' => $row['BathRooms'], 'email' => $row['Email'], 'street' => $row['Street']);
                 if (!empty($row['DayOfWeek'])) {
                     $dataArray['list'][$row['ID']]['days'][] = array('dayOfWeek' => trim($row['DayOfWeek']), 'startTime' => trim($row['StartTime']), 'endTime' =>  trim($row['EndTime']));
                 }
@@ -413,7 +413,7 @@ class App
 
     public function getSingleListing($id)
     {
-        $sql = "SELECT ID, AdText, SiteCode, Placement, Position, Images FROM `listing` where ID = :id";
+        $sql = "SELECT ID, AdText, SiteCode, Placement, Position, Images, Street, City, State FROM `listing` where ID = :id";
         $params = array(':id' => $id);
         $results = $this->database->getAssoc($sql, $params);
 
@@ -423,6 +423,9 @@ class App
         $retArray['placement'] = $results[0]['Placement'];
         $retArray['position'] = $results[0]['Position'];
         $retArray['images'] = $results[0]['Images'];
+        $retArray['street'] = $results[0]['Street'];
+        $retArray['state'] = $results[0]['State'];
+        $retArray['city'] = $results[0]['City'];
 
         return $retArray;
     }
