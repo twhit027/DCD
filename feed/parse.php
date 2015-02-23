@@ -111,22 +111,22 @@ function char($parser, $data)
     }elseif ($state['name'] == "GS_ZIPCODE") {
         $userData[$userCount]["ZIP"] .= $data;
     }elseif ($state['name'] == "EXTERNAL_URL") {
-        $userData[$userCount]["EXTERNAL"] .= $data;
+        $userData[$userCount]["EXTERNAL_URL"] .= $data;
     }elseif ($state['name'] == "MORE_INFORMATION") {
         $userData[$userCount]["MORE_INFORMATION"] .= $data;
-    }elseif ($state['name'] == "mondaydate") {
+    }elseif ($state['name'] == "MONDAYDATE") {
         $userData[$userCount]['Days'][1] .= $data;
-    }elseif ($state['name'] == "tuesdaydate") {
+    }elseif ($state['name'] == "TUESDAYDATE") {
         $userData[$userCount]['Days'][2] .= $data;
-    }elseif ($state['name'] == "wednesdaydate") {
+    }elseif ($state['name'] == "WEDNESDAYDATE") {
         $userData[$userCount]['Days'][3] .= $data;
-    }elseif ($state['name'] == "thursdaydate") {
+    }elseif ($state['name'] == "THURSDAYDATE") {
         $userData[$userCount]['Days'][4] .= $data;
-    }elseif ($state['name'] == "fridaydate") {
+    }elseif ($state['name'] == "FRIDAYDATE") {
         $userData[$userCount]['Days'][5] .= $data;
-    }elseif ($state['name'] == "saturdaydate") {
+    }elseif ($state['name'] == "SATURDAYDATE") {
         $userData[$userCount]['Days'][6] .= $data;
-    }elseif ($state['name'] == "sundaydate") {
+    }elseif ($state['name'] == "SUNDAYDATE") {
         $userData[$userCount]['Days'][7] .= $data;
     }
 }
@@ -174,8 +174,8 @@ class ClassifiedsAdmin extends PDO
             if (empty($userData[$i]["ZIP"])) {
                 $userData[$i]["ZIP"] = '';
             }
-            if (empty($userData[$i]["EXTERNAL"])) {
-                $userData[$i]["EXTERNAL"] = '';
+            if (empty($userData[$i]["EXTERNAL_URL"])) {
+                $userData[$i]["EXTERNAL_URL"] = '';
             }
             if (empty($userData[$i]["MORE_INFORMATION"])) {
                 $userData[$i]["MORE_INFORMATION"] = '';
@@ -217,7 +217,7 @@ class ClassifiedsAdmin extends PDO
 
             try {
                 $stmt = $this->prepare("INSERT INTO `listing` (`ID`, `StartDate`, `EndDate`, `Placement`,`Position`, `AdText`, `Images`, `SiteCode`, `Street`, `City`, `State`, `Zip`, `ExternalURL`, `MoreInfo`) VALUES(:ID, :StartDate, :EndDate, :Placement, :Position, :AdText, :Images, :Site, :Street, :City, :State, :Zip, :ExternalURL, :MoreInfo)");
-                $stmt->execute(array(':ID' => $userData[$i]["AD"], ':StartDate' => $userData[$i]["START-DATE"], ':EndDate' => $userData[$i]["END-DATE"], ':Placement' => $userData[$i]["PLACEMENT"], ':Position' => $userData[$i]["POSITION"], ':AdText' => $userData[$i]["AD-TEXT"], ':Images'=> $imagesCSV,':Site' => $site, ':Street' => $userData[$i]["STREET"], ':City' => $userData[$i]["CITY"], ':State' => $userData[$i]["STATE"], ':Zip' => $userData[$i]["ZIP"], ':ExternalURL' => $userData[$i]["EXTERNAL"], ':MoreInfo' => $userData[$i]["MORE_INFORMATION"]));
+                $stmt->execute(array(':ID' => $userData[$i]["AD"], ':StartDate' => $userData[$i]["START-DATE"], ':EndDate' => $userData[$i]["END-DATE"], ':Placement' => $userData[$i]["PLACEMENT"], ':Position' => $userData[$i]["POSITION"], ':AdText' => $userData[$i]["AD-TEXT"], ':Images'=> $imagesCSV,':Site' => $site, ':Street' => $userData[$i]["STREET"], ':City' => $userData[$i]["CITY"], ':State' => $userData[$i]["STATE"], ':Zip' => $userData[$i]["ZIP"], ':ExternalURL' => $userData[$i]["EXTERNAL_URL"], ':MoreInfo' => $userData[$i]["MORE_INFORMATION"]));
                 $inserted++;
             } catch (PDOException $e) {
                 $logText = "Message:(" . $e->getMessage() . ") attempting to insert listing (" . $userData[$i]["AD"] . ") into the database";
