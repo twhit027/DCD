@@ -260,9 +260,11 @@ class App
                     @$categoriesArray[$row['Placement']][$row['Position']]['count'] += $row['Count'];
                     @$categoriesArray[$row['Placement']][$row['Position']]['url'] = $row['ExternalURL'];
                 }
-            } else if (!isset($categoriesArray[$row['Placement']][$row['Position']]['url']) || ($row['ExternalURL'] == 1)) {
+            } else {
                 @$categoriesArray[$row['Placement']][$row['Position']]['count'] += $row['Count'];
-                @$categoriesArray[$row['Placement']][$row['Position']]['url'] = $row['ExternalURL'];
+                if (!isset($categoriesArray[$row['Placement']][$row['Position']]['url']) || ($row['ExternalURL'] == 1)) {
+                    @$categoriesArray[$row['Placement']][$row['Position']]['url'] = $row['ExternalURL'];
+                }
             }
         }
 
