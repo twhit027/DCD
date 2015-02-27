@@ -86,6 +86,7 @@ $siteCode = $app->getSite()->getSiteCode();
 $busName = $app->getSite()->getBusName();
 $siteTopData = $app->getSite()->getTopLinks();
 $siteBottomData = $app->getSite()->getBottomLinks();
+$siteClassUrl = $app->getSite()->getUrl();
 
 $siteState = $app->getSite()->getSiteState();
 $siteCity = $app->getSite()->getSiteCity();
@@ -450,7 +451,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
 
         <h3>Easily find your next rental home, apartment, townhome or condo.</h3>
         <a style="margin-bottom:25px;"
-           href="http://classifieds.greenbaypressgazette.com/category.php?place=Rentals&posit=Apartments+for+Rent "
+           href="http://<?php echo "$siteClassUrl"; ?>/category.php?place=Rentals"
            class="btn btn-primary btn-lg">
             <span style="font-weight:bolder;font-size:24px;">Search Here</span> for Local listings</a>
     </div>
