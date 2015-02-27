@@ -120,6 +120,27 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
     <meta name="twitter:description" content="search for apartments"/>
     <meta name="twitter:image" content="img/header.png"/>
 
+    <link rel="shortcut icon" href="img/ico/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="img/ico/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="img/ico/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="img/ico/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="img/ico/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="img/ico/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="img/ico/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="img/ico/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="img/ico/apple-touch-icon-152x152.png">
+    <link rel="icon" type="image/png" href="img/ico/favicon-196x196.png" sizes="196x196">
+    <link rel="icon" type="image/png" href="img/ico/favicon-160x160.png" sizes="160x160">
+    <link rel="icon" type="image/png" href="img/ico/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="img/ico/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="img/ico/favicon-32x32.png" sizes="32x32">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="css/apartments.css">
+
     <title>Rentals</title>
 
     <!-- Just for debugging purposes. Don't actually copy this line! -->
@@ -415,11 +436,6 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
 </head>
 
 <body>
-<link rel="icon" href="http://wisinfo.biz/gpg/favicon.png">
-<link rel="stylesheet" type="text/css" href="http://wisinfo.biz/shared/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" href="css/apartments.css">
-<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-<script src="http://wisinfo.biz/shared/bootstrap.min.js"></script>
 <header role="banner" class="navbar navbar-inverse bs-docs-nav">
     <div class="container">
         <?php echo $nav->getTopNavigation($siteUrl, $palette, $siteName, $siteTopData, $imgSiteName); ?>
@@ -505,6 +521,10 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
 </div>
 
 </div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="3rdParty/jquery/jquery.min.js"><\/script>')</script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
 <script language="JavaScript" type="text/javascript">
     var s_account = "gpaper186"
