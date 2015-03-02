@@ -178,7 +178,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
         <h3>Easily find your next rental home, apartment, townhome or condo.</h3>
         <a style="margin-bottom:25px;"
            href="http://<?php echo "$siteClassUrl"; ?>/category.php?place=Rentals"
-           class="btn btn-primary btn-lg">
+           class="btn btn-primary btn-lg btn-responsive">
             <span style="font-weight:bolder;font-size:24px;">Search Here</span> for Local listings</a>
     </div>
     <div class="col-md-1">&nbsp;</div>
