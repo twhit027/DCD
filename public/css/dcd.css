@@ -1,3 +1,24 @@
+body {
+    min-width: 10px !important;
+}
+
+.gallery {
+    display: inline-block;
+    margin-top: 20px;
+}
+
+.header {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAA3NCSVQICAjb4U/gAAAAJFBMVEX///9wcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHDRPAkXAAAADHRSTlMAESIziJmqu8zd7v+91kxoAAAACXBIWXMAAAsSAAALEgHS3X78AAAAFnRFWHRDcmVhdGlvbiBUaW1lADIxLzEyLzEymvNa/wAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNui8sowAAAArSURBVAiZY2DAB1iaoAy2XQZQVvRiKIMVLlQ9AU0EpoZjhwLUnEa81iABAFHzB8GYPzdNAAAAAElFTkSuQmCC");
+    background-repeat: no-repeat;
+}
+
+.content {
+    border: 2px solid #ccc;
+    width: 300px;
+    height: 100px;
+    overflow-y: scroll;
+}
+
 .footlinks ul {
     display: inline;
     list-style: none outside none;
