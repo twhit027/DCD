@@ -45,7 +45,7 @@ class Navigation
         return $data;
     }
 
-    function getTopNavigation($siteUrl, $paletteNumber = '', $siteName = '', $siteData = '', $imgSiteName = '')
+    function getTopNavigation($siteUrl, $paletteNumber = '', $siteName = '', $siteData = '', $imgSiteName = '', $wrap=true, $includeImage=true)
     {
         $top = $bottom = $border = '';
         if (!empty($paletteNumber)&& $paletteNumber < 90) {
@@ -86,9 +86,11 @@ class Navigation
                 }</style>';
         }
 
-        $data .= '<nav id="grad" role="navigation" class="collapse navbar-collapse bs-navbar-collapse top-navbar"><ul class="nav navbar-nav">';
+        $data .= '<ul class="nav navbar-nav">';
 
-        $data .=  '<li style="height:40px"><a style="margin:5px;padding:0;" href="'.$siteUrl.'/"><img style="height:40px" class="img-responsive" src="'.$siteImage.'"/></a></li>';
+        if ($includeImage) {
+            $data .= '<li style="height:40px"><a style="margin:5px;padding:0;" href="' . $siteUrl . '/"><img style="height:40px" class="img-responsive" src="' . $siteImage . '"/></a></li>';
+        }
 
         //$data .= '<li style="height:40px"><a href="'.$siteUrl.'/" style="margin:0;padding:0;"><img style="padding-top:10px;height:40px" src="'.$siteImage.'"/></a></li>';
 
@@ -96,7 +98,11 @@ class Navigation
             $data .= '<li><a href="'.$linkHref.'">'.$linkName.'</a></li>';
         }
 
-        $data .= '</ul></nav>';
+        $data .= '</ul>';
+
+        if ($wrap) {
+            $data .= '<nav id="grad" role="navigation" class="collapse navbar-collapse bs-navbar-collapse top-navbar">' . $data . '</nav>';
+        }
 
         return $data;
     }
