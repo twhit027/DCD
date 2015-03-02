@@ -47,7 +47,7 @@ class Navigation
 
     function getTopNavigation($siteUrl, $paletteNumber = '', $siteName = '', $siteData = '', $imgSiteName = '', $wrap=true, $includeImage=true)
     {
-        $top = $bottom = $border = '';
+        $top = $bottom = $border = $data = '';
         if (!empty($paletteNumber)&& $paletteNumber < 90) {
             $top = \GCI\site::$paletteArray[$paletteNumber]['top'];
             $bottom = \GCI\site::$paletteArray[$paletteNumber]['bottom'];
@@ -73,8 +73,6 @@ class Navigation
         if (!empty($siteData)) {
             $siteLinks = json_decode($siteData, true);
         }
-
-        $data = '';
 
         if (!empty($top) && !empty($bottom) && !empty($border)) {
             $data .= '<style>.navbar-inverse {
