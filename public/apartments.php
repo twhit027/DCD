@@ -81,6 +81,12 @@ $siteClassUrl = $app->getSite()->getUrl();
 $siteState = $app->getSite()->getSiteState();
 $siteCity = $app->getSite()->getSiteCity();
 
+if (empty($imgSiteName)) {
+    $siteImage = "http://www.gannett-cdn.com/sites/$siteName/images/site-nav-logo@2x.png";
+} else {
+    $siteImage = "http://www.gannett-cdn.com/sites/$imgSiteName/images/site-nav-logo@2x.png";
+}
+
 $qString = "http://www.apartments.com/search/?query=$siteCity,%20$siteState&stype=CityStateOrZip&frontdoor=$siteCity&partner=$siteCity&rentmin=0&rentmax=99999";
 
 if ($palette > 89 && empty($siteBottomData)) {
@@ -98,7 +104,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- for Google -->
-    <meta name="description" content="Win free tickets to this free contest"/>
+    <meta name="description" content="search for rentals"/>
     <meta name="keywords" content="Rentals"/>
     <meta name="author" content="Gannett Media"/>
     <!-- for Facebook -->
@@ -106,11 +112,11 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
     <meta property="og:type" content="article"/>
     <meta property="og:image" content="apartments/img/header.png"/>
     <meta property="og:url" content="apartments/"/>
-    <meta property="og:description" content="Win free tickets to this free contest"/>
+    <meta property="og:description" content="search for rentals"/>
     <!-- for Twitter -->
     <meta name="twitter:card" content="summary"/>
     <meta name="twitter:title" content="Rentals"/>
-    <meta name="twitter:description" content="search for apartments"/>
+    <meta name="twitter:description" content="search for rentals"/>
     <meta name="twitter:image" content="img/header.png"/>
 
     <link rel="shortcut icon" href="img/ico/favicon-16x16.png">
@@ -130,8 +136,8 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="msapplication-TileImage" content="/mstile-144x144.png">
 
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
     <link rel="stylesheet" type="text/css" href="css/apartments.css">
 
     <title><?php echo $siteName; ?> Rentals</title>
@@ -145,13 +151,25 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
 </head>
-
 <body>
-<header role="banner" class="navbar navbar-inverse bs-docs-nav">
+<!-- Fixed navbar -->
+<nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
     <div class="container">
-        <?php echo $nav->getTopNavigation($siteUrl, $palette, $siteName, $siteTopData, $imgSiteName); ?>
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" style="margin: 0; padding: 0;" href="#"><img style="height: 45px;" class="img-responsive" src="<?php echo $siteImage; ?>" /></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+        <?php echo $nav->getTopNavigation($siteUrl, $palette, $siteName, $siteTopData, $imgSiteName, false, false); ?>
+        </div>
     </div>
-</header>
+</nav>
+<!-- Fixed navbar end-->
 
 <div class="container main">
     <div class="col-md-5 col-lg-6 border">
@@ -221,7 +239,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="3rdParty/jquery/jquery.min.js"><\/script>')</script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 <script src="js/apartments.js"></script>
 
 <?php include("../includes/tracking.php"); ?>
