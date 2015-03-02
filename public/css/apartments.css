@@ -1,15 +1,12 @@
-
 .navbar-brand
 {
     margin-right:5px;
 }
 .navone {
     background-color: rgb(0, 155, 255)!important;
-
 }
 .navone a{
     color: #fff!important;
-
 }
 .navtwo a:hover{
     background-color: rgb(0, 155, 255)!important;
@@ -35,7 +32,6 @@
 .navnine a:hover{
     background-color:rgb(247, 96, 31)!important;
 }
-
 .leftside
 {
     background-color:#003D6F;
@@ -55,8 +51,6 @@
     background-color:#1D1D1D;
     height: 420px;
 }
-
-
 .col-md-8, .col-md-7
 {
     padding-left:0px!important;
@@ -84,7 +78,6 @@
 {
     padding-left:10px;
 }
-
 .front-headlines-header
 {
     background: none repeat scroll 0 0 #F2F2F2;
@@ -94,7 +87,6 @@
     padding: 10px 20px 9px;
 
 }
-
 .subsection-links  a
 {
     color: #004074;
@@ -106,19 +98,14 @@
     margin-left: 0px!important;
     margin-right: 0px!important;
 }
-
-
 body{
     background: url(../img/couch.jpg) center center no-repeat;
 }
-
-
 .jumbotron {
     background-color: #005288 !important;
     margin-top: 100px;
     min-height: 300px;
 }
-
 .starter-template
 {
     padding: 60px 15px;
@@ -127,11 +114,9 @@ body{
 .jumbotron h3, .jumbotron h2, .jumbotron h4, .jumbotron h1 {
     color: #FFFFFF !important;
 }
-
 .main{
-    margin-top: 100px;
+    margin-top: 45px;
 }
-
 .border{
     background-color:#fff;
     border-radius: 10px;

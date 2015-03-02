@@ -153,7 +153,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
 </head>
 <body>
 <!-- Fixed navbar -->
-<nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
+<nav class="navbar navbar-default navbar-inverse navbar-static-top">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -162,7 +162,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" style="margin: 0; padding: 0;" href="#"><img style="height: 45px;" class="img-responsive" src="<?php echo $siteImage; ?>" /></a>
+            <a class="navbar-brand" style="margin: 0; padding: 0px 10px;" href="#"><img style="height: 45px;" class="img-responsive" src="<?php echo $siteImage; ?>" /></a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
         <?php echo $nav->getTopNavigation($siteUrl, $palette, $siteName, $siteTopData, $imgSiteName, false, false); ?>
