@@ -15,6 +15,7 @@
  */
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 include(__DIR__ . '/../conf/constants.php');
+include(__DIR__.'/../conf/tagMap.php');
 
 $userCount = $return = 0;
 $userData = array();
@@ -28,9 +29,10 @@ if (isset($argv[1])) {
     $fileArray[1] = $_GET['location'];
 }
 
-function formatTime ($string) {
+function formatTime($string)
+{
     $string .= ':00:00';
-    $timeArray = explode(':',$string);
+    $timeArray = explode(':', $string);
     return sprintf("%02d:%02d:%02d", $timeArray[0], $timeArray[1], $timeArray[2]);
 }
 
@@ -59,9 +61,7 @@ function start($parser, $element_name, $element_attrs)
     $state['name'] = $element_name;
     if (count($element_attrs) >= 1) {
         foreach ($element_attrs as $x => $y) {
-
             $state[$x] = $y;
-
         }
     }
 }
@@ -83,51 +83,34 @@ function char($parser, $data)
     global $userData;
     global $state;
     global $site;
+    global $tagMapArray;
 
     if (empty($state)) {
         return;
     }
 
-    if ($state['name'] == "DCD") {
+    $upperStateName = strtoupper($state['name']);
+
+    $jsonTagsArray = array(
+        'AMENITIES','DEPOSIT','EXERCISEREC','COMMFEAT'
+    );
+
+    if ($upperStateName == "DCD") {
         $site = $state['SITECODE'];
-    }elseif ($state['name'] == "AD") {
+    } elseif ($upperStateName == "AD") {
         $userData[$userCount]["AD"] = $state['ID'];
-    }elseif ($state['name'] == "START-DATE") {
-        $userData[$userCount]["START-DATE"] .= $data;
-    }elseif ($state['name'] == "END-DATE") {
-        $userData[$userCount]["END-DATE"] .= $data;
-    }elseif ($state['name'] == "PLACEMENT") {
-        $userData[$userCount]["PLACEMENT"] .= $data;
-    }elseif ($state['name'] == "POSITION") {
-        $userData[$userCount]["POSITION"] .= $data;
-    }elseif ($state['name'] == "AD-TEXT") {
-        $userData[$userCount]["AD-TEXT"] .= $data;
-    }elseif ($state['name'] == "GS_ADDRESS") {
-        $userData[$userCount]["STREET"] .= $data;
-    }elseif ($state['name'] == "GS_CITY") {
-        $userData[$userCount]["CITY"] .= $data;
-    }elseif ($state['name'] == "GS_STATE") {
-        $userData[$userCount]["STATE"] .= $data;
-    }elseif ($state['name'] == "GS_ZIPCODE") {
-        $userData[$userCount]["ZIP"] .= $data;
-    }elseif ($state['name'] == "EXTERNAL_URL") {
-        $userData[$userCount]["EXTERNAL_URL"] .= $data;
-    }elseif ($state['name'] == "MORE_INFORMATION") {
-        $userData[$userCount]["MORE_INFORMATION"] .= $data;
-    }elseif ($state['name'] == "MONDAYDATE") {
-        $userData[$userCount]['Days'][1] .= $data;
-    }elseif ($state['name'] == "TUESDAYDATE") {
-        $userData[$userCount]['Days'][2] .= $data;
-    }elseif ($state['name'] == "WEDNESDAYDATE") {
-        $userData[$userCount]['Days'][3] .= $data;
-    }elseif ($state['name'] == "THURSDAYDATE") {
-        $userData[$userCount]['Days'][4] .= $data;
-    }elseif ($state['name'] == "FRIDAYDATE") {
-        $userData[$userCount]['Days'][5] .= $data;
-    }elseif ($state['name'] == "SATURDAYDATE") {
-        $userData[$userCount]['Days'][6] .= $data;
-    }elseif ($state['name'] == "SUNDAYDATE") {
-        $userData[$userCount]['Days'][7] .= $data;
+    } elseif (isset($tagMapArray[$upperStateName]) || array_key_exists($upperStateName, $tagMapArray)) {
+        if (strstr($tagMapArray[$upperStateName], ':') !== false) {
+            $tags = explode(':', $tagMapArray[$upperStateName]);
+            //foreach($tags as $tagsKey) {}
+            $userData[$userCount][$tags[0]][$tags[1]] = $data;
+        } else {
+            if (in_array($tagMapArray[$upperStateName], $jsonTagsArray)) {
+                $userData[$userCount][$tagMapArray[$upperStateName]][] = $data;
+            } else {
+                $userData[$userCount][$tagMapArray[$upperStateName]] .= $data;
+            }
+        }
     }
 }
 
@@ -181,7 +164,7 @@ class ClassifiedsAdmin extends PDO
                 $userData[$i]["MORE_INFORMATION"] = '';
             }
 
-            $imagesCSV ='';
+            $imagesCSV = '';
             if (!empty($userData[$i]["AD-TEXT"])) {
                 //get all img tags
                 $regexp = '/<img[^>]*src="(.*?)"[^>]*>/i';
@@ -216,8 +199,25 @@ class ClassifiedsAdmin extends PDO
             }
 
             try {
-                $stmt = $this->prepare("INSERT INTO `listing` (`ID`, `StartDate`, `EndDate`, `Placement`,`Position`, `AdText`, `Images`, `SiteCode`, `Street`, `City`, `State`, `Zip`, `ExternalURL`, `MoreInfo`) VALUES(:ID, :StartDate, :EndDate, :Placement, :Position, :AdText, :Images, :Site, :Street, :City, :State, :Zip, :ExternalURL, :MoreInfo)");
-                $stmt->execute(array(':ID' => $userData[$i]["AD"], ':StartDate' => $userData[$i]["START-DATE"], ':EndDate' => $userData[$i]["END-DATE"], ':Placement' => $userData[$i]["PLACEMENT"], ':Position' => $userData[$i]["POSITION"], ':AdText' => $userData[$i]["AD-TEXT"], ':Images'=> $imagesCSV,':Site' => $site, ':Street' => $userData[$i]["STREET"], ':City' => $userData[$i]["CITY"], ':State' => $userData[$i]["STATE"], ':Zip' => $userData[$i]["ZIP"], ':ExternalURL' => $userData[$i]["EXTERNAL_URL"], ':MoreInfo' => $userData[$i]["MORE_INFORMATION"]));
+                $stmt = $this->prepare("INSERT INTO `listing` (`ID`,`StartDate`,`EndDate`,`Placement`,`Position`,`AdText`,`Images`,`SiteCode`,`Street`,`City`,`State`,`Zip`,`ExternalURL`,`MoreInfo`,`Rent`,`Amenities`,`BathRooms`,`BedRooms`,`Deposit`,`Email`,`Pets`,`Phone`,`ExerciseRec`,`CommFeat`,`Neighborhood`,`Parking`,`PropType` ) VALUES(:ID, :StartDate, :EndDate, :Placement, :Position, :AdText, :Images, :Site, :Street, :City, :State, :Zip, :ExternalURL, :MoreInfo, :Rent, :Amenities, :BathRooms, :BedRooms, :Deposit, :Email, :Pets, :Phone, :ExerciseRec, :CommFeat, :Neighborhood, :Parking, :PropType)");
+                $stmt->execute(array(':ID' => $userData[$i]["AD"], ':StartDate' => $userData[$i]["START-DATE"], ':EndDate' => $userData[$i]["END-DATE"], ':Placement' => $userData[$i]["PLACEMENT"], ':Position' => $userData[$i]["POSITION"], ':AdText' => $userData[$i]["AD-TEXT"], ':Images' => $imagesCSV, ':Site' => $site, ':Street' => $userData[$i]["STREET"], ':City' => $userData[$i]["CITY"], ':State' => $userData[$i]["STATE"], ':Zip' => $userData[$i]["ZIP"], ':ExternalURL' => $userData[$i]["EXTERNAL_URL"], ':MoreInfo' => $userData[$i]["MORE_INFORMATION"],
+                    ':Rent' => $userData[$i]["RENT"],
+                    ':Amenities' => json_encode($userData[$i]["AMENITIES"]),
+                    ':BathRooms' => $userData[$i]["BATHROOMS"],
+                    ':BedRooms' => $userData[$i]["BEDROOMS"],
+                    ':Deposit' => json_encode($userData[$i]["DEPOSIT"]),
+                    ':Email' => $userData[$i]["EMAIL"],
+                    ':Pets' => $userData[$i]["PETS"],
+                    ':Phone' => $userData[$i]["PHONE"],
+                    ':ExerciseRec' => json_encode($userData[$i]["EXERCISEREC"]),
+                    ':CommFeat' => json_encode($userData[$i]["COMMFEAT"]),
+                    ':Neighborhood' => $userData[$i]["NEIGHBORHOOD"],
+                    ':Parking' => $userData[$i]["PARKING"],
+                    ':PropType' => $userData[$i]["PROPTYPE"]
+                ));
+
+                //$stmt = $this->prepare("INSERT INTO `listing` (`ID`,`StartDate`,`EndDate`,`Placement`,`Position`,`AdText`,`Images`,`SiteCode`,`Street`,`City`,`State`,`Zip`,`ExternalURL`,`MoreInfo`) VALUES(:ID, :StartDate, :EndDate, :Placement, :Position, :AdText, :Images, :Site, :Street, :City, :State, :Zip, :ExternalURL, :MoreInfo)");
+                //$stmt->execute(array(':ID' => $userData[$i]["AD"], ':StartDate' => $userData[$i]["START-DATE"], ':EndDate' => $userData[$i]["END-DATE"], ':Placement' => $userData[$i]["PLACEMENT"], ':Position' => $userData[$i]["POSITION"], ':AdText' => $userData[$i]["AD-TEXT"], ':Images'=> $imagesCSV,':Site' => $site, ':Street' => $userData[$i]["STREET"], ':City' => $userData[$i]["CITY"], ':State' => $userData[$i]["STATE"], ':Zip' => $userData[$i]["ZIP"], ':ExternalURL' => $userData[$i]["EXTERNAL_URL"], ':MoreInfo' => $userData[$i]["MORE_INFORMATION"]));
                 $inserted++;
             } catch (PDOException $e) {
                 $logText = "Message:(" . $e->getMessage() . ") attempting to insert listing (" . $userData[$i]["AD"] . ") into the database";
@@ -226,7 +226,7 @@ class ClassifiedsAdmin extends PDO
             }
 
             if (isset($userData[$i]["Days"])) {
-                foreach($userData[$i]["Days"] as $dayOfWeek => $timeOfDay) {
+                foreach ($userData[$i]["Days"] as $dayOfWeek => $timeOfDay) {
                     $date = $startTime = $endTime = '';
                     list($startTime, $endTime) = explode('-', $timeOfDay);
                     try {
@@ -388,18 +388,18 @@ class ClassifiedsAdmin extends PDO
             $latlon = $this->getLocation($address);
 
             if ($latlon === false) {
-				$latlon['lat'] = '';
-				$latlon['lon'] = '';
+                $latlon['lat'] = '';
+                $latlon['lon'] = '';
             }
-			
-			try {
-				$stmt = $this->prepare("UPDATE `listing` SET `Lat` = :lat, `Long` = :lon, `ExternalURL` = '1' WHERE `ID` = :id ");
-				$stmt->execute(array(":lat" => $latlon['lat'], ":lon" => $latlon['lon'], ":id" => $row['ID']));
-			} catch (PDOException $e) {
-				$logText = "Message:(" . $e->getMessage() . ") Updating listing, adding Long and Lat for ".$row['ID'];
-				fwrite(STDERR, $logText . "\n");
-				$return = 14;
-			}
+
+            try {
+                $stmt = $this->prepare("UPDATE `listing` SET `Lat` = :lat, `Long` = :lon, `ExternalURL` = '1' WHERE `ID` = :id ");
+                $stmt->execute(array(":lat" => $latlon['lat'], ":lon" => $latlon['lon'], ":id" => $row['ID']));
+            } catch (PDOException $e) {
+                $logText = "Message:(" . $e->getMessage() . ") Updating listing, adding Long and Lat for " . $row['ID'];
+                fwrite(STDERR, $logText . "\n");
+                $return = 14;
+            }
 
             //Slow this down so we don't run into problems with Google's Geocoding limits
             sleep(1);
@@ -411,7 +411,7 @@ $user = new ClassifiedsAdmin();
 
 foreach ($fileArray as $file) {
     if ($useSimple) {
-        $adData = simplexml_load_file($file,'SimpleXMLElement', LIBXML_NOCDATA);
+        $adData = simplexml_load_file($file, 'SimpleXMLElement', LIBXML_NOCDATA);
         if (!empty($adData)) {
             $user->insertListingsSimple($adData);
         }
@@ -423,6 +423,7 @@ foreach ($fileArray as $file) {
         parseXMLFile($file);
 
         if ($userCount > 0) {
+            print_r($userData);
             $user->insertListings();
         }
     }
@@ -433,4 +434,3 @@ $user->updateGeocodes();
 $user->buildNav();
 
 exit($return);
-?>
