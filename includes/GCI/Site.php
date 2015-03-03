@@ -110,6 +110,14 @@ class Site {
     public function getSiteGroup() {
         return $this->siteGroup;
     }
+
+    public function getSiteCity() {
+        return $this->city;
+    }
+
+    public function getSiteState() {
+        return $this->state;
+    }
 	
 	public function getDFP() {
         return $this->dfp;

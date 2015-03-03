@@ -10,6 +10,8 @@ include('../includes/GCI/Ads.php');
 
 $app = new \GCI\App();
 
+$busName = $app->getSite()->getBusName();
+
 $app->logInfo('Category Page(FORWARDED_FOR: ' . @$_SERVER['HTTP_X_FORWARDED_FOR'] . ', REMOTE_ADDR: ' . @$_SERVER['REMOTE_ADDR'] . ',HTTP_HOST: ' . @$_SERVER['HTTP_HOST'] . 'SERVER_NAME: ' . @$_SERVER['SERVER_NAME'] . ')');
 
 //$content = new Content();
@@ -39,6 +41,13 @@ $search = "";
 $listings = $app->getListings($placement, $position, $page, $siteGroup, $fullText, $radius);
 
 $pagination = "";
+
+$metadata = '
+<title>'.$busName.' Classifieds Listings</title>
+<meta name="description" content="category listing page for '.$busName.'" />
+<meta itemprop="name" content="category listing page">
+<meta itemprop="description" content="category listing page for '.$busName.'">';
+
 if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
     $total_pages = $listings['totalRows'];
     // How many adjacent pages should be shown on each side?
