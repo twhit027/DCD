@@ -262,7 +262,9 @@ class App
                 }
             } else {
                 @$categoriesArray[$row['Placement']][$row['Position']]['count'] += $row['Count'];
-                @$categoriesArray[$row['Placement']][$row['Position']]['url'] = $row['ExternalURL'];
+                if (!isset($categoriesArray[$row['Placement']][$row['Position']]['url']) || ($row['ExternalURL'] == 1)) {
+                    @$categoriesArray[$row['Placement']][$row['Position']]['url'] = $row['ExternalURL'];
+                }
             }
         }
 

@@ -157,8 +157,8 @@ class ClassifiedsAdmin extends PDO
             if (empty($userData[$i]["ZIP"])) {
                 $userData[$i]["ZIP"] = '';
             }
-            if (empty($userData[$i]["EXTERNAL"])) {
-                $userData[$i]["EXTERNAL"] = '';
+            if (empty($userData[$i]["EXTERNAL_URL"])) {
+                $userData[$i]["EXTERNAL_URL"] = '';
             }
             if (empty($userData[$i]["MORE_INFORMATION"])) {
                 $userData[$i]["MORE_INFORMATION"] = '';
@@ -215,6 +215,9 @@ class ClassifiedsAdmin extends PDO
                     ':Parking' => $userData[$i]["PARKING"],
                     ':PropType' => $userData[$i]["PROPTYPE"]
                 ));
+                //CMP
+                $stmt = $this->prepare("INSERT INTO `listing` (`ID`, `StartDate`, `EndDate`, `Placement`,`Position`, `AdText`, `Images`, `SiteCode`, `Street`, `City`, `State`, `Zip`, `ExternalURL`, `MoreInfo`) VALUES(:ID, :StartDate, :EndDate, :Placement, :Position, :AdText, :Images, :Site, :Street, :City, :State, :Zip, :ExternalURL, :MoreInfo)");
+                $stmt->execute(array(':ID' => $userData[$i]["AD"], ':StartDate' => $userData[$i]["START-DATE"], ':EndDate' => $userData[$i]["END-DATE"], ':Placement' => $userData[$i]["PLACEMENT"], ':Position' => $userData[$i]["POSITION"], ':AdText' => $userData[$i]["AD-TEXT"], ':Images'=> $imagesCSV,':Site' => $site, ':Street' => $userData[$i]["STREET"], ':City' => $userData[$i]["CITY"], ':State' => $userData[$i]["STATE"], ':Zip' => $userData[$i]["ZIP"], ':ExternalURL' => $userData[$i]["EXTERNAL_URL"], ':MoreInfo' => $userData[$i]["MORE_INFORMATION"]));
                 $inserted++;
             } catch (PDOException $e) {
                 $logText = "Message:(" . $e->getMessage() . ") attempting to insert listing (" . $userData[$i]["AD"] . ") into the database";
