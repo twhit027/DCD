@@ -200,7 +200,7 @@ class ClassifiedsAdmin extends PDO
 
             try {
                 $stmt = $this->prepare("INSERT INTO `listing` (`ID`,`StartDate`,`EndDate`,`Placement`,`Position`,`AdText`,`Images`,`SiteCode`,`Street`,`City`,`State`,`Zip`,`ExternalURL`,`MoreInfo`,`Rent`,`Amenities`,`BathRooms`,`BedRooms`,`Deposit`,`Email`,`Pets`,`Phone`,`ExerciseRec`,`CommFeat`,`Neighborhood`,`Parking`,`PropType` ) VALUES(:ID, :StartDate, :EndDate, :Placement, :Position, :AdText, :Images, :Site, :Street, :City, :State, :Zip, :ExternalURL, :MoreInfo, :Rent, :Amenities, :BathRooms, :BedRooms, :Deposit, :Email, :Pets, :Phone, :ExerciseRec, :CommFeat, :Neighborhood, :Parking, :PropType)");
-                $stmt->execute(array(':ID' => $userData[$i]["AD"], ':StartDate' => $userData[$i]["START-DATE"], ':EndDate' => $userData[$i]["END-DATE"], ':Placement' => $userData[$i]["PLACEMENT"], ':Position' => $userData[$i]["POSITION"], ':AdText' => $userData[$i]["AD-TEXT"], ':Images' => $imagesCSV, ':Site' => $site, ':Street' => $userData[$i]["STREET"], ':City' => $userData[$i]["CITY"], ':State' => $userData[$i]["STATE"], ':Zip' => $userData[$i]["ZIP"], ':ExternalURL' => $userData[$i]["EXTERNAL"], ':MoreInfo' => $userData[$i]["MORE_INFORMATION"],
+                $stmt->execute(array(':ID' => $userData[$i]["AD"], ':StartDate' => $userData[$i]["START-DATE"], ':EndDate' => $userData[$i]["END-DATE"], ':Placement' => $userData[$i]["PLACEMENT"], ':Position' => $userData[$i]["POSITION"], ':AdText' => $userData[$i]["AD-TEXT"], ':Images' => $imagesCSV, ':Site' => $site, ':Street' => $userData[$i]["STREET"], ':City' => $userData[$i]["CITY"], ':State' => $userData[$i]["STATE"], ':Zip' => $userData[$i]["ZIP"], ':ExternalURL' => $userData[$i]["EXTERNAL_URL"], ':MoreInfo' => $userData[$i]["MORE_INFORMATION"],
                     ':Rent' => $userData[$i]["RENT"],
                     ':Amenities' => json_encode($userData[$i]["AMENITIES"]),
                     ':BathRooms' => $userData[$i]["BATHROOMS"],
@@ -215,9 +215,9 @@ class ClassifiedsAdmin extends PDO
                     ':Parking' => $userData[$i]["PARKING"],
                     ':PropType' => $userData[$i]["PROPTYPE"]
                 ));
-                //CMP
-                $stmt = $this->prepare("INSERT INTO `listing` (`ID`, `StartDate`, `EndDate`, `Placement`,`Position`, `AdText`, `Images`, `SiteCode`, `Street`, `City`, `State`, `Zip`, `ExternalURL`, `MoreInfo`) VALUES(:ID, :StartDate, :EndDate, :Placement, :Position, :AdText, :Images, :Site, :Street, :City, :State, :Zip, :ExternalURL, :MoreInfo)");
-                $stmt->execute(array(':ID' => $userData[$i]["AD"], ':StartDate' => $userData[$i]["START-DATE"], ':EndDate' => $userData[$i]["END-DATE"], ':Placement' => $userData[$i]["PLACEMENT"], ':Position' => $userData[$i]["POSITION"], ':AdText' => $userData[$i]["AD-TEXT"], ':Images'=> $imagesCSV,':Site' => $site, ':Street' => $userData[$i]["STREET"], ':City' => $userData[$i]["CITY"], ':State' => $userData[$i]["STATE"], ':Zip' => $userData[$i]["ZIP"], ':ExternalURL' => $userData[$i]["EXTERNAL_URL"], ':MoreInfo' => $userData[$i]["MORE_INFORMATION"]));
+
+                //$stmt = $this->prepare("INSERT INTO `listing` (`ID`,`StartDate`,`EndDate`,`Placement`,`Position`,`AdText`,`Images`,`SiteCode`,`Street`,`City`,`State`,`Zip`,`ExternalURL`,`MoreInfo`) VALUES(:ID, :StartDate, :EndDate, :Placement, :Position, :AdText, :Images, :Site, :Street, :City, :State, :Zip, :ExternalURL, :MoreInfo)");
+                //$stmt->execute(array(':ID' => $userData[$i]["AD"], ':StartDate' => $userData[$i]["START-DATE"], ':EndDate' => $userData[$i]["END-DATE"], ':Placement' => $userData[$i]["PLACEMENT"], ':Position' => $userData[$i]["POSITION"], ':AdText' => $userData[$i]["AD-TEXT"], ':Images'=> $imagesCSV,':Site' => $site, ':Street' => $userData[$i]["STREET"], ':City' => $userData[$i]["CITY"], ':State' => $userData[$i]["STATE"], ':Zip' => $userData[$i]["ZIP"], ':ExternalURL' => $userData[$i]["EXTERNAL_URL"], ':MoreInfo' => $userData[$i]["MORE_INFORMATION"]));
                 $inserted++;
             } catch (PDOException $e) {
                 $logText = "Message:(" . $e->getMessage() . ") attempting to insert listing (" . $userData[$i]["AD"] . ") into the database";
