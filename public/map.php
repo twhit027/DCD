@@ -79,7 +79,7 @@ foreach($rummages as $k=>$v){
     $rummageList .= "<tr><td style='font-weight: bold;color:blue; font-size: 150%' dcd-id='". $k."' colspan='2'>".$v["street"]."</td></tr>";
     $rummageList .= "<tr><td style='font-weight: bold;font-size: 120%' dcd-id='". $k."' colspan='2'>email".$v["email"]."</td></tr>";
     $rummageList .= "<tr><td class='dcd-adText' dcd-id='". $k."' colspan='2'>".$v["adText"]."</td></tr>";
-    $rummageList .= "<tr><td align='right' style='font:bold' dcd-id='". $k."' colspan='2'><a href='#'>Click for full text</a></td></tr>";
+    $rummageList .= "<tr><td align='right' style='font-weight: bold;' dcd-id='". $k."' colspan='2'><a href='#'>Click for full text</a></td></tr>";
     $rummageList .= '<td align="right">';
 	$filter['city'][strtoupper($v['city'])] = true;
 	$filter['sites'][$v['siteCode']] = strtoupper($v['siteName']);
