@@ -28,9 +28,18 @@ $siteCode = $app->getSite()->getSiteCode();
 $busName = $app->getSite()->getBusName();
 $siteTopData = $app->getSite()->getTopLinks();
 $siteBottomData = $app->getSite()->getBottomLinks();
+$device = $app->getDeviceType();
+
+if (empty($imgSiteName)) {
+    $siteImage = "http://www.gannett-cdn.com/sites/$siteName/images/site-nav-logo@2x.png";
+} else {
+    $siteImage = "http://www.gannett-cdn.com/sites/$imgSiteName/images/site-nav-logo@2x.png";
+}
+
 if ($palette > 89 && empty($siteBottomData)) {
     $siteBottomData = $siteTopData;
 }
+
 $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
 ?>
 <!DOCTYPE html>
@@ -60,40 +69,20 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="msapplication-TileImage" content="/mstile-144x144.png">
 
-    <style type="text/css">
-        body {
-            min-width: 10px !important;
-        }
 
-        .gallery {
-            display: inline-block;
-            margin-top: 20px;
-        }
-
-        .header {
-            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAA3NCSVQICAjb4U/gAAAAJFBMVEX///9wcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHDRPAkXAAAADHRSTlMAESIziJmqu8zd7v+91kxoAAAACXBIWXMAAAsSAAALEgHS3X78AAAAFnRFWHRDcmVhdGlvbiBUaW1lADIxLzEyLzEymvNa/wAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNui8sowAAAArSURBVAiZY2DAB1iaoAy2XQZQVvRiKIMVLlQ9AU0EpoZjhwLUnEa81iABAFHzB8GYPzdNAAAAAElFTkSuQmCC");
-            background-repeat: no-repeat;
-        }
-
-        .content {
-            border: 2px solid #ccc;
-            width: 300px;
-            height: 100px;
-            overflow-y: scroll;
-        }
-    </style>
-
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
-    <?php if (!empty($googleApiScript)) {
-        echo $googleApiScript;
-    } ?>
+    <?php
+        if (!empty($googleApiScript)) {
+            echo $googleApiScript;
+        }
+    ?>
     <link type="text/css" href="css/dcd.css" rel="stylesheet">
 </head>
 <body>
@@ -101,7 +90,6 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
 <div class="browser-warning-container">
     <div class="browser-warning">
         <h2 class="heading">oops!</h2>
-
         <p>
             It appears that your version of Internet Explorer is out of date.<br>
             <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a
@@ -111,17 +99,34 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
     </div>
 </div>
 <![endif]-->
-<header role="banner" class="navbar navbar-inverse bs-docs-nav">
+
+<header role="banner" class="navbar navbar-default navbar-inverse navbar-static-top">
     <div class="container">
-        <?php echo $nav->getTopNavigation($siteUrl, $palette, $siteName, $siteTopData, $imgSiteName); ?>
-        <nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse side-navbar ">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#side-navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle sidebar</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" style="margin: 0; padding: 0px 10px;" href="#"><img style="height: 45px;" class="img-responsive" src="<?php echo $siteImage; ?>" /></a>
+        </div>
+        <?php echo $ads->InitializeAds($app->getSite()->getDFP(), $app->getSite()->getDFPmobile()); ?>
+        <div id="navbar" class="navbar-collapse collapse">
+            <?php echo $nav->getTopNavigation($siteUrl, $palette, $siteName, $siteTopData, $imgSiteName, false, false); ?>
+        </div>
+        <nav id="side-navbar" role="navigation" class="collapse navbar-collapse bs-navbar-collapse side-navbar ">
             <div class="visible-xs">
                 <h3 style="color:#3276B1;">Search Our Classifieds</h3>
-
                 <div class="alert alert-danger" style="display: none;" id="searchAlert1"></div>
                 <div class="input-group">
-                    <input id="fullTextBox1" type="text" name="search" class="form-control"
-                           value="<?php echo $fullText; ?>">
+                    <input id="fullTextBox1" type="text" name="search" class="form-control" value="<?php echo $fullText; ?>">
                         <span class="input-group-btn">
                             <button id="ftSearchbtn1" class="btn btn-primary" type="button">
                                 <img src="img/white-magnifying-glass-20.png">
@@ -129,9 +134,8 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                         </span>
                 </div>
                 <div class="filter" style="color: white;">
-                    <input type="checkbox" id="allSites1"
-                           value="" <?php if (strtolower($siteGroup) == 'all') echo 'checked="checked"'; ?> /> Search
-                    Across All Sites
+                    <input type="checkbox" id="allSites1" value="" <?php if (strtolower($siteGroup) == 'all') echo 'checked="checked"'; ?> />
+                    Search Across All Sites
                     <div id="radius1" style="<?php if (strtolower($siteGroup) != 'all') echo 'display: none;'; ?>">
                         Limit Search Radius:
                         <select id="radSelect1" style="color:black">
@@ -154,24 +158,10 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                 </ul>
             </div>
         </nav>
-        <div class="navbar-header">
-            <button data-target=".side-navbar" data-toggle="collapse" class="navbar-toggle" type="button">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <button data-target=".top-navbar" data-toggle="collapse" class="navbar-toggle" type="button">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-        </div>
-        <?php echo $ads->InitializeAds($app->getSite()->getDFP(), $app->getSite()->getDFPmobile()); ?>
     </div>
 </header>
 <div>
     <?php
-    $device = $app->getDeviceType();
     if ($device == "computer") {
         echo $ads->getLaunchpad();
     } else if ($device == "phone") {
@@ -249,7 +239,7 @@ if ($device == "computer") {
 </footer>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="3rdParty/jquery/jquery.min.js"><\/script>')</script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 <script>
     function getDistance(lat1, lat2, lon1, lon2) {
         //var R = 6371; // km
