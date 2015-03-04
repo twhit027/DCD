@@ -172,68 +172,70 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
 <!-- Fixed navbar end-->
 
 <div class="container main">
-    <div class="col-md-5 col-lg-6 border">
-        <img class="img-responsive" src="img/rental.png">
-        <h1>Check out Rentals in Your Area.</h1>
-        <h3>Easily find your next rental home, apartment, townhome or condo.</h3>
-        <a style="margin-bottom:25px;"
-           href="http://<?php echo "$siteClassUrl"; ?>/category.php?place=Rentals"
-           class="btn btn-primary btn-lg btn-responsive">
-            <span style="font-weight:bolder;font-size:24px;">Search Here</span> for Local listings</a>
-    </div>
-    <div class="col-md-1">&nbsp;</div>
-    <div class="col-xs-8 col-sm-6 col-md-5 col-lg-4 border">
-        <a href="http://www.apartments.com/">
-            <img src="img/apartments.jpg" alt="APARTMENTS.COM" width="80%" height="80%"/>
-        </a>
-        <form name="qs" onSubmit="return deterLoad();">
-            <div style="margin-top:10px;" id="apts_form_area">
-                <div class="field_col_1 input-group">
-                    <input name="city" type="text" size="20" id="city" class="apts form-control input-lg" tabindex="1" placeholder="City or ZIP"/>
-                    <input src="img/btn_search.gif" onclick="return deterLoader()" type="image" tabindex="8">
-                </div>
-                <input name="zip" type="text" size="6" class="apts  input-lg" tabindex="3" style="display:none"/>
-                <div class="field_col_1">
-                    <p class="form_label">State:</p>
-                    <select name="state" class="apts form-control" tabindex="2">
-                        <?php
-                        foreach ($us_state_abbrevs_names as $abbrevs => $names) {
-                            $stateOpt = '<option value="'.$abbrevs.'" ';
-                            if (strtoupper($siteState) == $names) {$stateOpt .=  'selected="selected"';}
-                            $stateOpt .= ">$abbrevs</option>";
+    <div class="row">
+        <div class="col-md-5 col-lg-6 border">
+            <img class="img-responsive" src="img/rental.png">
+            <h1>Check out Rentals in Your Area.</h1>
+            <h3>Easily find your next rental home, apartment, townhome or condo.</h3>
+            <a style="margin-bottom:25px;"
+               href="http://<?php echo "$siteClassUrl"; ?>/category.php?place=Rentals"
+               class="btn btn-primary btn-lg btn-responsive">
+                <span style="font-weight:bolder;font-size:24px;">Search Here</span> for Local listings</a>
+        </div>
+        <div class="col-md-1">&nbsp;</div>
+        <div class="col-xs-8 col-sm-6 col-md-5 col-lg-4 border">
+            <a href="http://www.apartments.com/">
+                <img src="img/apartments.jpg" alt="APARTMENTS.COM" width="80%" height="80%"/>
+            </a>
+            <form name="qs" onSubmit="return deterLoad();">
+                <div style="margin-top:10px;" id="apts_form_area">
+                    <div class="field_col_1 input-group">
+                        <input name="city" type="text" id="city" class="apts form-control input-lg" tabindex="1" placeholder="City or ZIP"/>
+                        <input src="img/btn_search.gif" onclick="return deterLoader()" type="image" tabindex="8">
+                    </div>
+                    <input name="zip" type="text" size="6" class="apts  input-lg" tabindex="3" style="display:none"/>
+                    <div class="field_col_1">
+                        <p class="form_label">State:</p>
+                        <select name="state" class="apts form-control" tabindex="2">
+                            <?php
+                            foreach ($us_state_abbrevs_names as $abbrevs => $names) {
+                                $stateOpt = '<option value="'.$abbrevs.'" ';
+                                if (strtoupper($siteState) == $names) {$stateOpt .=  'selected="selected"';}
+                                $stateOpt .= ">$abbrevs</option>";
 
-                            echo $stateOpt;
-                        }
-                        ?>
-                    </select>
+                                echo $stateOpt;
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div style="display:none" class="field_col_3">
+                        <p class="form_label">Radius:</p>
+                        <select name="rad" class="apts" tabindex="4">
+                            <option value="0" selected="selected">Any</option>
+                            <option value="5">5 miles</option>
+                            <option value="10">10 miles</option>
+                            <option value="20">20 miles</option>
+                        </select>
+                    </div>
+                    <div style="display:none" class="field_col_4">
+                        <p class="form_label">Beds:</p>
+                        <select name="bedrooms" class="apts" tabindex="7">
+                            <option value="" selected="selected">Any</option>
+                            <option value="studio">Studio</option>
+                            <option value="onebdrm">1</option>
+                            <option value="twobdrm">2</option>
+                            <option value="threebdrm">3</option>
+                            <option value="fourbdrm">4</option>
+                            <option value="fivebdrm">5</option>
+                        </select>
+                    </div>
+                    <div class="clear"></div>
+                    <div class="aptQuickLinks field_col_1">
+                        <strong>Quick Link:</strong> <a target="_blank" href="<?php echo $qString; ?>"><?php echo $siteCity; ?></a>
+                    </div>
                 </div>
-                <div style="display:none" class="field_col_3">
-                    <p class="form_label">Radius:</p>
-                    <select name="rad" class="apts" tabindex="4">
-                        <option value="0" selected="selected">Any</option>
-                        <option value="5">5 miles</option>
-                        <option value="10">10 miles</option>
-                        <option value="20">20 miles</option>
-                    </select>
-                </div>
-                <div style="display:none" class="field_col_4">
-                    <p class="form_label">Beds:</p>
-                    <select name="bedrooms" class="apts" tabindex="7">
-                        <option value="" selected="selected">Any</option>
-                        <option value="studio">Studio</option>
-                        <option value="onebdrm">1</option>
-                        <option value="twobdrm">2</option>
-                        <option value="threebdrm">3</option>
-                        <option value="fourbdrm">4</option>
-                        <option value="fivebdrm">5</option>
-                    </select>
-                </div>
-                <div class="clear"></div>
-                <div class="aptQuickLinks field_col_1">
-                    <strong>Quick Link:</strong> <a target="_blank" href="<?php echo $qString; ?>"><?php echo $siteCity; ?></a>
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 
