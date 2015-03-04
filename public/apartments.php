@@ -162,7 +162,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" style="margin: 0; padding: 0px 10px;" href="#"><img alt="Gannett" style="height: 45px;" class="img-responsive" src="<?php echo $siteImage; ?>" /></a>
+            <a class="navbar-brand" style="margin: 0; padding: 0px 10px;" href="<?php echo $siteUrl; ?>"><img alt="Gannett" style="height: 45px;" class="img-responsive" src="<?php echo $siteImage; ?>" /></a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
         <?php echo $nav->getTopNavigation($siteUrl, $palette, $siteName, $siteTopData, $imgSiteName, false, false); ?>
