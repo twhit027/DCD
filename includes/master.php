@@ -69,43 +69,6 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="msapplication-TileImage" content="/mstile-144x144.png">
 
-    <style type="text/css">
-        body {
-            min-width: 10px !important;
-        }
-
-        .gallery {
-            display: inline-block;
-            margin-top: 20px;
-        }
-
-        .header {
-            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAA3NCSVQICAjb4U/gAAAAJFBMVEX///9wcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHDRPAkXAAAADHRSTlMAESIziJmqu8zd7v+91kxoAAAACXBIWXMAAAsSAAALEgHS3X78AAAAFnRFWHRDcmVhdGlvbiBUaW1lADIxLzEyLzEymvNa/wAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNui8sowAAAArSURBVAiZY2DAB1iaoAy2XQZQVvRiKIMVLlQ9AU0EpoZjhwLUnEa81iABAFHzB8GYPzdNAAAAAElFTkSuQmCC");
-            background-repeat: no-repeat;
-        }
-
-        .content {
-            border: 2px solid #ccc;
-            width: 300px;
-            height: 100px;
-            overflow-y: scroll;
-        }
-
-
-         .panel-heading span {
-             margin-top: -20px;
-             font-size: 15px;
-         }
-        .row {
-            margin-top: 40px;
-            padding: 0 10px;
-        }
-        .clickable {
-            cursor: pointer;
-        }
-
-    </style>
-
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
@@ -127,7 +90,6 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
 <div class="browser-warning-container">
     <div class="browser-warning">
         <h2 class="heading">oops!</h2>
-
         <p>
             It appears that your version of Internet Explorer is out of date.<br>
             <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a
@@ -336,7 +298,6 @@ if ($device == "computer") {
     }
 
     $(document).ready(function () {
-
         $('.panel-heading span.clickable').on("click", function (e) {
             if ($(this).hasClass('panel-collapsed')) {
                 // expand the panel
