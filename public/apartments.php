@@ -173,7 +173,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
 
 <div class="container main">
     <div class="row">
-        <div class="col-md-5 col-lg-6 border">
+        <div class="col-md-6 col-lg-7 border">
             <img alt="Rentals" class="img-responsive" src="img/rental.png">
             <h1>Check out Rentals in Your Area.</h1>
             <h3>Easily find your next rental home, apartment, townhome or condo.</h3>
