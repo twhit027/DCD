@@ -107,20 +107,22 @@ function visit(obj, id){
 	
 	var bool = false;
 	if(obj.classList.contains("add") && locations.selected < 8){
-		obj.classList.remove("add");
-		obj.classList.add("remove");
 		locations.selected++;
 		locations.list.push(id);
-		obj.value = "Remove";
+        var $el = $(obj);
+        $el.toggleClass('add remove')
+        $el.find('span').toggleClass('glyphicon-plus glyphicon-minus');
+        $el.prop('title', 'Remove from Route');
 		//document.getElementById('num-of-locations').innerHTML = locations.selected;
 		bool = true;
 	}
 	else if(obj.classList.contains("remove")){
-		obj.classList.remove("remove");
-		obj.classList.add("add");
 		locations.selected--;
 		locations.list.splice(locations.list.indexOf(id),1);
-		obj.value = "Add";
+        var $el = $(obj);
+        $el.toggleClass('remove add')
+        $el.find('span').toggleClass('glyphicon-minus glyphicon-plus');
+        $el.prop('title', 'Add to Route');
 		//document.getElementById('num-of-locations').innerHTML = locations.selected;
 	}
 	else{
