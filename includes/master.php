@@ -115,7 +115,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" style="margin: 0; padding: 0px 10px;" href="#"><img style="height: 45px;" class="img-responsive" src="<?php echo $siteImage; ?>" /></a>
+            <a class="navbar-brand" style="margin: 0; padding: 0px 10px;" href="<?php echo $siteUrl; ?>"><img style="height: 45px;" class="img-responsive" src="<?php echo $siteImage; ?>" /></a>
         </div>
         <?php echo $ads->InitializeAds($app->getSite()->getDFP(), $app->getSite()->getDFPmobile()); ?>
         <div id="navbar" class="navbar-collapse collapse">
