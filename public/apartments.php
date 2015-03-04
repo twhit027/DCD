@@ -87,7 +87,7 @@ if (empty($imgSiteName)) {
     $siteImage = "http://www.gannett-cdn.com/sites/$imgSiteName/images/site-nav-logo@2x.png";
 }
 
-$qString = "http://www.apartments.com/search/?query=$siteCity,%20$siteState&stype=CityStateOrZip&frontdoor=$siteCity&partner=$siteCity&rentmin=0&rentmax=99999";
+$qString = "http://www.apartments.com/search/?query=$siteCity,%20$siteState&amp;stype=CityStateOrZip&amp;frontdoor=$siteCity&amp;partner=$siteCity&amp;rentmin=0&amp;rentmax=99999";
 
 if ($palette > 89 && empty($siteBottomData)) {
     $siteBottomData = $siteTopData;
@@ -162,7 +162,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" style="margin: 0; padding: 0px 10px;" href="#"><img style="height: 45px;" class="img-responsive" src="<?php echo $siteImage; ?>" /></a>
+            <a class="navbar-brand" style="margin: 0; padding: 0px 10px;" href="#"><img alt="Gannett" style="height: 45px;" class="img-responsive" src="<?php echo $siteImage; ?>" /></a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
         <?php echo $nav->getTopNavigation($siteUrl, $palette, $siteName, $siteTopData, $imgSiteName, false, false); ?>
@@ -173,8 +173,8 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
 
 <div class="container main">
     <div class="row">
-        <div class="col-md-5 col-lg-6 border">
-            <img class="img-responsive" src="img/rental.png">
+        <div class="col-md-6 col-lg-7 border">
+            <img alt="Rentals" class="img-responsive" src="img/rental.png">
             <h1>Check out Rentals in Your Area.</h1>
             <h3>Easily find your next rental home, apartment, townhome or condo.</h3>
             <a style="margin-bottom:25px;"
@@ -185,13 +185,13 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
         <div class="col-md-1">&nbsp;</div>
         <div class="col-xs-8 col-sm-6 col-md-5 col-lg-4 border">
             <a href="http://www.apartments.com/">
-                <img src="img/apartments.jpg" alt="APARTMENTS.COM" width="80%" height="80%"/>
+                <img src="img/apartments.jpg" alt="APARTMENTS.COM" width="80%" />
             </a>
             <form name="qs" onSubmit="return deterLoad();">
                 <div style="margin-top:10px;" id="apts_form_area">
                     <div class="field_col_1 input-group">
                         <input name="city" type="text" id="city" class="apts form-control input-lg" tabindex="1" placeholder="City or ZIP"/>
-                        <input src="img/btn_search.gif" onclick="return deterLoader()" type="image" tabindex="8">
+                        <input alt="Search" src="img/btn_search.gif" onclick="return deterLoader()" type="image" tabindex="8">
                     </div>
                     <input name="zip" type="text" size="6" class="apts  input-lg" tabindex="3" style="display:none"/>
                     <div class="field_col_1">
