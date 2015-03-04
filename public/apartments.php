@@ -190,7 +190,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
             <form name="qs" onSubmit="return deterLoad();">
                 <div style="margin-top:10px;" id="apts_form_area">
                     <div class="field_col_1 input-group">
-                        <input name="city" type="text" id="city" class="apts form-control input-lg" tabindex="1" placeholder="City or ZIP"/>
+                        <input name="city" type="text" id="city" class="apts form-control input-group-lg" tabindex="1" placeholder="City or ZIP"/>
                         <input alt="Search" src="img/btn_search.gif" onclick="return deterLoader()" type="image" tabindex="8">
                     </div>
                     <input name="zip" type="text" size="6" class="apts  input-lg" tabindex="3" style="display:none"/>
