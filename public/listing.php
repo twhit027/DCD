@@ -51,6 +51,7 @@ $mapArray = $listOfRummages['map'];
 $rummages = $listOfRummages['list'];
 $rummageList = '';
 $rummageList1 = '';
+$rummageList2 = '';
 //$filter = array();
 $filter['days'] = array();
 if(!empty($showcase) && !empty($rummages[$showcase])){
@@ -67,24 +68,23 @@ if(!empty($showcase) && !empty($rummages[$showcase])){
 	$filter['sites'][$rummages[$showcase]['siteCode']] = true;
 	unset($rummages[$showcase]);
 }
+
 $picInt = 1;
 foreach($rummages as $k=>$v) {
-	$rummageList .= "<tr><td><input title='Add to Route' type='button' value='+' onclick=\"visit(this,'".$k."');\" class='add btn btn-default' id='".$k."'";
-    if (! isset($mapArray[$k])) {
-        $rummageList .= "disabled='disabled'";
+    $imageArray = array();
+    $images = '';
+    if (!empty($row['images'])) {
+        $imageArray = explode(',', $row['images']);
+        if (count($imageArray) > 0) {
+            foreach ($imageArray as $imgSrc) {
+                $images .= '<a class="fancybox" href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" rel="ligthbox ' . $row['id'] . '_group" title="Picture"';
+                if ($imgCnt > 1) {$images .= 'style="display: none;"';}
+                $images .= ' >';
+                $images .= '<img src="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" width="64" />';
+                $images .= '</a>';
+            }
+        }
     }
-
-    $rummageList .= " />";
-    $rummageList .= '<br /><br /><a style="padding:1px" href="http://twitter.com/home?status=' . str_replace("&","%26",substr($v["adText"], 0, 120)) . '" target="_blank"><img src="img/twitter-16.png" /></a><br />';
-    $rummageList .= '<a style="padding:1px" href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $k . '" target="_blank"><img src="img/facebook-16.png" /></a><br />';
-    $rummageList .= '<a style="padding:1px" href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $k . '" target="_blank"><img src="img/google-plus-16.png" /></a><br />';
-    $rummageList .= '<a style="padding:1px" href="mailto:?subject='. str_replace("&","%26",substr($v["adText"], 0, 80)) .'&body='. str_replace("&","%26",substr($v["adText"], 0, 120)) .'%0D%0A%0D%0A http://' . $_SERVER['SERVER_NAME'] . '/map.php?place='.urlencode($place).'%26posit='.urlencode($position).'%26ad=' . $k .'" target="_top" id="'.$k.'-gs-mail"><img src="img/social-email-16.png" /></span></a></td>';
-    $rummageList .= '<td><img src="/DCD/images/INI/apt'.$picInt++.'-120x120.jpg" alt="http://classifieds-lc.indystar.com/DCD/images/INI/apt1-120x120.jpg" height="120" width="120"></td><td><table>';
-    $rummageList .= "<tr><td style='font-weight: bold;color:blue; font-size: 150%' dcd-id='". $k."' colspan='2'>".$v["street"]."</td></tr>";
-    $rummageList .= "<tr><td style='font-weight: bold;font-size: 120%' dcd-id='". $k."' colspan='2'>email".$v["email"]."</td></tr>";
-    $rummageList .= "<tr><td class='dcd-adText' dcd-id='". $k."' colspan='2'>".$v["adText"]."</td></tr>";
-    $rummageList .= "<tr><td align='right' style='font-weight: bold;' dcd-id='". $k."' colspan='2'><a href='#'>Click for full text</a></td></tr>";
-    $rummageList .= '<td align="right">';
 
 	$filter['city'][strtoupper($v['city'])] = true;
 	$filter['sites'][$v['siteCode']] = strtoupper($v['siteName']);
@@ -100,48 +100,55 @@ foreach($rummages as $k=>$v) {
             $filter['days'][$dayVal['dayOfWeek']] = $dayArray[$dayVal['dayOfWeek']];
         }
     }
-    if (! empty($daysOpen)) {
-        $rummageList .= '<strong><small>Days: </small></strong><div class="btn-group btn-group-xs" role="group" aria-label="days">'.$daysOpen.'</div>';
-    }
-    $rummageList .= "</td></tr>";
-    $rummageList .= "</table></td></tr>";
-
 
     $rummageList1 .= '<div class="row" style="margin-top: 0px;">';
-    $rummageList1 .= '<div class="col-md-3">';
-    $rummageList1 .= '<a href="#">';
-    //$rummageList1 .= '<img class="img-responsive" src="http://placehold.it/150x150" alt="" height="150" width="150">';
-    //$rummageList1 .= '<img class="img-responsive" src="img/no-photo-available-150x150.jpg" alt="" height="150" width="150">';
-    $rummageList1 .= '<img class="img-responsive" src="img/no-image-available-150x150.jpg" alt="" height="150" width="150">';
 
+    $mainImage = ($picInt++%2 ? true : false);
 
-    $rummageList1 .= '</a>';
-
-    $rummageList1 .= '<button title="Add to Route" style="margin-top: 5px;" type="button" class="add btn btn-default btn-xs" onclick="visit(this,\''.$k.'\');" id="'.$k.'"';
-    if (! isset($mapArray[$k])) {
-        $rummageList1 .= " disabled='disabled'";
+    if (!empty($images)) {
+        $rummageList1 .= '<div class="col-md-3">';
+        $rummageList1 .= $images;
+        $rummageList1 .= '</div>';
+        $rummageList1 .= '<div class="col-md-9">';
+    } else {
+        $rummageList1 .= '<div class="col-md-12">';
     }
-    $rummageList1 .= " />";
-    $rummageList1 .= '<span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>&nbsp;&nbsp;&nbsp;';
-    $rummageList1 .= '<a style="padding:1px" href="http://twitter.com/home?status=' . str_replace("&","%26",substr($v["adText"], 0, 120)) . '" target="_blank"><img src="img/twitter-16.png" /></a>&nbsp;';
-    $rummageList1 .= '<a style="padding:1px" href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $k . '" target="_blank"><img src="img/facebook-16.png" /></a>&nbsp;';
-    $rummageList1 .= '<a style="padding:1px" href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $k . '" target="_blank"><img src="img/google-plus-16.png" /></a>&nbsp;';
-    $rummageList1 .= '<a style="padding:1px" href="mailto:?subject='. str_replace("&","%26",substr($v["adText"], 0, 80)) .'&body='. str_replace("&","%26",substr($v["adText"], 0, 120)) .'%0D%0A%0D%0A http://' . $_SERVER['SERVER_NAME'] . '/map.php?place='.urlencode($place).'%26posit='.urlencode($position).'%26ad=' . $k .'" target="_top" id="'.$k.'-gs-mail"><img src="img/social-email-16.png" /></span></a>';
-
-    $rummageList1 .= '</div>';
-    $rummageList1 .= '<div class="col-md-9">';
     if (!empty($v["street"])) {
         $rummageList1 .= '<h3>' . $v["street"] . '</h3>';
     }
     if (!empty($v["email"])) {
         $rummageList1 .= '<h4>' . $v["email"] . '</h4>';
     }
-    $rummageList1 .= '<p>'.$v["adText"].'</p>';
-    $rummageList1 .= '<a class="btn btn-primary" href="newItem.php?id='.$k.'">View Listing <span class="glyphicon glyphicon-chevron-right"></span></a>';
+
+    $newtext = wordwrap($v["adText"], 137, '<span class="truncated">').'</span>';
+
+    $rummageList1 .= '<p>'.$newtext.'</p>';
+
+    $rummageList1 .= '</div><div class="col-md-12" style="margin-top: 5px;">';
+
+    $rummageList1 .= '<button title="Add to Route" type="button" class="add btn btn-default btn-sm" onclick="visit(this,\''.$k.'\');" id="'.$k.'"';
+    if (! isset($mapArray[$k])) {
+        $rummageList1 .= " disabled='disabled'";
+    }
+    $rummageList1 .= " />";
+    $rummageList1 .= '<span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>&nbsp;&nbsp;&nbsp;';
+
+    $rummageList1 .= '<div class="btn-group btn-group-xs" role="group" aria-label="...">';
+    $rummageList1 .= '<a href="http://twitter.com/home?status=' . str_replace("&","%26",substr($v["adText"], 0, 120)) . '" target="_blank" class="btn btn-twitter btn-xs"><i class="fa fa-twitter"></i></a>';
+    $rummageList1 .= '<a href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $k . '" target="_blank" class="btn btn-facebook btn-xs"><i class="fa fa-facebook"></i></a>';
+    $rummageList1 .= '<a href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $k . '" target="_blank" class="btn btn-google-plus btn-xs"><i class="fa fa-google-plus"></i></a>';
+    $rummageList1 .= '<a href="mailto:?subject='. str_replace("&","%26",substr($v["adText"], 0, 80)) .'&body='. str_replace("&","%26",substr($v["adText"], 0, 120)) .'%0D%0A%0D%0A http://' . $_SERVER['SERVER_NAME'] . '/map.php?place='.urlencode($place).'%26posit='.urlencode($position).'%26ad=' . $k .'" target="_top" id="'.$k.'-gs-mail"class="btn btn-instagram btn-xs"><i class="fa fa-envelope"></i></a>';
+    $rummageList1 .= '</div>';
+
+    $rummageList1 .= '<a class="btn btn-primary pull-right btn-sm" href="listItem.php?id='.$k.'">View Listing <span class="glyphicon glyphicon-chevron-right"></span></a>';
+
+    if (! empty($daysOpen)) {
+        $rummageList1 .= '<div class="pull-right"><strong><small>Days: </small></strong><div class="btn-group btn-group-xs" role="group" aria-label="days">'.$daysOpen.'</div></div>';
+    }
+
     $rummageList1 .= '</div>';
     $rummageList1 .= '</div>';
     $rummageList1 .= '<hr>';
-
 }
 
 $filter['days'] = array_unique($filter['days']);
@@ -158,13 +165,9 @@ if(empty($_GET['city'])) {
         }
         $filterForm .= '</ul></div>';
     }
-}else{
+} else {
     $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuCity" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'city\')" href="javascript:void(0)">';
     $filterForm .= 'City - <strong>'.$_GET['city'].'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
-}
-
-if (! empty($filterForm)) {
-    $filterForm .= '&nbsp;';
 }
 
 if(empty($_GET['paper'])) {
@@ -184,15 +187,11 @@ if(empty($_GET['paper'])) {
     $filterForm .= ' Newspaper - <strong>'.$selectedBusName.'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
 }
 
-if (! empty($filterForm)) {
-    $filterForm .= '&nbsp;';
-}
-
 if(empty($_GET['day'])) {
     if(count($filter['days']) > 1){
-        $filterForm .= '<div class="btn-group"><button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown">';
+        $filterForm .= '<div class="btn-group"><button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuDay" data-toggle="dropdown">';
         $filterForm .= ' Days <span class="caret"></span></button>';
-        $filterForm .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuPaper">';
+        $filterForm .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuDay">';
         foreach($filter['days'] as $k=>$v){
             $filterForm .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'day\', \'' . $k . '\')" href="javascript:void(0)">' . $v . '</a></li>';
         }
@@ -200,15 +199,15 @@ if(empty($_GET['day'])) {
     }
 } else {
     $dayString = isset($dayArray[$_GET['day']])?$dayArray[$_GET['day']]:'';
-    $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'day\')" href="javascript:void(0)">';
+    $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuDay" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'day\')" href="javascript:void(0)">';
     $filterForm .= ' Days - <strong>'.$dayString.'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
 }
 
 if(empty($_GET['bdrooms'])) {
     if(count($filter['bdrooms']) > 1){
-        $filterForm .= '<div class="btn-group"><button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown">';
+        $filterForm .= '<div class="btn-group"><button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuBdrooms" data-toggle="dropdown">';
         $filterForm .= ' Bed Rooms <span class="caret"></span></button>';
-        $filterForm .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuPaper">';
+        $filterForm .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuBdrooms">';
         ksort($filter['bdrooms']);
         foreach($filter['bdrooms'] as $k=>$v){
             $filterForm .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'bdrooms\', \'' . $k . '\')" href="javascript:void(0)">' . $v . '</a></li>';
@@ -217,15 +216,15 @@ if(empty($_GET['bdrooms'])) {
     }
 } else {
     $bdrooms = isset($dayArray[$_GET['bdrooms']])?$dayArray[$_GET['bdrooms']]:'';
-    $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'bdrooms\')" href="javascript:void(0)">';
+    $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuBdrooms" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'bdrooms\')" href="javascript:void(0)">';
     $filterForm .= ' Min. Bed Rooms - <strong>'.$bdrooms.'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
 }
 
 if(empty($_GET['bthrooms'])) {
     if(count($filter['bthrooms']) > 1){
-        $filterForm .= '&nbsp;&nbsp;<div class="btn-group"><button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown">';
+        $filterForm .= '<div class="btn-group"><button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuBthrooms" data-toggle="dropdown">';
         $filterForm .= ' Bath Rooms <span class="caret"></span></button>';
-        $filterForm .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuPaper">';
+        $filterForm .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuBthrooms">';
         ksort($filter['bthrooms']);
         foreach($filter['bthrooms'] as $k=>$v){
             $filterForm .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'bthrooms\', \'' . $k . '\')" href="javascript:void(0)">' . $v . '</a></li>';
@@ -234,7 +233,7 @@ if(empty($_GET['bthrooms'])) {
     }
 } else {
     $bthrooms = isset($dayArray[$_GET['bthrooms']])?$dayArray[$_GET['bthrooms']]:'';
-    $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'bthrooms\')" href="javascript:void(0)">';
+    $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuBthrooms" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'bthrooms\')" href="javascript:void(0)">';
     $filterForm .= ' Bath Rooms - <strong>'.$bthrooms.'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
 }
 
@@ -295,7 +294,20 @@ if (!empty($filterForm)) {
     $filterLine = '<div><label>Filter by:&nbsp;</label>'.$filterForm.'</div>';
 }
 
-$routPanelForm = <<<EOS
+$mapDisplay = <<<EOS
+<div id="map-options">
+    <ul id="map-resize">
+        <li><strong>Map Size:</strong></li>
+        <li><a href="#" data-size="small">Small</a></li>
+        <li><a href="#" data-size="medium">Medium</a></li>
+        <li><a href="#" data-size="large">Large</a></li>
+    </ul>
+    <div class="clear"></div>
+</div>
+<div id="map">
+    <div id="dcd-map-container"></div>
+</div>
+<br>
 <div>
     <div class="panel panel-default" id="panel2">
 	    <div class="panel-heading">
@@ -354,9 +366,8 @@ $routPanelForm = <<<EOS
         </div>
     </div>
 </div>
+<p><strong>Click or Tap on any entry to find on the map.</strong></p>
 EOS;
-
-$masterBottom = '<script src="js/rummage.js"></script>';
 
 $googleApiScript = <<<EOS
 	<link rel="stylesheet" href="css/rummage.css">
@@ -370,26 +381,7 @@ $googleApiScript = <<<EOS
     </script>
 EOS;
 
-$data = <<<EOS
-	<div id="map-options">
-	<ul id="map-resize">
-		<li><strong>Map Size:</strong></li>
-		<li><a href="#" data-size="small">Small</a></li>
-		<li><a href="#" data-size="medium">Medium</a></li>
-		<li><a href="#" data-size="large">Large</a></li>
-	</ul>
-	<div class="clear"></div>
-</div>
-<div id="map">
-	<div id="dcd-map-container"></div>
-</div>
-<br>
-$routPanelForm
-	<p><strong>Click or Tap on any entry to find on the map.</strong></p>
-	<table class="table table-striped">
-		$rummageList1
-	</table>
-EOS;
+$rummageList = $rummageList1;
 
 $mainContent = <<<EOS
 	<ol class="breadcrumb">
@@ -397,7 +389,10 @@ $mainContent = <<<EOS
 		<li class="active">$place</li>
 	</ol>
 	$filterLine
-	$data
+    $mapDisplay
+    $rummageList
 EOS;
+
+$masterBottom = '<script src="js/rummage.js"></script>';
 
 include("../includes/master.php");
