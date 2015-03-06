@@ -72,6 +72,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -84,6 +85,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
         }
     ?>
     <link type="text/css" href="css/dcd.css" rel="stylesheet">
+    <link type="text/css" href="css/social-buttons-3.css" rel="stylesheet">
 </head>
 <body>
 <!--[if lt IE 8]>
@@ -298,6 +300,13 @@ if ($device == "computer") {
     }
 
     $(document).ready(function () {
+        $('.truncated').hide()                       // Hide the text initially
+            .after('<i class="icon-plus-sign"></i>') // Create toggle button
+            .next().on('click', function(){          // Attach behavior
+                $(this).toggleClass('icon-minus-sign')   // Swap the icon
+                    .prev().toggle();                    // Hide/show the text
+            });
+
         $('.panel-heading span.clickable').on("click", function (e) {
             if ($(this).hasClass('panel-collapsed')) {
                 // expand the panel
