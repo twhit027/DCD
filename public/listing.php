@@ -103,7 +103,7 @@ foreach($rummages as $k=>$v) {
     $imageArray = array();
     $images = '';
     if (!empty($v['images'])) {
-        $imageArray = explode(',', $row['images']);
+        $imageArray = explode(',', $v['images']);
         if (count($imageArray) > 0) {
             foreach ($imageArray as $imgSrc) {
                 $images .= '<a class="fancybox" href="http://' . $server . '/images/' . $v['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" rel="ligthbox ' . $v['id'] . '_group" title="Picture"';
