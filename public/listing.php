@@ -134,7 +134,7 @@ foreach($rummages as $k=>$v) {
         $rummageList1 .= '<h4>' . $v["email"] . '</h4>';
     }
 
-    $newtext = wordwrap($v["adText"], 137, '<span class="truncated">').'</span>';
+    $newtext = wordwrap($v["adText"], 200, '<span class="truncated">').'</span>';
 
     $rummageList1 .= '<p>'.$newtext.'</p>';
 
@@ -384,6 +384,7 @@ $mapDisplay = <<<EOS
 EOS;
 
 if (count($listOfRummages['map']) < 1) {
+    //$mapDisplay = '<div class="row" style="margin-top: 0px;"><div class="col-md-12"><h1>$position</h1></div></div>';
     $mapDisplay = '';
 }
 
@@ -399,6 +400,10 @@ $googleApiScript = <<<EOS
     </script>
 EOS;
 
+$masterBottom = '<link type="text/css" rel="stylesheet" href="3rdParty/fancybox/source/jquery.fancybox.css" media="screen">
+<script type="text/javascript" src="3rdParty/fancybox/source/jquery.fancybox.pack.js"></script>
+<script src="js/rummage.js"></script>';
+
 $rummageList = $rummageList1;
 
 $mainContent = <<<EOS
@@ -406,11 +411,9 @@ $mainContent = <<<EOS
     <li><a href="./">Home</a></li>
     <li class="active">$position</li>
 </ol>
-	$filterLine
+    $filterLine
     $mapDisplay
     $rummageList
 EOS;
-
-$masterBottom = '<script src="js/rummage.js"></script>';
 
 include("../includes/master.php");

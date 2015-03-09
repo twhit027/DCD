@@ -300,13 +300,6 @@ if ($device == "computer") {
     }
 
     $(document).ready(function () {
-        $('.truncated').hide()                       // Hide the text initially
-            .after('<i class="icon-plus-sign"></i>') // Create toggle button
-            .next().on('click', function(){          // Attach behavior
-                $(this).toggleClass('icon-minus-sign')   // Swap the icon
-                    .prev().toggle();                    // Hide/show the text
-            });
-
         $('.panel-heading span.clickable').on("click", function (e) {
             if ($(this).hasClass('panel-collapsed')) {
                 // expand the panel
