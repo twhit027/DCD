@@ -89,7 +89,6 @@ if(!empty($showcase) && !empty($rummages[$showcase])){
 
 $picInt = 1;
 foreach($rummages as $k=>$v) {
-
     if ($app->getSite()->getDomain() == $v['domain']) {
         $server = $_SERVER['SERVER_NAME'];
         if (isset($_SERVER['CONTEXT_PREFIX'])) {
@@ -132,8 +131,6 @@ foreach($rummages as $k=>$v) {
     }
 
     $rummageList1 .= '<div class="row" style="margin-top: 0px;">';
-
-    $mainImage = ($picInt++%2 ? true : false);
 
     if (!empty($images)) {
         $rummageList1 .= '<div class="col-md-3">';
