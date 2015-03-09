@@ -8,6 +8,20 @@ include('../includes/GCI/App.php');
 include('../includes/GCI/Navigation.php');
 include('../includes/GCI/Ads.php');
 
+function myTruncate($string, $limit, $break=" ", $pad="")
+{
+    if(strlen($string) <= $limit) return $ret[0] = $string;
+
+    if(false !== ($breakpoint = strpos($string, $break, $limit))) {
+        if($breakpoint < strlen($string) - 1) {
+            $ret[0] = substr($string, 0, $breakpoint).$pad;
+            $ret[1] = substr($string, $breakpoint);
+        }
+    }
+
+    return $ret;
+}
+
 $app = new \GCI\App();
 
 $app->logInfo('Listing Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].', REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].',HTTP_HOST: '.@$_SERVER['HTTP_HOST'].'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].')');
@@ -134,9 +148,9 @@ foreach($rummages as $k=>$v) {
         $rummageList1 .= '<h4>' . $v["email"] . '</h4>';
     }
 
-    $newtext = wordwrap($v["adText"], 200, ' <span class="truncated">').'</span>';
+    $newTextArray = myTruncate($v["adText"], 200);
 
-    $rummageList1 .= '<p>'.$newtext.'</p>';
+    $rummageList1 .= '<p>'.$newTextArray[0].'<span class="truncated">'.$newTextArray[1].'</span></p>';
 
     $rummageList1 .= '</div><div class="col-md-12" style="margin-top: 5px;">';
 
