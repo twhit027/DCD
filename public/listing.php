@@ -72,31 +72,10 @@ $rummageList1 = '';
 
 //$filter = array();
 $filter['days'] = array();
-if(!empty($showcase) && !empty($rummages[$showcase])){
-	$rummageList .= "<tr id='dcd-showcase'>
-		<td><input type='button' value='Add' onclick=\"visit(this,'".$showcase."');\" class='add btn btn-default' id='".$showcase."' /></td>
-		<td class='dcd-adText' dcd-id='". $showcase."'>".$rummages[$showcase]["adText"]."<br />";
-	$rummageList .= '<a href="http://twitter.com/home?status=' . str_replace("&","%26",substr($rummages[$showcase]["adText"], 0, 120)) . '" target="_blank"><img src="img/twitter-16.png" /></a>&nbsp';
-	$rummageList .= '<a href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $showcase . '" target="_blank"><img src="img/facebook-16.png" /></a>&nbsp';
-	$rummageList .= '<a href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $showcase . '" target="_blank"><img src="img/google-plus-16.png" /></a>&nbsp';
-	$rummageList .= '<a href="mailto:?subject='. str_replace("&","%26",substr($rummages[$showcase]["adText"], 0, 80)) .'&body='. str_replace("&","%26",substr($rummages[$showcase]["adText"], 0, 120)) .'%0D%0A%0D%0A http://' . $_SERVER['SERVER_NAME'] . '/map.php?place='.urlencode($place).'%26posit='.urlencode($position).'%26ad='.$showcase.'" target="_top" id="'.$showcase.'-gs-mail"><img src="img/social-email-16.png" /></span></a>';
-	$rummageList .= "</td></tr>";
 
-	$filter['city'][$rummages[$showcase]['city']] = true;
-	$filter['sites'][$rummages[$showcase]['siteCode']] = true;
-	unset($rummages[$showcase]);
-}
-
-//background-color: #dcdcdc;
 $rownum = 0;
 foreach($rummages as $k=>$v) {
-    $rownum++;
-
     $bgColor = 'F9F9F9';
-
-    if ($rownum%2) {
-        $bgColor = 'F9F9F9';
-    }
 
     if ($app->getSite()->getDomain() == $v['domain']) {
         $server = $_SERVER['SERVER_NAME'];
@@ -114,7 +93,9 @@ foreach($rummages as $k=>$v) {
     if (!empty($v['images'])) {
         $imageArray = explode(',', $v['images']);
         if (count($imageArray) > 0) {
+            $imgCnt = 0;
             foreach ($imageArray as $imgSrc) {
+                $imgCnt++;
                 $images .= '<a class="fancybox" href="http://' . $server . '/images/' . $v['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" rel="ligthbox ' . $v['id'] . '_group" title="Picture"';
                 if ($imgCnt > 1) {$images .= ' style="display: none;"';}
                 $images .= ' >';
