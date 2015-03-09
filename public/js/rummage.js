@@ -170,7 +170,7 @@ function closeMarkers (){
 }
 
 $(document).ready(function(){
-	if (!jQuery.isEmptyObject(DCDMAPGLOBAL)) {
+	if (! jQuery.isEmptyObject(DCDMAPGLOBAL.points)) {
         initializeMap();
 	    $("#dcd-route").attr("disabled","disabled");
 	    $(".form-control").change(function() { updateButton(); });
