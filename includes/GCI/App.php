@@ -100,8 +100,20 @@ class App
         $siteGroupString = $this->createSiteGroupString($siteGroup);
 
         //$sql = "SELECT t1.*, t2.BusName FROM `listing` AS t1, `siteinfo` AS t2, `day` AS t3 WHERE Placement = :place AND Position = :position AND StartDate <= :startDate AND t1.SiteCode IN ( " . $siteGroupString . " ) AND t2.SiteCode = t1.SiteCode AND t1.ID = t3.ListingId";
-        $sql = "SELECT t1.*, t2.BusName, t2.Domain, t3.DayOfWeek, t3.StartTime, t3.EndTime FROM `listing` AS t1 JOIN `siteinfo` AS t2 on t1.SiteCode = t2.SiteCode LEFT JOIN `day` AS t3 on t1.ID = t3.ListingId WHERE t1.Placement = :place AND t1.Position = :position AND t1.StartDate <= :startDate AND t1.SiteCode IN ( " . $siteGroupString . " )";
-        $params = array(':place' => $place, ':position' => $position, ':startDate' => date("Y-m-d"));
+        $sql = "SELECT t1.*, t2.BusName, t2.Domain, t3.DayOfWeek, t3.StartTime, t3.EndTime FROM `listing` AS t1 JOIN `siteinfo` AS t2 on t1.SiteCode = t2.SiteCode LEFT JOIN `day` AS t3 on t1.ID = t3.ListingId WHERE t1.StartDate <= :startDate AND t1.SiteCode IN ( " . $siteGroupString . " )";
+        $params = array(':startDate' => date("Y-m-d"));
+
+        //t1.Placement = :place AND t1.Position = :position AND
+        //':place' => $place, ':position' => $position,
+
+        if (!empty($place)) {
+            $sql .= ' and t1.Placement = :place';
+            $params[':place'] = $place;
+        }
+        if (!empty($position)) {
+            $sql .= ' and t1.Position = :position ';
+            $params[':position'] = $position;
+        }
 
         if (!empty($city)) {
             $sql .= " AND t1.City = :city";
@@ -150,6 +162,8 @@ class App
             } else {
                 $dataArray['list'][$row['ID']] = array(
                     'id' => $row['ID'],
+                    'externalURL' => $row['ExternalURL'],
+                    'moreInfo' => $row['MoreInfo'],
                     'adText' => $row['AdText'],
                     'images' => $row['Images'],
                     'siteCode' => $row['SiteCode'],
@@ -161,7 +175,9 @@ class App
                     'bdrooms' => $row['BedRooms'],
                     'bthrooms' => $row['BathRooms'],
                     'email' => $row['Email'],
-                    'street' => $row['Street']
+                    'street' => $row['Street'],
+                    'position' => $row['Position'],
+                    'placement' => $row['Placement'],
                 );
                 if (!empty($row['DayOfWeek'])) {
                     $dataArray['list'][$row['ID']]['days'][] = array(
