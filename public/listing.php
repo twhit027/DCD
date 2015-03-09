@@ -134,7 +134,7 @@ foreach($rummages as $k=>$v) {
         $rummageList1 .= '<h4>' . $v["email"] . '</h4>';
     }
 
-    $newtext = wordwrap($v["adText"], 200, '<span class="truncated">').'</span>';
+    $newtext = wordwrap($v["adText"], 200, ' <span class="truncated">').'</span>';
 
     $rummageList1 .= '<p>'.$newtext.'</p>';
 
