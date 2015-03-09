@@ -10,7 +10,7 @@ include('../includes/GCI/Ads.php');
 
 $app = new \GCI\App();
 
-$app->logInfo('Map Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].', REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].',HTTP_HOST: '.@$_SERVER['HTTP_HOST'].'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].')');
+$app->logInfo('Listing Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].', REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].',HTTP_HOST: '.@$_SERVER['HTTP_HOST'].'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].')');
 
 $place = $position = $city = $paper = $day = '';
 
@@ -42,16 +42,18 @@ $dayArray = Array(1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursda
 $dayAbrvArray = Array(1 => 'Mon', 2 => 'Tue', 3 => 'Wed', 4 => 'Thu', 5 => 'Fri', 6 => 'Sat', 7 => 'Sun');
 
 $listOfRummages = $app->getRummages($place,$position,'','',$city,$paper,$day);
+
 if(isset($_GET['ad']) && !empty($_GET['ad'])) {
     $showcase = $_GET['ad'];
 	$listOfRummages['map'][$showcase]['showcase'] = true;
 }
+
 $mapPoints = json_encode($listOfRummages['map']);
 $mapArray = $listOfRummages['map'];
 $rummages = $listOfRummages['list'];
 $rummageList = '';
 $rummageList1 = '';
-$rummageList2 = '';
+
 //$filter = array();
 $filter['days'] = array();
 if(!empty($showcase) && !empty($rummages[$showcase])){
@@ -71,16 +73,28 @@ if(!empty($showcase) && !empty($rummages[$showcase])){
 
 $picInt = 1;
 foreach($rummages as $k=>$v) {
+
+    if ($app->getSite()->getDomain() == $v['domain']) {
+        $server = $_SERVER['SERVER_NAME'];
+        if (isset($_SERVER['CONTEXT_PREFIX'])) {
+            $server .= $_SERVER['CONTEXT_PREFIX'];
+        }
+    } else {
+        $server = 'classifieds.' . $v['domain'];
+    }
+
+    $url = rtrim($server, "/");
+
     $imageArray = array();
     $images = '';
-    if (!empty($row['images'])) {
+    if (!empty($v['images'])) {
         $imageArray = explode(',', $row['images']);
         if (count($imageArray) > 0) {
             foreach ($imageArray as $imgSrc) {
-                $images .= '<a class="fancybox" href="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" rel="ligthbox ' . $row['id'] . '_group" title="Picture"';
+                $images .= '<a class="fancybox" href="http://' . $server . '/images/' . $v['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" rel="ligthbox ' . $v['id'] . '_group" title="Picture"';
                 if ($imgCnt > 1) {$images .= 'style="display: none;"';}
                 $images .= ' >';
-                $images .= '<img src="http://' . $server . '/images/' . $row['siteCode'] . '/' . $imgSrc . '" width="64" />';
+                $images .= '<img src="http://' . $server . '/images/' . $v['siteCode'] . '/' . $imgSrc . '" width="64" />';
                 $images .= '</a>';
             }
         }
@@ -126,12 +140,10 @@ foreach($rummages as $k=>$v) {
 
     $rummageList1 .= '</div><div class="col-md-12" style="margin-top: 5px;">';
 
-    $rummageList1 .= '<button title="Add to Route" type="button" class="add btn btn-default btn-sm" onclick="visit(this,\''.$k.'\');" id="'.$k.'"';
-    if (! isset($mapArray[$k])) {
-        $rummageList1 .= " disabled='disabled'";
+    if (isset($mapArray[$k])) {
+        $rummageList1 .= '<button title="Add to Route" type="button" class="add btn btn-default btn-sm" onclick="visit(this,\''.$k.'\');" id="'.$k.'">';
+        $rummageList1 .= '<span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>&nbsp;&nbsp;&nbsp;';
     }
-    $rummageList1 .= " />";
-    $rummageList1 .= '<span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>&nbsp;&nbsp;&nbsp;';
 
     $rummageList1 .= '<div class="btn-group btn-group-xs" role="group" aria-label="...">';
     $rummageList1 .= '<a href="http://twitter.com/home?status=' . str_replace("&","%26",substr($v["adText"], 0, 120)) . '" target="_blank" class="btn btn-twitter btn-xs"><i class="fa fa-twitter"></i></a>';
@@ -140,7 +152,9 @@ foreach($rummages as $k=>$v) {
     $rummageList1 .= '<a href="mailto:?subject='. str_replace("&","%26",substr($v["adText"], 0, 80)) .'&body='. str_replace("&","%26",substr($v["adText"], 0, 120)) .'%0D%0A%0D%0A http://' . $_SERVER['SERVER_NAME'] . '/map.php?place='.urlencode($place).'%26posit='.urlencode($position).'%26ad=' . $k .'" target="_top" id="'.$k.'-gs-mail"class="btn btn-instagram btn-xs"><i class="fa fa-envelope"></i></a>';
     $rummageList1 .= '</div>';
 
-    $rummageList1 .= '<a class="btn btn-primary pull-right btn-sm" href="listItem.php?id='.$k.'">View Listing <span class="glyphicon glyphicon-chevron-right"></span></a>';
+    if (! empty($v['rent']) || ! empty($v['proptype'])) {
+        $rummageList1 .= '<a class="btn btn-primary pull-right btn-sm" href="listItem.php?id='.$k.'">View Listing <span class="glyphicon glyphicon-chevron-right"></span></a>';
+    }
 
     if (! empty($daysOpen)) {
         $rummageList1 .= '<div class="pull-right"><strong><small>Days: </small></strong><div class="btn-group btn-group-xs" role="group" aria-label="days">'.$daysOpen.'</div></div>';
@@ -307,7 +321,7 @@ $mapDisplay = <<<EOS
 <div id="map">
     <div id="dcd-map-container"></div>
 </div>
-<br>
+<br />
 <div>
     <div class="panel panel-default" id="panel2">
 	    <div class="panel-heading">
@@ -369,6 +383,10 @@ $mapDisplay = <<<EOS
 <p><strong>Click or Tap on any entry to find on the map.</strong></p>
 EOS;
 
+if (count($listOfRummages['map']) < 1) {
+    $mapDisplay = '';
+}
+
 $googleApiScript = <<<EOS
 	<link rel="stylesheet" href="css/rummage.css">
     <!-- Google Maps API V3 -->
@@ -384,10 +402,10 @@ EOS;
 $rummageList = $rummageList1;
 
 $mainContent = <<<EOS
-	<ol class="breadcrumb">
-		<li><a href="./">Home</a></li>
-		<li class="active">$place</li>
-	</ol>
+<ol class="breadcrumb">
+    <li><a href="./">Home</a></li>
+    <li class="active">$position</li>
+</ol>
 	$filterLine
     $mapDisplay
     $rummageList
