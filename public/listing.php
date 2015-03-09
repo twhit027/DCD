@@ -150,7 +150,11 @@ foreach($rummages as $k=>$v) {
 
     $newTextArray = myTruncate($v["adText"], 200);
 
-    $rummageList1 .= '<p>'.$newTextArray[0].'<span class="truncated">'.$newTextArray[1].'</span></p>';
+    if (isset($newTextArray[1])) {
+        $rummageList1 .= '<p>' . $newTextArray[0] . '<span class="truncated">' . $newTextArray[1] . '</span></p>';
+    } else {
+        $rummageList1 .= '<p>' . $newTextArray[0] . '</p>';
+    }
 
     $rummageList1 .= '</div><div class="col-md-12" style="margin-top: 5px;">';
 
