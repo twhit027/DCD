@@ -149,6 +149,7 @@ class App
                 );
             } else {
                 $dataArray['list'][$row['ID']] = array(
+                    'id' => $row['ID'],
                     'adText' => $row['AdText'],
                     'images' => $row['Images'],
                     'siteCode' => $row['SiteCode'],
