@@ -143,7 +143,6 @@ var allowDirections = {
 	zip : false
 }
 function updateButton (){
-	
 	allowDirections.moreThanOneRoute = locations.selected;
 	allowDirections.address = $('#Address').val();
 	allowDirections.city = $('#City').val();
@@ -176,6 +175,31 @@ $(document).ready(function(){
 	$(".form-control").change(function() { updateButton(); });
 	$(".dcd-adText").click(function() { showMarker($(this)); });
 	$("#map-resize a").click(function(e) { e.preventDefault(); mapsize($(this).data("size")); });
+
+    $('.truncated').hide()                       // Hide the text initially
+        .after('<span title="See Full Text" style="margin-left: 5px; cursor:pointer" class="glyphicon glyphicon-plus-sign"></span>') // Create toggle button
+        .next().on('click', function(){          // Attach behavior
+            $(this).toggleClass('glyphicon-minus-sign').prev().toggle();
+            $(this).prop('title', 'See Less Text');
+        });
+
+    $(".fancybox").fancybox({
+        openEffect: "none",
+        closeEffect: "none"
+        });
+    $(".dcd-expand-text").click(function(){
+        $("#dcd-short-"+$(this).data("id")).slideToggle("slow");
+        $("#dcd-content-"+$(this).data("id")).slideToggle("slow");
+        $orgText = "Click for full text";
+        if ($orgText == $(this).html()) {
+            $(this).html("Click for less text");
+        } else {
+            $(this).html($orgText);
+        }
+
+        return false;
+        });
+    //$("#sitesdd").on("change", function() { window.location.href = window.location.href + "&sites=" + encodeURIComponent(this.value); return false;} );
 });
 
 function mapsize(_size){
@@ -196,17 +220,30 @@ function mapsize(_size){
 
 function setGetParameter(paramName, paramValue) {
     var url = window.location.href;
-	if (url.indexOf("?") < 0) {
-		url += "?" + paramName + "=" + encodeURIComponent(paramValue);
-	} else {
-		url += "&" + paramName + "=" + encodeURIComponent(paramValue);
-	}
+    url = url.replace(/&?page=([^&]$|[^&]*)/i, "");
+    if (url.indexOf(paramName + "=") >= 0)
+    {
+        var prefix = url.substring(0, url.indexOf(paramName));
+        var suffix = url.substring(url.indexOf(paramName));
+        suffix = suffix.substring(suffix.indexOf("=") + 1);
+        suffix = (suffix.indexOf("&") >= 0) ? suffix.substring(suffix.indexOf("&")) : "";
+        url = prefix + paramName + "=" + paramValue + suffix;
+    }
+    else
+    {
+        if (url.indexOf("?") < 0) {
+            url += "?" + paramName + "=" + encodeURIComponent(paramValue);
+        } else {
+            url += "&" + paramName + "=" + encodeURIComponent(paramValue);
+        }
+    }
     window.location.href = url;
     return false;
 }
 
 function removeSitesAndReloadPage(paramName) {
 	var url = window.location.href;
+    url = url.replace(/&?page=([^&]$|[^&]*)/i, "");
 	if(paramName == 'city') {
 		url = url.replace(/&?city=([^&]$|[^&]*)/i, "");
     } else if(paramName == 'paper') {
@@ -216,4 +253,8 @@ function removeSitesAndReloadPage(paramName) {
     }
 	window.location.href = url;
 	return false;
+}
+
+function addSitesAndReloadPage(paramValue) {
+    setGetParameter("sites", paramValue);
 }
