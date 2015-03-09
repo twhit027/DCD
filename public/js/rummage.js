@@ -170,11 +170,13 @@ function closeMarkers (){
 }
 
 $(document).ready(function(){
-	initializeMap();
-	$("#dcd-route").attr("disabled","disabled");
-	$(".form-control").change(function() { updateButton(); });
-	$(".dcd-adText").click(function() { showMarker($(this)); });
-	$("#map-resize a").click(function(e) { e.preventDefault(); mapsize($(this).data("size")); });
+	if (!jQuery.isEmptyObject(DCDMAPGLOBAL)) {
+        initializeMap();
+	    $("#dcd-route").attr("disabled","disabled");
+	    $(".form-control").change(function() { updateButton(); });
+	    $(".dcd-adText").click(function() { showMarker($(this)); });
+	    $("#map-resize a").click(function(e) { e.preventDefault(); mapsize($(this).data("size")); });
+    }
 
     $('.truncated').hide()                       // Hide the text initially
         .after('<span title="See Full Text" style="margin-left: 5px; cursor:pointer" class="glyphicon glyphicon-plus-sign"></span>') // Create toggle button
