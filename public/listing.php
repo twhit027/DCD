@@ -10,12 +10,14 @@ include('../includes/GCI/Ads.php');
 
 function myTruncate($string, $limit, $break=" ", $pad="")
 {
-    if(strlen($string) <= $limit) return $ret[0] = $string;
+    $ret[0] = $string;
 
-    if(false !== ($breakpoint = strpos($string, $break, $limit))) {
-        if($breakpoint < strlen($string) - 1) {
-            $ret[0] = substr($string, 0, $breakpoint).$pad;
-            $ret[1] = substr($string, $breakpoint);
+    if(strlen($string) > $limit) {
+        if(false !== ($breakpoint = strpos($string, $break, $limit))) {
+            if($breakpoint < strlen($string) - 1) {
+                $ret[0] = substr($string, 0, $breakpoint).$pad;
+                $ret[1] = substr($string, $breakpoint);
+            }
         }
     }
 
