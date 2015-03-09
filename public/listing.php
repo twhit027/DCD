@@ -343,7 +343,7 @@ if (empty($_GET['maxrent'])) {
 
 $filterLine = '';
 if (!empty($filterForm)) {
-    $filterLine = '<div><label>Filter by:&nbsp;</label>'.$filterForm.'</div>';
+    $filterLine = '<div style="padding-bottom: 5px;"><label>Filter by:&nbsp;</label>'.$filterForm.'</div>';
 }
 
 $mapDisplay = <<<EOS
