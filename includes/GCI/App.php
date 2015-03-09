@@ -150,6 +150,7 @@ class App
             } else {
                 $dataArray['list'][$row['ID']] = array(
                     'adText' => $row['AdText'],
+                    'images' => $row['Images'],
                     'siteCode' => $row['SiteCode'],
                     'siteName' => $row['BusName'],
                     'domain' => $row['Domain'],
