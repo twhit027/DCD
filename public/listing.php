@@ -87,8 +87,17 @@ if(!empty($showcase) && !empty($rummages[$showcase])){
 	unset($rummages[$showcase]);
 }
 
-$picInt = 1;
+//background-color: #dcdcdc;
+$rownum = 0;
 foreach($rummages as $k=>$v) {
+    $rownum++;
+
+    $bgColor = 'F9F9F9';
+
+    if ($rownum%2) {
+        $bgColor = 'F9F9F9';
+    }
+
     if ($app->getSite()->getDomain() == $v['domain']) {
         $server = $_SERVER['SERVER_NAME'];
         if (isset($_SERVER['CONTEXT_PREFIX'])) {
@@ -130,7 +139,18 @@ foreach($rummages as $k=>$v) {
         }
     }
 
-    $rummageList1 .= '<div class="row" style="margin-top: 0px;">';
+    $rummageList1 .= '<div class="row" style="margin-top: 0px; padding-bottom: 5px; background-color: #'.$bgColor.';">';
+
+    $dataInfo = '<div class=".small" style="padding-bottom:10px; color:#0052f4; padding-left: 5px;"><a href="http://' . $server . '/" target="_blank">' . $v['siteName'] . '</a>';
+    if (empty($position))
+    $dataInfo .= '&nbsp;|&nbsp;<a href="http://' . $server . '/category.php?place=' . urlencode($v['placement']) . '&posit=' . urlencode($v['position']) . '" target="_blank">' . $v['position'] . '</a>';
+    if (!empty($v['moreInfo'])) {
+        $dataInfo .= '&nbsp;|&nbsp;<a href="' . $v['moreInfo'] . '" style="color:#0052f4;" title="More Information" target="_blank"><span class="glyphicon glyphicon-info-sign"></span>More Info</a>';
+    }
+
+    if (!empty($dataInfo)) {
+        $rummageList1 .= '<div class="col-md-12" style="margin-top: 5px;">'.$dataInfo.'</div></div>';
+    }
 
     if (!empty($images)) {
         $rummageList1 .= '<div class="col-md-3">';
@@ -140,8 +160,9 @@ foreach($rummages as $k=>$v) {
     } else {
         $rummageList1 .= '<div class="col-md-12">';
     }
+
     if (!empty($v["street"])) {
-        $rummageList1 .= '<h3>' . $v["street"] . '</h3>';
+        $rummageList1 .= '<h4>' . $v["street"] . '</h4>';
     }
     if (!empty($v["email"])) {
         $rummageList1 .= '<h4>' . $v["email"] . '</h4>';
@@ -170,7 +191,7 @@ foreach($rummages as $k=>$v) {
     $rummageList1 .= '</div>';
 
     if (! empty($v['rent']) || ! empty($v['proptype'])) {
-        $rummageList1 .= '<a class="btn btn-primary pull-right btn-sm" href="listItem.php?id='.$k.'">View Listing <span class="glyphicon glyphicon-chevron-right"></span></a>';
+        $rummageList1 .= '<a class="btn btn-primary pull-right btn-sm" href="listingItem.php?id='.$k.'">View Listing <span class="glyphicon glyphicon-chevron-right"></span></a>';
     }
 
     if (! empty($daysOpen)) {
