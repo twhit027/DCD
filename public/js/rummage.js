@@ -187,6 +187,7 @@ $(document).ready(function(){
         openEffect: "none",
         closeEffect: "none"
         });
+
     $(".dcd-expand-text").click(function(){
         $("#dcd-short-"+$(this).data("id")).slideToggle("slow");
         $("#dcd-content-"+$(this).data("id")).slideToggle("slow");
@@ -199,6 +200,7 @@ $(document).ready(function(){
 
         return false;
         });
+
     //$("#sitesdd").on("change", function() { window.location.href = window.location.href + "&sites=" + encodeURIComponent(this.value); return false;} );
 });
 
