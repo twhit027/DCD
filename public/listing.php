@@ -96,7 +96,7 @@ foreach($rummages as $k=>$v) {
             $imgCnt = 0;
             foreach ($imageArray as $imgSrc) {
                 $imgCnt++;
-                $images .= '<a class="fancybox" href="http://' . $server . '/images/' . $v['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" rel="ligthbox ' . $v['id'] . '_group" title="Picture"';
+                $images .= '<a class="fancybox" href="http://' . $server . '/images/' . $v['siteCode'] . '/' . $imgSrc . '" rel="ligthbox ' . $v['id'] . '_group" title="Picture"';
                 if ($imgCnt > 1) {$images .= ' style="display: none;"';}
                 $images .= ' >';
                 $images .= '<img src="http://' . $server . '/images/' . $v['siteCode'] . '/' . $imgSrc . '" class="img-responsive" style="max-width: 150px;"/>';
