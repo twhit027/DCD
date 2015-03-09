@@ -107,9 +107,9 @@ foreach($rummages as $k=>$v) {
         if (count($imageArray) > 0) {
             foreach ($imageArray as $imgSrc) {
                 $images .= '<a class="fancybox" href="http://' . $server . '/images/' . $v['siteCode'] . '/' . $imgSrc . '" style="color:#FFA500;" rel="ligthbox ' . $v['id'] . '_group" title="Picture"';
-                if ($imgCnt > 1) {$images .= 'style="display: none;"';}
+                if ($imgCnt > 1) {$images .= ' style="display: none;"';}
                 $images .= ' >';
-                $images .= '<img src="http://' . $server . '/images/' . $v['siteCode'] . '/' . $imgSrc . '" width="64" />';
+                $images .= '<img src="http://' . $server . '/images/' . $v['siteCode'] . '/' . $imgSrc . '" />';
                 $images .= '</a>';
             }
         }
