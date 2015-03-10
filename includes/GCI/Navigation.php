@@ -8,7 +8,6 @@
 
 namespace GCI;
 
-
 class Navigation
 {
     function getSideNavigation($categories)
@@ -54,13 +53,11 @@ class Navigation
             $border = \GCI\site::$paletteArray[$paletteNumber]['border'];
         }
 
-        //$siteImage = $siteUrl . '/graphics/ody/cobrand_logo.gif';
-        //$siteImage = $siteUrl . '/graphics/ody/mast_logo.gif"';
         if (empty($imgSiteName)) {
-            $siteImage = "http://www.gannett-cdn.com/sites/$siteName/images/site-nav-logo@2x.png";
-        } else {
-            $siteImage = "http://www.gannett-cdn.com/sites/$imgSiteName/images/site-nav-logo@2x.png";
+            $imgSiteName = $siteName;
         }
+
+        $siteImage = "http://www.gannett-cdn.com/sites/$imgSiteName/images/site-nav-logo@2x.png";
 
         $siteLinks = array(
             'JOBS' => $siteUrl . '/jobs',
@@ -89,8 +86,6 @@ class Navigation
         if ($includeImage) {
             $data .= '<li style="height:40px"><a style="margin:5px;padding:0;" href="' . $siteUrl . '/"><img style="height:40px" class="img-responsive" src="' . $siteImage . '"/></a></li>';
         }
-
-        //$data .= '<li style="height:40px"><a href="'.$siteUrl.'/" style="margin:0;padding:0;"><img style="padding-top:10px;height:40px" src="'.$siteImage.'"/></a></li>';
 
         foreach ($siteLinks as $linkName => $linkHref) {
             $data .= '<li><a href="'.$linkHref.'">'.$linkName.'</a></li>';
@@ -149,9 +144,9 @@ class Navigation
             $data .= '<a href="' . $siteUrl . '/section/terms">Terms of Service</a>, ';
             $data .= '<a href="' . $siteUrl . '/section/privacy">Privacy Notice</a>, and <a href="' . $siteUrl . '/section/privacy#adchoices">Ad Choices</a></p>';
         } else {
-            $data .= '<p>All rights reserved. Users of this site agree to the <a href="'.$siteUrl.'/legal/tos.html">Terms of Service</a>,';
-            $data .= ' <a href="'.$siteUrl.'/legal/privacynotice.html">Privacy Notice/Your California Privacy Rights</a>, and';
-            $data .= ' <a href="'.$siteUrl.'/legal/privacynotice.html#adchoices">Ad Choices</a></p>';
+            $data .= '<p>All rights reserved. Users of this site agree to the <a href="'.$siteUrl.'/terms">Terms of Service</a>,';
+            $data .= ' <a href="'.$siteUrl.'/privacy">Privacy Notice/Your California Privacy Rights</a>, and';
+            $data .= ' <a href="'.$siteUrl.'/privacy/#adchoices">Ad Choices</a></p>';
         }
 
         $data .= '</div>';
