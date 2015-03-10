@@ -8,7 +8,6 @@
 
 namespace GCI;
 
-
 class Navigation
 {
     function getSideNavigation($categories)
@@ -54,13 +53,11 @@ class Navigation
             $border = \GCI\site::$paletteArray[$paletteNumber]['border'];
         }
 
-        //$siteImage = $siteUrl . '/graphics/ody/cobrand_logo.gif';
-        //$siteImage = $siteUrl . '/graphics/ody/mast_logo.gif"';
         if (empty($imgSiteName)) {
-            $siteImage = "http://www.gannett-cdn.com/sites/$siteName/images/site-nav-logo@2x.png";
-        } else {
-            $siteImage = "http://www.gannett-cdn.com/sites/$imgSiteName/images/site-nav-logo@2x.png";
+            $imgSiteName = $siteName;
         }
+
+        $siteImage = "http://www.gannett-cdn.com/sites/$imgSiteName/images/site-nav-logo@2x.png";
 
         $siteLinks = array(
             'JOBS' => $siteUrl . '/jobs',
@@ -89,8 +86,6 @@ class Navigation
         if ($includeImage) {
             $data .= '<li style="height:40px"><a style="margin:5px;padding:0;" href="' . $siteUrl . '/"><img style="height:40px" class="img-responsive" src="' . $siteImage . '"/></a></li>';
         }
-
-        //$data .= '<li style="height:40px"><a href="'.$siteUrl.'/" style="margin:0;padding:0;"><img style="padding-top:10px;height:40px" src="'.$siteImage.'"/></a></li>';
 
         foreach ($siteLinks as $linkName => $linkHref) {
             $data .= '<li><a href="'.$linkHref.'">'.$linkName.'</a></li>';
