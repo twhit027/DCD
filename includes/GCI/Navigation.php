@@ -149,9 +149,9 @@ class Navigation
             $data .= '<a href="' . $siteUrl . '/section/terms">Terms of Service</a>, ';
             $data .= '<a href="' . $siteUrl . '/section/privacy">Privacy Notice</a>, and <a href="' . $siteUrl . '/section/privacy#adchoices">Ad Choices</a></p>';
         } else {
-            $data .= '<p>All rights reserved. Users of this site agree to the <a href="'.$siteUrl.'/legal/tos.html">Terms of Service</a>,';
-            $data .= ' <a href="'.$siteUrl.'/legal/privacynotice.html">Privacy Notice/Your California Privacy Rights</a>, and';
-            $data .= ' <a href="'.$siteUrl.'/legal/privacynotice.html#adchoices">Ad Choices</a></p>';
+            $data .= '<p>All rights reserved. Users of this site agree to the <a href="'.$siteUrl.'/terms/">Terms of Service</a>,';
+            $data .= ' <a href="'.$siteUrl.'/privacy/">Privacy Notice/Your California Privacy Rights</a>, and';
+            $data .= ' <a href="'.$siteUrl.'/privacy/#adchoices">Ad Choices</a></p>';
         }
 
         $data .= '</div>';
