@@ -143,7 +143,7 @@ foreach($rummages as $k=>$v) {
     }
 
     if (!empty($v["street"])) {
-        $rummageList1 .= '<h4 class="h4">' . $v["street"];
+        $rummageList1 .= '<h4>' . $v["street"];
     }
     if (!empty($v["email"])) {
         $rummageList1 .='<a class="btn btn-small" type="button" href="mailto:'.$v["email"].'?subject='. str_replace("&","%26",substr($v["adText"], 0, 80)) .'"><span class="glyphicon glyphicon glyphicon-envelope" aria-hidden="true"></span></a>';
