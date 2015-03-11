@@ -137,16 +137,19 @@ foreach($rummages as $k=>$v) {
         $rummageList1 .= '<div class="col-md-3">';
         $rummageList1 .= $images;
         $rummageList1 .= '</div>';
-        $rummageList1 .= '<div class="col-md-9">';
+        $rummageList1 .= '<div class="dcd-adText col-md-9" dcd-id="'.$k.'">';
     } else {
-        $rummageList1 .= '<div class="col-md-12">';
+        $rummageList1 .= '<div class="dcd-adText col-md-12" dcd-id="'.$k.'">';
     }
 
     if (!empty($v["street"])) {
-        $rummageList1 .= '<h4>' . $v["street"] . '</h4>';
+        $rummageList1 .= '<h4>' . $v["street"];
     }
     if (!empty($v["email"])) {
-        $rummageList1 .= '<h4>' . $v["email"] . '</h4>';
+        $rummageList1 .='<a class="btn btn-small" type="button" href="mailto:'.$v["email"].'?subject='. str_replace("&","%26",substr($v["adText"], 0, 80)) .'"><span class="glyphicon glyphicon glyphicon-envelope" aria-hidden="true"></span></a>';
+    }
+    if (!empty($v["street"])) {
+        $rummageList1 .= '</h4>';
     }
 
     $newTextArray = myTruncate($v["adText"], 200);
