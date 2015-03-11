@@ -137,9 +137,9 @@ foreach($rummages as $k=>$v) {
         $rummageList1 .= '<div class="col-md-3">';
         $rummageList1 .= $images;
         $rummageList1 .= '</div>';
-        $rummageList1 .= '<div class="col-md-9">';
+        $rummageList1 .= '<div class="dcd-adText col-md-9" dcd-id="'.$k.'">';
     } else {
-        $rummageList1 .= '<div class="col-md-12">';
+        $rummageList1 .= '<div class="dcd-adText col-md-12" dcd-id="'.$k.'">';
     }
 
     if (!empty($v["street"])) {
