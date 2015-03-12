@@ -80,9 +80,9 @@ if (!empty($feats)) {
     $featsList .= '</ul>';
 }
 
-$propTypeShow = '';
-if (!empty($propType)) {
-    $propTypeShow = "($propType)";
+$neighborhoodShow = '';
+if (!empty($neighborhood)) {
+    $neighborhoodShow = "($neighborhood)";
 }
 
 $imageArray = array();
@@ -123,7 +123,7 @@ $mainContent = <<<EOS
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">$street
-                    <small>$propTypeShow</small>
+                    <small>$neighborhoodShow</small>
                     <small>$email</small>
                 </h1>
             </div>
@@ -161,7 +161,7 @@ $mainContent = <<<EOS
         </div>
 
         <div class="col-sm-3 col-xs-6">
-        $neighborhood
+        $propType
         </div>
 
         </div>
