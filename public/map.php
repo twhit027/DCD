@@ -105,7 +105,7 @@ foreach($rummages as $k=>$v) {
         }
     }
 
-	$filter['city'][strtoupper($v['city'])] = true;
+	$filter['city'][strtoupper(trim($v['city']))] = true;
 	$filter['sites'][$v['siteCode']] = strtoupper($v['siteName']);
     $filter['rents'][$v['rent']] = $v['rent'];
     $filter['bdrooms'][$v['bdrooms']] = $v['bdrooms'];

@@ -30,19 +30,65 @@ if (isset($_REQUEST['posit'])) {
 
 $listings = $app->getSingleListing($id);
 
-$cleanAdText = strip_tags($listings['adText']);
-$siteCode = urlencode($listings['siteCode']);
-$placement = urlencode($listings['placement']);
-$position = urlencode($listings['position']);
-$street = $listings['street'];
-$city = $listings['city'];
-$state = $listings['state'];
+$cleanAdText = strip_tags($listings['AdText']);
+$siteCode = urlencode($listings['SiteCode']);
+$placement = urlencode($listings['Placement']);
+$position = urlencode($listings['Position']);
+$street = $listings['Street'];
+$city = $listings['City'];
+$state = $listings['State'];
+$amenities = json_decode($listings['Amenities']);
+$email = $listings['Email'];
+$propType = $listings['PropType'];
+$parking = $listings['Parking'];
 
+$parkingList = '';
+if (!empty($parking)) {
+    $parkingList .= '<ul><li>'.$parking.'</li></ul>';
+}
+
+$bedRooms = $listings['BedRooms'];
+$bathRooms = $listings['BathRooms'];
+$rent = $listings['Rent'];
+$phone = $listings['Phone'];
+$neighborhood = $listings['Neighborhood'];
+
+$pets = $listings['Pets'];
+
+$petsList = '';
+if (!empty($pets)) {
+    $petsList .= '<ul><li>'.$pets.'</li></ul>';
+}
+
+$recs = json_decode($listings['ExerciseRec']);
+$recsList = '';
+if (!empty($recs)) {
+    $recsList = '<ul>';
+    foreach($recs as $rectx) {
+        $recsList .= '<li>'.$rectx.'</li>';
+    }
+    $recsList .= '</ul>';
+}
+
+$feats = json_decode($listings['CommFeat']);
+$featsList = '';
+if (!empty($feats)) {
+    $featsList = '<ul>';
+    foreach($feats as $rectx) {
+        $featsList .= '<li>'.$rectx.'</li>';
+    }
+    $featsList .= '</ul>';
+}
+
+$propTypeShow = '';
+if (!empty($propType)) {
+    $propTypeShow = "($propType)";
+}
 
 $imageArray = array();
 
-if (!empty($listings['images'])) {
-    $imageArray = explode(',', $listings['images']);
+if (!empty($listings['Images'])) {
+    $imageArray = explode(',', $listings['Images']);
 }
 
 
@@ -60,15 +106,25 @@ function convertImages($listingResults) {
     }
 
 
+if (!empty($email)) {
+    $email ='<a class="btn btn-small" type="button" href="mailto:'.$email.'?subject='. str_replace("&","%26",substr($cleanAdText, 0, 80)) .'"><span class="glyphicon glyphicon glyphicon-envelope" aria-hidden="true"></span></a>';
+}
 
-
+if (!empty($amenities)) {
+    $amenitiesList = '<h3>Amenities</h3><ul>';
+    foreach($amenities as $amen) {
+        $amenitiesList .= '<li>'.$amen.'</li>';
+    }
+    $amenitiesList .= '</ul>';
+}
 
 $mainContent = <<<EOS
 <!-- Portfolio Item Heading -->
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">Listing
-                    <small>($street)</small>
+                <h1 class="page-header">$street
+                    <small>$propTypeShow</small>
+                    <small>$email</small>
                 </h1>
             </div>
         </div>
@@ -78,22 +134,35 @@ $mainContent = <<<EOS
         <div class="row">
 
             <div class="col-md-8">
-                <img class="img-responsive" src="http://placehold.it/750x500" alt="">
+                <img class="img-responsive" src="http://placehold.it/480x320" alt="">
                 <br />
                 <i class="fa fa-map-marker fa-2x"></i>&nbsp;&nbsp;$street, $city, $state <a href="#">(view Map)</a>
             </div>
 
             <div class="col-md-4">
                 <h3>Description</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque urna varius vitae. Sed dui lorem, adipiscing in adipiscing et, interdum nec metus. Mauris ultricies, justo eu convallis placerat, felis enim.</p>
-                <h3>Details</h3>
-                <ul>
-                    <li>Lorem Ipsum</li>
-                    <li>Dolor Sit Amet</li>
-                    <li>Consectetur</li>
-                    <li>Adipiscing Elit</li>
-                </ul>
+                <p>$cleanAdText</p>
+                $amenitiesList
             </div>
+
+        </div>
+
+        <div class="row">
+        <div class="col-sm-3 col-xs-6">
+        $bedRooms&nbsp<strong>Bedrooms</strong>
+        </div>
+
+        <div class="col-sm-3 col-xs-6">
+        $bathRooms&nbsp<strong>Bathrooms</strong>
+        </div>
+
+        <div class="col-sm-3 col-xs-6">
+        <strong>$</strong>$rent
+        </div>
+
+        <div class="col-sm-3 col-xs-6">
+        $neighborhood
+        </div>
 
         </div>
         <!-- /.row -->
@@ -102,37 +171,34 @@ $mainContent = <<<EOS
         <div class="row">
 
             <div class="col-lg-12">
-                <h3 class="page-header">Additional Images</h3>
+                <h3 class="page-header">Additional Features</h3>
             </div>
 
             <div class="col-sm-3 col-xs-6">
-                <a href="#">
-                    <img class="img-responsive portfolio-item" src="http://placehold.it/500x300" alt="">
-                </a>
+                <h4>Parking</h4>
+                    $parkingList
             </div>
 
             <div class="col-sm-3 col-xs-6">
-                <a href="#">
-                    <img class="img-responsive portfolio-item" src="http://placehold.it/500x300" alt="">
-                </a>
+                <h4>Pets</h4>
+                    $petsList
             </div>
 
             <div class="col-sm-3 col-xs-6">
-                <a href="#">
-                    <img class="img-responsive portfolio-item" src="http://placehold.it/500x300" alt="">
-                </a>
+                <h4>Recreation</h4>
+                    $recsList
             </div>
 
             <div class="col-sm-3 col-xs-6">
-                <a href="#">
-                    <img class="img-responsive portfolio-item" src="http://placehold.it/500x300" alt="">
-                </a>
+                <h4>Features</h4>
+                    $featsList
             </div>
+
 
         </div>
         <!-- /.row -->
 
-        <hr />
+
         <div class"row">
             <div class="col-lg-12">
                 <h3 class="page-header">Area Map</h3>

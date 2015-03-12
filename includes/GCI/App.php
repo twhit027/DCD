@@ -453,21 +453,11 @@ class App
 
     public function getSingleListing($id)
     {
-        $sql = "SELECT ID, AdText, SiteCode, Placement, Position, Images, Street, City, State FROM `listing` where ID = :id";
+        $sql = "SELECT ID, AdText, SiteCode, Placement, Position, Images, Street, City, State, Zip, Rent, Amenities, BathRooms, BedRooms, Deposit, Email, Pets, Phone, ExerciseRec, CommFeat, Neighborhood, Parking, PropType FROM `listing` where ID = :id";
         $params = array(':id' => $id);
         $results = $this->database->getAssoc($sql, $params);
 
-        $retArray['id'] = $results[0]['ID'];
-        $retArray['adText'] = $results[0]['AdText'];
-        $retArray['siteCode'] = $results[0]['SiteCode'];
-        $retArray['placement'] = $results[0]['Placement'];
-        $retArray['position'] = $results[0]['Position'];
-        $retArray['images'] = $results[0]['Images'];
-        $retArray['street'] = $results[0]['Street'];
-        $retArray['state'] = $results[0]['State'];
-        $retArray['city'] = $results[0]['City'];
-
-        return $retArray;
+        return $results[0];
     }
 
     public static function getHost()
