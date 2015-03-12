@@ -106,9 +106,10 @@ function convertImages($listingResults) {
     return preg_replace('/src="([^"]*)"/i', 'src="img/images/'.$listingResults['siteCode'].'/${1}"', $listingResults['adText']);
     }
 
-
+$emailGlyph = $emailTextOnly = '';
 if (!empty($email)) {
-    $email ='<a class="btn btn-small" type="button" href="mailto:'.$email.'?subject='. str_replace("&","%26",substr($cleanAdText, 0, 80)) .'"><span class="glyphicon glyphicon glyphicon-envelope" aria-hidden="true"></span></a>';
+    $emailGlyph ='<a class="btn btn-small" type="button" href="mailto:'.$email.'?subject='. str_replace("&","%26",substr($cleanAdText, 0, 80)) .'"><span class="glyphicon glyphicon glyphicon-envelope" aria-hidden="true"></span></a>';
+    $emailTextOnly ='<a class="btn btn-small" type="button" href="mailto:'.$email.'?subject='. str_replace("&","%26",substr($cleanAdText, 0, 80)) .'">'.$email.'</a>';
 }
 
 if (!empty($amenities)) {
@@ -125,7 +126,7 @@ $mainContent = <<<EOS
             <div class="col-lg-12">
                 <h1 class="page-header">$street
                     <small>$neighborhoodShow</small>
-                    <small>$email</small>
+                    <small>$emailGlyph</small>
                 </h1>
             </div>
         </div>
@@ -197,6 +198,18 @@ $mainContent = <<<EOS
         </div>
         <!-- /.row -->
 
+        <!-- Related Projects Row -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="page-header">Contact</h3>
+            </div>
+            <div class="col-sm-6 col-xs-12">
+                <strong>Phone:</strong>&nbsp; $phone
+            </div>
+            <div class="col-sm-6 col-xs-12">
+                <strong>Email:</strong>&nbsp; $emailTextOnly
+            </div>
+        </div>
 
         <div class"row">
             <div class="col-lg-12">
