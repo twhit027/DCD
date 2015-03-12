@@ -37,6 +37,7 @@ $position = urlencode($listings['Position']);
 $street = $listings['Street'];
 $city = $listings['City'];
 $state = $listings['State'];
+$zip = $listings['Zip'];
 $amenities = json_decode($listings['Amenities']);
 $email = $listings['Email'];
 $propType = $listings['PropType'];
@@ -120,7 +121,7 @@ if (!empty($amenities)) {
 
 $mainContent = <<<EOS
 <!-- Portfolio Item Heading -->
-        <div class="row">
+        <div class="row" style="margin-top: 0px;">
             <div class="col-lg-12">
                 <h1 class="page-header">$street
                     <small>$neighborhoodShow</small>
@@ -136,7 +137,7 @@ $mainContent = <<<EOS
             <div class="col-md-8">
                 <img class="img-responsive" src="http://placehold.it/480x320" alt="">
                 <br />
-                <i class="fa fa-map-marker fa-2x"></i>&nbsp;&nbsp;$street, $city, $state <a href="#">(view Map)</a>
+                <i class="fa fa-map-marker fa-2x"></i>&nbsp;&nbsp;$street, $city, $state $zip<a href="#">(view Map)</a>
             </div>
 
             <div class="col-md-4">
@@ -147,23 +148,21 @@ $mainContent = <<<EOS
 
         </div>
 
-        <div class="row">
-        <div class="col-sm-3 col-xs-6">
-        $bedRooms&nbsp<strong>Bedrooms</strong>
-        </div>
-
-        <div class="col-sm-3 col-xs-6">
-        $bathRooms&nbsp<strong>Bathrooms</strong>
-        </div>
-
-        <div class="col-sm-3 col-xs-6">
-        <strong>$</strong>$rent
-        </div>
-
-        <div class="col-sm-3 col-xs-6">
-        $propType
-        </div>
-
+        <div class="panel panel-default" style="margin-top: 20px">
+            <div class="panel-body">
+                <div class="col-sm-3 col-xs-6">
+                $bedRooms&nbsp<strong>Bedrooms</strong>
+                </div>
+                <div class="col-sm-3 col-xs-6">
+                $bathRooms&nbsp<strong>Bathrooms</strong>
+                </div>
+                <div class="col-sm-3 col-xs-6">
+                <strong>$</strong>$rent
+                </div>
+                <div class="col-sm-3 col-xs-6">
+                $propType
+                </div>
+            </div>
         </div>
         <!-- /.row -->
 
@@ -175,22 +174,22 @@ $mainContent = <<<EOS
             </div>
 
             <div class="col-sm-3 col-xs-6">
-                <h4>Parking</h4>
+                <h4><i class="fa fa-car"></i>&nbsp;Parking</h4>
                     $parkingList
             </div>
 
             <div class="col-sm-3 col-xs-6">
-                <h4>Pets</h4>
+                <h4><i class="fa fa-paw"></i>&nbsp;Pets</h4>
                     $petsList
             </div>
 
             <div class="col-sm-3 col-xs-6">
-                <h4>Recreation</h4>
+                <h4><i class="fa fa-futbol-o"></i>&nbsp;Recreation</h4>
                     $recsList
             </div>
 
             <div class="col-sm-3 col-xs-6">
-                <h4>Features</h4>
+                <h4><i class="fa fa-wheelchair"></i>&nbsp;Features</h4>
                     $featsList
             </div>
 
