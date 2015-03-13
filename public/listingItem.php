@@ -42,6 +42,7 @@ $amenities = json_decode($listings['Amenities']);
 $email = $listings['Email'];
 $propType = $listings['PropType'];
 $parking = $listings['Parking'];
+$deposit = $listings['Deposit'];
 
 $parkingList = '';
 if (!empty($parking)) {
@@ -152,16 +153,16 @@ $mainContent = <<<EOS
         <div class="panel panel-default" style="margin-top: 20px">
             <div class="panel-body">
                 <div class="col-sm-3 col-xs-6">
-                $bedRooms&nbsp<strong>Bedrooms</strong>
+                <span class="label label-default">Bedrooms</span>&nbsp;$bedRooms
                 </div>
                 <div class="col-sm-3 col-xs-6">
-                $bathRooms&nbsp<strong>Bathrooms</strong>
+                <span class="label label-default">Bathrooms</span>&nbsp;$bathRooms
                 </div>
                 <div class="col-sm-3 col-xs-6">
-                <strong>$</strong>$rent
+                <span class="label label-default">Rent</span>&nbsp;$$rent
                 </div>
                 <div class="col-sm-3 col-xs-6">
-                $propType
+                <span class="label label-default">Deposit</span>&nbsp;$deposit
                 </div>
             </div>
         </div>

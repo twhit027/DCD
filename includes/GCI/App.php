@@ -91,7 +91,7 @@ class App
         return $data;
     }
 
-    public function getRummages($place = '', $position = '', $route = '', $siteGroup = '', $city = '', $siteCode = '', $day ='')
+    public function getRummages($place = '', $position = '', $route = '', $siteGroup = '', $city = '', $siteCode = '', $day ='', $bdRooms = '', $bthRooms = '', $minRent = '', $maxRent = '')
     {
         if ($siteGroup == '') {
             $siteGroup = $this->site->getSiteGroup();
@@ -130,6 +130,26 @@ class App
             $params = array_merge($params, array(':day' => $day));
         }
 
+        if (!empty($bdRooms)) {
+            $sql .= " AND t1.BedRooms >= :bdRooms";
+            $params = array_merge($params, array(':bdRooms' => $bdRooms));
+        }
+
+        if (!empty($bthRooms)) {
+            $sql .= " AND t1.BathRooms >= :bthRooms";
+            $params = array_merge($params, array(':bthRooms' => $bthRooms));
+        }
+
+        if (!empty($minRent)) {
+            $sql .= " AND t1.Rent >= :rent";
+            $params = array_merge($params, array(':rent' => $minRent));
+        }
+
+        if (!empty($maxRent)) {
+            $sql .= " AND t1.Rent <= :rent";
+            $params = array_merge($params, array(':rent' => $maxRent));
+        }
+
         if (!empty($route)) {
             $routeIDS = explode(",", $route);
             $rts = array();
@@ -144,10 +164,11 @@ class App
             $params = array_merge($params, $rts['params']);
         }
 
-        //Move iteration 16 fix to come after the route part of the sql string
         $sql .= " ORDER BY t1.AdText";
 
         $results = $this->database->getAssoc($sql, $params);
+
+        echo $sql;
 
         $dataArray = array();
         //$dataArray['totalRows'] = $this->database->getCount("SELECT FOUND_ROWS()");

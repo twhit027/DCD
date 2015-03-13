@@ -164,18 +164,27 @@ class ClassifiedsAdmin extends PDO
                 $userData[$i]["MORE_INFORMATION"] = '';
             }
 
-            $imagesCSV = '';
+            $imageArray = array();
             if (!empty($userData[$i]["AD-TEXT"])) {
                 //get all img tags
                 $regexp = '/<img[^>]*src="(.*?)"[^>]*>/i';
                 //$regexp = '/<img[^>]*src="([^"]+)"[^>]*>/i';
                 //$regexp = '/< *img[^>]*src *= *["\']?([^"\']*)/i';
                 $iResults = preg_match_all($regexp, $userData[$i]["AD-TEXT"], $aMatches);
-                if (!empty($aMatches[1])) {
-                    $imagesCSV = implode(',', $aMatches[1]);
-                }
+                $imageArray = $aMatches[1];
                 //then strip all html tags
                 $userData[$i]["AD-TEXT"] = trim(strip_tags($userData[$i]["AD-TEXT"]));
+            }
+
+            if (!empty($userData[$i]["IMAGE"])) {
+                foreach ($userData[$i]["IMAGE"] as $imgSrc) {
+                    $imageArray[] = $imgSrc;
+                }
+            }
+
+            $imagesCSV = '';
+            if (!empty($imageArray)) {
+                $imagesCSV = implode(',', $imageArray);
             }
 
             //$userData[$i]["AD"] = $site.$userData[$i]["AD"];
@@ -200,7 +209,21 @@ class ClassifiedsAdmin extends PDO
 
             try {
                 $stmt = $this->prepare("INSERT INTO `listing` (`ID`,`StartDate`,`EndDate`,`Placement`,`Position`,`AdText`,`Images`,`SiteCode`,`Street`,`City`,`State`,`Zip`,`ExternalURL`,`MoreInfo`,`Rent`,`Amenities`,`BathRooms`,`BedRooms`,`Deposit`,`Email`,`Pets`,`Phone`,`ExerciseRec`,`CommFeat`,`Neighborhood`,`Parking`,`PropType` ) VALUES(:ID, :StartDate, :EndDate, :Placement, :Position, :AdText, :Images, :Site, :Street, :City, :State, :Zip, :ExternalURL, :MoreInfo, :Rent, :Amenities, :BathRooms, :BedRooms, :Deposit, :Email, :Pets, :Phone, :ExerciseRec, :CommFeat, :Neighborhood, :Parking, :PropType)");
-                $stmt->execute(array(':ID' => $userData[$i]["AD"], ':StartDate' => $userData[$i]["START-DATE"], ':EndDate' => $userData[$i]["END-DATE"], ':Placement' => $userData[$i]["PLACEMENT"], ':Position' => $userData[$i]["POSITION"], ':AdText' => $userData[$i]["AD-TEXT"], ':Images' => $imagesCSV, ':Site' => $site, ':Street' => $userData[$i]["STREET"], ':City' => $userData[$i]["CITY"], ':State' => $userData[$i]["STATE"], ':Zip' => $userData[$i]["ZIP"], ':ExternalURL' => $userData[$i]["EXTERNAL_URL"], ':MoreInfo' => $userData[$i]["MORE_INFORMATION"],
+                $stmt->execute(array(
+                    ':ID' => $userData[$i]["AD"],
+                    ':StartDate' => $userData[$i]["START-DATE"],
+                    ':EndDate' => $userData[$i]["END-DATE"],
+                    ':Placement' => $userData[$i]["PLACEMENT"],
+                    ':Position' => $userData[$i]["POSITION"],
+                    ':AdText' => $userData[$i]["AD-TEXT"],
+                    ':Images' => $imagesCSV,
+                    ':Site' => $site,
+                    ':Street' => $userData[$i]["STREET"],
+                    ':City' => $userData[$i]["CITY"],
+                    ':State' => $userData[$i]["STATE"],
+                    ':Zip' => $userData[$i]["ZIP"],
+                    ':ExternalURL' => $userData[$i]["EXTERNAL_URL"],
+                    ':MoreInfo' => $userData[$i]["MORE_INFORMATION"],
                     ':Rent' => $userData[$i]["RENT"],
                     ':Amenities' => json_encode($userData[$i]["AMENITIES"]),
                     ':BathRooms' => $userData[$i]["BATHROOMS"],
