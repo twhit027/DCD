@@ -94,9 +94,13 @@ if (!empty($neighborhood)) {
 }
 
 $imageArray = array();
+$imageArrayCnt = 0;
 if (!empty($listings['Images'])) {
     $imageArray = explode(',', $listings['Images']);
+    $imageArrayCnt = count($imageArray);
 }
+
+
 
 $emailGlyph = $emailTextOnly = '';
 if (!empty($email)) {
@@ -126,7 +130,7 @@ if (!empty($port)) {
 
 $imageCarouselIndicators = '';
 $imageCarouselDivs = '';
-if (!empty($imageArray)) {
+if ($imageArrayCnt > 2) {
     $imgCnt = 0;
     foreach((array) $imageArray as $imgFile) {
         if (strpos($imgFile, 'http:') === false) {
@@ -170,8 +174,17 @@ $imageCarousel = <<<EOS
 </div>
 EOS;
 
-if (empty($imageCarouselDivs)) {
+if ($imageArrayCnt == 0) {
     $imageCarousel = '<img class="img-responsive" src="http://placehold.it/480x320&text=No+Image+available" alt="No Image Available">';
+} else if ($imageArrayCnt == 1) {
+    $imgFile = $imageArray[0];
+        if (strpos($imgFile, 'http:') === false) {
+            $imgSrc = 'http://' . $url . '/images/' . $listings['SiteCode'] . '/' . $imgFile;
+        } else {
+            $imgSrc =  $imgFile;
+        }
+
+    $imageCarousel = '<img class="img-responsive" style="margin: 0 auto;" src="'.$imgSrc.'" alt="No Image Available">';
 }
 
 $metadata = '
