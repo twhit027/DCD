@@ -121,7 +121,7 @@ foreach($rummages as $k=>$v) {
                     $imgSrc =  $imgFile;
                 }
 
-                $images .= '<a class="fancybox" href='. $imgSrc . '" rel="ligthbox ' . $v['id'] . '_group" title="Picture"';
+                $images .= '<a class="fancybox" href="'. $imgSrc . '" rel="ligthbox ' . $v['id'] . '_group" title="Picture"';
                 if ($imgCnt > 1) {$images .= ' style="display: none;"';}
                 $images .= ' >';
                 $images .= '<img src="'.$imgSrc.'" class="img-responsive" />';
