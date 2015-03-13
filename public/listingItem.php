@@ -170,32 +170,25 @@ $mainContent = <<<EOS
 
         <!-- Related Projects Row -->
         <div class="row">
-
             <div class="col-lg-12">
                 <h3 class="page-header">Additional Features</h3>
             </div>
-
             <div class="col-sm-3 col-xs-6">
                 <h4><i class="fa fa-car"></i>&nbsp;Parking</h4>
                     $parkingList
             </div>
-
             <div class="col-sm-3 col-xs-6">
                 <h4><i class="fa fa-paw"></i>&nbsp;Pets</h4>
                     $petsList
             </div>
-
             <div class="col-sm-3 col-xs-6">
                 <h4><i class="fa fa-futbol-o"></i>&nbsp;Recreation</h4>
                     $recsList
             </div>
-
             <div class="col-sm-3 col-xs-6">
-                <h4><i class="fa fa-wheelchair"></i>&nbsp;Features</h4>
+                <h4><i class="fa fa-building-o"></i>&nbsp;Features</h4>
                     $featsList
             </div>
-
-
         </div>
         <!-- /.row -->
 
