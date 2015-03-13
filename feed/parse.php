@@ -92,7 +92,7 @@ function char($parser, $data)
     $upperStateName = strtoupper($state['name']);
 
     $jsonTagsArray = array(
-        'AMENITIES','DEPOSIT','EXERCISEREC','COMMFEAT'
+        'AMENITIES','DEPOSIT','EXERCISEREC','COMMFEAT','IMAGE'
     );
 
     if ($upperStateName == "DCD") {
