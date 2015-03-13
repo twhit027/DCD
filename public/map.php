@@ -28,7 +28,8 @@ $app = new \GCI\App();
 
 $app->logInfo('Listing Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].', REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].',HTTP_HOST: '.@$_SERVER['HTTP_HOST'].'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].')');
 
-$place = $position = $city = $paper = $day = '';
+$place = $position = $city = $paper = $day = $bdRooms = $bthRooms = $minRent = $maxRent = '';
+$filtersApplied = 0;
 
 if (isset($_REQUEST['place'])) {
     $place = urldecode($_REQUEST['place']);
@@ -45,6 +46,18 @@ if (isset($_REQUEST['paper'])) {
 if (isset($_REQUEST['day'])) {
     $day = urldecode($_REQUEST['day']);
 }
+if (isset($_REQUEST['bdrooms'])) {
+    $bdRooms = urldecode($_REQUEST['bdrooms']);
+}
+if (isset($_REQUEST['bthrooms'])) {
+    $bthRooms = urldecode($_REQUEST['bthrooms']);
+}
+if (isset($_REQUEST['minrent'])) {
+    $minRent = urldecode($_REQUEST['minrent']);
+}
+if (isset($_REQUEST['maxrent'])) {
+    $maxRent = urldecode($_REQUEST['maxrent']);
+}
 
 $busName = $app->getSite()->getBusName();
 
@@ -57,7 +70,7 @@ $metadata = '
 $dayArray = Array(1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday', 5 => 'Friday', 6 => 'Saturday', 7 => 'Sunday');
 $dayAbrvArray = Array(1 => 'Mon', 2 => 'Tue', 3 => 'Wed', 4 => 'Thu', 5 => 'Fri', 6 => 'Sat', 7 => 'Sun');
 
-$listOfRummages = $app->getRummages($place,$position,'','',$city,$paper,$day);
+$listOfRummages = $app->getRummages($place,$position,'','',$city,$paper,$day,$bdRooms,$bthRooms,$minRent,$maxRent);
 
 if(isset($_GET['ad']) && !empty($_GET['ad'])) {
     $showcase = $_GET['ad'];
@@ -217,6 +230,7 @@ if(empty($_GET['paper'])) {
         $filterForm .= '</ul></div>';
     }
 } else {
+    $filtersApplied++;
     $selectedSiteArray = $app->getSiteFromSiteCode($_GET['paper']);
     $selectedBusName = $selectedSiteArray[0]['BusName'];
     $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPaper" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'paper\')" href="javascript:void(0)">';
@@ -234,6 +248,7 @@ if(empty($_GET['day'])) {
         $filterForm .= '</ul></div>';
     }
 } else {
+    $filtersApplied++;
     $dayString = isset($dayArray[$_GET['day']])?$dayArray[$_GET['day']]:'';
     $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuDay" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'day\')" href="javascript:void(0)">';
     $filterForm .= ' Days - <strong>'.$dayString.'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
@@ -251,9 +266,9 @@ if(empty($_GET['bdrooms'])) {
         $filterForm .= '</ul></div>';
     }
 } else {
-    $bdrooms = isset($dayArray[$_GET['bdrooms']])?$dayArray[$_GET['bdrooms']]:'';
+    $filtersApplied++;
     $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuBdrooms" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'bdrooms\')" href="javascript:void(0)">';
-    $filterForm .= ' Min. Bed Rooms - <strong>'.$bdrooms.'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
+    $filterForm .= ' Min. Bed Rooms - <strong>'.$_GET['bdrooms'].'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
 }
 
 if(empty($_GET['bthrooms'])) {
@@ -268,9 +283,9 @@ if(empty($_GET['bthrooms'])) {
         $filterForm .= '</ul></div>';
     }
 } else {
-    $bthrooms = isset($dayArray[$_GET['bthrooms']])?$dayArray[$_GET['bthrooms']]:'';
+    $filtersApplied++;
     $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuBthrooms" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'bthrooms\')" href="javascript:void(0)">';
-    $filterForm .= ' Bath Rooms - <strong>'.$bthrooms.'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
+    $filterForm .= ' Bath Rooms - <strong>'.$_GET['bthrooms'].'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
 }
 
 if(count($filter['rents']) > 2) {
@@ -304,9 +319,9 @@ if (empty($_GET['minrent'])) {
         $filterForm .= '</ul></div>';
     }
 } else {
-    $minrent = isset($dayArray[$_GET['maxrent']])?$dayArray[$_GET['maxrent']]:'';
+    $filtersApplied++;
     $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuMinRent" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'minrent\')" href="javascript:void(0)">';
-    $filterForm .= ' Min. Rent - <strong>'.$minrent.'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
+    $filterForm .= ' Min. Rent - <strong>'.$_GET['minrent'].'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
 }
 
 if (empty($_GET['maxrent'])) {
@@ -320,14 +335,18 @@ if (empty($_GET['maxrent'])) {
         $filterForm .= '</ul></div>';
     }
 } else {
-    $maxrent = isset($dayArray[$_GET['maxrent']])?$dayArray[$_GET['maxrent']]:'';
+    $filtersApplied++;
     $filterForm .= '<div class="btn-group"><button title="Remove Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuMaxRent" data-toggle="dropdown" onClick="removeSitesAndReloadPage(\'maxrent\')" href="javascript:void(0)">';
-    $filterForm .= ' Max. Rent - <strong>'.$maxrent.'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
+    $filterForm .= ' Max. Rent - <strong>'.$_GET['maxrent'].'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
 }
 
 $filterLine = '';
 if (!empty($filterForm)) {
-    $filterLine = '<div style="padding-bottom: 5px;"><label>Filter by:&nbsp;</label>'.$filterForm.'</div>';
+    $filterLine = '<div style="padding-bottom: 5px;"><label>Filter by:&nbsp;</label>'.$filterForm;
+    if($filtersApplied > 1) {
+        $filterLine .= '<a id="clearFilters" href="#">&nbsp;Clear All Filters</a>';
+    }
+    $filterLine .= '</div>';
 }
 
 $mapDisplay = <<<EOS

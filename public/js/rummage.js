@@ -203,6 +203,13 @@ $(document).ready(function(){
         return false;
         });
 
+    $('#clearFilters').click(function () {
+        var url = window.location.href;
+        url = url.replace(/&?(page|city|paper|day|bdrooms|bthrooms|minrent|maxrent)=([^&]$|[^&]*)/gi, "");
+        window.location.href = url;
+        return false;
+        });
+
     //$("#sitesdd").on("change", function() { window.location.href = window.location.href + "&sites=" + encodeURIComponent(this.value); return false;} );
 });
 
@@ -254,9 +261,21 @@ function removeSitesAndReloadPage(paramName) {
 		url = url.replace(/&?paper=([^&]$|[^&]*)/i, "");
     } else if(paramName == 'day') {
         url = url.replace(/&?day=([^&]$|[^&]*)/i, "");
+    } else if(paramName == 'bdrooms') {
+        url = url.replace(/&?bdrooms=([^&]$|[^&]*)/i, "");
+    } else if(paramName == 'bthrooms') {
+        url = url.replace(/&?bthrooms=([^&]$|[^&]*)/i, "");
+    } else if(paramName == 'minrent') {
+        url = url.replace(/&?minrent=([^&]$|[^&]*)/i, "");
+    } else if(paramName == 'maxrent') {
+        url = url.replace(/&?maxrent=([^&]$|[^&]*)/i, "");
     }
 	window.location.href = url;
 	return false;
+}
+
+function removeAllParamsAndReloadPage(paramName) {
+
 }
 
 function addSitesAndReloadPage(paramValue) {
