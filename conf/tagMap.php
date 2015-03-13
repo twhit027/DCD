@@ -42,5 +42,5 @@ $tagMapArray = array(
     'APTS_NEIGHBORHOOD' => 'NEIGHBORHOOD',
     'APTS_PARKING' => 'PARKING',
     'APTS_PROPTYPE' => 'PROPTYPE',
-    'IMG' => 'IMAGE'
+    'IMAGE' => 'IMAGE'
 );
