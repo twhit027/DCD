@@ -210,6 +210,12 @@ $(document).ready(function(){
         return false;
         });
 
+    $('#gotomap').click(function () {
+        //var divPosition = $('#map').offset();
+        $('html, body').animate({scrollTop: $('#map').offset().top}, "slow");
+        return false;
+        });
+
     //$("#sitesdd").on("change", function() { window.location.href = window.location.href + "&sites=" + encodeURIComponent(this.value); return false;} );
 });
 
@@ -272,10 +278,6 @@ function removeSitesAndReloadPage(paramName) {
     }
 	window.location.href = url;
 	return false;
-}
-
-function removeAllParamsAndReloadPage(paramName) {
-
 }
 
 function addSitesAndReloadPage(paramValue) {

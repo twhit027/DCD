@@ -88,31 +88,43 @@ $filter['days'] = array();
 
 $rownum = 0;
 foreach($rummages as $k=>$v) {
-    $bgColor = 'F9F9F9';
-
     if ($app->getSite()->getDomain() == $v['domain']) {
         $server = $_SERVER['SERVER_NAME'];
+        $port = $_SERVER['SERVER_PORT'];
         if (isset($_SERVER['CONTEXT_PREFIX'])) {
             $server .= $_SERVER['CONTEXT_PREFIX'];
         }
     } else {
+        $port = '';
         $server = 'classifieds.' . $v['domain'];
     }
 
     $url = rtrim($server, "/");
 
+    if (!empty($port)) {
+        $url= $url.':'.$port;
+    }
+
+    $bgColor = 'F9F9F9';
     $imageArray = array();
     $images = '';
+    $imgInt = 0;
     if (!empty($v['images'])) {
         $imageArray = explode(',', $v['images']);
-        if (count($imageArray) > 0) {
+        if (!empty($imageArray)) {
             $imgCnt = 0;
-            foreach ($imageArray as $imgSrc) {
+            foreach ($imageArray as $imgFile) {
                 $imgCnt++;
-                $images .= '<a class="fancybox" href="http://' . $server . '/images/' . $v['siteCode'] . '/' . $imgSrc . '" rel="ligthbox ' . $v['id'] . '_group" title="Picture"';
+                if (strpos($imgFile, 'http:') === false) {
+                    $imgSrc = 'http://' . $url . '/images/' . $v['siteCode'] . '/' . $imgFile;
+                } else {
+                    $imgSrc =  $imgFile;
+                }
+
+                $images .= '<a class="fancybox" href='. $imgSrc . '" rel="ligthbox ' . $v['id'] . '_group" title="Picture"';
                 if ($imgCnt > 1) {$images .= ' style="display: none;"';}
                 $images .= ' >';
-                $images .= '<img src="http://' . $server . '/images/' . $v['siteCode'] . '/' . $imgSrc . '" class="img-responsive" style="max-width: 150px;"/>';
+                $images .= '<img src="'.$imgSrc.'" class="img-responsive" />';
                 $images .= '</a>';
             }
         }
@@ -135,9 +147,9 @@ foreach($rummages as $k=>$v) {
 
     $rummageList1 .= '<div class="row" style="margin-top: 0px; padding-bottom: 5px; background-color: #'.$bgColor.';">';
 
-    $dataInfo = '<div class=".small" style="padding-bottom:10px; color:#0052f4; padding-left: 5px;"><a href="http://' . $server . '/" target="_blank">' . $v['siteName'] . '</a>';
+    $dataInfo = '<div class=".small" style="padding-bottom:10px; color:#0052f4; padding-left: 5px;"><a href="http://' . $url . '/" target="_blank">' . $v['siteName'] . '</a>';
     if (empty($position))
-    $dataInfo .= '&nbsp;|&nbsp;<a href="http://' . $server . '/category.php?place=' . urlencode($v['placement']) . '&posit=' . urlencode($v['position']) . '" target="_blank">' . $v['position'] . '</a>';
+    $dataInfo .= '&nbsp;|&nbsp;<a href="http://' . $url . '/category.php?place=' . urlencode($v['placement']) . '&posit=' . urlencode($v['position']) . '" target="_blank">' . $v['position'] . '</a>';
     if (!empty($v['moreInfo'])) {
         $dataInfo .= '&nbsp;|&nbsp;<a href="' . $v['moreInfo'] . '" style="color:#0052f4;" title="More Information" target="_blank"><span class="glyphicon glyphicon-info-sign"></span>More Info</a>';
     }
@@ -182,9 +194,9 @@ foreach($rummages as $k=>$v) {
 
     $rummageList1 .= '<div class="btn-group btn-group-xs" role="group" aria-label="...">';
     $rummageList1 .= '<a href="http://twitter.com/home?status=' . str_replace("&","%26",substr($v["adText"], 0, 120)) . '" target="_blank" class="btn btn-twitter btn-xs"><i class="fa fa-twitter"></i></a>';
-    $rummageList1 .= '<a href="https://www.facebook.com/sharer/sharer.php?u=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $k . '" target="_blank" class="btn btn-facebook btn-xs"><i class="fa fa-facebook"></i></a>';
-    $rummageList1 .= '<a href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $_SERVER['SERVER_NAME'] . '/item.php?id=' . $k . '" target="_blank" class="btn btn-google-plus btn-xs"><i class="fa fa-google-plus"></i></a>';
-    $rummageList1 .= '<a href="mailto:?subject='. str_replace("&","%26",substr($v["adText"], 0, 80)) .'&body='. str_replace("&","%26",substr($v["adText"], 0, 120)) .'%0D%0A%0D%0A http://' . $_SERVER['SERVER_NAME'] . '/map.php?place='.urlencode($place).'%26posit='.urlencode($position).'%26ad=' . $k .'" target="_top" id="'.$k.'-gs-mail"class="btn btn-instagram btn-xs"><i class="fa fa-envelope"></i></a>';
+    $rummageList1 .= '<a href="https://www.facebook.com/sharer/sharer.php?u=http://' . $url . '/item.php?id=' . $k . '" target="_blank" class="btn btn-facebook btn-xs"><i class="fa fa-facebook"></i></a>';
+    $rummageList1 .= '<a href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://' . $url . '/item.php?id=' . $k . '" target="_blank" class="btn btn-google-plus btn-xs"><i class="fa fa-google-plus"></i></a>';
+    $rummageList1 .= '<a href="mailto:?subject='. str_replace("&","%26",substr($v["adText"], 0, 80)) .'&body='. str_replace("&","%26",substr($v["adText"], 0, 120)) .'%0D%0A%0D%0A http://' . $url . '/map.php?place='.urlencode($place).'%26posit='.urlencode($position).'%26ad=' . $k .'" target="_top" id="'.$k.'-gs-mail"class="btn btn-instagram btn-xs"><i class="fa fa-envelope"></i></a>';
     $rummageList1 .= '</div>';
 
     if (! empty($v['rent']) || ! empty($v['proptype'])) {

@@ -15,6 +15,12 @@ include('../includes/GCI/App.php');
 include('../includes/GCI/Navigation.php');
 include('../includes/GCI/Ads.php');
 
+function convertImages($listingResults) {
+//<imgp src="0000005351-01-1.jpg">
+    //<img src="0000005351-01-1.jpg">
+    return preg_replace('/src="([^"]*)"/i', 'src="img/images/'.$listingResults['siteCode'].'/${1}"', $listingResults['adText']);
+}
+
 $app = new \GCI\App();
 
 $app->logInfo('Item Page(ID: '.urldecode($_REQUEST['id']).' FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].', REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].',HTTP_HOST: '.@$_SERVER['HTTP_HOST'].'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].')');
@@ -88,24 +94,9 @@ if (!empty($neighborhood)) {
 }
 
 $imageArray = array();
-
 if (!empty($listings['Images'])) {
     $imageArray = explode(',', $listings['Images']);
 }
-
-
-$metadata = '
-<title>'.substr($cleanAdText, 0, 70).'</title>
-<meta name="description" content="'.substr($cleanAdText, 0, 150).'" />
-
-<meta itemprop="name" content="'.substr($cleanAdText, 0, 70).'">
-<meta itemprop="description" content="'.substr($cleanAdText, 0, 150).'">';
-
-function convertImages($listingResults) {
-//<imgp src="0000005351-01-1.jpg">
-    //<img src="0000005351-01-1.jpg">
-    return preg_replace('/src="([^"]*)"/i', 'src="img/images/'.$listingResults['siteCode'].'/${1}"', $listingResults['adText']);
-    }
 
 $emailGlyph = $emailTextOnly = '';
 if (!empty($email)) {
@@ -120,6 +111,74 @@ if (!empty($amenities)) {
     }
     $amenitiesList .= '</ul>';
 }
+
+$server = $_SERVER['SERVER_NAME'];
+$port = $_SERVER['SERVER_PORT'];
+if (isset($_SERVER['CONTEXT_PREFIX'])) {
+    $server .= $_SERVER['CONTEXT_PREFIX'];
+}
+
+$url = rtrim($server, "/");
+
+if (!empty($port)) {
+    $url= $url.':'.$port;
+}
+
+$imageCarouselIndicators = '';
+$imageCarouselDivs = '';
+if (!empty($imageArray)) {
+    $imgCnt = 0;
+    foreach((array) $imageArray as $imgFile) {
+        if (strpos($imgFile, 'http:') === false) {
+            $imgSrc = 'http://' . $url . '/images/' . $listings['SiteCode'] . '/' . $imgFile;
+        } else {
+            $imgSrc =  $imgFile;
+        }
+
+        if ($imgCnt == 0) {
+            $imageCarouselIndicators .= '<li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>';
+            $imageCarouselDivs .= '<div class="item active"><img alt="slide '.$imgCnt.'" src="'.$imgSrc.'"></div>';
+        } else {
+            $imageCarouselIndicators .= '<li data-target="#carousel-example-generic" data-slide-to="'.$imgCnt.'"></li>';
+            $imageCarouselDivs .= '<div class="item"><img alt="slide '.$imgCnt.'" src="'.$imgSrc.'"></div>';
+        }
+        $imgCnt++;
+    }
+}
+
+$imageCarousel = <<<EOS
+<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+    $imageCarouselIndicators
+  </ol>
+
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner" role="listbox">
+    $imageCarouselDivs
+  </div>
+
+  <!-- Controls -->
+  <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+EOS;
+
+if (empty($imageCarouselDivs)) {
+    $imageCarousel = '<img class="img-responsive" src="http://placehold.it/480x320&text=No+Image+available" alt="No Image Available">';
+}
+
+$metadata = '
+<title>'.substr($cleanAdText, 0, 70).'</title>
+<meta name="description" content="'.substr($cleanAdText, 0, 150).'" />
+<meta itemprop="name" content="'.substr($cleanAdText, 0, 70).'">
+<meta itemprop="description" content="'.substr($cleanAdText, 0, 150).'">';
 
 $mainContent = <<<EOS
 <!-- Portfolio Item Heading -->
@@ -137,9 +196,9 @@ $mainContent = <<<EOS
         <div class="row">
 
             <div class="col-md-8">
-                <img class="img-responsive" src="http://placehold.it/480x320" alt="">
+                $imageCarousel
                 <br />
-                <i class="fa fa-map-marker fa-2x"></i>&nbsp;&nbsp;$street, $city, $state $zip<a href="#">(view Map)</a>
+                <i class="fa fa-map-marker fa-2x"></i>&nbsp;&nbsp;$street, $city, $state $zip<a id="gotomap" href="#">(view Map)</a>
             </div>
 
             <div class="col-md-4">
@@ -206,7 +265,7 @@ $mainContent = <<<EOS
         </div>
 
         <div class"row">
-            <div class="col-lg-12">
+            <div class="col-lg-12" id="map">
                 <h3 class="page-header">Area Map</h3>
             </div>
             <br />
@@ -238,6 +297,8 @@ $googleApiScript = <<<EOS
     </script>
 EOS;
 
-$masterBottom = '<script src="js/rummage.js"></script>';
+$masterBottom = '<link type="text/css" rel="stylesheet" href="3rdParty/fancybox/source/jquery.fancybox.css" media="screen">
+<script type="text/javascript" src="3rdParty/fancybox/source/jquery.fancybox.pack.js"></script>
+<script src="js/rummage.js"></script>';
 
 include("../includes/master.php");
