@@ -130,7 +130,7 @@ if (!empty($port)) {
 
 $imageCarouselIndicators = '';
 $imageCarouselDivs = '';
-if ($imageArrayCnt > 1) {
+if ($imageArrayCnt > 2) {
     $imgCnt = 0;
     foreach((array) $imageArray as $imgFile) {
         if (strpos($imgFile, 'http:') === false) {
