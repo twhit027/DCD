@@ -111,6 +111,7 @@ foreach($rummages as $k=>$v) {
     $imgInt = 0;
     if (!empty($v['images'])) {
         $imageArray = explode(',', $v['images']);
+        sort($imageArray);
         if (!empty($imageArray)) {
             $imgCnt = 0;
             foreach ($imageArray as $imgFile) {
