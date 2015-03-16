@@ -99,10 +99,9 @@ $imageArray = array();
 $imageArrayCnt = 0;
 if (!empty($listings['Images'])) {
     $imageArray = explode(',', $listings['Images']);
+    sort($imageArray);
     $imageArrayCnt = count($imageArray);
 }
-
-
 
 $emailGlyph = $emailTextOnly = '';
 if (!empty($email)) {
