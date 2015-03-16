@@ -105,19 +105,17 @@ foreach($rummages as $k=>$v) {
         $url= $url.':'.$port;
     }
 
-    $bgColor = 'F9F9F9';
     $imageArray = array();
     $images = '';
     $imgInt = 0;
     if (!empty($v['images'])) {
         $imageArray = explode(',', $v['images']);
-        sort($imageArray);
         if (!empty($imageArray)) {
             $imgCnt = 0;
             foreach ($imageArray as $imgFile) {
                 $imgCnt++;
                 if (strpos($imgFile, 'http:') === false) {
-                    $imgSrc = 'http://' . $url . '/images/' . $v['siteCode'] . '/' . $imgFile;
+                    $imgSrc = '/images/' . $v['siteCode'] . '/' . $imgFile;
                 } else {
                     $imgSrc =  $imgFile;
                 }
@@ -146,11 +144,11 @@ foreach($rummages as $k=>$v) {
         }
     }
 
-    $rummageList1 .= '<div class="row" style="margin-top: 0px; padding-bottom: 5px; background-color: #'.$bgColor.';">';
+    $rummageList1 .= '<div class="row" style="margin-top: 0px; padding-bottom: 5px; background-color: #F9F9F9;">';
 
-    $dataInfo = '<div class=".small" style="padding-bottom:10px; color:#0052f4; padding-left: 5px;"><a href="http://' . $url . '/" target="_blank">' . $v['siteName'] . '</a>';
+    $dataInfo = '<div class=".small" style="padding-bottom:10px; color:#0052f4; padding-left: 5px;"><a href="./" target="_blank">' . $v['siteName'] . '</a>';
     if (empty($position))
-    $dataInfo .= '&nbsp;|&nbsp;<a href="http://' . $url . '/category.php?place=' . urlencode($v['placement']) . '&posit=' . urlencode($v['position']) . '" target="_blank">' . $v['position'] . '</a>';
+    $dataInfo .= '&nbsp;|&nbsp;<a href="./map.php?place=' . urlencode($v['placement']) . '&posit=' . urlencode($v['position']) . '" target="_blank">' . $v['position'] . '</a>';
     if (!empty($v['moreInfo'])) {
         $dataInfo .= '&nbsp;|&nbsp;<a href="' . $v['moreInfo'] . '" style="color:#0052f4;" title="More Information" target="_blank"><span class="glyphicon glyphicon-info-sign"></span>More Info</a>';
     }
@@ -228,10 +226,7 @@ foreach($rummages as $k=>$v) {
         $rummageList1 .= '<a class="btn btn-primary pull-right btn-sm" href="listingItem.php?id='.$k.'">View Listing <span class="glyphicon glyphicon-chevron-right"></span></a>';
     }
 
-    $rummageList1 .= '</div>';
-
-    $rummageList1 .= '</div>';
-    $rummageList1 .= '<hr>';
+    $rummageList1 .= '</div></div><hr>';
 }
 
 $filter['days'] = array_unique($filter['days']);

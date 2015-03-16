@@ -138,6 +138,20 @@ class ClassifiedsAdmin extends PDO
         }
     }
 
+    function sortPrimaryImage(&$theArray) {
+        $foundKey = '';
+        foreach($theArray as $arrayKey => $arrayValue) {
+            if (preg_match('/-p.jpg$/i', $arrayValue)) {
+                $foundKey = $arrayKey;
+            }
+        }
+
+        if ($foundKey !== '') {
+            array_unshift($theArray, $theArray[$foundKey]);
+            unset($theArray[$foundKey]);
+        }
+    }
+
     function insertListings()
     {
         global $userCount;
@@ -184,6 +198,7 @@ class ClassifiedsAdmin extends PDO
 
             $imagesCSV = '';
             if (!empty($imageArray)) {
+                $this->sortPrimaryImage($imageArray);
                 $imagesCSV = implode(',', $imageArray);
             }
 
