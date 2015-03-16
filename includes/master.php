@@ -29,6 +29,7 @@ $busName = $app->getSite()->getBusName();
 $siteTopData = $app->getSite()->getTopLinks();
 $siteBottomData = $app->getSite()->getBottomLinks();
 $device = $app->getDeviceType();
+$catagories = $app->getCategories();
 
 if (empty($imgSiteName)) {
     $siteImage = "http://www.gannett-cdn.com/sites/$siteName/images/site-nav-logo@2x.png";
@@ -41,6 +42,7 @@ if ($palette > 89 && empty($siteBottomData)) {
 }
 
 $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -156,7 +158,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                 </div>
                 <h3 style="color:#3276B1;">Or Select A Category</h3>
                 <ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">
-                    <?php echo $nav->getSideNavigation($app->getCategories()) ?>
+                    <?php echo $nav->getSideNavigation($catagories); ?>
                 </ul>
             </div>
         </nav>
@@ -214,7 +216,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                     </div>
                     <h3 style="color:#3276B1;">Or Select A Category</h3>
                     <ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">
-                        <?php echo $nav->getSideNavigation($app->getCategories()); ?>
+                        <?php echo $nav->getSideNavigation($catagories) ?>
                     </ul>
                 </div>
                 <div style="padding:10px">
