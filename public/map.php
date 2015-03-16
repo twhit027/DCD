@@ -62,7 +62,7 @@ if (isset($_REQUEST['maxrent'])) {
 $busName = $app->getSite()->getBusName();
 
 $metadata = '
-<title>'.$busName.' Classifieds Listings</title>
+<title>'.$busName.' - Classifieds Listings</title>
 <meta name="description" content="category listing page for '.$busName.'" />
 <meta itemprop="name" content="category listing page">
 <meta itemprop="description" content="category listing page for '.$busName.'">';

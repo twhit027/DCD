@@ -36,6 +36,8 @@ if (isset($_REQUEST['posit'])) {
 
 $listings = $app->getSingleListing($id);
 
+$busName = $app->getSite()->getBusName();
+
 $cleanAdText = strip_tags($listings['AdText']);
 $siteCode = urlencode($listings['SiteCode']);
 $placement = urlencode($listings['Placement']);
@@ -188,12 +190,20 @@ if ($imageArrayCnt == 0) {
 }
 
 $metadata = '
-<title>'.substr($cleanAdText, 0, 70).'</title>
+<title>'.$busName.' - Classifieds Listing - ($id)</title>
 <meta name="description" content="'.substr($cleanAdText, 0, 150).'" />
 <meta itemprop="name" content="'.substr($cleanAdText, 0, 70).'">
 <meta itemprop="description" content="'.substr($cleanAdText, 0, 150).'">';
 
+$urlEncodedPlacement = urlencode($placement);
+$urlEncodedPosition = urlencode($position);
+
 $mainContent = <<<EOS
+<ol class="breadcrumb">
+    <li><a href="./">Home</a></li>
+    <li><a href="map.php?place=$urlEncodedPlacement&posit=$urlEncodedPosition">$position</a></li>
+    <li class="active">listing - ($id)</li>
+</ol>
 <!-- Portfolio Item Heading -->
         <div class="row" style="margin-top: 0px;">
             <div class="col-lg-12">
