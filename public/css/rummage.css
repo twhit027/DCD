@@ -9,3 +9,13 @@
 #map-options #map-resize li{ list-style:none; float:left; padding-right:5px; }
 
 .custom-infowindow{ width:275px; text-align:center; }
+
+.panel-heading a:after {
+    font-family:'Glyphicons Halflings';
+    content:"\e114";
+    float: right;
+    color: grey;
+}
+.panel-heading a.collapsed:after {
+    content:"\e080";
+}

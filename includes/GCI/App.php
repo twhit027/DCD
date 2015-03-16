@@ -91,7 +91,7 @@ class App
         return $data;
     }
 
-    public function getRummages($place = '', $position = '', $route = '', $siteGroup = '', $city = '', $siteCode = '', $day ='')
+    public function getRummages($place = '', $position = '', $route = '', $siteGroup = '', $city = '', $siteCode = '', $day ='', $bdRooms = '', $bthRooms = '', $minRent = '', $maxRent = '')
     {
         if ($siteGroup == '') {
             $siteGroup = $this->site->getSiteGroup();
@@ -100,8 +100,20 @@ class App
         $siteGroupString = $this->createSiteGroupString($siteGroup);
 
         //$sql = "SELECT t1.*, t2.BusName FROM `listing` AS t1, `siteinfo` AS t2, `day` AS t3 WHERE Placement = :place AND Position = :position AND StartDate <= :startDate AND t1.SiteCode IN ( " . $siteGroupString . " ) AND t2.SiteCode = t1.SiteCode AND t1.ID = t3.ListingId";
-        $sql = "SELECT t1.*, t2.BusName, t3.DayOfWeek, t3.StartTime, t3.EndTime FROM `listing` AS t1 JOIN `siteinfo` AS t2 on t1.SiteCode = t2.SiteCode LEFT JOIN `day` AS t3 on t1.ID = t3.ListingId WHERE t1.Placement = :place AND t1.Position = :position AND t1.StartDate <= :startDate AND t1.SiteCode IN ( " . $siteGroupString . " )";
-        $params = array(':place' => $place, ':position' => $position, ':startDate' => date("Y-m-d"));
+        $sql = "SELECT t1.*, t2.BusName, t2.Domain, t3.DayOfWeek, t3.StartTime, t3.EndTime FROM `listing` AS t1 JOIN `siteinfo` AS t2 on t1.SiteCode = t2.SiteCode LEFT JOIN `day` AS t3 on t1.ID = t3.ListingId WHERE t1.StartDate <= :startDate AND t1.SiteCode IN ( " . $siteGroupString . " )";
+        $params = array(':startDate' => date("Y-m-d"));
+
+        //t1.Placement = :place AND t1.Position = :position AND
+        //':place' => $place, ':position' => $position,
+
+        if (!empty($place)) {
+            $sql .= ' and t1.Placement = :place';
+            $params[':place'] = $place;
+        }
+        if (!empty($position)) {
+            $sql .= ' and t1.Position = :position ';
+            $params[':position'] = $position;
+        }
 
         if (!empty($city)) {
             $sql .= " AND t1.City = :city";
@@ -118,6 +130,26 @@ class App
             $params = array_merge($params, array(':day' => $day));
         }
 
+        if (!empty($bdRooms)) {
+            $sql .= " AND t1.BedRooms >= :bdRooms";
+            $params = array_merge($params, array(':bdRooms' => $bdRooms));
+        }
+
+        if (!empty($bthRooms)) {
+            $sql .= " AND t1.BathRooms >= :bthRooms";
+            $params = array_merge($params, array(':bthRooms' => $bthRooms));
+        }
+
+        if (!empty($minRent)) {
+            $sql .= " AND t1.Rent >= :rent";
+            $params = array_merge($params, array(':rent' => $minRent));
+        }
+
+        if (!empty($maxRent)) {
+            $sql .= " AND t1.Rent <= :rent";
+            $params = array_merge($params, array(':rent' => $maxRent));
+        }
+
         if (!empty($route)) {
             $routeIDS = explode(",", $route);
             $rts = array();
@@ -132,7 +164,6 @@ class App
             $params = array_merge($params, $rts['params']);
         }
 
-        //Move iteration 16 fix to come after the route part of the sql string
         $sql .= " ORDER BY t1.AdText";
 
         $results = $this->database->getAssoc($sql, $params);
@@ -142,11 +173,37 @@ class App
 
         foreach ($results as $row) {
             if (isset($dataArray['list'][$row['ID']]) && !empty($row['DayOfWeek'])) {
-                $dataArray['list'][$row['ID']]['days'][] = array('dayOfWeek' => trim($row['DayOfWeek']), 'startTime' => trim($row['StartTime']), 'endTime' =>  trim($row['EndTime']));
+                $dataArray['list'][$row['ID']]['days'][] = array(
+                    'dayOfWeek' => trim($row['DayOfWeek']),
+                    'startTime' => trim($row['StartTime']),
+                    'endTime' =>  trim($row['EndTime'])
+                );
             } else {
-                $dataArray['list'][$row['ID']] = array('adText' => $row['AdText'], 'siteCode' => $row['SiteCode'], 'siteName' => $row['BusName'], 'city' => trim($row['City']));
+                $dataArray['list'][$row['ID']] = array(
+                    'id' => $row['ID'],
+                    'externalURL' => $row['ExternalURL'],
+                    'moreInfo' => $row['MoreInfo'],
+                    'adText' => $row['AdText'],
+                    'images' => $row['Images'],
+                    'siteCode' => $row['SiteCode'],
+                    'siteName' => $row['BusName'],
+                    'domain' => $row['Domain'],
+                    'city' => trim($row['City']),
+                    'proptype' => $row['PropType'],
+                    'rent' => $row['Rent'],
+                    'bdrooms' => $row['BedRooms'],
+                    'bthrooms' => $row['BathRooms'],
+                    'email' => $row['Email'],
+                    'street' => $row['Street'],
+                    'position' => $row['Position'],
+                    'placement' => $row['Placement'],
+                );
                 if (!empty($row['DayOfWeek'])) {
-                    $dataArray['list'][$row['ID']]['days'][] = array('dayOfWeek' => trim($row['DayOfWeek']), 'startTime' => trim($row['StartTime']), 'endTime' =>  trim($row['EndTime']));
+                    $dataArray['list'][$row['ID']]['days'][] = array(
+                        'dayOfWeek' => trim($row['DayOfWeek']),
+                        'startTime' => trim($row['StartTime']),
+                        'endTime' =>  trim($row['EndTime'])
+                    );
                 }
                 if (!empty($row['Street']) && !empty($row['Lat']) && !empty($row['Long'])) {
                     $dataArray['map'][$row['ID']] = array(
@@ -415,18 +472,11 @@ class App
 
     public function getSingleListing($id)
     {
-        $sql = "SELECT ID, AdText, SiteCode, Placement, Position, Images FROM `listing` where ID = :id";
+        $sql = "SELECT ID, AdText, SiteCode, Placement, Position, Images, Street, City, State, Zip, Rent, Amenities, BathRooms, BedRooms, Deposit, Email, Pets, Phone, ExerciseRec, CommFeat, Neighborhood, Parking, PropType FROM `listing` where ID = :id";
         $params = array(':id' => $id);
         $results = $this->database->getAssoc($sql, $params);
 
-        $retArray['id'] = $results[0]['ID'];
-        $retArray['adText'] = $results[0]['AdText'];
-        $retArray['siteCode'] = $results[0]['SiteCode'];
-        $retArray['placement'] = $results[0]['Placement'];
-        $retArray['position'] = $results[0]['Position'];
-        $retArray['images'] = $results[0]['Images'];
-
-        return $retArray;
+        return $results[0];
     }
 
     public static function getHost()
@@ -443,9 +493,29 @@ class App
         }
 
         // Remove port number from host
-        $host = preg_replace('/:\d+$/', '', $host);
+        $host = strtolower(preg_replace('/:\d+$/', '', $host));
         return trim($host);
     }
+    
+    public static function getHost2()
+    {
+        if (!empty($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+            $elements = explode(',', $_SERVER['HTTP_X_FORWARDED_HOST']);
+            $host = trim(end($elements));
+        } elseif (!empty($_SERVER['HTTP_HOST'])) {
+            $host = $_SERVER['HTTP_HOST'];
+        } elseif (!empty($_SERVER['SERVER_NAME'])) {
+            $host = $_SERVER['SERVER_NAME'];
+        } elseif (!empty($_SERVER['SERVER_ADDR'])) {
+            $host = $_SERVER['SERVER_ADDR'];
+        } else {
+            $host = '';
+        }
+
+        // Remove port number from host
+        $host = strtolower(preg_replace('/:\d+$/', '', $host));
+        return trim($host);
+    }    
 
     function logInfo($logText)
     {

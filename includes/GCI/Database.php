@@ -16,13 +16,13 @@ class Database extends \PDO
 
     public function __construct($logDir = LOGGING_DIR, $logLevel = LOGGING_LEVEL)
     {
+        $this->setLog($logDir, $logLevel);
         try {
             $this->connection_string = 'mysql:dbname=' . DB_NAME . ';host=' . DB_HOST . ';port=' . DB_PORT . ';charset=utf8';
             parent::__construct($this->connection_string, DB_USER, DB_PASS);
             $this->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
             $this->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             $this->con = true;
-            $this->setLog($logDir, $logLevel);
         } catch (\PDOException $e) {
             $logText = "Message:(" . $e->getMessage() . ") attempting to connect to database";
             $this->log->logError($logText);
