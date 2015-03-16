@@ -177,6 +177,28 @@ foreach($rummages as $k=>$v) {
         $rummageList1 .= '</h4>';
     }
 
+    if (! (empty($v['rent'])&&empty($v['bdrooms'])&&empty($v['bthrooms']))) {
+        $detList = '';
+        if (! empty($v['rent'])) {
+            $detList .= '$'.$v['rent'];
+        }
+        if (! empty($detList)) {
+            $detList .= '<li style="list-style: none">|</li>';
+        }
+        if (! empty($v['bdrooms'])) {
+            $detList .= $v['bdrooms'] . '&nbsp;Beds';
+        }
+        if (! empty($detList)) {
+            $detList .= '<li style="list-style: none">|</li>';
+        }
+        if (! empty($v['bthrooms'])) {
+            $detList .= $v['bthrooms'] . '&nbsp;Baths';
+        }
+        if (! empty($detList)) {
+            $rummageList1 .= '<ul class="list-inline list-unstyled">'.$detList.'</ul>';
+        }
+    }
+
     $newTextArray = myTruncate($v["adText"], 200);
 
     if (isset($newTextArray[1])) {
@@ -185,7 +207,9 @@ foreach($rummages as $k=>$v) {
         $rummageList1 .= '<p>' . $newTextArray[0] . '</p>';
     }
 
-    $rummageList1 .= '</div><div class="col-md-12" style="margin-top: 5px;">';
+    $rummageList1 .= '</div>';
+
+    $rummageList1 .= '<div class="col-md-12" style="margin-top: 5px;">';
 
     if (isset($mapArray[$k])) {
         $rummageList1 .= '<button title="Add to Route" type="button" class="add btn btn-default btn-sm" onclick="visit(this,\''.$k.'\');" id="'.$k.'">';
@@ -203,11 +227,8 @@ foreach($rummages as $k=>$v) {
         $rummageList1 .= '<a class="btn btn-primary pull-right btn-sm" href="listingItem.php?id='.$k.'">View Listing <span class="glyphicon glyphicon-chevron-right"></span></a>';
     }
 
-    if (! empty($daysOpen)) {
-        $rummageList1 .= '<div class="pull-right"><strong><small>Days: </small></strong><div class="btn-group btn-group-xs" role="group" aria-label="days">'.$daysOpen.'</div></div>';
-    }
-
     $rummageList1 .= '</div>';
+
     $rummageList1 .= '</div>';
     $rummageList1 .= '<hr>';
 }

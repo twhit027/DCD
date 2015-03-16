@@ -270,17 +270,12 @@ class ClassifiedsAdmin extends PDO
 
     function insertListingsSimple($adData)
     {
-        print_r($adData);
-
         $siteCode = (string)$adData['sitecode'];
-
-        echo "siteCode: $siteCode \n";
 
         $inserted = 0;
         $userCount = count($adData->ad);
         foreach ($adData->ad as $ad) {
             $id = (string)$ad['id'];
-            echo "id: $id \n";
             $startDate = $ad->start_date;
             $endDate = $ad->end_date;
             $placement = $ad['placement'];
@@ -300,9 +295,10 @@ class ClassifiedsAdmin extends PDO
                     fwrite(STDERR, $logText . "\n");
                     $return = 2;
                 }
-                print_r(array(':ID' => $id, ':StartDate' => $startDate, ':EndDate' => $endDate, ':Placement' => $placement,
-                    ':Position' => $position, ':AdText' => $adText, ':Site' => $siteCode, ':Street' => $street, ':City' => $city,
-                    ':State' => $state, ':Zip' => $zip));
+                //print_r(array(':ID' => $id, ':StartDate' => $startDate, ':EndDate' => $endDate, ':Placement' => $placement,
+                //    ':Position' => $position, ':AdText' => $adText, ':Site' => $siteCode, ':Street' => $street, ':City' => $city,
+                //    ':State' => $state, ':Zip' => $zip));
+
                 try {
                     $stmt = $this->prepare("INSERT INTO `listing` (`ID`, `StartDate`, `EndDate`, `Placement`,`Position`, `AdText`, `SiteCode`, `Street`, `City`, `State`, `Zip`) VALUES(:ID, :StartDate, :EndDate, :Placement, :Position, :AdText, :Site, :Street, :City, :State, :Zip)");
                     $stmt->execute(array(':ID' => $id, ':StartDate' => $startDate, ':EndDate' => $endDate, ':Placement' => $placement,
@@ -446,7 +442,7 @@ foreach ($fileArray as $file) {
         parseXMLFile($file);
 
         if ($userCount > 0) {
-            print_r($userData);
+            //print_r($userData);
             $user->insertListings();
         }
     }
