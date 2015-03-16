@@ -46,8 +46,12 @@ function parseXMLFile($file)
     $fp = fopen($file, "r");
 
     while ($data = fread($fp, 4096)) {
-        xml_parse($parser, $data, feof($fp)) or die (xml_get_error_code($parser));
-        //sprintf("XML Error: %s at line %d", xml_error_string(xml_get_error_code($parser)),xml_get_current_line_number($parser))
+        if (xml_parse($parser, $data, feof($fp)) === 0) {
+            $logText = sprintf("Message: XML Error: %s at line %d", xml_error_string(xml_get_error_code($parser)),xml_get_current_line_number($parser));
+            fwrite(STDERR, $logText . "\n");
+            exit(xml_get_error_code($parser));
+        }
+
     }
 
     xml_parser_free($parser);
