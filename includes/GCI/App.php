@@ -305,7 +305,7 @@ class App
         $siteGroupString = $this->createSiteGroupString($this->getSite()->getSiteGroup());
         $siteCode = $this->getSite()->getSiteCode();
 
-        $sql = "SELECT * FROM `position` WHERE SiteCode in( $siteGroupString )";
+        $sql = "SELECT * FROM `position` WHERE SiteCode in( $siteGroupString ) ORDER BY Placement, Position";
         $params = array();
 
         $results = $this->database->getAssoc($sql, $params);
