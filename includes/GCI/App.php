@@ -306,7 +306,7 @@ class App
         $siteCode = $this->getSite()->getSiteCode();
 
         $sql = "SELECT * FROM `position` WHERE SiteCode in( $siteGroupString ) ORDER BY Placement, Position";
-        echo 'sql: '.$sql . '<br />';
+
         $params = array();
 
         $results = $this->database->getAssoc($sql, $params);
