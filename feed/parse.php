@@ -141,18 +141,11 @@ class ClassifiedsAdmin extends PDO
         }
     }
 
-    function sortPrimaryImage(&$theArray) {
-        $foundKey = '';
-        foreach($theArray as $arrayKey => $arrayValue) {
-            if (preg_match('/-p.jpg$/i', $arrayValue)) {
-                $foundKey = $arrayKey;
-            }
-        }
-
-        if ($foundKey !== '') {
-            array_unshift($theArray, $theArray[$foundKey]);
-            unset($theArray[$foundKey]);
-        }
+    function startsWith($haystack, $needle) {
+        return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== FALSE;
+    }
+    function endsWith($haystack, $needle) {
+        return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== FALSE);
     }
 
     function insertListings()
@@ -201,7 +194,21 @@ class ClassifiedsAdmin extends PDO
 
             $imagesCSV = '';
             if (!empty($imageArray)) {
-                $this->sortPrimaryImage($imageArray);
+                /**/
+                $foundKey = '';
+                foreach($imageArray as $arrayKey => $arrayValue) {
+                    //if ($this->endsWith($arrayValue, '-p.jpg')) {}
+                    if (preg_match('/-p.jpg$/i', $arrayValue)) {
+                        $foundKey = $arrayKey;
+                    }
+                }
+
+                if ($foundKey !== '') {
+                    $orgValue = $imageArray[$foundKey];
+                    unset($imageArray[$foundKey]);
+                    array_unshift($imageArray, $orgValue);
+                }
+                /**/
                 $imagesCSV = implode(',', $imageArray);
             }
 
