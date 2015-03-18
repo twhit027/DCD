@@ -103,6 +103,7 @@ function char($parser, $data)
     } elseif ($upperStateName == "AD") {
         $userData[$userCount]["AD"] = $state['ID'];
     } elseif (isset($tagMapArray[$upperStateName]) || array_key_exists($upperStateName, $tagMapArray)) {
+        echo "found tag: $upperStateName /n";
         if (strstr($tagMapArray[$upperStateName], ':') !== false) {
             $tags = explode(':', $tagMapArray[$upperStateName]);
             //foreach($tags as $tagsKey) {}
