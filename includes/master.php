@@ -133,7 +133,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                     <input id="fullTextBox1" type="text" name="search" class="form-control" value="<?php echo $fullText; ?>">
                         <span class="input-group-btn">
                             <button id="ftSearchbtn1" class="btn btn-primary" type="button">
-                                <img src="img/white-magnifying-glass-20.png">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                             </button>
                         </span>
                 </div>
@@ -190,7 +190,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                                value="<?php echo $fullText; ?>">
                         <span class="input-group-btn">
                             <button id="ftSearchbtn2" class="btn btn-primary" type="button">
-                                <img src="img/white-magnifying-glass-20.png">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                             </button>
                         </span>
                     </div>
