@@ -62,6 +62,7 @@ $bathRooms = $listings['BathRooms'];
 $rent = $listings['Rent'];
 $phone = $listings['Phone'];
 $neighborhood = $listings['Neighborhood'];
+$squareFeet = $listings['SquareFeet'];
 
 $pets = $listings['Pets'];
 
@@ -196,6 +197,16 @@ $metadata = '
 $urlEncodedPlacement = urlencode($placement);
 $urlEncodedPosition = urlencode($position);
 
+$depositDiv = '';
+if (! empty($deposit) && ($deposit != 'null')) {
+    $depositDiv = '<div class="col-sm-3 col-xs-6"><h4><i class="fa fa-money"></i>&nbsp;Deposit</h4>'.$deposit.'</div>';
+}
+
+$propTypeDiv = '';
+if (! empty($propType) && ($propType != 'null')) {
+    $propTypeDiv = '<div class="col-sm-3 col-xs-6"><h4><i class="fa fa-university"></i>&nbsp;Property Type</h4>'.$propType.'</div>';
+}
+
 $mainContent = <<<EOS
 <ol class="breadcrumb">
     <li><a href="./">Home</a></li>
@@ -242,7 +253,7 @@ $mainContent = <<<EOS
                 <span class="label label-default">Rent</span>&nbsp;$$rent
                 </div>
                 <div class="col-sm-3 col-xs-6">
-                <span class="label label-default">Deposit</span>&nbsp;$deposit
+                <span class="label label-default">Sq Ft</span>&nbsp;$squareFeet
                 </div>
             </div>
         </div>
@@ -270,6 +281,10 @@ $mainContent = <<<EOS
                     $featsList
             </div>
         </div>
+        <div class="row" style="margin-top: 5px;">
+            $depositDiv
+            $propTypeDiv
+        </div>
         <!-- /.row -->
 
         <!-- Related Projects Row -->
@@ -278,7 +293,7 @@ $mainContent = <<<EOS
                 <h3 class="page-header">Contact</h3>
             </div>
             <div class="col-sm-6 col-xs-12">
-                <strong>Phone:</strong>&nbsp; $phone
+                <strong>Phone:</strong>&nbsp;<a href="tel:$phone">$phone</a>
             </div>
             <div class="col-sm-6 col-xs-12">
                 <strong>Email:</strong>&nbsp; $emailTextOnly

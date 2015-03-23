@@ -16,7 +16,7 @@ $tagMapArray = array(
     'GS_CITY' => 'CITY',
     'GS_STATE' => 'STATE',
     'GS_ZIPCODE' => 'ZIP',
-    'EXTERNAL_URL' => 'EXTERNAL',
+    'EXTERNAL_URL' => 'EXTERNAL_URL',
     'MORE_INFORMATION' => 'MORE_INFORMATION',
     'MONDAYDATE' => 'Days:1',
     'TUESDAYDATE' => 'Days:2',
@@ -42,5 +42,6 @@ $tagMapArray = array(
     'APTS_NEIGHBORHOOD' => 'NEIGHBORHOOD',
     'APTS_PARKING' => 'PARKING',
     'APTS_PROPTYPE' => 'PROPTYPE',
+    'APTS_SQUAREFEET' => 'SQUAREFEET',
     'IMAGE' => 'IMAGE'
 );

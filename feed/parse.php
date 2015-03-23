@@ -17,7 +17,7 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE);
 include(__DIR__ . '/../conf/constants.php');
 include(__DIR__.'/../conf/tagMap.php');
 
-$userCount = $return = 0;
+$userCount = 0;
 $userData = array();
 $state = $site = '';
 
@@ -126,6 +126,8 @@ class ClassifiedsAdmin extends PDO
     private $db_pass = DB_PASS;
     private $db_name = DB_NAME;
 
+    private $error = 0;
+
     public function __construct()
     {
         try {
@@ -141,6 +143,11 @@ class ClassifiedsAdmin extends PDO
         }
     }
 
+    public function error()
+    {
+        return $this->error;
+    }
+
     function startsWith($haystack, $needle) {
         return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== FALSE;
     }
@@ -148,11 +155,8 @@ class ClassifiedsAdmin extends PDO
         return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== FALSE);
     }
 
-    function insertListings()
+    function insertListings($userData, $site, $userCount)
     {
-        global $userCount;
-        global $userData;
-        global $site;
         $inserted = 0;
         for ($i = 0; $i < $userCount; $i++) {
             if (empty($userData[$i]["STREET"])) {
@@ -180,8 +184,9 @@ class ClassifiedsAdmin extends PDO
                 $regexp = '/<img[^>]*src="(.*?)"[^>]*>/i';
                 //$regexp = '/<img[^>]*src="([^"]+)"[^>]*>/i';
                 //$regexp = '/< *img[^>]*src *= *["\']?([^"\']*)/i';
-                $iResults = preg_match_all($regexp, $userData[$i]["AD-TEXT"], $aMatches);
-                $imageArray = $aMatches[1];
+                if (preg_match_all($regexp, $userData[$i]["AD-TEXT"], $aMatches)) {
+                    $imageArray = $aMatches[1];
+                }
                 //then strip all html tags
                 $userData[$i]["AD-TEXT"] = trim(strip_tags($userData[$i]["AD-TEXT"]));
             }
@@ -220,7 +225,7 @@ class ClassifiedsAdmin extends PDO
             } catch (PDOException $e) {
                 $logText = "Message:(" . $e->getMessage() . ") attempting to delete listing (" . $userData[$i]["AD"] . ") from the database";
                 fwrite(STDERR, $logText . "\n");
-                $return = 2;
+                $this->error = 2;
             }
 
             try {
@@ -229,11 +234,11 @@ class ClassifiedsAdmin extends PDO
             } catch (PDOException $e) {
                 $logText = "Message:(" . $e->getMessage() . ") attempting to delete listing dates (" . $userData[$i]["AD"] . ") from the database";
                 fwrite(STDERR, $logText . "\n");
-                $return = 3;
+                $this->error = 3;
             }
 
             try {
-                $stmt = $this->prepare("INSERT INTO `listing` (`ID`,`StartDate`,`EndDate`,`Placement`,`Position`,`AdText`,`Images`,`SiteCode`,`Street`,`City`,`State`,`Zip`,`ExternalURL`,`MoreInfo`,`Rent`,`Amenities`,`BathRooms`,`BedRooms`,`Deposit`,`Email`,`Pets`,`Phone`,`ExerciseRec`,`CommFeat`,`Neighborhood`,`Parking`,`PropType` ) VALUES(:ID, :StartDate, :EndDate, :Placement, :Position, :AdText, :Images, :Site, :Street, :City, :State, :Zip, :ExternalURL, :MoreInfo, :Rent, :Amenities, :BathRooms, :BedRooms, :Deposit, :Email, :Pets, :Phone, :ExerciseRec, :CommFeat, :Neighborhood, :Parking, :PropType)");
+                $stmt = $this->prepare("INSERT INTO `listing` (`ID`,`StartDate`,`EndDate`,`Placement`,`Position`,`AdText`,`Images`,`SiteCode`,`Street`,`City`,`State`,`Zip`,`ExternalURL`,`MoreInfo`,`Rent`,`Amenities`,`BathRooms`,`BedRooms`,`Deposit`,`Email`,`Pets`,`Phone`,`ExerciseRec`,`CommFeat`,`Neighborhood`,`Parking`,`PropType`, `SquareFeet` ) VALUES(:ID, :StartDate, :EndDate, :Placement, :Position, :AdText, :Images, :Site, :Street, :City, :State, :Zip, :ExternalURL, :MoreInfo, :Rent, :Amenities, :BathRooms, :BedRooms, :Deposit, :Email, :Pets, :Phone, :ExerciseRec, :CommFeat, :Neighborhood, :Parking, :PropType, :SquareFeet)");
                 $stmt->execute(array(
                     ':ID' => $userData[$i]["AD"],
                     ':StartDate' => $userData[$i]["START-DATE"],
@@ -261,7 +266,8 @@ class ClassifiedsAdmin extends PDO
                     ':CommFeat' => json_encode($userData[$i]["COMMFEAT"]),
                     ':Neighborhood' => $userData[$i]["NEIGHBORHOOD"],
                     ':Parking' => $userData[$i]["PARKING"],
-                    ':PropType' => $userData[$i]["PROPTYPE"]
+                    ':PropType' => $userData[$i]['PROPTYPE'],
+                    ':SquareFeet' => $userData[$i]['SQUAREFEET']
                 ));
 
                 //$stmt = $this->prepare("INSERT INTO `listing` (`ID`,`StartDate`,`EndDate`,`Placement`,`Position`,`AdText`,`Images`,`SiteCode`,`Street`,`City`,`State`,`Zip`,`ExternalURL`,`MoreInfo`) VALUES(:ID, :StartDate, :EndDate, :Placement, :Position, :AdText, :Images, :Site, :Street, :City, :State, :Zip, :ExternalURL, :MoreInfo)");
@@ -270,7 +276,7 @@ class ClassifiedsAdmin extends PDO
             } catch (PDOException $e) {
                 $logText = "Message:(" . $e->getMessage() . ") attempting to insert listing (" . $userData[$i]["AD"] . ") into the database";
                 fwrite(STDERR, $logText . "\n");
-                $return = 4;
+                $this->error = 4;
             }
 
             if (isset($userData[$i]["Days"])) {
@@ -278,12 +284,12 @@ class ClassifiedsAdmin extends PDO
                     $date = $startTime = $endTime = '';
                     list($startTime, $endTime) = explode('-', $timeOfDay);
                     try {
-                        $stmt = $this->prepare("INSERT INTO `day` (`ListingId`, `DayOfWeek`, `Date`, `StartTime`, `EndTime`) VALUES(:ListingId, :DayOfWeek, :Date, :StartTime, :EndTime)");
-                        $stmt->execute(array(':ListingId' => $userData[$i]["AD"], ':DayOfWeek' => $dayOfWeek, ':Date' => $date, ':StartTime' => $startTime, ':EndTime' => $endTime));
+                        $stmt = $this->prepare("INSERT INTO `day` (`ListingId`, `DayOfWeek`, `Date`, `StartTime`, `EndTime`) VALUES(:ListingId, :DayOfWeek, now(), :StartTime, :EndTime)");
+                        $stmt->execute(array(':ListingId' => $userData[$i]["AD"], ':DayOfWeek' => $dayOfWeek, ':StartTime' => $startTime, ':EndTime' => $endTime));
                     } catch (PDOException $e) {
                         $logText = "Message:(" . $e->getMessage() . ") attempting to insert listing (" . $userData[$i]["AD"] . ") into the database";
                         fwrite(STDERR, $logText . "\n");
-                        $return = 5;
+                        $this->error = 5;
                     }
                 }
             }
@@ -318,11 +324,8 @@ class ClassifiedsAdmin extends PDO
                 } catch (PDOException $e) {
                     $logText = "Message:(" . $e->getMessage() . ") attempting to delete listing (" . $id . ") from the database";
                     fwrite(STDERR, $logText . "\n");
-                    $return = 2;
+                    $this->error = 2;
                 }
-                //print_r(array(':ID' => $id, ':StartDate' => $startDate, ':EndDate' => $endDate, ':Placement' => $placement,
-                //    ':Position' => $position, ':AdText' => $adText, ':Site' => $siteCode, ':Street' => $street, ':City' => $city,
-                //    ':State' => $state, ':Zip' => $zip));
 
                 try {
                     $stmt = $this->prepare("INSERT INTO `listing` (`ID`, `StartDate`, `EndDate`, `Placement`,`Position`, `AdText`, `SiteCode`, `Street`, `City`, `State`, `Zip`) VALUES(:ID, :StartDate, :EndDate, :Placement, :Position, :AdText, :Site, :Street, :City, :State, :Zip)");
@@ -333,7 +336,7 @@ class ClassifiedsAdmin extends PDO
                 } catch (PDOException $e) {
                     $logText = "Message:(" . $e->getMessage() . ") attempting to insert listing (" . $id . ") into the database";
                     fwrite(STDERR, $logText . "\n");
-                    $return = 4;
+                    $this->error = 4;
                 }
             }
         }
@@ -341,7 +344,6 @@ class ClassifiedsAdmin extends PDO
         $logText = "inserted $inserted out of $userCount rows in listing for $siteCode";
         fwrite(STDOUT, $logText . "\n");
     }
-
 
     function deleteOldListings()
     {
@@ -355,7 +357,7 @@ class ClassifiedsAdmin extends PDO
         } catch (PDOException $e) {
             $logText = "Message:(" . $e->getMessage() . ") attempting to delete data prior to (" . $date . ") from the listing table";
             fwrite(STDERR, $logText . "\n");
-            $return = 6;
+            $this->error = 6;
         }
     }
 
@@ -370,7 +372,7 @@ class ClassifiedsAdmin extends PDO
         } catch (PDOException $e) {
             $logText = "Message:(" . $e->getMessage() . ") attempting to truncate the positions table";
             fwrite(STDERR, $logText . "\n");
-            $return = 8;
+            $this->error = 8;
         }
 
         try {
@@ -381,7 +383,7 @@ class ClassifiedsAdmin extends PDO
         } catch (PDOException $e) {
             $logText = "Message:(" . $e->getMessage() . ") attempting to insert the positions table";
             fwrite(STDERR, $logText . "\n");
-            $return = 10;
+            $this->error = 10;
         }
     }
 
@@ -414,7 +416,7 @@ class ClassifiedsAdmin extends PDO
         } catch (PDOException $e) {
             $logText = "Message:(" . $e->getMessage() . ") Selecting addresses without Lat and Long from listing";
             fwrite(STDERR, $logText . "\n");
-            $return = 12;
+            $this->error = 12;
         }
 
         foreach ($results as $row) {
@@ -442,7 +444,7 @@ class ClassifiedsAdmin extends PDO
             } catch (PDOException $e) {
                 $logText = "Message:(" . $e->getMessage() . ") Updating listing, adding Long and Lat for " . $row['ID'];
                 fwrite(STDERR, $logText . "\n");
-                $return = 14;
+                $this->error = 14;
             }
 
             //Slow this down so we don't run into problems with Google's Geocoding limits
@@ -468,7 +470,7 @@ foreach ($fileArray as $file) {
 
         if ($userCount > 0) {
             //print_r($userData);
-            $user->insertListings();
+            $user->insertListings($userData, $site, $userCount);
         }
     }
 }
@@ -477,4 +479,4 @@ $user->deleteOldListings();
 $user->updateGeocodes();
 $user->buildNav();
 
-exit($return);
+exit($user->error());
