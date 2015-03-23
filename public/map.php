@@ -24,6 +24,13 @@ function myTruncate($string, $limit, $break=" ", $pad="")
     return $ret;
 }
 
+function cmpDays($a, $b) {
+    if ($a['dayOfWeek'] == $b['dayOfWeek']) {
+        return 0;
+    }
+    return ($a['dayOfWeek'] < $b['dayOfWeek']) ? -1 : 1;
+}
+
 $app = new \GCI\App();
 
 $app->logInfo('Listing Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].', REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].',HTTP_HOST: '.@$_SERVER['HTTP_HOST'].'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].')');
@@ -137,9 +144,9 @@ foreach($rummages as $k=>$v) {
 
     $daysOpen = '';
     if (! empty($v['days'])) {
+        usort($v['days'], 'cmpDays');
         foreach($v['days'] as $dayVal) {
             $daysOpen .= '&nbsp;<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="'.$dayVal['startTime'].'-'.$dayVal['endTime'].'">'.$dayAbrvArray[$dayVal['dayOfWeek']].'</button>';
-            //$daysOpen .= '<a href="#" data-toggle="tooltip" title="'.$dayVal['startTime'].'-'.$dayVal['endTime'].'">'.$dayAbrvArray[$dayVal['dayOfWeek']].'</a>';
             $filter['days'][$dayVal['dayOfWeek']] = $dayArray[$dayVal['dayOfWeek']];
         }
     }
@@ -226,10 +233,15 @@ foreach($rummages as $k=>$v) {
         $rummageList1 .= '<a class="btn btn-primary pull-right btn-sm" href="listingItem.php?id='.$k.'">View Listing <span class="glyphicon glyphicon-chevron-right"></span></a>';
     }
 
+    if (! empty($daysOpen)) {
+        $rummageList1 .= '<div class="pull-right"><strong><small>Days: </small></strong><div class="btn-group btn-group-xs" role="group" aria-label="days">'.$daysOpen.'</div></div>';
+    }
+
     $rummageList1 .= '</div></div><hr>';
 }
 
 $filter['days'] = array_unique($filter['days']);
+ksort($filter['days']);
 
 $filterForm = "";
 if(empty($_GET['city'])) {
@@ -289,6 +301,7 @@ if(empty($_GET['bdrooms'])) {
         $filterForm .= ' Bed Rooms <span class="caret"></span></button>';
         $filterForm .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuBdrooms">';
         ksort($filter['bdrooms']);
+        $firstBdRoom = array_shift($filter['bdrooms']);
         foreach($filter['bdrooms'] as $k=>$v){
             $filterForm .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'bdrooms\', \'' . $k . '\')" href="javascript:void(0)">' . $v . '</a></li>';
         }
@@ -306,6 +319,7 @@ if(empty($_GET['bthrooms'])) {
         $filterForm .= ' Bath Rooms <span class="caret"></span></button>';
         $filterForm .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuBthrooms">';
         ksort($filter['bthrooms']);
+        $firstBthRoom = array_shift($filter['bthrooms']);
         foreach($filter['bthrooms'] as $k=>$v){
             $filterForm .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'bthrooms\', \'' . $k . '\')" href="javascript:void(0)">' . $v . '</a></li>';
         }
@@ -317,33 +331,37 @@ if(empty($_GET['bthrooms'])) {
     $filterForm .= ' Bath Rooms - <strong>'.$_GET['bthrooms'].'</strong> <span class="glyphicon glyphicon-remove-circle" style="color:#d43f3a;"></span></button></div>';
 }
 
-if(count($filter['rents']) > 2) {
+$rentCount = count($filter['rents']);
+ksort($filter['rents']);
+
+if($rentCount > 5) {
     $minRent = min($filter['rents']);
     $maxRent = max($filter['rents']);
-    $halfRent = ceil($maxRent / 2) . '.00';
+    $quarterRent = array_slice($filter['rents'], 2, 1);
+    $threeQuarterRent = array_slice($filter['rents'], -2, 1);
+    $halfRent = ceil(($quarterRent + $threeQuarterRent) / 2) . '.00';
 
-    $newRent = array(
+    $filter['rents'] = array(
         $minRent => $minRent,
+        $quarterRent = $quarterRent,
         $halfRent => $halfRent,
+        $threeQuarterRent = $threeQuarterRent,
         $maxRent => $maxRent
     );
-
-    if(count($filter['rents']) > 3) {
-        $quarterRent = ceil($maxRent / 4) . '.00';
-        $threeQuarterRent = ($halfRent + $quarterRent) . '.00';
-        $newRent[$quarterRent] = $quarterRent;
-        $newRent[$threeQuarterRent] = $threeQuarterRent;
-        ksort($newRent);
-    }
 }
 
+print_r($filter['rents']); echo '<br />';
+
 if (empty($_GET['minrent'])) {
-    if(count($filter['rents']) > 2){
+    if($rentCount > 2){
         $filterForm .= '<div class="btn-group"><button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuMinRent" data-toggle="dropdown">';
         $filterForm .= ' Min. Rent <span class="caret"></span></button>';
         $filterForm .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuPaper">';
-        foreach($newRent as $k=>$v){
-            $filterForm .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'minrent\', \'' . $k . '\')" href="javascript:void(0)">' . $v . '</a></li>';
+        $i = 0;
+        foreach($filter['rents'] as $k=>$v){
+            if ($i++ > 0) {
+                $filterForm .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'minrent\', \'' . $k . '\')" href="javascript:void(0)">' . $v . '</a></li>';
+            }
         }
         $filterForm .= '</ul></div>';
     }
@@ -354,12 +372,15 @@ if (empty($_GET['minrent'])) {
 }
 
 if (empty($_GET['maxrent'])) {
-    if(count($filter['rents']) > 2){
+    if($rentCount > 2){
         $filterForm .= '<div class="btn-group"><button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuMaxRent" data-toggle="dropdown">';
         $filterForm .= ' Max. Rent <span class="caret"></span></button>';
         $filterForm .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuPaper">';
-        foreach($newRent as $k=>$v){
-            $filterForm .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'maxrent\', \'' . $k . '\')" href="javascript:void(0)">' . $v . '</a></li>';
+        $i = 0;
+        foreach($filter['rents'] as $k=>$v){
+            if ($i++ < ($rentCount - 1)) {
+                $filterForm .= '<li role="presentation"><a role="menuitem" tabindex="-1" onClick="setGetParameter(\'maxrent\', \'' . $k . '\')" href="javascript:void(0)">' . $v . '</a></li>';
+            }
         }
         $filterForm .= '</ul></div>';
     }
