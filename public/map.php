@@ -138,7 +138,9 @@ foreach($rummages as $k=>$v) {
 
 	$filter['city'][strtoupper(trim($v['city']))] = true;
 	$filter['sites'][$v['siteCode']] = strtoupper($v['siteName']);
-    $filter['rents'][$v['rent']] = $v['rent'];
+    if (! empty($v['rent'])) {
+        $filter['rents'][$v['rent']] = $v['rent'];
+    }
     $filter['bdrooms'][$v['bdrooms']] = $v['bdrooms'];
     $filter['bthrooms'][$v['bthrooms']] = $v['bthrooms'];
 
@@ -147,9 +149,7 @@ foreach($rummages as $k=>$v) {
         usort($v['days'], 'cmpDays');
         foreach($v['days'] as $dayVal) {
             $daysOpen .= '&nbsp;<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="'.$dayVal['startTime'].'-'.$dayVal['endTime'].'">'.$dayAbrvArray[$dayVal['dayOfWeek']].'</button>';
-            if ((! empty($dayVal['dayOfWeek'])) && (isset($dayArray[$dayVal['dayOfWeek']]))) {
-                $filter['days'][$dayVal['dayOfWeek']] = $dayArray[$dayVal['dayOfWeek']];
-            }
+            $filter['days'][$dayVal['dayOfWeek']] = $dayArray[$dayVal['dayOfWeek']];
         }
     }
 
@@ -242,12 +242,8 @@ foreach($rummages as $k=>$v) {
     $rummageList1 .= '</div></div><hr>';
 }
 
-echo 'filter Days1 '; print_r($filter['days']); echo '<br />';
 $filter['days'] = array_unique($filter['days']);
-echo 'filter Days2 '; print_r($filter['days']);echo '<br />';
-
 ksort($filter['days']);
-echo 'filter Days3'; print_r($filter['days']);echo '<br />';
 
 $filterForm = "";
 if(empty($_GET['city'])) {
