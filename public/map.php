@@ -337,8 +337,10 @@ ksort($filter['rents']);
 if($rentCount > 5) {
     $minRent = min($filter['rents']);
     $maxRent = max($filter['rents']);
-    $quarterRent = array_slice($filter['rents'], 2, 1);
-    $threeQuarterRent = array_slice($filter['rents'], -2, 1);
+    $quarterRentSlice = array_slice($filter['rents'], 2, 1);
+    $threeQuarterRentSlice = array_slice($filter['rents'], -2, 1);
+    $quarterRent = $quarterRentSlice[0];
+    $threeQuarterRent = $threeQuarterRentSlice[0];
     $halfRent = ceil(($quarterRent + $threeQuarterRent) / 2) . '.00';
 
     $filter['rents'] = array(
