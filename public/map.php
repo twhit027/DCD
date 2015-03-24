@@ -334,6 +334,7 @@ if(empty($_GET['bthrooms'])) {
 $rentCount = count($filter['rents']);
 ksort($filter['rents']);
 
+/*
 if($rentCount > 5) {
     $minRent = min($filter['rents']);
     $maxRent = max($filter['rents']);
@@ -351,6 +352,7 @@ if($rentCount > 5) {
         $maxRent => $maxRent
     );
 }
+*
 
 print_r($filter['rents']); echo '<br />';
 
