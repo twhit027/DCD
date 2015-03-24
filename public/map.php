@@ -347,9 +347,9 @@ if($rentCount > 5) {
 
     $filter['rents'] = array(
         $minRent => $minRent,
-        $quarterRent = $quarterRent,
+        $quarterRent => $quarterRent,
         $halfRent => $halfRent,
-        $threeQuarterRent = $threeQuarterRent,
+        $threeQuarterRent => $threeQuarterRent,
         $maxRent => $maxRent
     );
 }
