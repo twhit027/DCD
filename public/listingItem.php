@@ -202,23 +202,23 @@ if (!empty($bedRooms)) {
     $propInfo .= $bedRooms . ' Bed Rooms';
 }
 if (!empty($bathRooms)) {
-    if (! empty($propInfo)) {$propInfo .= '$nbsp;|$nbsp;';}
+    if (! empty($propInfo)) {$propInfo .= '&nbsp;|&nbsp;';}
     $propInfo .= $bathRooms . ' Bath Rooms';
 }
 if (!empty($squareFeet)) {
-    if (! empty($propInfo)) {$propInfo .= '$nbsp;|$nbsp;';}
+    if (! empty($propInfo)) {$propInfo .= '&nbsp;|&nbsp;';}
     $propInfo .= $squareFeet . ' Square Feet';
 }
 if (!empty($propType)) {
-    if (! empty($propInfo)) {$propInfo .= '$nbsp;|$nbsp;';}
+    if (! empty($propInfo)) {$propInfo .= '&nbsp;|&nbsp;';}
     $propInfo .= $propType;
 }
 if (!empty($rent)) {
-    if (! empty($propInfo)) {$propInfo .= '$nbsp;|$nbsp;';}
+    if (! empty($propInfo)) {$propInfo .= '&nbsp;|&nbsp;';}
     $propInfo .= '$ '.$rent. ' Rent';
 }
 if (!empty($deposit)) {
-    if (! empty($propInfo)) {$propInfo .= '$nbsp;|$nbsp;';}
+    if (! empty($propInfo)) {$propInfo .= '&nbsp;|&nbsp;';}
     $propInfo .= '$'.$deposit.' Deposit';
 }
 
