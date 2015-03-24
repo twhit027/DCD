@@ -31,6 +31,28 @@ function cmpDays($a, $b) {
     return ($a['dayOfWeek'] < $b['dayOfWeek']) ? -1 : 1;
 }
 
+function averageArray($theArray) {
+    if(count($theArray) > 5) {
+        $minRent = min($theArray['rents']);
+        $maxRent = max($theArray['rents']);
+        $quarterRentSlice = array_slice($theArray['rents'], 2, 1);
+        $threeQuarterRentSlice = array_slice($theArray['rents'], -2, 1);
+        $quarterRent = $quarterRentSlice[0];
+        $threeQuarterRent = $threeQuarterRentSlice[0];
+        $halfRent = ceil(($quarterRent + $threeQuarterRent) / 2) . '.00';
+
+        $retFilter['rents'] = array(
+            $minRent => $minRent,
+            $quarterRent => $quarterRent,
+            $halfRent => $halfRent,
+            $threeQuarterRent => $threeQuarterRent,
+            $maxRent => $maxRent
+        );
+
+        return $retFilter;
+    }
+}
+
 $app = new \GCI\App();
 
 $app->logInfo('Listing Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].', REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].',HTTP_HOST: '.@$_SERVER['HTTP_HOST'].'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].')');
@@ -336,25 +358,7 @@ if(empty($_GET['bthrooms'])) {
 $rentCount = count($filter['rents']);
 ksort($filter['rents']);
 
-if($rentCount > 5) {
-    $minRent = min($filter['rents']);
-    $maxRent = max($filter['rents']);
-    $quarterRentSlice = array_slice($filter['rents'], 2, 1);
-    $threeQuarterRentSlice = array_slice($filter['rents'], -2, 1);
-    $quarterRent = $quarterRentSlice[0];
-    $threeQuarterRent = $threeQuarterRentSlice[0];
-    $halfRent = ceil(($quarterRent + $threeQuarterRent) / 2) . '.00';
-
-    $filter['rents'] = array(
-        $minRent => $minRent,
-        $quarterRent => $quarterRent,
-        $halfRent => $halfRent,
-        $threeQuarterRent => $threeQuarterRent,
-        $maxRent => $maxRent
-    );
-}
-
-print_r($filter['rents']); echo '<br />';
+// $filter['rents'] = averageArray($filter['rents']);
 
 if (empty($_GET['minrent'])) {
     if($rentCount > 2){
