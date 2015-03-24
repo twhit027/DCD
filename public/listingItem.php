@@ -197,6 +197,31 @@ $metadata = '
 $urlEncodedPlacement = urlencode($placement);
 $urlEncodedPosition = urlencode($position);
 
+$propInfo = '';
+if (!empty($bedRooms)) {
+    $propInfo .= $bedRooms . ' Bed Rooms';
+}
+if (!empty($bathRooms)) {
+    if (! empty($propInfo)) {$propInfo .= '$nbsp;|$nbsp;';}
+    $propInfo .= $bathRooms . ' Bath Rooms';
+}
+if (!empty($squareFeet)) {
+    if (! empty($propInfo)) {$propInfo .= '$nbsp;|$nbsp;';}
+    $propInfo .= $squareFeet . ' Square Feet';
+}
+if (!empty($propType)) {
+    if (! empty($propInfo)) {$propInfo .= '$nbsp;|$nbsp;';}
+    $propInfo .= $propType;
+}
+if (!empty($rent)) {
+    if (! empty($propInfo)) {$propInfo .= '$nbsp;|$nbsp;';}
+    $propInfo .= '$ '.$rent. ' Rent';
+}
+if (!empty($deposit)) {
+    if (! empty($propInfo)) {$propInfo .= '$nbsp;|$nbsp;';}
+    $propInfo .= '$'.$deposit.' Deposit';
+}
+
 $depositDiv = '';
 if (! empty($deposit) && ($deposit != 'null')) {
     $depositDiv = '<div class="col-sm-3 col-xs-6"><h4><i class="fa fa-money"></i>&nbsp;Deposit</h4>'.$deposit.'</div>';
@@ -242,20 +267,7 @@ $mainContent = <<<EOS
         </div>
 
         <div class="panel panel-default" style="margin-top: 20px">
-            <div class="panel-body">
-                <div class="col-sm-3 col-xs-6">
-                <span class="label label-default">Bedrooms</span>&nbsp;$bedRooms
-                </div>
-                <div class="col-sm-3 col-xs-6">
-                <span class="label label-default">Bathrooms</span>&nbsp;$bathRooms
-                </div>
-                <div class="col-sm-3 col-xs-6">
-                <span class="label label-default">Rent</span>&nbsp;$$rent
-                </div>
-                <div class="col-sm-3 col-xs-6">
-                <span class="label label-default">Sq Ft</span>&nbsp;$squareFeet
-                </div>
-            </div>
+            <div class="panel-body">$propInfo</div>
         </div>
         <!-- /.row -->
 
@@ -280,10 +292,6 @@ $mainContent = <<<EOS
                 <h4><i class="fa fa-building-o"></i>&nbsp;Features</h4>
                     $featsList
             </div>
-        </div>
-        <div class="row" style="margin-top: 5px;">
-            $depositDiv
-            $propTypeDiv
         </div>
         <!-- /.row -->
 
