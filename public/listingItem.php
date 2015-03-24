@@ -242,7 +242,20 @@ $mainContent = <<<EOS
         </div>
 
         <div class="panel panel-default" style="margin-top: 20px">
-            <div class="panel-body">$propInfo</div>
+            <div class="panel-body">
+                <div class="col-sm-3 col-xs-6">
+                <span class="label label-default">Bedrooms</span>&nbsp;$bedRooms
+                </div>
+                <div class="col-sm-3 col-xs-6">
+                <span class="label label-default">Bathrooms</span>&nbsp;$bathRooms
+                </div>
+                <div class="col-sm-3 col-xs-6">
+                <span class="label label-default">Rent</span>&nbsp;$$rent
+                </div>
+                <div class="col-sm-3 col-xs-6">
+                <span class="label label-default">Sq Ft</span>&nbsp;$squareFeet
+                </div>
+            </div>
         </div>
         <!-- /.row -->
 
@@ -267,6 +280,10 @@ $mainContent = <<<EOS
                 <h4><i class="fa fa-building-o"></i>&nbsp;Features</h4>
                     $featsList
             </div>
+        </div>
+        <div class="row" style="margin-top: 5px;">
+            $depositDiv
+            $propTypeDiv
         </div>
         <!-- /.row -->
 
