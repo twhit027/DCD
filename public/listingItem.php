@@ -197,31 +197,6 @@ $metadata = '
 $urlEncodedPlacement = urlencode($placement);
 $urlEncodedPosition = urlencode($position);
 
-$propInfo = '';
-if (!empty($bedRooms)) {
-    $propInfo .= $bedRooms . ' Bed Rooms';
-}
-if (!empty($bathRooms)) {
-    if (! empty($propInfo)) {$propInfo .= '&nbsp;|&nbsp;';}
-    $propInfo .= $bathRooms . ' Bath Rooms';
-}
-if (!empty($squareFeet)) {
-    if (! empty($propInfo)) {$propInfo .= '&nbsp;|&nbsp;';}
-    $propInfo .= $squareFeet . ' Square Feet';
-}
-if (!empty($propType)) {
-    if (! empty($propInfo)) {$propInfo .= '&nbsp;|&nbsp;';}
-    $propInfo .= $propType;
-}
-if (!empty($rent)) {
-    if (! empty($propInfo)) {$propInfo .= '&nbsp;|&nbsp;';}
-    $propInfo .= '$ '.$rent. ' Rent';
-}
-if (!empty($deposit)) {
-    if (! empty($propInfo)) {$propInfo .= '&nbsp;|&nbsp;';}
-    $propInfo .= '$'.$deposit.' Deposit';
-}
-
 $depositDiv = '';
 if (! empty($deposit) && ($deposit != 'null')) {
     $depositDiv = '<div class="col-sm-3 col-xs-6"><h4><i class="fa fa-money"></i>&nbsp;Deposit</h4>'.$deposit.'</div>';
