@@ -360,8 +360,6 @@ ksort($filter['rents']);
 
 // $filter['rents'] = averageArray($filter['rents']);
 
-print_r($filter['rents']); echo '<br />';
-
 if (empty($_GET['minrent'])) {
     if($rentCount > 2){
         $filterForm .= '<div class="btn-group"><button title="Add Filter" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuMinRent" data-toggle="dropdown">';
