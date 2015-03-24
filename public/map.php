@@ -240,8 +240,12 @@ foreach($rummages as $k=>$v) {
     $rummageList1 .= '</div></div><hr>';
 }
 
-$filter['days'] = array_unique($filter['days']);
+echo 'filter Days1'; print_r($filter['days']); echo '<br />';
+echo 'filter Days2'; $filter['days'] = array_unique($filter['days']);
+print_r($filter['days']);echo '<br />';
+
 ksort($filter['days']);
+echo 'filter Days3'; print_r($filter['days']);echo '<br />';
 
 $filterForm = "";
 if(empty($_GET['city'])) {
@@ -352,7 +356,7 @@ if($rentCount > 5) {
         $maxRent => $maxRent
     );
 }
-*
+*/
 
 print_r($filter['rents']); echo '<br />';
 
