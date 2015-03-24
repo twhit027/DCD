@@ -147,7 +147,7 @@ foreach($rummages as $k=>$v) {
         usort($v['days'], 'cmpDays');
         foreach($v['days'] as $dayVal) {
             $daysOpen .= '&nbsp;<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="'.$dayVal['startTime'].'-'.$dayVal['endTime'].'">'.$dayAbrvArray[$dayVal['dayOfWeek']].'</button>';
-            if (! empty($dayVal['dayOfWeek'])) {
+            if ((! empty($dayVal['dayOfWeek'])) && (isset($dayArray[$dayVal['dayOfWeek']]))) {
                 $filter['days'][$dayVal['dayOfWeek']] = $dayArray[$dayVal['dayOfWeek']];
             }
         }
