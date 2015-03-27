@@ -320,7 +320,7 @@ $mainContent = <<<EOS
             <input type="hidden" id="fullText" name="fullText" value="$fullText">
             <ol class="breadcrumb">
                 <li><a href="./">Home</a></li>
-                <li class="active">Category</li>
+                <li class="active">$position</li>
             </ol>
             <div class="row">
                 <div class="col-lg-12"><h1>$position</h1></div>

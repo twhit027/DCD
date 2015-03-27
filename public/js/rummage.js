@@ -107,20 +107,22 @@ function visit(obj, id){
 	
 	var bool = false;
 	if(obj.classList.contains("add") && locations.selected < 8){
-		obj.classList.remove("add");
-		obj.classList.add("remove");
 		locations.selected++;
 		locations.list.push(id);
-		obj.value = "Remove";
+        var $el = $(obj);
+        $el.toggleClass('add remove')
+        $el.find('span').toggleClass('glyphicon-plus glyphicon-minus');
+        $el.prop('title', 'Remove from Route');
 		//document.getElementById('num-of-locations').innerHTML = locations.selected;
 		bool = true;
 	}
 	else if(obj.classList.contains("remove")){
-		obj.classList.remove("remove");
-		obj.classList.add("add");
 		locations.selected--;
 		locations.list.splice(locations.list.indexOf(id),1);
-		obj.value = "Add";
+        var $el = $(obj);
+        $el.toggleClass('remove add')
+        $el.find('span').toggleClass('glyphicon-minus glyphicon-plus');
+        $el.prop('title', 'Add to Route');
 		//document.getElementById('num-of-locations').innerHTML = locations.selected;
 	}
 	else{
@@ -141,7 +143,6 @@ var allowDirections = {
 	zip : false
 }
 function updateButton (){
-	
 	allowDirections.moreThanOneRoute = locations.selected;
 	allowDirections.address = $('#Address').val();
 	allowDirections.city = $('#City').val();
@@ -169,11 +170,53 @@ function closeMarkers (){
 }
 
 $(document).ready(function(){
-	initializeMap();
-	$("#dcd-route").attr("disabled","disabled");
-	$(".form-control").change(function() { updateButton(); });
-	$(".dcd-adText").click(function() { showMarker($(this)); });
-	$("#map-resize a").click(function(e) { e.preventDefault(); mapsize($(this).data("size")); });
+	if (! jQuery.isEmptyObject(DCDMAPGLOBAL.points)) {
+        initializeMap();
+	    $("#dcd-route").attr("disabled","disabled");
+	    $(".form-control").change(function() { updateButton(); });
+	    $(".dcd-adText").click(function() { showMarker($(this)); });
+	    $("#map-resize a").click(function(e) { e.preventDefault(); mapsize($(this).data("size")); });
+    }
+
+    $('.truncated').hide()                       // Hide the text initially
+        .after('<span title="See Full Text" style="margin-left: 5px; cursor:pointer" class="glyphicon glyphicon-plus-sign"></span>') // Create toggle button
+        .next().on('click', function(){          // Attach behavior
+            $(this).toggleClass('glyphicon-minus-sign').prev().toggle();
+            $(this).prop('title', 'See Less Text');
+        });
+
+    $(".fancybox").fancybox({
+        openEffect: "none",
+        closeEffect: "none"
+        });
+
+    $(".dcd-expand-text").click(function(){
+        $("#dcd-short-"+$(this).data("id")).slideToggle("slow");
+        $("#dcd-content-"+$(this).data("id")).slideToggle("slow");
+        $orgText = "Click for full text";
+        if ($orgText == $(this).html()) {
+            $(this).html("Click for less text");
+        } else {
+            $(this).html($orgText);
+        }
+
+        return false;
+        });
+
+    $('#clearFilters').click(function () {
+        var url = window.location.href;
+        url = url.replace(/&?(page|city|paper|day|bdrooms|bthrooms|minrent|maxrent)=([^&]$|[^&]*)/gi, "");
+        window.location.href = url;
+        return false;
+        });
+
+    $('#gotomap').click(function () {
+        //var divPosition = $('#map').offset();
+        $('html, body').animate({scrollTop: $('#map').offset().top}, "slow");
+        return false;
+        });
+
+    //$("#sitesdd").on("change", function() { window.location.href = window.location.href + "&sites=" + encodeURIComponent(this.value); return false;} );
 });
 
 function mapsize(_size){
@@ -194,24 +237,49 @@ function mapsize(_size){
 
 function setGetParameter(paramName, paramValue) {
     var url = window.location.href;
-	if (url.indexOf("?") < 0) {
-		url += "?" + paramName + "=" + encodeURIComponent(paramValue);
-	} else {
-		url += "&" + paramName + "=" + encodeURIComponent(paramValue);
-	}
+    url = url.replace(/&?page=([^&]$|[^&]*)/i, "");
+    if (url.indexOf(paramName + "=") >= 0)
+    {
+        var prefix = url.substring(0, url.indexOf(paramName));
+        var suffix = url.substring(url.indexOf(paramName));
+        suffix = suffix.substring(suffix.indexOf("=") + 1);
+        suffix = (suffix.indexOf("&") >= 0) ? suffix.substring(suffix.indexOf("&")) : "";
+        url = prefix + paramName + "=" + paramValue + suffix;
+    }
+    else
+    {
+        if (url.indexOf("?") < 0) {
+            url += "?" + paramName + "=" + encodeURIComponent(paramValue);
+        } else {
+            url += "&" + paramName + "=" + encodeURIComponent(paramValue);
+        }
+    }
     window.location.href = url;
     return false;
 }
 
 function removeSitesAndReloadPage(paramName) {
 	var url = window.location.href;
+    url = url.replace(/&?page=([^&]$|[^&]*)/i, "");
 	if(paramName == 'city') {
 		url = url.replace(/&?city=([^&]$|[^&]*)/i, "");
     } else if(paramName == 'paper') {
 		url = url.replace(/&?paper=([^&]$|[^&]*)/i, "");
     } else if(paramName == 'day') {
         url = url.replace(/&?day=([^&]$|[^&]*)/i, "");
+    } else if(paramName == 'bdrooms') {
+        url = url.replace(/&?bdrooms=([^&]$|[^&]*)/i, "");
+    } else if(paramName == 'bthrooms') {
+        url = url.replace(/&?bthrooms=([^&]$|[^&]*)/i, "");
+    } else if(paramName == 'minrent') {
+        url = url.replace(/&?minrent=([^&]$|[^&]*)/i, "");
+    } else if(paramName == 'maxrent') {
+        url = url.replace(/&?maxrent=([^&]$|[^&]*)/i, "");
     }
 	window.location.href = url;
 	return false;
+}
+
+function addSitesAndReloadPage(paramValue) {
+    setGetParameter("sites", paramValue);
 }

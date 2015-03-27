@@ -55,7 +55,7 @@ class Ads
 		</div>
 		";
 
-		return $data;
+	return $data;
     }
     function getLeaderBottom()
     {

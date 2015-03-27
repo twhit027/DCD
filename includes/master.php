@@ -29,6 +29,7 @@ $busName = $app->getSite()->getBusName();
 $siteTopData = $app->getSite()->getTopLinks();
 $siteBottomData = $app->getSite()->getBottomLinks();
 $device = $app->getDeviceType();
+$catagories = $app->getCategories();
 
 if (empty($imgSiteName)) {
     $siteImage = "http://www.gannett-cdn.com/sites/$siteName/images/site-nav-logo@2x.png";
@@ -41,6 +42,7 @@ if ($palette > 89 && empty($siteBottomData)) {
 }
 
 $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -69,9 +71,10 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="msapplication-TileImage" content="/mstile-144x144.png">
 
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -84,6 +87,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
         }
     ?>
     <link type="text/css" href="css/dcd.css" rel="stylesheet">
+    <link type="text/css" href="css/social-buttons-3.css" rel="stylesheet">
 </head>
 <body>
 <!--[if lt IE 8]>
@@ -129,7 +133,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                     <input id="fullTextBox1" type="text" name="search" class="form-control" value="<?php echo $fullText; ?>">
                         <span class="input-group-btn">
                             <button id="ftSearchbtn1" class="btn btn-primary" type="button">
-                                <img src="img/white-magnifying-glass-20.png">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                             </button>
                         </span>
                 </div>
@@ -140,21 +144,21 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                         Limit Search Radius:
                         <select id="radSelect1" style="color:black">
                             <option value="all">all</option>
-                            <option value="50" <?php if ($radius == "50") echo "selected"; ?>>50 Miles</option>
-                            <option value="100" <?php if ($radius == "100") echo "selected"; ?>>100 Miles</option>
-                            <option value="200" <?php if ($radius == "200") echo "selected"; ?>>200 Miles</option>
-                            <option value="250" <?php if ($radius == "250") echo "selected"; ?>>250 Miles</option>
-                            <option value="300" <?php if ($radius == "300") echo "selected"; ?>>300 Miles</option>
-                            <option value="400" <?php if ($radius == "400") echo "selected"; ?>>400 Miles</option>
-                            <option value="500" <?php if ($radius == "500") echo "selected"; ?>>500 Miles</option>
-                            <option value="750" <?php if ($radius == "750") echo "selected"; ?>>750 Miles</option>
-                            <option value="1000" <?php if ($radius == "1000") echo "selected"; ?>>1000 Miles</option>
+                            <option value="50" <?php if ($radius == "50") {echo "selected";} ?>>50 Miles</option>
+                            <option value="100" <?php if ($radius == "100") {echo "selected";} ?>>100 Miles</option>
+                            <option value="200" <?php if ($radius == "200") {echo "selected";} ?>>200 Miles</option>
+                            <option value="250" <?php if ($radius == "250") {echo "selected";} ?>>250 Miles</option>
+                            <option value="300" <?php if ($radius == "300") {echo "selected";} ?>>300 Miles</option>
+                            <option value="400" <?php if ($radius == "400") {echo "selected";} ?>>400 Miles</option>
+                            <option value="500" <?php if ($radius == "500") {echo "selected";} ?>>500 Miles</option>
+                            <option value="750" <?php if ($radius == "750") {echo "selected";} ?>>750 Miles</option>
+                            <option value="1000" <?php if ($radius == "1000") {echo "selected";} ?>>1000 Miles</option>
                         </select>
                     </div>
                 </div>
                 <h3 style="color:#3276B1;">Or Select A Category</h3>
                 <ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">
-                    <?php echo $nav->getSideNavigation($app->getCategories()) ?>
+                    <?php echo $nav->getSideNavigation($catagories); ?>
                 </ul>
             </div>
         </nav>
@@ -186,34 +190,33 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                                value="<?php echo $fullText; ?>">
                         <span class="input-group-btn">
                             <button id="ftSearchbtn2" class="btn btn-primary" type="button">
-                                <img src="img/white-magnifying-glass-20.png">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                             </button>
                         </span>
                     </div>
-                    <div class="filter" style="color: white">
+                    <div class="filter" style="color: white" >
                         <input type="checkbox" id="allSites2"
-                               value="" <?php if (strtolower($siteGroup) == 'all') echo 'checked="checked"'; ?> />
+                               value="" <?php if (strtolower($siteGroup) == 'all') {echo 'checked="checked"';} ?> />
                         Search Across All Sites
-                        <div id="radius2" style="<?php if (strtolower($siteGroup) != 'all') echo 'display: none;'; ?>">
+                        <div id="radius2" style="<?php if (strtolower($siteGroup) != 'all') {echo 'display: none;';} ?>">
                             Limit Search Radius:
                             <select id="radSelect2" style="color:black">
                                 <option value="all">all</option>
-                                <option value="50" <?php if ($radius == "50") echo "selected"; ?>>50 Miles</option>
-                                <option value="100" <?php if ($radius == "100") echo "selected"; ?>>100 Miles</option>
-                                <option value="200" <?php if ($radius == "200") echo "selected"; ?>>200 Miles</option>
-                                <option value="250" <?php if ($radius == "250") echo "selected"; ?>>250 Miles</option>
-                                <option value="300" <?php if ($radius == "300") echo "selected"; ?>>300 Miles</option>
-                                <option value="400" <?php if ($radius == "400") echo "selected"; ?>>400 Miles</option>
-                                <option value="500" <?php if ($radius == "500") echo "selected"; ?>>500 Miles</option>
-                                <option value="750" <?php if ($radius == "750") echo "selected"; ?>>750 Miles</option>
-                                <option value="1000" <?php if ($radius == "1000") echo "selected"; ?>>1000 Miles
-                                </option>
+                                <option value="50" <?php if ($radius == "50") {echo "selected";} ?>>50 Miles</option>
+                                <option value="100" <?php if ($radius == "100") {echo "selected";} ?>>100 Miles</option>
+                                <option value="200" <?php if ($radius == "200") {echo "selected";} ?>>200 Miles</option>
+                                <option value="250" <?php if ($radius == "250") {echo "selected";} ?>>250 Miles</option>
+                                <option value="300" <?php if ($radius == "300") {echo "selected";} ?>>300 Miles</option>
+                                <option value="400" <?php if ($radius == "400") {echo "selected";} ?>>400 Miles</option>
+                                <option value="500" <?php if ($radius == "500") {echo "selected";} ?>>500 Miles</option>
+                                <option value="750" <?php if ($radius == "750") {echo "selected";} ?>>750 Miles</option>
+                                <option value="1000" <?php if ($radius == "1000") {echo "selected";} ?>>1000 Miles</option>
                             </select>
                         </div>
                     </div>
                     <h3 style="color:#3276B1;">Or Select A Category</h3>
                     <ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">
-                        <?php echo $nav->getSideNavigation($app->getCategories()); ?>
+                        <?php echo $nav->getSideNavigation($catagories) ?>
                     </ul>
                 </div>
                 <div style="padding:10px">
@@ -259,31 +262,31 @@ if ($device == "computer") {
     function doSearch(place, posit, ft, allSites, rad) {
         var path = '';
 
-        if (place != '') {
+        if (place !== '') {
             path += 'place=' + encodeURIComponent(place);
         }
 
-        if (posit != '') {
-            if (path != '') {
+        if (posit !== '') {
+            if (path !== '') {
                 path += '&';
             }
             path += 'posit=' + encodeURIComponent(posit);
         }
 
-        if (ft != '') {
-            if (path != '') {
+        if (ft !== '') {
+            if (path !== '') {
                 path += '&';
             }
             path += 'ft=' + encodeURIComponent(ft);
 
             if (allSites) {
-                if (path != '') {
+                if (path !== '') {
                     path += '&';
                 }
                 path += 'sites=all';
 
-                if (rad != '' && rad.toLowerCase() != 'all') {
-                    if (path != '') {
+                if (rad !== '' && rad.toLowerCase() !== 'all') {
+                    if (path !== '') {
                         path += '&';
                     }
                     path += 'rad=' + encodeURIComponent(rad);
@@ -291,7 +294,7 @@ if ($device == "computer") {
             }
         }
 
-        if (path != '') {
+        if (path !== '') {
             path = '?' + path;
         }
 
@@ -299,6 +302,21 @@ if ($device == "computer") {
     }
 
     $(document).ready(function () {
+        $('.panel-heading span.clickable').on("click", function (e) {
+            if ($(this).hasClass('panel-collapsed')) {
+                // expand the panel
+                $(this).parents('.panel').find('.panel-body').slideDown();
+                $(this).removeClass('panel-collapsed');
+                $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+            }
+            else {
+                // collapse the panel
+                $(this).parents('.panel').find('.panel-body').slideUp();
+                $(this).addClass('panel-collapsed');
+                $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+            }
+        });
+
         $(".header").click(function () {
             $('[data-toggle="tooltip"]').tooltip();
             $('[data-toggle="popover"]').popover();
@@ -338,7 +356,7 @@ if ($device == "computer") {
             allSites = $("#allSites1").prop("checked") ? 1 : 0;
             rad = $('#radSelect1').val();
 
-            if (ft == '') {
+            if (ft === '') {
                 $("#searchAlert1").html("Please provide a search term");
                 $("#searchAlert1").toggle(true);
                 $("#fullTextBox1").focus();
@@ -348,7 +366,7 @@ if ($device == "computer") {
         });
 
         $('#fullTextBox1').keypress(function (e) {
-            if (e.which == '13') {
+            if (e.which === '13') {
                 e.preventDefault();
                 ft = $("#fullTextBox1").val().trim();
                 place = '';
@@ -356,7 +374,7 @@ if ($device == "computer") {
                 allSites = $("#allSites1").prop("checked") ? 1 : 0;
                 rad = $('#radSelect1').val();
 
-                if (ft == '') {
+                if (ft === '') {
                     $("#searchAlert1").html("Please provide a search term");
                     $("#searchAlert1").toggle(true);
                     $("#fullTextBox1").focus();
@@ -374,7 +392,7 @@ if ($device == "computer") {
             allSites = $("#allSites2").prop("checked") ? 1 : 0;
             rad = $('#radSelect2').val();
 
-            if (ft == '') {
+            if (ft === '') {
                 $("#searchAlert2").html("Please provide a search term");
                 $("#searchAlert2").toggle(true);
                 $("#fullTextBox2").focus();
@@ -384,7 +402,7 @@ if ($device == "computer") {
         });
 
         $('#fullTextBox2').keypress(function (e) {
-            if (e.which == '13') {
+            if (e.which === '13') {
                 e.preventDefault();
                 ft = $("#fullTextBox2").val().trim();
                 place = '';
@@ -392,7 +410,7 @@ if ($device == "computer") {
                 allSites = $("#allSites2").prop("checked") ? 1 : 0;
                 rad = $('#radSelect2').val();
 
-                if (ft == '') {
+                if (ft === '') {
                     $("#searchAlert2").html("Please provide a search term");
                     $("#searchAlert2").toggle(true);
                     $("#fullTextBox2").focus();
