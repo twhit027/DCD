@@ -14,7 +14,6 @@ $busName = $app->getSite()->getBusName();
 
 $app->logInfo('Category Page(FORWARDED_FOR: ' . @$_SERVER['HTTP_X_FORWARDED_FOR'] . ', REMOTE_ADDR: ' . @$_SERVER['REMOTE_ADDR'] . ',HTTP_HOST: ' . @$_SERVER['HTTP_HOST'] . 'SERVER_NAME: ' . @$_SERVER['SERVER_NAME'] . ')');
 
-//$content = new Content();
 $page = 1;
 $fullText = $placement = $position = $siteGroup = $radius = '';
 
@@ -37,10 +36,9 @@ if (isset($_REQUEST['rad'])) {
     $radius = trim(urldecode($_REQUEST['rad']));
 }
 
-$search = "";
-$listings = $app->getListings($placement, $position, $page, $siteGroup, $fullText, $radius);
+$search = $pagination = $data = $siteDropDown = '';
 
-$pagination = "";
+$listings = $app->getListings($placement, $position, $page, $siteGroup, $fullText, $radius);
 
 $metadata = '
 <title>'.$busName.' Classifieds Listings</title>
@@ -157,13 +155,10 @@ if ($listings['totalRows'] > LISTINGS_PER_PAGE) {
     }
 }
 
-$data = '';
-
 if (!isset($listings['results'])) {
     $data = '<h1 style="color:#d43f3a;"> No results found, please pick a different category or expand your advanced search</h1>';
 } else {
     $count = 1;
-    $siteDropDown = '';
     if (empty($siteGroup)) {
         if ((!empty($listings['sites'])) && (count($listings['sites']) > 1)) {
             $siteDropDown .= '<div class="col-lg-12"><label>Filter by:&nbsp;</label>';
