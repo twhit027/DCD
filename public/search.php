@@ -31,7 +31,7 @@ $mainContent = <<<EOS
             <br />$data
 EOS;
 
-include("includes/master.php");
+include("../includes/master.php");
 
 
 
