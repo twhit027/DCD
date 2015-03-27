@@ -208,11 +208,9 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                         <input name="city" type="text" id="city" class="apts form-control input-group-lg" tabindex="1" placeholder="City or ZIP"/>
                         <input alt="Search" src="img/btn_search.gif" onclick="return deterLoader()" type="image" tabindex="8">
                     </div>
-                    <label for="zip">Zip Code</label>
                     <input name="zip" id="zip" type="text" size="6" class="apts  input-lg" tabindex="3" style="display:none"/>
                     <div class="field_col_1">
                         <p class="form_label">State:</p>
-                        <label for="state">State</label>
                         <select name="state" id="state" class="apts form-control" tabindex="2">
                             <?php
                             foreach ($us_state_abbrevs_names as $abbrevs => $names) {
@@ -227,7 +225,6 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                     </div>
                     <div style="display:none" class="field_col_3">
                         <p class="form_label">Radius:</p>
-                        <label for="rad">Radius</label>
                         <select name="rad" id="rad" class="apts" tabindex="4">
                             <option value="0" selected="selected">Any</option>
                             <option value="5">5 miles</option>
@@ -237,7 +234,6 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                     </div>
                     <div style="display:none" class="field_col_4">
                         <p class="form_label">Beds:</p>
-                        <label for="bedrooms">Beds</label>
                         <select name="bedrooms" id="bedrooms" class="apts" tabindex="7">
                             <option value="" selected="selected">Any</option>
                             <option value="studio">Studio</option>

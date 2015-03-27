@@ -134,7 +134,6 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                 <h3 style="color:#3276B1;">Search Our Classifieds</h3>
                 <div class="alert alert-danger" style="display: none;" id="searchAlert1"></div>
                 <div class="input-group">
-                    <label for="fullTextBox1">Search Classifieds</label>
                     <input id="fullTextBox1" type="text" name="search" class="form-control" value="<?php echo $fullText; ?>">
                         <span class="input-group-btn">
                             <button id="ftSearchbtn1" class="btn btn-primary" type="button">
@@ -143,12 +142,10 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                         </span>
                 </div>
                 <div class="filter" style="color: white;">
-                    <label for="allSites1">Search Across All Sites</label>
                     <input type="checkbox" id="allSites1" value="" <?php if (strtolower($siteGroup) == 'all') echo 'checked="checked"'; ?> />
                     Search Across All Sites
                     <div id="radius1" style="<?php if (strtolower($siteGroup) != 'all') echo 'display: none;'; ?>">
                         Limit Search Radius:
-                        <label for="radSelect1">Radius</label>
                         <select id="radSelect1" style="color:black">
                             <option value="all">all</option>
                             <option value="50" <?php if ($radius == "50") {echo "selected";} ?>>50 Miles</option>
@@ -190,10 +187,8 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                 <div role="navigation" id="sidebar"
                      style="background-color:#000; padding-left:15px; padding-right:15px; padding-top:5px">
                     <h3 style="color:#3276B1;">Search Our Classifieds</h3>
-
                     <div class="alert alert-danger" style="display: none;" id="searchAlert2"></div>
                     <div class="input-group">
-                        <label for="fullTextBox2">Search Classifieds</label>
                         <input id="fullTextBox2" type="text" name="search" class="form-control"
                                value="<?php echo $fullText; ?>">
                         <span class="input-group-btn">
@@ -203,13 +198,11 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                         </span>
                     </div>
                     <div class="filter" style="color: white" >
-                        <label for="allSites2">Search Across All Sites</label>
                         <input type="checkbox" id="allSites2"
                                value="" <?php if (strtolower($siteGroup) == 'all') {echo 'checked="checked"';} ?> />
                         Search Across All Sites
                         <div id="radius2" style="<?php if (strtolower($siteGroup) != 'all') {echo 'display: none;';} ?>">
                             Limit Search Radius:
-                            <label for="radSelect2">Radius</label>
                             <select id="radSelect2" style="color:black">
                                 <option value="all">all</option>
                                 <option value="50" <?php if ($radius == "50") {echo "selected";} ?>>50 Miles</option>
