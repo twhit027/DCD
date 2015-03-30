@@ -36,3 +36,14 @@ body {
     margin: 0.125em 0;
     padding: 0 0.5em;
 }
+.panel-heading span {
+    margin-top: -20px;
+    font-size: 15px;
+}
+.row {
+    margin-top: 40px;
+    padding: 0 10px;
+}
+.clickable {
+    cursor: pointer;
+}

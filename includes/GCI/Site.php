@@ -45,7 +45,7 @@ class Site {
     private $state;
     private $dfp;
     private $dfpm;
-	private $gpaper;
+    private $gpaper;
     private $topLinks;
     private $bottomLinks;
     private $lat;

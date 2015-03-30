@@ -11,9 +11,7 @@ namespace GCI;
 class Crud
 {
     private $db;
-
     private $variables;
-
     private $log;
 
     public function __construct($data = array(), $table = '', $pk = '')
@@ -25,10 +23,7 @@ class Crud
             throw new Exception('need table and pk');
         }
 
-        if (empty($logDir)) {
-            $logDir = LOGGING_DIR;
-        }
-        $this->setLog($logDir);
+        $this->setLog(LOGGING_DIR);
     }
 
     public function __set($name, $value)
