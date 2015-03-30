@@ -46,6 +46,8 @@ $street = $listings['Street'];
 $city = $listings['City'];
 $state = $listings['State'];
 $zip = $listings['Zip'];
+$lat = $listings['Lat'];
+$lon = $listings['Long'];
 $amenities = json_decode($listings['Amenities']);
 $email = $listings['Email'];
 $propType = $listings['PropType'];
@@ -313,13 +315,15 @@ EOS;
 
 $mapPoints = '{
     "APTSTEST": {
-        "street": "619 Virginia Ave",
-        "city": "Indianapolis",
-        "state": "In",
-        "zip": "46203",
-        "lat": "39.7583596",
-        "lon": "-86.14653"
+        "street": "'.$street .'",
+        "city": "'.$city .'",
+        "state": "'.$state .'",
+        "zip": "'.$zip .'",
+        "lat": "'.$lat .'",
+        "lon": "'.$lon .'"
     }}';
+
+
 
 $googleApiScript = <<<EOS
 	<link rel="stylesheet" href="css/rummage.css">

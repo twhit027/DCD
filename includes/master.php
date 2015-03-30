@@ -18,28 +18,32 @@ if (!isset($radius)) {
 if (!isset($metadata)) {
     $metadata = '';
 }
+
 $nav = new \GCI\Navigation();
 $ads = new \GCI\Ads();
+
 $palette = $app->getSite()->getPalette();
 $siteName = $app->getSite()->getSiteName();
 $imgSiteName = $app->getSite()->getImgSiteName();
 $siteUrl = $app->getSite()->getSiteUrl();
-$siteCode = $app->getSite()->getSiteCode();
-$busName = $app->getSite()->getBusName();
+//$siteCode = $app->getSite()->getSiteCode();
+//$busName = $app->getSite()->getBusName();
 $siteTopData = $app->getSite()->getTopLinks();
 $siteBottomData = $app->getSite()->getBottomLinks();
 $device = $app->getDeviceType();
-$catagories = $app->getCategories();
+$categories = $app->getCategories();
 
 if (empty($imgSiteName)) {
-    $siteImage = "http://www.gannett-cdn.com/sites/$siteName/images/site-nav-logo@2x.png";
-} else {
-    $siteImage = "http://www.gannett-cdn.com/sites/$imgSiteName/images/site-nav-logo@2x.png";
+    $imgSiteName = $siteName;
 }
+
+$siteImage = "http://www.gannett-cdn.com/sites/$imgSiteName/images/site-nav-logo@2x.png";
 
 if ($palette > 89 && empty($siteBottomData)) {
     $siteBottomData = $siteTopData;
 }
+
+//#141414;
 
 $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
 
@@ -54,32 +58,32 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
 
     <base href="<?php echo $baseUrl; ?>"/>
 
-    <link rel="shortcut icon" href="img/ico/favicon-16x16.png">
-    <link rel="apple-touch-icon" sizes="57x57" href="img/ico/apple-touch-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="img/ico/apple-touch-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="img/ico/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="img/ico/apple-touch-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="img/ico/apple-touch-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="img/ico/apple-touch-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="img/ico/apple-touch-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="img/ico/apple-touch-icon-152x152.png">
-    <link rel="icon" type="image/png" href="img/ico/favicon-196x196.png" sizes="196x196">
-    <link rel="icon" type="image/png" href="img/ico/favicon-160x160.png" sizes="160x160">
-    <link rel="icon" type="image/png" href="img/ico/favicon-96x96.png" sizes="96x96">
-    <link rel="icon" type="image/png" href="img/ico/favicon-16x16.png" sizes="16x16">
-    <link rel="icon" type="image/png" href="img/ico/favicon-32x32.png" sizes="32x32">
+    <link rel="shortcut icon" href="/img/ico/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/ico/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/ico/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/ico/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/ico/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/ico/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/ico/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/ico/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/ico/apple-touch-icon-152x152.png">
+    <link rel="icon" type="image/png" href="/img/ico/favicon-196x196.png" sizes="196x196">
+    <link rel="icon" type="image/png" href="/img/ico/favicon-160x160.png" sizes="160x160">
+    <link rel="icon" type="image/png" href="/img/ico/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/img/ico/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/img/ico/favicon-32x32.png" sizes="32x32">
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="msapplication-TileImage" content="/mstile-144x144.png">
 
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <?php
         if (!empty($googleApiScript)) {
@@ -158,7 +162,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                 </div>
                 <h3 style="color:#3276B1;">Or Select A Category</h3>
                 <ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">
-                    <?php echo $nav->getSideNavigation($catagories); ?>
+                    <?php echo $nav->getSideNavigation($categories); ?>
                 </ul>
             </div>
         </nav>
@@ -183,7 +187,6 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                 <div role="navigation" id="sidebar"
                      style="background-color:#000; padding-left:15px; padding-right:15px; padding-top:5px">
                     <h3 style="color:#3276B1;">Search Our Classifieds</h3>
-
                     <div class="alert alert-danger" style="display: none;" id="searchAlert2"></div>
                     <div class="input-group">
                         <input id="fullTextBox2" type="text" name="search" class="form-control"
@@ -216,7 +219,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                     </div>
                     <h3 style="color:#3276B1;">Or Select A Category</h3>
                     <ul class="nav nav-list accordion" id="sidenav-accordian" style="padding-bottom:10px;">
-                        <?php echo $nav->getSideNavigation($catagories) ?>
+                        <?php echo $nav->getSideNavigation($categories) ?>
                     </ul>
                 </div>
                 <div style="padding:10px">
@@ -240,9 +243,9 @@ if ($device == "computer") {
 <footer class="footer">
     <?php echo $nav->getBottomNavigation($siteUrl, $palette, $siteName, $siteBottomData); ?>
 </footer>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="3rdParty/jquery/jquery.min.js"><\/script>')</script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="3rdParty/jquery/jquery-1.11.2.min.js"><\/script>')</script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script>
     function getDistance(lat1, lat2, lon1, lon2) {
         //var R = 6371; // km
@@ -339,7 +342,6 @@ if ($device == "computer") {
 
                 $header.css("background-image", 'url(' + bckImg + ')');
             });
-
         });
 
         $(".filterContent").hide();

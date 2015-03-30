@@ -136,8 +136,8 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="msapplication-TileImage" content="/mstile-144x144.png">
 
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
     <link rel="stylesheet" type="text/css" href="css/apartments.css">
 
     <title><?php echo $siteName; ?> Rentals</title>
@@ -147,11 +147,26 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
     <script src="../../docs-assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
 <body>
+<!-- modal -->
+<div class="modal fade" id="prefmodal">
+    <div class="modal-dialog" style="width: 340px;">
+        <div class="modal-content">
+            <div class="modal-header" style="border-bottom: None">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <a href="http://<?php echo "$siteClassUrl"; ?>/category.php?place=Rentals"
+                   class="btn btn-primary btn-lg btn-responsive">
+                    <span style="font-weight:bolder;font-size:24px;">Search Here</span> for Local listings</a>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 <!-- Fixed navbar -->
 <nav class="navbar navbar-default navbar-inverse navbar-static-top">
     <div class="container">
@@ -193,10 +208,10 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                         <input name="city" type="text" id="city" class="apts form-control input-group-lg" tabindex="1" placeholder="City or ZIP"/>
                         <input alt="Search" src="img/btn_search.gif" onclick="return deterLoader()" type="image" tabindex="8">
                     </div>
-                    <input name="zip" type="text" size="6" class="apts  input-lg" tabindex="3" style="display:none"/>
+                    <input name="zip" id="zip" type="text" size="6" class="apts  input-lg" tabindex="3" style="display:none"/>
                     <div class="field_col_1">
                         <p class="form_label">State:</p>
-                        <select name="state" class="apts form-control" tabindex="2">
+                        <select name="state" id="state" class="apts form-control" tabindex="2">
                             <?php
                             foreach ($us_state_abbrevs_names as $abbrevs => $names) {
                                 $stateOpt = '<option value="'.$abbrevs.'" ';
@@ -210,7 +225,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                     </div>
                     <div style="display:none" class="field_col_3">
                         <p class="form_label">Radius:</p>
-                        <select name="rad" class="apts" tabindex="4">
+                        <select name="rad" id="rad" class="apts" tabindex="4">
                             <option value="0" selected="selected">Any</option>
                             <option value="5">5 miles</option>
                             <option value="10">10 miles</option>
@@ -219,7 +234,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                     </div>
                     <div style="display:none" class="field_col_4">
                         <p class="form_label">Beds:</p>
-                        <select name="bedrooms" class="apts" tabindex="7">
+                        <select name="bedrooms" id="bedrooms" class="apts" tabindex="7">
                             <option value="" selected="selected">Any</option>
                             <option value="studio">Studio</option>
                             <option value="onebdrm">1</option>
@@ -239,10 +254,30 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
     </div>
 </div>
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="3rdParty/jquery/jquery.min.js"><\/script>')</script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="3rdParty/jquery/jquery-1.11.2.min.js"><\/script>')</script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script src="js/apartments.js"></script>
+
+<script>
+    function GetParameterValues(param) {
+        var url = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for (var i = 0; i < url.length; i++) {
+            var urlparam = url[i].split('=');
+            if (urlparam[0] == param) {
+                return urlparam[1];
+            }
+        }
+    }
+
+    $(function() {
+        console.log("ready!");
+        var modal = GetParameterValues('modal');
+        if (modal == 1) {
+            $('#prefmodal').modal('show');
+        }
+    });
+</script>
 
 <?php include("../includes/tracking.php"); ?>
 </body>
