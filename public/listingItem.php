@@ -323,6 +323,8 @@ $mapPoints = '{
         "lon": "'.$lon .'"
     }}';
 
+
+
 $googleApiScript = <<<EOS
 	<link rel="stylesheet" href="css/rummage.css">
     <!-- Google Maps API V3 -->
