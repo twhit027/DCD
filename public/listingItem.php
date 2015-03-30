@@ -316,7 +316,7 @@ EOS;
 $mapPoints = '{
     "APTSTEST": {
         "street": "'.$street .'",
-        "city": "'.$city .',
+        "city": "'.$city .'",
         "state": "'.$state .'",
         "zip": "'.$zip .'",
         "lat": "'.$lat .'",
