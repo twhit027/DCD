@@ -473,7 +473,7 @@ class App
 
     public function getSingleListing($id)
     {
-        $sql = "SELECT ID, AdText, SiteCode, Placement, Position, Images, Street, City, State, Lat, Long, Zip, Rent, Amenities, BathRooms, BedRooms, Deposit, Email, Pets, Phone, ExerciseRec, CommFeat, Neighborhood, Parking, PropType, SquareFeet FROM `listing` where ID = :id";
+        $sql = "SELECT ID, AdText, SiteCode, Placement, Position, Images, Street, City, State, `Lat`, `Long`, Zip, Rent, Amenities, BathRooms, BedRooms, Deposit, Email, Pets, Phone, ExerciseRec, CommFeat, Neighborhood, Parking, PropType, SquareFeet FROM `listing` where ID = :id";
         $params = array(':id' => $id);
         $results = $this->database->getAssoc($sql, $params);
 
