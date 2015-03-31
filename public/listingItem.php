@@ -232,7 +232,7 @@ $mainContent = <<<EOS
             <div class="col-md-8">
                 $imageCarousel
                 <br />
-                <i class="fa fa-map-marker fa-2x"></i>&nbsp;&nbsp;$street, $city, $state $zip<a id="gotomap" href="#">&nbsp;(view Map)</a>
+                <i class="fa fa-map-marker fa-2x"></i>&nbsp;&nbsp;$street, $city, $state $zip&nbsp;<a id="gotomap" href="#">(view Map)</a>
             </div>
 
             <div class="col-md-4">
