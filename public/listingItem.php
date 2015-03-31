@@ -191,7 +191,7 @@ if ($imageArrayCnt == 0) {
 }
 
 $metadata = '
-<title>'.$busName.' - Classifieds Listing - ($id)</title>
+<title>'.$busName.' - Classifieds Listing - ('.$id.')</title>
 <meta name="description" content="'.substr($cleanAdText, 0, 150).'" />
 <meta itemprop="name" content="'.substr($cleanAdText, 0, 70).'">
 <meta itemprop="description" content="'.substr($cleanAdText, 0, 150).'">';
@@ -232,7 +232,7 @@ $mainContent = <<<EOS
             <div class="col-md-8">
                 $imageCarousel
                 <br />
-                <i class="fa fa-map-marker fa-2x"></i>&nbsp;&nbsp;$street, $city, $state $zip<a id="gotomap" href="#">(view Map)</a>
+                <i class="fa fa-map-marker fa-2x"></i>&nbsp;&nbsp;$street, $city, $state $zip&nbsp;<a id="gotomap" href="#">(view Map)</a>
             </div>
 
             <div class="col-md-4">
