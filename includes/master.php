@@ -178,7 +178,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
     ?>
 </div>
 <div class="container">
-    <div class="row" style="background-color:#FFF;">
+    <div class="row" style="background-color:#FFF; margin-top: 5px;">
         <div class="col-xs-11 col-sm-8">
             <?php echo $mainContent; ?>
         </div>
