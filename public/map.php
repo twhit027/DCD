@@ -209,12 +209,6 @@ foreach($rummages as $k=>$v) {
 
     if (! (empty($v['rent'])&&empty($v['bdrooms'])&&empty($v['bthrooms']))) {
         $detList = '';
-        if (! empty($v['rent'])) {
-            $detList .= '$'.$v['rent'];
-        }
-        if (! empty($detList)) {
-            $detList .= '<li style="list-style: none">|</li>';
-        }
         if (! empty($v['bdrooms'])) {
             $detList .= $v['bdrooms'] . '&nbsp;Beds';
         }
@@ -223,6 +217,12 @@ foreach($rummages as $k=>$v) {
         }
         if (! empty($v['bthrooms'])) {
             $detList .= $v['bthrooms'] . '&nbsp;Baths';
+        }
+        if (! empty($detList)) {
+            $detList .= '<li style="list-style: none">|</li>';
+        }
+        if (! empty($v['rent'])) {
+            $detList .= '$'.$v['rent'];
         }
         if (! empty($detList)) {
             $rummageList1 .= '<ul class="list-inline list-unstyled">'.$detList.'</ul>';
