@@ -191,7 +191,7 @@ if ($imageArrayCnt == 0) {
 }
 
 $metadata = '
-<title>'.$busName.' - Classifieds Listing - ($id)</title>
+<title>'.$busName.' - Classifieds Listing - ('.$id.')</title>
 <meta name="description" content="'.substr($cleanAdText, 0, 150).'" />
 <meta itemprop="name" content="'.substr($cleanAdText, 0, 70).'">
 <meta itemprop="description" content="'.substr($cleanAdText, 0, 150).'">';
