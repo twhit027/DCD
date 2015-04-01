@@ -114,6 +114,7 @@ $rummageList1 = '';
 
 //$filter = array();
 $filter['days'] = array();
+$filter['rents'] = array();
 
 $rownum = 0;
 foreach($rummages as $k=>$v) {
@@ -212,16 +213,16 @@ foreach($rummages as $k=>$v) {
         if (! empty($v['bdrooms'])) {
             $detList .= $v['bdrooms'] . '&nbsp;Beds';
         }
-        if (! empty($detList)) {
-            $detList .= '<li style="list-style: none">|</li>';
-        }
         if (! empty($v['bthrooms'])) {
+            if (! empty($detList)) {
+                $detList .= '<li style="list-style: none">|</li>';
+            }
             $detList .= $v['bthrooms'] . '&nbsp;Baths';
         }
-        if (! empty($detList)) {
-            $detList .= '<li style="list-style: none">|</li>';
-        }
         if (! empty($v['rent'])) {
+            if (! empty($detList)) {
+                $detList .= '<li style="list-style: none">|</li>';
+            }
             $detList .= '$'.$v['rent'];
         }
         if (! empty($detList)) {
