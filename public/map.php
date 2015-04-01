@@ -51,6 +51,7 @@ function averageArray($theArray) {
 
         return $retFilter;
     }
+    return $theArray;
 }
 
 $app = new \GCI\App();
