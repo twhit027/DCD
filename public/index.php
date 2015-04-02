@@ -12,11 +12,10 @@ $app = new \GCI\App();
 
 $app->logInfo('Landin Page(FORWARDED_FOR: '.@$_SERVER['HTTP_X_FORWARDED_FOR'].', REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].',HTTP_HOST: '.@$_SERVER['HTTP_HOST'].'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].')');
 
-$search = $app->getSearch();
+//$search = $app->getSearch();
 $siteName = $app->getSite()->getSiteName();
 $siteUrl = $app->getSite()->getSiteUrl();
 $busName = $app->getSite()->getBusName();
-$url = $app->getSite()->getUrl();
 
 $mainContent = <<<EOS
 <h1>$busName Classifieds</h1>
