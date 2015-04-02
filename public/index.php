@@ -17,6 +17,12 @@ $siteName = $app->getSite()->getSiteName();
 $siteUrl = $app->getSite()->getSiteUrl();
 $busName = $app->getSite()->getBusName();
 
+$metadata = '
+<title>'.$busName.' - Classifieds Landing Page</title>
+<meta name="description" content="Classifieds Landing page for '.$busName.'" />
+<meta itemprop="name" content="Classifieds Landing page">
+<meta itemprop="description" content="Classifieds Landing page for '.$busName.'">';
+
 $mainContent = <<<EOS
 <h1>$busName Classifieds</h1>
 <h2>Introducing our new online system</h2>

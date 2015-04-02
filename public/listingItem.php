@@ -16,8 +16,7 @@ include('../includes/GCI/Navigation.php');
 include('../includes/GCI/Ads.php');
 
 function convertImages($listingResults) {
-//<imgp src="0000005351-01-1.jpg">
-    //<img src="0000005351-01-1.jpg">
+    //<imgp src="0000005351-01-1.jpg"> //<img src="0000005351-01-1.jpg">
     return preg_replace('/src="([^"]*)"/i', 'src="img/images/'.$listingResults['siteCode'].'/${1}"', $listingResults['adText']);
 }
 
@@ -335,8 +334,6 @@ $mapPoints = '{
         "lat": "'.$lat .'",
         "lon": "'.$lon .'"
     }}';
-
-
 
 $googleApiScript = <<<EOS
 	<link rel="stylesheet" href="css/rummage.css">
