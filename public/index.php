@@ -23,6 +23,28 @@ $metadata = '
 <meta itemprop="name" content="Classifieds Landing page">
 <meta itemprop="description" content="Classifieds Landing page for '.$busName.'">';
 
+$thirdPartyCars = defined('THIRD_PARTY_CARS') ? THIRD_PARTY_CARS : true;
+$thirdPartyJobs = defined('THIRD_PARTY_JOBS') ? THIRD_PARTY_JOBS : true;
+$thirdPartyHomes = defined('THIRD_PARTY_HOME') ? THIRD_PARTY_HOME : true;
+
+$cars = $jobs = $homes = $rows = '';
+
+if ($thirdPartyCars) {
+    $cars = '<h4>Cars</h4><a href="'.$siteUrl.'/cars"><img alt="Cars.com" src="img/partners/130-cars.gif"></a><p><a class="button" href="'.$siteUrl.'/cars"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Autos</button></a></p>';
+}
+
+if ($thirdPartyJobs) {
+    $jobs = '<h4>Jobs</h4><a href="'.$siteUrl.'/jobs"><img alt="micareerbuilder.com" src="img/partners/130-careerbuilder.gif"></a><p><a class="button" href="'.$siteUrl.'/jobs"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Jobs</button></a></p>';
+}
+
+if ($thirdPartyHomes) {
+    $homes = '<h4>Homes</h4><a href="'.$siteUrl.'/homes"><img alt="homefinder.com" src="img/partners/130-homefinder.gif" ></a><p><a class="button" href="'.$siteUrl.'/homes"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Homes</button></a></p>';
+}
+
+if ($thirdPartyCars || $thirdPartyJobs || $thirdPartyHomes) {
+    $rows = '<h1>Featured Partner Classified Services</h1><div class="row"><div class="col-md-4">'.$cars.'</div><div class="col-md-4">'.$jobs.'</div><div class="col-md-4">'.$homes.'</div></div>';
+}
+
 $mainContent = <<<EOS
 <h1>$busName Classifieds</h1>
 <h2>Introducing our new online system</h2>
@@ -33,25 +55,7 @@ $mainContent = <<<EOS
 buyers through our leading mobile, online and print solutions.</p>
 <p><a class="button" href="http://$siteName.gannettclassifieds.com"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">Place an Ad</button></a></p>
 <p><a class="button" href="http://$siteName.com/classifiedshelp" target="_blank"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">Classifieds Help</button></a></p>
-<h1>Featured Partner Classified Services</h1>
-<div class="row">
-    <div class="col-md-4">
-        <h4>Cars</h4>
-        <a href="$siteUrl/cars"><img alt="Cars.com" src="img/partners/130-cars.gif"></a>
-        <p><a class="button" href="$siteUrl/cars"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Autos</button></a></p>
-    </div>
-    <div class="col-md-4">
-        <h4>Jobs</h4>
-        <a href="$siteUrl/jobs"><img alt="micareerbuilder.com" src="img/partners/130-careerbuilder.gif"></a>
-        <p><a class="button" href="$siteUrl/jobs"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Jobs</button></a></p>
-    </div>
-    <div class="col-md-4">
-        <h4>Homes</h4>
-        <a href="$siteUrl/homes"><img alt="homefinder.com" src="img/partners/130-homefinder.gif" ></a>
-        <p><a class="button" href="$siteUrl/homes"><button type="button" class="btn btn-primary btn-lg" style="width:100%;">View Homes</button></a></p>
-    </div>
-    
-</div>
+$rows
 EOS;
 
 include("../includes/master.php");
