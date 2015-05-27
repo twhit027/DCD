@@ -48,6 +48,7 @@ class Site {
     private $gpaper;
     private $topLinks;
     private $bottomLinks;
+    private $siteLinks;
     private $lat;
     private $lng;
     private $imgSiteName;
@@ -74,6 +75,9 @@ class Site {
 		$this->gpaper = $data['Gpaper'];
         $this->topLinks = $data['TopLinks'];
         $this->bottomLinks = $data['BottomLinks'];
+        if (isset($data['SiteLinks'])) {
+            $this->siteLinks = json_decode($data['SiteLinks'], true);
+        }
         $this->lat = $data['Lat'];
         $this->lng = $data['Lng'];
         $this->imgSiteName = $data['ImgSiteName'];
@@ -137,6 +141,10 @@ class Site {
 
     public function getTopLinks() {
         return $this->topLinks;
+    }
+
+    public function getSiteLinks() {
+        return $this->siteLinks;
     }
 
     public function getLat() {
