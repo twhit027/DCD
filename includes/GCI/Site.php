@@ -75,7 +75,9 @@ class Site {
 		$this->gpaper = $data['Gpaper'];
         $this->topLinks = $data['TopLinks'];
         $this->bottomLinks = $data['BottomLinks'];
-        $this->siteLinks = json_decode($data['SiteLinks'], true);
+        if (isset($data['SiteLinks'])) {
+            $this->siteLinks = json_decode($data['SiteLinks'], true);
+        }
         $this->lat = $data['Lat'];
         $this->lng = $data['Lng'];
         $this->imgSiteName = $data['ImgSiteName'];
