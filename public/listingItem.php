@@ -16,8 +16,7 @@ include('../includes/GCI/Navigation.php');
 include('../includes/GCI/Ads.php');
 
 function convertImages($listingResults) {
-//<imgp src="0000005351-01-1.jpg">
-    //<img src="0000005351-01-1.jpg">
+    //<imgp src="0000005351-01-1.jpg"> //<img src="0000005351-01-1.jpg">
     return preg_replace('/src="([^"]*)"/i', 'src="img/images/'.$listingResults['siteCode'].'/${1}"', $listingResults['adText']);
 }
 
@@ -46,6 +45,8 @@ $street = $listings['Street'];
 $city = $listings['City'];
 $state = $listings['State'];
 $zip = $listings['Zip'];
+$lat = $listings['Lat'];
+$lon = $listings['Long'];
 $amenities = json_decode($listings['Amenities']);
 $email = $listings['Email'];
 $propType = $listings['PropType'];
@@ -189,7 +190,7 @@ if ($imageArrayCnt == 0) {
 }
 
 $metadata = '
-<title>'.$busName.' - Classifieds Listing - ($id)</title>
+<title>'.$busName.' - Classifieds Listing - ('.$id.')</title>
 <meta name="description" content="'.substr($cleanAdText, 0, 150).'" />
 <meta itemprop="name" content="'.substr($cleanAdText, 0, 70).'">
 <meta itemprop="description" content="'.substr($cleanAdText, 0, 150).'">';
@@ -197,14 +198,39 @@ $metadata = '
 $urlEncodedPlacement = urlencode($placement);
 $urlEncodedPosition = urlencode($position);
 
-$depositDiv = '';
-if (! empty($deposit) && ($deposit != 'null')) {
-    $depositDiv = '<div class="col-sm-3 col-xs-6"><h4><i class="fa fa-money"></i>&nbsp;Deposit</h4>'.$deposit.'</div>';
+$detList = '';
+if (! empty($bedRooms) && ($bedRooms != 'null')) {
+    $detList .= '<span class="label label-default">Bedrooms</span>&nbsp;'.$bedRooms;
 }
-
-$propTypeDiv = '';
+if (! empty($bathRooms) && ($bathRooms != 'null')) {
+    if (! empty($detList)) {
+        $detList .= '<li style="list-style: none">&nbsp;|&nbsp;</li>';
+    }
+    $detList .= '<span class="label label-default">Bathsrooms</span>&nbsp;'.$bathRooms;
+}
+if (! empty($squareFeet) && ($squareFeet != 'null')) {
+    if (! empty($detList)) {
+        $detList .= '<li style="list-style: none">&nbsp;|&nbsp;</li>';
+    }
+    $detList .= '<span class="label label-default">SqFt</span>&nbsp;'.$squareFeet;
+}
 if (! empty($propType) && ($propType != 'null')) {
-    $propTypeDiv = '<div class="col-sm-3 col-xs-6"><h4><i class="fa fa-university"></i>&nbsp;Property Type</h4>'.$propType.'</div>';
+    if (! empty($detList)) {
+        $detList .= '<li style="list-style: none">&nbsp;|&nbsp;</li>';
+    }
+    $detList .= '<span class="label label-default">Type</span>&nbsp;'.$propType;
+}
+if (! empty($rent) && ($rent != 'null')) {
+    if (! empty($detList)) {
+        $detList .= '<li style="list-style: none">&nbsp;|&nbsp;</li>';
+    }
+    $detList .= '<span class="label label-default">Rent</span>&nbsp;'.'$'.$rent;
+}
+if (! empty($deposit) && ($deposit != 'null')) {
+    if (! empty($detList)) {
+        $detList .= '<li style="list-style: none">&nbsp;|&nbsp;</li>';
+    }
+    $detList .= '<span class="label label-default">Deposit</span>&nbsp;'.$deposit;
 }
 
 $mainContent = <<<EOS
@@ -230,7 +256,7 @@ $mainContent = <<<EOS
             <div class="col-md-8">
                 $imageCarousel
                 <br />
-                <i class="fa fa-map-marker fa-2x"></i>&nbsp;&nbsp;$street, $city, $state $zip<a id="gotomap" href="#">(view Map)</a>
+                <i class="fa fa-map-marker fa-2x"></i>&nbsp;&nbsp;$street, $city, $state $zip&nbsp;<a id="gotomap" href="#">(view Map)</a>
             </div>
 
             <div class="col-md-4">
@@ -243,18 +269,9 @@ $mainContent = <<<EOS
 
         <div class="panel panel-default" style="margin-top: 20px">
             <div class="panel-body">
-                <div class="col-sm-3 col-xs-6">
-                <span class="label label-default">Bedrooms</span>&nbsp;$bedRooms
-                </div>
-                <div class="col-sm-3 col-xs-6">
-                <span class="label label-default">Bathrooms</span>&nbsp;$bathRooms
-                </div>
-                <div class="col-sm-3 col-xs-6">
-                <span class="label label-default">Rent</span>&nbsp;$$rent
-                </div>
-                <div class="col-sm-3 col-xs-6">
-                <span class="label label-default">Sq Ft</span>&nbsp;$squareFeet
-                </div>
+                <ul class="list-inline list-unstyled">
+                    $detList
+                </ul>
             </div>
         </div>
         <!-- /.row -->
@@ -281,10 +298,7 @@ $mainContent = <<<EOS
                     $featsList
             </div>
         </div>
-        <div class="row" style="margin-top: 5px;">
-            $depositDiv
-            $propTypeDiv
-        </div>
+
         <!-- /.row -->
 
         <!-- Related Projects Row -->
@@ -313,12 +327,12 @@ EOS;
 
 $mapPoints = '{
     "APTSTEST": {
-        "street": "619 Virginia Ave",
-        "city": "Indianapolis",
-        "state": "In",
-        "zip": "46203",
-        "lat": "39.7583596",
-        "lon": "-86.14653"
+        "street": "'.$street .'",
+        "city": "'.$city .'",
+        "state": "'.$state .'",
+        "zip": "'.$zip .'",
+        "lat": "'.$lat .'",
+        "lon": "'.$lon .'"
     }}';
 
 $googleApiScript = <<<EOS

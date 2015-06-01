@@ -7,4 +7,4 @@
  */
 
 //version
-@define("DCD_VERSION_STATUS", "20.00");
+@define("DCD_VERSION_STATUS", "20.02.00");
